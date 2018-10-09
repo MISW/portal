@@ -13,9 +13,10 @@
     "precommit": "npm run lint"
   },
   "dependencies": {
+    "@nuxtjs/bulma": "^1.2.0",
+    "@nuxtjs/pwa": "^2.6.0",
     "cross-env": "^5.2.0",
-    "nuxt": "^2.0.0",
-    "@nuxtjs/bulma": "^1.2.0"
+    "nuxt": "^2.0.0"
   },
   "devDependencies": {
     "nodemon": "^1.11.0",
