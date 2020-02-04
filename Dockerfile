@@ -26,7 +26,7 @@ ADD ./frontend /frontend
 FROM alpine:3.9
 
 COPY --from=tools /usr/local/bin/mysqldef /bin
-COPY --from=build-backend /backend/portal /mmorpg2019server 
+COPY --from=build-backend /backend/portal /portal 
 COPY --from=build-backend /backend/schema /schema
 # COPY --from=build-frontend /frontend/dist /dist 
 # COPY --from=build-frontend /resources /resources
