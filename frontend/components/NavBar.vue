@@ -33,37 +33,14 @@
         :class="{'is-active': isMenuActive}"
         class="navbar-menu">
         <div class="navbar-start">
-          <a
+          <nuxt-link
+            v-for="item in links"
+            :to="item.link"
+            :key="item.name"
             class="navbar-item"
           >
-            Home
-          </a>
-
-          <a class="navbar-item">
-            Documentation
-          </a>
-
-          <div class="navbar-item has-dropdown is-hoverable">
-            <a class="navbar-link">
-              More
-            </a>
-
-            <div class="navbar-dropdown">
-              <a class="navbar-item">
-                About
-              </a>
-              <a class="navbar-item">
-                Jobs
-              </a>
-              <a class="navbar-item">
-                Contact
-              </a>
-              <hr class="navbar-divider">
-              <a class="navbar-item">
-                Report an issue
-              </a>
-            </div>
-          </div>
+            {{ item.name }}
+          </nuxt-link>
         </div>
 
         <div class="navbar-end">
@@ -85,6 +62,12 @@
 
 <script>
 export default {
+  props: {
+    links: {
+      type: Array,
+      default: () => []
+    }
+  },
   data: () => {
     return {
       isMenuActive: false
@@ -104,29 +87,24 @@ export default {
   padding-top: 0;
   padding-bottom: 0;
 }
-.navbar-menu.is-active {
-  -webkit-transition: all 0.4s;
-  -moz-transition: all 0.4s;
-  -ms-transition: all 0.4s;
-  -o-transition: all 0.4s;
-  transition: all 0.4s;
 
-  z-index: 1;
-  max-height: 100vh;
-  opacity: 1;
-}
-.navbar-menu {
-  display: block;
+@media screen and (max-width: 1087px) {
+  .navbar-menu.is-active {
+    transition: all 0.4s;
 
-  -webkit-transition: all 0.1s;
-  -moz-transition: all 0.1s;
-  -ms-transition: all 0.1s;
-  -o-transition: all 0.1s;
-  transition: all 0.1s;
+    z-index: 1;
+    max-height: 100vh;
+    opacity: 1;
+  }
+  .navbar-menu {
+    display: block;
 
-  max-height: 0;
-  overflow: hidden;
-  opacity: 0;
+    transition: none;
+
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+  }
 }
 #navbar-base {
   height: 3.25rem;
