@@ -1,6 +1,6 @@
 <template>
   <div>
-    <navbar/>
+    <navbar :links="navbarLinks"/>
     <nuxt/>
   </div>
 </template>
@@ -32,6 +32,20 @@ import Navbar from '~/components/NavBar.vue'
 export default {
   components: {
     Navbar
+  },
+  data: function() {
+    return {
+      navbarLinks: [
+        {
+          name: 'Home',
+          link: '/'
+        },
+        {
+          name: 'Notifications',
+          link: '/notifications'
+        }
+      ]
+    }
   }
 }
 </script>

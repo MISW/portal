@@ -1,13 +1,23 @@
 <template>
   <section class="container">
     <div>
-      <img
-        src="~/assets/ultrafastparrot.gif"
-        style="min-width: 100%;">
+      <logo/>
+      <h1 class="title">
+        Notifications
+      </h1>
       <h2 class="subtitle">
-        MIS.W Portalへようこそ
+        MIS.W Portal
       </h2>
-      <div class="links"/>
+      <div class="links">
+        <a
+          href="https://nuxtjs.org/"
+          target="_blank"
+          class="button--green">Documentation</a>
+        <a
+          href="https://github.com/nuxt/nuxt.js"
+          target="_blank"
+          class="button--grey">GitHub</a>
+      </div>
     </div>
   </section>
 </template>
@@ -22,7 +32,7 @@ export default {
 
   head() {
     return {
-      title: 'Top'
+      title: 'Notifications'
     }
   }
 }
@@ -33,6 +43,7 @@ export default {
   min-height: 100vh;
   display: flex;
   justify-content: center;
+  align-items: center;
   text-align: center;
 }
 
