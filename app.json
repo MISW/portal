@@ -1,0 +1,14 @@
+{
+    "addons": [
+        {
+            "plan": "cleardb:ignite"
+        }
+    ],
+    "buildpacks": [],
+    "description": "",
+    "env": {},
+    "formation": {},
+    "name": "mmorpg2019",
+    "scripts": {},
+    "stack": "container"
+}
