@@ -1,3 +1,10 @@
+FROM golang:1.13 as tools
+
+ENV SQLDEF_VERSION v0.5.12
+RUN wget https://github.com/k0kubun/sqldef/releases/download/${SQLDEF_VERSION}/mysqldef_linux_amd64.tar.gz \
+    && tar -C /usr/local/bin -xzvf mysqldef_linux_amd64.tar.gz \
+    && rm mysqldef_linux_amd64.tar.gz
+
 FROM golang:1.13 as build-backend
 
 ADD ./backend /backend
@@ -18,6 +25,7 @@ ADD ./frontend /frontend
 
 FROM alpine:3.9
 
+COPY --from=tools /usr/local/bin/mysqldef /bin
 COPY --from=build-backend /backend/portal /mmorpg2019server 
 COPY --from=build-backend /backend/schema /schema
 # COPY --from=build-frontend /frontend/dist /dist 
