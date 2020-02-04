@@ -1,0 +1,14 @@
+{
+    "addons": [
+        {
+            "plan": "cleardb:ignite"
+        }
+    ],
+    "buildpacks": [],
+    "description": "",
+    "env": {},
+    "formation": {},
+    "name": "misw-portal",
+    "scripts": {},
+    "stack": "container"
+}
