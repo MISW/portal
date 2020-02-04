@@ -8,7 +8,7 @@
     "description": "",
     "env": {},
     "formation": {},
-    "name": "mmorpg2019",
+    "name": "misw-portal",
     "scripts": {},
     "stack": "container"
 }
