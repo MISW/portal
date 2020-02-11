@@ -12,6 +12,9 @@ const Header = () => (
         <Link href="/links">
             <a style={linkStyle}>Links</a>
         </Link>
+        <Link href="/setting">
+            <a style={linkStyle}>会員情報設定</a>
+        </Link>
     </div>
 );
 
