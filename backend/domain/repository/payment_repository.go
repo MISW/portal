@@ -14,7 +14,7 @@ type PaymentStatusRepository interface {
 	GetLastByUser(DB db.Ext, userID int) (int, error)
 
 	// ListForPeriod returns all users paying in the period
-	ListUsersForPeriod(DB db.Ext, period int) ([]*domain.User, error)
+	ListUsersForPeriod(DB db.Ext, period int) ([]int, error)
 
 	// ListForUser returns all periods the user paid in
 	ListPeriodsForUser(DB db.Ext, userID int) ([]int, error)
