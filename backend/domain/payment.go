@@ -2,15 +2,14 @@ package domain
 
 import "time"
 
-type Period struct {
-	Year   int    `json:"year" yaml:"year"`
-	Season string `json:"season" yaml:"season"`
-}
-
 // PaymentStatus - 支払い情報
 type PaymentStatus struct {
-	// Period - いつの
-	Period     *Period   `json:"period" yaml:"period"`
-	Time       time.Time `json:"time" yaml:"time"`
-	Authorizer int       `json:"authorizer"`
+	UserID     int `json:"user_id" yaml:"user_id"`
+	Authorizer int `json:"authorizer"`
+
+	// Period - 支払い区間(201904, 201910のようにYYYYMM)
+	Period int `json:"period" yaml:"period"`
+
+	CreatedAt time.Time `json:"created_at" yaml:"created_at"`
+	UpdatedAt time.Time `json:"updated_at" yaml:"updated_at"`
 }
