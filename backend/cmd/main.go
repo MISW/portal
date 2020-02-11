@@ -1,10 +1,14 @@
 package cmd
 
 import (
+	"flag"
 	"net/http"
-	"os"
+)
+
+var (
+	addr = flag.String("addr", ":80", "address to listen on")
 )
 
 func Run() {
-	http.ListenAndServe(":"+os.Getenv("PORT"), nil)
+	http.ListenAndServe(addr, nil)
 }
