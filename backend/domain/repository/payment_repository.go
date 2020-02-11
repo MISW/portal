@@ -13,9 +13,9 @@ type PaymentStatusRepository interface {
 	// GetLastByUser - 最新の支払情報の取得
 	GetLastByUser(DB db.Ext, userID int) (int, error)
 
-	// ListForPeriod - その期間に支払したユーザ一覧
-	ListForPeriod(DB db.Ext, period int) ([]*domain.User, error)
+	// ListForPeriod returns all users paying in the period
+	ListUsersForPeriod(DB db.Ext, period int) ([]*domain.User, error)
 
-	// ListForUser - そのユーザの支払情報一覧
-	ListForUser(DB db.Ext, userID int) ([]int, error)
+	// ListForUser returns all periods the user paid in
+	ListPeriodsForUser(DB db.Ext, userID int) ([]int, error)
 }

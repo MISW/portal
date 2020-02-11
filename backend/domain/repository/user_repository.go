@@ -21,4 +21,7 @@ type UserRepository interface {
 
 	// List - 全ユーザを取得
 	List(DB db.Ext) ([]*domain.User, error)
+
+	// ListByID - ユーザIDが一致する全てのユーザを取得
+	ListByID(DB db.Ext, ids []int) ([]*domain.User, error)
 }

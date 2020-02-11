@@ -219,3 +219,31 @@ func (up *userPersistence) List(db db.Ext) ([]*domain.User, error) {
 
 	return res, nil
 }
+
+// ListByID - ユーザIDが一致する全てのユーザを取得
+func (up *userPersistence) ListByID(db db.Ext, ids []int) ([]*domain.User, error) {
+	query, args, err := sqlx.In(`SELECT * FROM users WHERE id IN (?)`, ids)
+
+	if err != nil {
+		return nil, xerrors.Errorf("failed to prepare query for IN clause: %w", err)
+	}
+
+	var users []user
+
+	if err := sqlx.Select(
+		db,
+		&users,
+		query,
+		args...,
+	); err != nil {
+		return nil, xerrors.Errorf("failed to list users: %w", err)
+	}
+
+	res := make([]*domain.User, 0, len(users))
+
+	for i := range res {
+		res = append(res, convertUser(&users[i]))
+	}
+
+	return res, nil
+}
