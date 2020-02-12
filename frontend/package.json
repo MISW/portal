@@ -15,6 +15,8 @@
     "@types/material-ui": "^0.21.7",
     "@types/node": "^13.7.0",
     "@types/react": "^16.9.19",
+    "@types/react-dom": "^16.9.5",
+    "@types/styled-jsx": "^2.2.8",
     "typescript": "^3.7.5"
   },
   "dependencies": {
