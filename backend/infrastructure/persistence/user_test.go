@@ -155,3 +155,83 @@ func TestGet(t *testing.T) {
 	})
 
 }
+
+func TestList(t *testing.T) {
+	t.Run("normal", func(t *testing.T) {
+		conn := testutil.NewSQLConn(t)
+
+		up := persistence.NewUserPersistence()
+
+		id := insertTestData(t, conn, up)
+
+		users, err := up.List(conn)
+
+		if err != nil {
+			t.Fatalf("failed to list users: %+v", err)
+		}
+
+		if expected := 1; len(users) != expected {
+			t.Fatal("list should return %d users, but returned %d", expected, len(users))
+		}
+
+		expectedUser := *userTemplate
+
+		expectedUser.CreatedAt = user.CreatedAt
+		expectedUser.UpdatedAt = user.UpdatedAt
+		expectedUser.ID = id
+
+		if diff := cmp.Diff(&expectedUser, users[0]); diff != "" {
+			t.Fatalf("users differ: %v", diff)
+		}
+
+	})
+
+	t.Run("by_id_normal", func(t *testing.T) {
+		conn := testutil.NewSQLConn(t)
+
+		up := persistence.NewUserPersistence()
+
+		id := insertTestData(t, conn, up)
+
+		users, err := up.ListByID(conn, []int{id})
+
+		if err != nil {
+			t.Fatalf("failed to list users: %+v", err)
+		}
+
+		if expected := 1; len(users) != expected {
+			t.Fatal("list should return %d users, but returned %d", expected, len(users))
+		}
+
+		expectedUser := *userTemplate
+
+		expectedUser.CreatedAt = user.CreatedAt
+		expectedUser.UpdatedAt = user.UpdatedAt
+		expectedUser.ID = id
+
+		if diff := cmp.Diff(&expectedUser, users[0]); diff != "" {
+			t.Fatalf("users differ: %v", diff)
+		}
+
+	})
+
+	t.Run("by_id_zero", func(t *testing.T) {
+		conn := testutil.NewSQLConn(t)
+
+		up := persistence.NewUserPersistence()
+
+		id := insertTestData(t, conn, up)
+
+		users, err := up.ListByID(conn, []int{})
+
+		if err != nil {
+			t.Fatalf("failed to list users: %+v", err)
+		}
+
+		if expected := 0; len(users) != expected {
+			t.Fatal("list should return %d users, but returned %d", expected, len(users))
+		}
+
+	})
+
+}
