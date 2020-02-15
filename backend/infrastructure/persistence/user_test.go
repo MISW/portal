@@ -61,32 +61,97 @@ func TestInsert(t *testing.T) {
 }
 
 func TestGet(t *testing.T) {
-	conn := testutil.NewSQLConn(t)
+	t.Run("get_by_id", func(t *testing.T) {
+		conn := testutil.NewSQLConn(t)
 
-	up := persistence.NewUserPersistence()
+		up := persistence.NewUserPersistence()
 
-	id := insertTestData(t, conn, up)
+		id := insertTestData(t, conn, up)
 
-	user, err := up.GetByID(conn, id)
+		user, err := up.GetByID(conn, id)
 
-	if err != nil {
-		t.Fatalf("failed to get user by id: %+v", err)
-	}
+		if err != nil {
+			t.Fatalf("failed to get user by id: %+v", err)
+		}
 
-	if user.CreatedAt.Before(time.Now().Add(-1*time.Minute)) || user.CreatedAt.After(time.Now()) {
-		t.Fatalf("created_at is invalid: %+v", user.CreatedAt)
-	}
-	if user.UpdatedAt.Before(time.Now().Add(-1*time.Minute)) || user.UpdatedAt.After(time.Now()) {
-		t.Fatalf("updated_at is invalid: %+v", user.UpdatedAt)
-	}
+		if user.CreatedAt.Before(time.Now().Add(-1*time.Minute)) || user.CreatedAt.After(time.Now()) {
+			t.Fatalf("created_at is invalid: %+v", user.CreatedAt)
+		}
+		if user.UpdatedAt.Before(time.Now().Add(-1*time.Minute)) || user.UpdatedAt.After(time.Now()) {
+			t.Fatalf("updated_at is invalid: %+v", user.UpdatedAt)
+		}
 
-	expectedUser := *userTemplate
+		expectedUser := *userTemplate
 
-	expectedUser.CreatedAt = user.CreatedAt
-	expectedUser.UpdatedAt = user.UpdatedAt
-	expectedUser.ID = id
+		expectedUser.CreatedAt = user.CreatedAt
+		expectedUser.UpdatedAt = user.UpdatedAt
+		expectedUser.ID = id
 
-	if diff := cmp.Diff(&expectedUser, user); diff != "" {
-		t.Fatalf("users differ: %v", diff)
-	}
+		if diff := cmp.Diff(&expectedUser, user); diff != "" {
+			t.Fatalf("users differ: %v", diff)
+		}
+	})
+
+	t.Run("get_by_email", func(t *testing.T) {
+		conn := testutil.NewSQLConn(t)
+
+		up := persistence.NewUserPersistence()
+
+		id := insertTestData(t, conn, up)
+
+		user, err := up.GetByEmail(conn, userTemplate.Email)
+
+		if err != nil {
+			t.Fatalf("failed to get user by id: %+v", err)
+		}
+
+		if user.CreatedAt.Before(time.Now().Add(-1*time.Minute)) || user.CreatedAt.After(time.Now()) {
+			t.Fatalf("created_at is invalid: %+v", user.CreatedAt)
+		}
+		if user.UpdatedAt.Before(time.Now().Add(-1*time.Minute)) || user.UpdatedAt.After(time.Now()) {
+			t.Fatalf("updated_at is invalid: %+v", user.UpdatedAt)
+		}
+
+		expectedUser := *userTemplate
+
+		expectedUser.CreatedAt = user.CreatedAt
+		expectedUser.UpdatedAt = user.UpdatedAt
+		expectedUser.ID = id
+
+		if diff := cmp.Diff(&expectedUser, user); diff != "" {
+			t.Fatalf("users differ: %v", diff)
+		}
+	})
+
+	t.Run("get_by_slack", func(t *testing.T) {
+		conn := testutil.NewSQLConn(t)
+
+		up := persistence.NewUserPersistence()
+
+		id := insertTestData(t, conn, up)
+
+		user, err := up.GetBySlackID(conn, userTemplate.SlackID)
+
+		if err != nil {
+			t.Fatalf("failed to get user by id: %+v", err)
+		}
+
+		if user.CreatedAt.Before(time.Now().Add(-1*time.Minute)) || user.CreatedAt.After(time.Now()) {
+			t.Fatalf("created_at is invalid: %+v", user.CreatedAt)
+		}
+		if user.UpdatedAt.Before(time.Now().Add(-1*time.Minute)) || user.UpdatedAt.After(time.Now()) {
+			t.Fatalf("updated_at is invalid: %+v", user.UpdatedAt)
+		}
+
+		expectedUser := *userTemplate
+
+		expectedUser.CreatedAt = user.CreatedAt
+		expectedUser.UpdatedAt = user.UpdatedAt
+		expectedUser.ID = id
+
+		if diff := cmp.Diff(&expectedUser, user); diff != "" {
+			t.Fatalf("users differ: %v", diff)
+		}
+	})
+
 }
