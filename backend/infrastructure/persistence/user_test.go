@@ -72,10 +72,10 @@ func TestGet(t *testing.T) {
 		t.Fatalf("failed to get user by id: %+v", err)
 	}
 
-	if user.CreatedAt <= time.Now().Sub(1*time.Minute) || user.CreatedAt >= time.Now() {
+	if user.CreatedAt <= time.Now().Add(-1*time.Minute) || user.CreatedAt >= time.Now() {
 		t.Fatalf("created_at is invalid: %+v", err)
 	}
-	if user.UpdatedAt <= time.Now().Sub(1*time.Minute) || user.UpdatedAt >= time.Now() {
+	if user.UpdatedAt <= time.Now().Add(-1*time.Minute) || user.UpdatedAt >= time.Now() {
 		t.Fatalf("updated_at is invalid: %+v", err)
 	}
 
