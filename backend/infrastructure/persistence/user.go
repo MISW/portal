@@ -174,7 +174,7 @@ func (up *userPersistence) GetByID(db db.Ext, id int) (*domain.User, error) {
 	return convertUser(&u), nil
 }
 
-// GetByID finds existing user by user's Slack ID(neither name nor display name)
+// GetBySlackID finds existing user by user's Slack ID(neither name nor display name)
 func (up *userPersistence) GetBySlackID(db db.Ext, slackID string) (*domain.User, error) {
 	var u user
 	if err := sqlx.Get(
