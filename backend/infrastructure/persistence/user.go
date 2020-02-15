@@ -44,6 +44,7 @@ type user struct {
 
 func newUser(u *domain.User) *user {
 	return &user{
+		ID:                   u.ID,
 		Email:                u.Email,
 		Generation:           u.Generation,
 		Name:                 u.Name,
@@ -71,6 +72,7 @@ func newUser(u *domain.User) *user {
 
 func convertUser(u *user) *domain.User {
 	return &domain.User{
+		ID:         u.ID,
 		Email:      u.Email,
 		Generation: u.Generation,
 		Name:       u.Name,
@@ -119,7 +121,8 @@ func (up *userPersistence) Insert(db db.Ext, user *domain.User) (int, error) {
 		emergency_phone_number,
 		other_circles,
 		workshops,
-		squads
+		squads,
+		slack_id
 	) VALUES (
 		:email,
 		:generation,
@@ -134,7 +137,8 @@ func (up *userPersistence) Insert(db db.Ext, user *domain.User) (int, error) {
 		:emergency_phone_number,
 		:other_circles,
 		:workshops,
-		:squads
+		:squads,
+		:slack_id
 	)
 	`, u)
 
