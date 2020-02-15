@@ -73,11 +73,11 @@ func TestGet(t *testing.T) {
 		t.Fatalf("failed to get user by id: %+v", err)
 	}
 
-	if user.CreatedAt.After(time.Now().Add(-1*time.Minute)) || user.CreatedAt.Before(time.Now()) {
-		t.Fatalf("created_at is invalid: %+v", err)
+	if user.CreatedAt.Before(time.Now().Add(-1*time.Minute)) || user.CreatedAt.After(time.Now()) {
+		t.Fatalf("created_at is invalid: %+v", user.CreatedAt)
 	}
-	if user.UpdatedAt.After(time.Now().Add(-1*time.Minute)) || user.UpdatedAt.Before(time.Now()) {
-		t.Fatalf("updated_at is invalid: %+v", err)
+	if user.UpdatedAt.Before(time.Now().Add(-1*time.Minute)) || user.UpdatedAt.After(time.Now()) {
+		t.Fatalf("updated_at is invalid: %+v", user.UpdatedAt)
 	}
 
 	expectedUser := *userTemplate
