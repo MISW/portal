@@ -4,6 +4,7 @@ package persistence_test
 
 import (
 	"testing"
+	"time"
 
 	"github.com/MISW/Portal/backend/domain"
 	"github.com/MISW/Portal/backend/domain/repository"
@@ -12,10 +13,8 @@ import (
 	"github.com/MISW/Portal/backend/internal/testutil"
 )
 
-func insertTestData(t *testing.T, conn db.Ext, up repository.UserRepository) int {
-	t.Helper()
-
-	id, err := up.Insert(conn, &domain.User{
+var (
+	userTemplate = &domain.User{
 		Email:      "mischan@example.com",
 		Generation: 53,
 		Name:       "みす ちゃん",
@@ -27,13 +26,19 @@ func insertTestData(t *testing.T, conn db.Ext, up repository.UserRepository) int
 			Department: "基幹理工学部",
 			Subject:    "情報理工学科",
 		},
-		StudentID:            "1W183088-4",
+		StudentID:            "1W180000-0",
 		EmergencyPhoneNumber: "0120117117",
 		OtherCircles:         "WCE",
 		Workshops:            []string{"Programming", "CG", "MIDI"},
 		Squads:               []string{"Web", "Webデザイン"},
 		SlackID:              "UAJXXXXXX",
-	})
+	}
+)
+
+func insertTestData(t *testing.T, conn db.Ext, up repository.UserRepository) int {
+	t.Helper()
+
+	id, err := up.Insert(conn, userTemplate)
 
 	if err != nil {
 		t.Fatalf("inserting a new user to db failed: %+v", err)
@@ -51,5 +56,35 @@ func TestInsert(t *testing.T) {
 
 	if id == 0 {
 		t.Fatalf("id shoule not be 0, but %d", id)
+	}
+}
+
+func TestGet(t *testing.T) {
+	conn := testutil.NewSQLConn(t)
+
+	up := persistence.NewUserPersistence()
+
+	id := insertTestData(t, conn, up)
+
+	user, err := up.GetByID(conn, id)
+
+	if err != nil {
+		t.Fatalf("failed to get user by id: %+v", err)
+	}
+
+	if user.CreatedAt <= time.Now().Sub(1*time.Minute) || user.CreatedAt >= time.Now() {
+		t.Fatalf("created_at is invalid: %+v", err)
+	}
+	if user.UpdatedAt <= time.Now().Sub(1*time.Minute) || user.UpdatedAt >= time.Now() {
+		t.Fatalf("updated_at is invalid: %+v", err)
+	}
+
+	expectedUser := *userTemplate
+
+	expectedUser.CreatedAt = user.CreatedAt
+	expectedUser.UpdatedAt = user.UpdatedAt
+
+	if diff := mp.Diff(&expectedUser, user); diff != "" {
+		t.Fatalf("users differ: %v", diff)
 	}
 }
