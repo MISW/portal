@@ -11,6 +11,7 @@ import (
 	"github.com/MISW/Portal/backend/infrastructure/persistence"
 	"github.com/MISW/Portal/backend/internal/db"
 	"github.com/MISW/Portal/backend/internal/testutil"
+	"github.com/google/go-cmp/cmp"
 )
 
 var (
@@ -83,8 +84,9 @@ func TestGet(t *testing.T) {
 
 	expectedUser.CreatedAt = user.CreatedAt
 	expectedUser.UpdatedAt = user.UpdatedAt
+	expectedUser.ID = id
 
-	if diff := mp.Diff(&expectedUser, user); diff != "" {
+	if diff := cmp.Diff(&expectedUser, user); diff != "" {
 		t.Fatalf("users differ: %v", diff)
 	}
 }
