@@ -27,4 +27,7 @@ jobs:
           tar zxf mysqldef_linux_amd64.tar.gz
           chmod +x mysqldef
           mv mysqldef /usr/local/bin
-      -
+      - name: Run backend tests
+        working-directory: backend
+        run: |
+          make ci-test
