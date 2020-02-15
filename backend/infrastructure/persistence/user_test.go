@@ -176,8 +176,8 @@ func TestList(t *testing.T) {
 
 		expectedUser := *userTemplate
 
-		expectedUser.CreatedAt = user.CreatedAt
-		expectedUser.UpdatedAt = user.UpdatedAt
+		expectedUser.CreatedAt = users[0].CreatedAt
+		expectedUser.UpdatedAt = users[0].UpdatedAt
 		expectedUser.ID = id
 
 		if diff := cmp.Diff(&expectedUser, users[0]); diff != "" {
@@ -205,8 +205,8 @@ func TestList(t *testing.T) {
 
 		expectedUser := *userTemplate
 
-		expectedUser.CreatedAt = user.CreatedAt
-		expectedUser.UpdatedAt = user.UpdatedAt
+		expectedUser.CreatedAt = users[0].CreatedAt
+		expectedUser.UpdatedAt = users[0].UpdatedAt
 		expectedUser.ID = id
 
 		if diff := cmp.Diff(&expectedUser, users[0]); diff != "" {
