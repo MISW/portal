@@ -1,0 +1,3 @@
+.PHONY: ci-test
+ci-test:
+	go test -race -tags use_external_db -v ./...

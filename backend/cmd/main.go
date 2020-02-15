@@ -10,5 +10,5 @@ var (
 )
 
 func Run() {
-	http.ListenAndServe(addr, nil)
+	http.ListenAndServe(*addr, nil)
 }
