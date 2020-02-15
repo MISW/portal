@@ -158,7 +158,7 @@ func (up *userPersistence) Insert(db db.Ext, user *domain.User) (int, error) {
 // GetByID finds existing user by user's id
 func (up *userPersistence) GetByID(db db.Ext, id int) (*domain.User, error) {
 	var u user
-	if err := sqlx.Select(
+	if err := sqlx.Get(
 		db,
 		&u,
 		`SELECT * FROM users WHERE id=?`,
@@ -173,7 +173,7 @@ func (up *userPersistence) GetByID(db db.Ext, id int) (*domain.User, error) {
 // GetByID finds existing user by user's Slack ID(neither name nor display name)
 func (up *userPersistence) GetBySlackID(db db.Ext, slackID string) (*domain.User, error) {
 	var u user
-	if err := sqlx.Select(
+	if err := sqlx.Get(
 		db,
 		&u,
 		`SELECT * FROM users WHERE slack_id=?`,
@@ -188,7 +188,7 @@ func (up *userPersistence) GetBySlackID(db db.Ext, slackID string) (*domain.User
 // GetByID finds existing user by user's Email
 func (up *userPersistence) GetByEmail(db db.Ext, email string) (*domain.User, error) {
 	var u user
-	if err := sqlx.Select(
+	if err := sqlx.Get(
 		db,
 		&u,
 		`SELECT * FROM users WHERE email=?`,
