@@ -36,7 +36,7 @@ var (
 	}
 )
 
-func insertTestData(t *testing.T, conn db.Ext, up repository.UserRepository) int {
+func insertTestUserData(t *testing.T, conn db.Ext, up repository.UserRepository) int {
 	t.Helper()
 
 	id, err := up.Insert(conn, userTemplate)
@@ -53,7 +53,7 @@ func TestInsert(t *testing.T) {
 
 	up := persistence.NewUserPersistence()
 
-	id := insertTestData(t, conn, up)
+	id := insertTestUserData(t, conn, up)
 
 	if id == 0 {
 		t.Fatalf("id shoule not be 0, but %d", id)
@@ -66,7 +66,7 @@ func TestGet(t *testing.T) {
 
 		up := persistence.NewUserPersistence()
 
-		id := insertTestData(t, conn, up)
+		id := insertTestUserData(t, conn, up)
 
 		user, err := up.GetByID(conn, id)
 
@@ -97,7 +97,7 @@ func TestGet(t *testing.T) {
 
 		up := persistence.NewUserPersistence()
 
-		id := insertTestData(t, conn, up)
+		id := insertTestUserData(t, conn, up)
 
 		user, err := up.GetByEmail(conn, userTemplate.Email)
 
@@ -128,7 +128,7 @@ func TestGet(t *testing.T) {
 
 		up := persistence.NewUserPersistence()
 
-		id := insertTestData(t, conn, up)
+		id := insertTestUserData(t, conn, up)
 
 		user, err := up.GetBySlackID(conn, userTemplate.SlackID)
 
@@ -162,7 +162,7 @@ func TestList(t *testing.T) {
 
 		up := persistence.NewUserPersistence()
 
-		id := insertTestData(t, conn, up)
+		id := insertTestUserData(t, conn, up)
 
 		users, err := up.List(conn)
 
@@ -191,7 +191,7 @@ func TestList(t *testing.T) {
 
 		up := persistence.NewUserPersistence()
 
-		id := insertTestData(t, conn, up)
+		id := insertTestUserData(t, conn, up)
 
 		users, err := up.ListByID(conn, []int{id})
 
@@ -220,7 +220,7 @@ func TestList(t *testing.T) {
 
 		up := persistence.NewUserPersistence()
 
-		_ := insertTestData(t, conn, up)
+		_ := insertTestUserData(t, conn, up)
 
 		users, err := up.ListByID(conn, []int{})
 
