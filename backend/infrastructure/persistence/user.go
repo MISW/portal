@@ -127,6 +127,7 @@ func (up *userPersistence) Insert(ctx context.Context, user *domain.User) (int, 
 		other_circles,
 		workshops,
 		squads,
+		role,
 		slack_id
 	) VALUES (
 		:email,
@@ -143,6 +144,7 @@ func (up *userPersistence) Insert(ctx context.Context, user *domain.User) (int, 
 		:other_circles,
 		:workshops,
 		:squads,
+		:role,
 		:slack_id
 	)
 	`, u)
