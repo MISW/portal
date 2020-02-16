@@ -36,10 +36,10 @@ var (
 	}
 )
 
-func insertTestUserData(t *testing.T, conn db.Ext, up repository.UserRepository) int {
+func insertTestUserData(t *testing.T up repository.UserRepository) int {
 	t.Helper()
 
-	id, err := up.Insert(conn, userTemplate)
+	id, err := up.Insert(context.Background(), userTemplate)
 
 	if err != nil {
 		t.Fatalf("inserting a new user to db failed: %+v", err)
@@ -51,9 +51,9 @@ func insertTestUserData(t *testing.T, conn db.Ext, up repository.UserRepository)
 func TestInsert(t *testing.T) {
 	conn := testutil.NewSQLConn(t)
 
-	up := persistence.NewUserPersistence()
+	up := persistence.NewUserPersistence(conn)
 
-	id := insertTestUserData(t, conn, up)
+	id := insertTestUserData(t, up)
 
 	if id == 0 {
 		t.Fatalf("id shoule not be 0, but %d", id)
@@ -64,11 +64,11 @@ func TestGet(t *testing.T) {
 	t.Run("get_by_id", func(t *testing.T) {
 		conn := testutil.NewSQLConn(t)
 
-		up := persistence.NewUserPersistence()
+		up := persistence.NewUserPersistence(conn)
 
-		id := insertTestUserData(t, conn, up)
+		id := insertTestUserData(t, up)
 
-		user, err := up.GetByID(conn, id)
+		user, err := up.GetByID(context.Background(), id)
 
 		if err != nil {
 			t.Fatalf("failed to get user by id: %+v", err)
@@ -95,11 +95,11 @@ func TestGet(t *testing.T) {
 	t.Run("get_by_email", func(t *testing.T) {
 		conn := testutil.NewSQLConn(t)
 
-		up := persistence.NewUserPersistence()
+		up := persistence.NewUserPersistence(conn)
 
-		id := insertTestUserData(t, conn, up)
+		id := insertTestUserData(t, up)
 
-		user, err := up.GetByEmail(conn, userTemplate.Email)
+		user, err := up.GetByEmail(context.Background(), userTemplate.Email)
 
 		if err != nil {
 			t.Fatalf("failed to get user by id: %+v", err)
@@ -126,11 +126,11 @@ func TestGet(t *testing.T) {
 	t.Run("get_by_slack", func(t *testing.T) {
 		conn := testutil.NewSQLConn(t)
 
-		up := persistence.NewUserPersistence()
+		up := persistence.NewUserPersistence(conn)
 
-		id := insertTestUserData(t, conn, up)
+		id := insertTestUserData(t, up)
 
-		user, err := up.GetBySlackID(conn, userTemplate.SlackID)
+		user, err := up.GetBySlackID(context.Background(), userTemplate.SlackID)
 
 		if err != nil {
 			t.Fatalf("failed to get user by id: %+v", err)
@@ -160,11 +160,11 @@ func TestList(t *testing.T) {
 	t.Run("normal", func(t *testing.T) {
 		conn := testutil.NewSQLConn(t)
 
-		up := persistence.NewUserPersistence()
+		up := persistence.NewUserPersistence(conn)
 
-		id := insertTestUserData(t, conn, up)
+		id := insertTestUserData(t, up)
 
-		users, err := up.List(conn)
+		users, err := up.List(context.Background())
 
 		if err != nil {
 			t.Fatalf("failed to list users: %+v", err)
@@ -189,11 +189,11 @@ func TestList(t *testing.T) {
 	t.Run("by_id_normal", func(t *testing.T) {
 		conn := testutil.NewSQLConn(t)
 
-		up := persistence.NewUserPersistence()
+		up := persistence.NewUserPersistence(conn)
 
-		id := insertTestUserData(t, conn, up)
+		id := insertTestUserData(t, up)
 
-		users, err := up.ListByID(conn, []int{id})
+		users, err := up.ListByID(context.Background(), []int{id})
 
 		if err != nil {
 			t.Fatalf("failed to list users: %+v", err)
@@ -218,11 +218,11 @@ func TestList(t *testing.T) {
 	t.Run("by_no_id", func(t *testing.T) {
 		conn := testutil.NewSQLConn(t)
 
-		up := persistence.NewUserPersistence()
+		up := persistence.NewUserPersistence(conn)
 
-		insertTestUserData(t, conn, up)
+		insertTestUserData(t, up)
 
-		users, err := up.ListByID(conn, []int{})
+		users, err := up.ListByID(context.Background(), []int{})
 
 		if err != nil {
 			t.Fatalf("failed to list users: %+v", err)

@@ -1,6 +1,7 @@
 package persistence
 
 import (
+	"context"
 	"database/sql"
 	"time"
 
@@ -13,8 +14,8 @@ import (
 )
 
 // NewPaymentStatusPersistence - ユーザのMySQL関連の実装
-func NewPaymentStatusPersistence() repository.PaymentStatusRepository {
-	return &paymentStatusPersistence{}
+func NewPaymentStatusPersistence(db db.Ext) repository.PaymentStatusRepository {
+	return &paymentStatusPersistence{db: db}
 }
 
 type paymentStatus struct {
@@ -50,13 +51,14 @@ func parsePaymentStatus(ps *paymentStatus) *domain.PaymentStatus {
 }
 
 type paymentStatusPersistence struct {
+	db db.Ext
 }
 
 var _ repository.PaymentStatusRepository = &paymentStatusPersistence{}
 
 // Insert - 新しい支払情報の追加
-func (psp *paymentStatusPersistence) Add(db db.Ext, userID, period, authorizer int) error {
-	_, err := db.Exec(
+func (psp *paymentStatusPersistence) Add(ctx context.Context, userID, period, authorizer int) error {
+	_, err := psp.db.Exec(
 		`INSERT INTO payment_statuses (
 			user_id,
 			period,
@@ -77,10 +79,10 @@ func (psp *paymentStatusPersistence) Add(db db.Ext, userID, period, authorizer i
 }
 
 // GetLatestByUser - 最新の支払情報の取得
-func (psp *paymentStatusPersistence) GetLatestByUser(db db.Ext, userID int) (*domain.PaymentStatus, error) {
+func (psp *paymentStatusPersistence) GetLatestByUser(ctx context.Context, userID int) (*domain.PaymentStatus, error) {
 	ps := &paymentStatus{}
 
-	err := db.QueryRowx(`
+	err := psp.db.QueryRowx(`
 		SELECT * FROM payment_statuses WHERE user_id=? ORDER BY period DESC LIMIT 1
 	`, userID).StructScan(ps)
 
@@ -96,10 +98,10 @@ func (psp *paymentStatusPersistence) GetLatestByUser(db db.Ext, userID int) (*do
 }
 
 // ListForPeriod returns all users paying in the period
-func (psp *paymentStatusPersistence) ListUsersForPeriod(db db.Ext, period int) ([]*domain.PaymentStatus, error) {
+func (psp *paymentStatusPersistence) ListUsersForPeriod(ctx context.Context, period int) ([]*domain.PaymentStatus, error) {
 	pss := []*paymentStatus{}
 
-	err := sqlx.Select(db, &pss,
+	err := sqlx.Select(psp.db, &pss,
 		`SELECT * FROM payment_statuses WHERE period=? ORDER BY user_id ASC`, period)
 
 	if err != nil {
@@ -115,10 +117,10 @@ func (psp *paymentStatusPersistence) ListUsersForPeriod(db db.Ext, period int) (
 }
 
 // ListForUser returns all periods(ordered by desc) the user paid in
-func (psp *paymentStatusPersistence) ListPeriodsForUser(db db.Ext, userID int) ([]*domain.PaymentStatus, error) {
+func (psp *paymentStatusPersistence) ListPeriodsForUser(ctx context.Context, userID int) ([]*domain.PaymentStatus, error) {
 	pss := []*paymentStatus{}
 
-	err := sqlx.Select(db, &pss,
+	err := sqlx.Select(psp.db, &pss,
 		`SELECT * FROM payment_statuses WHERE user_id=? ORDER BY period DESC`, userID)
 
 	if err != nil {
