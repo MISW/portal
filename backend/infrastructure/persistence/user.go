@@ -226,6 +226,10 @@ func (up *userPersistence) List(db db.Ext) ([]*domain.User, error) {
 
 // ListByID - ユーザIDが一致する全てのユーザを取得
 func (up *userPersistence) ListByID(db db.Ext, ids []int) ([]*domain.User, error) {
+	if len(ids) == 0 {
+		return []*domain.User{}, nil
+	}
+
 	query, args, err := sqlx.In(`SELECT * FROM users WHERE id IN (?)`, ids)
 
 	if err != nil {
