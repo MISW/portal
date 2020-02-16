@@ -38,7 +38,7 @@ fi
 
 if [ "$MIGRATION" = "1" ]; then
     echo "Running migration"
-    cat /schema/*.sql | mysqldef --user=$DATABSE_USER --password=$DATABSE_PASSWORD --host=$DATABASE_HOST -P $DATABASE_PORT $DATABASE_DB
+    cat /schema/*.sql | mysqldef --user=$DATABSE_USER --password=$DATABASE_PASSWORD --host=$DATABASE_HOST -P $DATABASE_PORT $DATABASE_DB
 fi
 
 if [ "$QUIT" = "1" ]; then
