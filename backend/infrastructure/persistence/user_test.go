@@ -3,13 +3,13 @@
 package persistence_test
 
 import (
+	"context"
 	"testing"
 	"time"
 
 	"github.com/MISW/Portal/backend/domain"
 	"github.com/MISW/Portal/backend/domain/repository"
 	"github.com/MISW/Portal/backend/infrastructure/persistence"
-	"github.com/MISW/Portal/backend/internal/db"
 	"github.com/MISW/Portal/backend/internal/testutil"
 	"github.com/google/go-cmp/cmp"
 )
@@ -36,7 +36,7 @@ var (
 	}
 )
 
-func insertTestUserData(t *testing.T up repository.UserRepository) int {
+func insertTestUserData(t *testing.T, up repository.UserRepository) int {
 	t.Helper()
 
 	id, err := up.Insert(context.Background(), userTemplate)
