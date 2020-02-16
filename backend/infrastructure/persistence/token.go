@@ -26,23 +26,23 @@ type token struct {
 	UpdatedAt time.Time `db:"updated_at"`
 }
 
-func newToken(ps *domain.Token) *token {
+func newToken(t *domain.Token) *token {
 	return &token{
-		UserID:     ps.UserID,
-		Authorizer: ps.Authorizer,
-		Period:     ps.Period,
-		CreatedAt:  ps.CreatedAt,
-		UpdatedAt:  ps.UpdatedAt,
+		UserID:    t.UserID,
+		Token:     t.Token,
+		ExpiredAt: t.ExpiredAt,
+		CreatedAt: t.CreatedAt,
+		UpdatedAt: t.UpdatedAt,
 	}
 }
 
-func parseToken(ps *token) *domain.Token {
+func parseToken(t *token) *domain.Token {
 	return &domain.Token{
-		UserID:     ps.UserID,
-		Authorizer: ps.Authorizer,
-		Period:     ps.Period,
-		CreatedAt:  ps.CreatedAt,
-		UpdatedAt:  ps.UpdatedAt,
+		UserID:    t.UserID,
+		Token:     t.Token,
+		ExpiredAt: t.ExpiredAt,
+		CreatedAt: t.CreatedAt,
+		UpdatedAt: t.UpdatedAt,
 	}
 }
 
@@ -71,12 +71,12 @@ func (tp *tokenPersistence) Add(ctx context.Context, userID int, token string, e
 }
 
 // GetByToken - トークンを検索する
-func (tp *tokenPersistence) GetByToken(ctx context.Context, token string) (*domain.Token, error) {
+func (tp *tokenPersistence) GetByToken(ctx context.Context, tk string) (*domain.Token, error) {
 	res := &token{}
 
-	err := psp.db.QueryRowx(`
+	err := tp.db.QueryRowx(`
 		SELECT * FROM tokens WHERE token=?
-	`, token).StructScan(res)
+	`, tk).StructScan(res)
 
 	if err != nil {
 		if err == sql.ErrNoRows {
@@ -91,7 +91,7 @@ func (tp *tokenPersistence) GetByToken(ctx context.Context, token string) (*doma
 
 // Delete - トークンを削除する
 func (tp *tokenPersistence) Delete(ctx context.Context, token string) error {
-	err := tp.db.Exec(`
+	_, err := tp.db.Exec(`
 		DELETE FROM tokens WHERE token=?
 	`, token)
 
@@ -104,7 +104,7 @@ func (tp *tokenPersistence) Delete(ctx context.Context, token string) error {
 
 // DeleteAll - 特定ユーザのトークンを一生削除する
 func (tp *tokenPersistence) DeleteAll(ctx context.Context, userID string) error {
-	err := tp.db.Exec(`
+	_, err := tp.db.Exec(`
 		DELETE FROM tokens WHERE user_id=?
 	`, userID)
 
