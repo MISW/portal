@@ -66,22 +66,12 @@ func comparePaymentStatus(t *testing.T, expected *domain.PaymentStatus, actual *
 func insertTestPaymentStatusData(t *testing.T, conn db.Ext, psp repository.PaymentStatusRepository) {
 	t.Helper()
 
-	err := psp.Add(conn, paymentStatusTemplate.UserID, paymentStatusTemplate.Period, paymentStatusTemplate.Authorizer)
+	for _, ps := range paymentStatusTemplates {
+		err := psp.Add(conn, ps.UserID, ps.Period, ps.Authorizer)
 
-	if err != nil {
-		t.Fatalf("inserting a new user to db failed: %+v", err)
-	}
-
-	err = psp.Add(conn, paymentStatusTemplate2.UserID, paymentStatusTemplate2.Period, paymentStatusTemplate2.Authorizer)
-
-	if err != nil {
-		t.Fatalf("inserting a new user to db failed: %+v", err)
-	}
-
-	err = psp.Add(conn, paymentStatusTemplate3.UserID, paymentStatusTemplate3.Period, paymentStatusTemplate3.Authorizer)
-
-	if err != nil {
-		t.Fatalf("inserting a new user to db failed: %+v", err)
+		if err != nil {
+			t.Fatalf("inserting a new user to db failed(%v): %+v", ps, err)
+		}
 	}
 }
 
