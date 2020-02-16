@@ -86,6 +86,10 @@ func (tp *tokenPersistence) GetByToken(ctx context.Context, tk string) (*domain.
 		return nil, xerrors.Errorf("failed to find the token: %w", err)
 	}
 
+	if res.ExpiredAt.Before(time.Now()) {
+		return nil, domain.ErrNoToken
+	}
+
 	return parseToken(res), nil
 }
 
