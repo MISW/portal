@@ -5,6 +5,7 @@ import (
 
 	"github.com/MISW/Portal/backend/domain"
 	"github.com/MISW/Portal/backend/domain/repository"
+	"github.com/MISW/Portal/backend/internal/oidc"
 )
 
 // SessionUsecase - login/signup/logoutなどのセッション周りの処理
@@ -23,16 +24,18 @@ type SessionUsecase interface {
 }
 
 // NewSessionUsecase - ユーザ関連のユースケースを初期化
-func NewSessionUsecase(userRepository repository.UserRepository, tokenRepository repository.TokenRepository) UserUsecase {
+func NewSessionUsecase(userRepository repository.UserRepository, tokenRepository repository.TokenRepository, authenticator oidc.Authenticator) SessionUsecase {
 	return &sessionUsecase{
 		userRepository:  userRepository,
 		tokenRepository: tokenRepository,
+		authenticator:   authenticator,
 	}
 }
 
 type sessionUsecase struct {
 	userRepository  repository.UserRepository
 	tokenRepository repository.TokenRepository
+	authenticator   oidc.Authenticator
 }
 
 var _ SessionUsecase = &sessionUsecase{}
