@@ -218,7 +218,7 @@ func (up *userPersistence) List(db db.Ext) ([]*domain.User, error) {
 
 	res := make([]*domain.User, 0, len(users))
 
-	for i := range res {
+	for i := range users {
 		res = append(res, convertUser(users[i]))
 	}
 
@@ -250,7 +250,7 @@ func (up *userPersistence) ListByID(db db.Ext, ids []int) ([]*domain.User, error
 
 	res := make([]*domain.User, 0, len(users))
 
-	for i := range res {
+	for i := range users {
 		res = append(res, convertUser(users[i]))
 	}
 
