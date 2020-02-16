@@ -7,6 +7,7 @@ import (
 	"golang.org/x/xerrors"
 )
 
+// GenerateRandomToken - セキュアなトークンの自動生成
 func GenerateRandomToken() (string, error) {
 	var b [128]byte
 	if _, err := rand.Read(b[:]); err != nil {
