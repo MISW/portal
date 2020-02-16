@@ -19,5 +19,5 @@ type TokenRepository interface {
 	Delete(ctx context.Context, token string) error
 
 	// DeleteAll - 特定ユーザのトークンを一生削除する
-	DeleteAll(ctx context.Context, userID string) error
+	DeleteAll(ctx context.Context, userID int) error
 }
