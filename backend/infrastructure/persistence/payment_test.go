@@ -127,7 +127,7 @@ func TestPaymentStatusList(t *testing.T) {
 		}
 
 		comparePaymentStatus(t, paymentStatusTemplate, pss[0])
-		comparePaymentStatus(t, paymentStatusTemplate2, pss[1])
+		comparePaymentStatus(t, paymentStatusTemplate3, pss[1])
 	})
 
 	t.Run("for_user", func(t *testing.T) {
@@ -137,7 +137,7 @@ func TestPaymentStatusList(t *testing.T) {
 
 		insertTestPaymentStatusData(t, conn, psp)
 
-		pss, err := psp.ListUsersForPeriod(conn, paymentStatusTemplate.Period)
+		pss, err := psp.ListPeriodsForUser(conn, paymentStatusTemplate.Period)
 
 		if err != nil {
 			t.Fatalf("failed to list payment statuses: %+v", err)
@@ -148,6 +148,6 @@ func TestPaymentStatusList(t *testing.T) {
 		}
 
 		comparePaymentStatus(t, paymentStatusTemplate, pss[0])
-		comparePaymentStatus(t, paymentStatusTemplate3, pss[1])
+		comparePaymentStatus(t, paymentStatusTemplate2, pss[1])
 	})
 }
