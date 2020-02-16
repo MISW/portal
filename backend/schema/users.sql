@@ -16,6 +16,7 @@ CREATE TABLE users (
     other_circles VARCHAR(512) NOT NULL,
     workshops VARCHAR(128) NOT NULL,
     squads VARCHAR(512) NOT NULL,
+    role VARCHAR(128) NOT NULL,
 
     slack_id VARCHAR(128),
 
