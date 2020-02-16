@@ -78,7 +78,7 @@ func (psp *paymentStatusPersistence) Add(db db.Ext, userID, period, authorizer i
 
 // GetLatestByUser - 最新の支払情報の取得
 func (psp *paymentStatusPersistence) GetLatestByUser(db db.Ext, userID int) (*domain.PaymentStatus, error) {
-	ps := &domain.PaymentStatus{}
+	ps := &paymentStatus{}
 
 	err := db.QueryRowx(`
 		SELECT * FROM payment_statuses WHERE user_id=? ORDER BY period DESC LIMIT 1
@@ -92,12 +92,12 @@ func (psp *paymentStatusPersistence) GetLatestByUser(db db.Ext, userID int) (*do
 		return nil, xerrors.Errorf("failed to get payment status for the user(%d): %w", userID, err)
 	}
 
-	return ps, nil
+	return parsePaymentStatus(ps), nil
 }
 
 // ListForPeriod returns all users paying in the period
 func (psp *paymentStatusPersistence) ListUsersForPeriod(db db.Ext, period int) ([]*domain.PaymentStatus, error) {
-	pss := []*domain.PaymentStatus{}
+	pss := []*paymentStatus{}
 
 	err := sqlx.Select(db, &pss,
 		`SELECT * FROM payment_statuses WHERE period=? ORDER BY user_id ASC`, period)
@@ -106,12 +106,17 @@ func (psp *paymentStatusPersistence) ListUsersForPeriod(db db.Ext, period int) (
 		return nil, xerrors.Errorf("failed to get payment statuses for the period(%d): %w", period, err)
 	}
 
-	return pss, nil
+	res := make([]*domain.PaymentStatus, 0, len(pss))
+	for i := range pss {
+		res = append(res, parsePaymentStatus(pss[i]))
+	}
+
+	return res, nil
 }
 
 // ListForUser returns all periods(ordered by desc) the user paid in
 func (psp *paymentStatusPersistence) ListPeriodsForUser(db db.Ext, userID int) ([]*domain.PaymentStatus, error) {
-	pss := []*domain.PaymentStatus{}
+	pss := []*paymentStatus{}
 
 	err := sqlx.Select(db, &pss,
 		`SELECT * FROM payment_statuses WHERE user_id=? ORDER BY period DESC`, userID)
@@ -120,5 +125,10 @@ func (psp *paymentStatusPersistence) ListPeriodsForUser(db db.Ext, userID int) (
 		return nil, xerrors.Errorf("failed to get payment statuses for the userID(%d): %w", userID, err)
 	}
 
-	return pss, nil
+	res := make([]*domain.PaymentStatus, 0, len(pss))
+	for i := range pss {
+		res = append(res, parsePaymentStatus(pss[i]))
+	}
+
+	return res, nil
 }
