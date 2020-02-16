@@ -220,7 +220,7 @@ func TestList(t *testing.T) {
 
 		up := persistence.NewUserPersistence()
 
-		_ := insertTestUserData(t, conn, up)
+		insertTestUserData(t, conn, up)
 
 		users, err := up.ListByID(conn, []int{})
 
