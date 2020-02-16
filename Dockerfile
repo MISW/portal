@@ -6,7 +6,7 @@ RUN wget https://github.com/k0kubun/sqldef/releases/download/${SQLDEF_VERSION}/m
     && rm mysqldef_linux_amd64.tar.gz
 
 
-ENV DBENV_VERSION v0.5.12
+ENV DBENV_VERSION v1.0.0
 RUN wget https://github.com/cs3238-tsuzu/dbenv/releases/download/${DBENV_VERSION}/dbenv_linux_x86_64.tar.gz \
     && tar -C /usr/local/bin -xzvf dbenv_linux_x86_64.tar.gz \
     && rm dbenv_linux_x86_64.tar.gz
