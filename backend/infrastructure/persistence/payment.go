@@ -59,8 +59,8 @@ func (psp *paymentStatusPersistence) Add(db db.Ext, userID, period, authorizer i
 	_, err := db.Exec(
 		`INSERT INTO payment_statuses (
 			user_id,
-			authorizer,
-			period
+			period,
+			authorizer
 		) VALUES (
 			?,?,?
 		)`, userID, period, authorizer)
