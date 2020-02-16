@@ -1,6 +1,10 @@
 package domain
 
-import "time"
+import (
+	"time"
+
+	"golang.org/x/xerrors"
+)
 
 // Token - 認証用トークン
 type Token struct {
@@ -11,3 +15,8 @@ type Token struct {
 	CreatedAt time.Time `json:"created_at" yaml:"created_at"`
 	UpdatedAt time.Time `json:"updated_at" yaml:"updated_at"`
 }
+
+var (
+	// ErrNoToken - トークンが見つからなかった
+	ErrNoToken = xerrors.New("no such token")
+)
