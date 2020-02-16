@@ -42,3 +42,4 @@ COPY ./scripts/* /bin/
 ADD ./config /config
 
 ENTRYPOINT [ "/bin/docker-entrypoint.sh" ]
+CMD [ "-w", "-m" ]
