@@ -7,15 +7,15 @@ import (
 
 // PaymentStatusRepository - サークル費支払関連のDB操作
 type PaymentStatusRepository interface {
-	// Insert - 新しい支払情報の追加
-	Insert(DB db.Ext, userID, authorizer int, period int) (*domain.PaymentStatus, error)
+	// Add - 新しい支払情報の追加
+	Add(db db.Ext, userID, period int, authorizer int) error
 
-	// GetLastByUser - 最新の支払情報の取得
-	GetLastByUser(DB db.Ext, userID int) (int, error)
+	// GetLatestByUser - 最新の支払情報の取得
+	GetLatestByUser(db db.Ext, userID int) (*domain.PaymentStatus, error)
 
 	// ListForPeriod returns all users paying in the period
-	ListUsersForPeriod(DB db.Ext, period int) ([]int, error)
+	ListUsersForPeriod(db db.Ext, period int) ([]*domain.PaymentStatus, error)
 
 	// ListForUser returns all periods the user paid in
-	ListPeriodsForUser(DB db.Ext, userID int) ([]int, error)
+	ListPeriodsForUser(db db.Ext, userID int) ([]*domain.PaymentStatus, error)
 }
