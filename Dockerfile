@@ -1,10 +1,14 @@
 FROM golang:1.13 as tools
 
+ENV DOCKERIZE_VERSION v0.6.1
+RUN wget https://github.com/jwilder/dockerize/releases/download/${DOCKERIZE_VERSION}/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
+    && tar -C /usr/local/bin -xzvf dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
+    && rm dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
+
 ENV SQLDEF_VERSION v0.5.12
 RUN wget https://github.com/k0kubun/sqldef/releases/download/${SQLDEF_VERSION}/mysqldef_linux_amd64.tar.gz \
     && tar -C /usr/local/bin -xzvf mysqldef_linux_amd64.tar.gz \
     && rm mysqldef_linux_amd64.tar.gz
-
 
 ENV DBENV_VERSION v1.0.0
 RUN wget https://github.com/cs3238-tsuzu/dbenv/releases/download/${DBENV_VERSION}/dbenv_linux_x86_64.tar.gz \
@@ -32,6 +36,7 @@ ADD ./frontend /frontend
 
 FROM alpine:3.9
 
+COPY --from=tools /usr/local/bin/dockerize /bin
 COPY --from=tools /usr/local/bin/mysqldef /bin
 COPY --from=tools /usr/local/bin/dbenv /bin
 COPY --from=build-backend /backend/portal /bin/portal 
