@@ -8,5 +8,6 @@ require (
 	github.com/google/go-cmp v0.4.0 // indirect
 	github.com/jmoiron/sqlx v1.2.0
 	github.com/kylelemons/godebug v1.1.0 // indirect
+	golang.org/x/net v0.0.0-20200202094626-16171245cfb2 // indirect
 	golang.org/x/xerrors v0.0.0-20191204190536-9bdfabe68543
 )

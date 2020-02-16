@@ -12,6 +12,7 @@ import (
 	"github.com/MISW/Portal/backend/internal/db"
 	"github.com/MISW/Portal/backend/internal/testutil"
 	"github.com/google/go-cmp/cmp"
+	"golang.org/x/net/context"
 )
 
 var (
@@ -63,11 +64,11 @@ func comparePaymentStatus(t *testing.T, expected *domain.PaymentStatus, actual *
 	}
 }
 
-func insertTestPaymentStatusData(t *testing.T, conn db.Ext, psp repository.PaymentStatusRepository) {
+func insertTestPaymentStatusData(t *testing.T, psp repository.PaymentStatusRepository) {
 	t.Helper()
 
 	for _, ps := range paymentStatusTemplates {
-		err := psp.Add(conn, ps.UserID, ps.Period, ps.Authorizer)
+		err := psp.Add(context.Background(), ps.UserID, ps.Period, ps.Authorizer)
 
 		if err != nil {
 			t.Fatalf("inserting a new user to db failed(%v): %+v", ps, err)
@@ -78,11 +79,11 @@ func insertTestPaymentStatusData(t *testing.T, conn db.Ext, psp repository.Payme
 func TestPaymentStatusInsert(t *testing.T) {
 	conn := testutil.NewSQLConn(t)
 
-	psp := persistence.NewPaymentStatusPersistence()
+	psp := persistence.NewPaymentStatusPersistence(conn)
 
-	insertTestPaymentStatusData(t, conn, psp)
+	insertTestPaymentStatusData(t, psp)
 
-	err := psp.Add(conn, paymentStatusTemplate.UserID, paymentStatusTemplate.Period, paymentStatusTemplate.Authorizer)
+	err := psp.Add(context.Background(), paymentStatusTemplate.UserID, paymentStatusTemplate.Period, paymentStatusTemplate.Authorizer)
 
 	if err != domain.ErrAlreadyPaid {
 		t.Fatalf("conflicting insert should return ErrAlreadyPaid but got %+v", err)
@@ -93,11 +94,11 @@ func TestPaymentStatusGet(t *testing.T) {
 	t.Run("get_latest", func(t *testing.T) {
 		conn := testutil.NewSQLConn(t)
 
-		psp := persistence.NewPaymentStatusPersistence()
+		psp := persistence.NewPaymentStatusPersistence(conn)
 
-		insertTestPaymentStatusData(t, conn, psp)
+		insertTestPaymentStatusData(t, psp)
 
-		ps, err := psp.GetLatestByUser(conn, paymentStatusTemplate.UserID)
+		ps, err := psp.GetLatestByUser(context.Background(), paymentStatusTemplate.UserID)
 
 		if err != nil {
 			t.Fatalf("failed to get latest payment status by id: %+v", err)
@@ -112,11 +113,11 @@ func TestPaymentStatusList(t *testing.T) {
 	t.Run("for_period", func(t *testing.T) {
 		conn := testutil.NewSQLConn(t)
 
-		psp := persistence.NewPaymentStatusPersistence()
+		psp := persistence.NewPaymentStatusPersistence(conn)
 
-		insertTestPaymentStatusData(t, conn, psp)
+		insertTestPaymentStatusData(t, psp)
 
-		pss, err := psp.ListUsersForPeriod(conn, paymentStatusTemplate.Period)
+		pss, err := psp.ListUsersForPeriod(context.Background(), paymentStatusTemplate.Period)
 
 		if err != nil {
 			t.Fatalf("failed to list payment statuses: %+v", err)
@@ -133,11 +134,11 @@ func TestPaymentStatusList(t *testing.T) {
 	t.Run("for_user", func(t *testing.T) {
 		conn := testutil.NewSQLConn(t)
 
-		psp := persistence.NewPaymentStatusPersistence()
+		psp := persistence.NewPaymentStatusPersistence(conn)
 
-		insertTestPaymentStatusData(t, conn, psp)
+		insertTestPaymentStatusData(t, psp)
 
-		pss, err := psp.ListPeriodsForUser(conn, paymentStatusTemplate.UserID)
+		pss, err := psp.ListPeriodsForUser(context.Background(), paymentStatusTemplate.UserID)
 
 		if err != nil {
 			t.Fatalf("failed to list payment statuses: %+v", err)

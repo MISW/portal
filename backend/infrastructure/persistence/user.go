@@ -1,6 +1,7 @@
 package persistence
 
 import (
+	"context"
 	"database/sql"
 	"strings"
 	"time"
@@ -14,8 +15,8 @@ import (
 )
 
 // NewUserPersistence - ユーザのMySQL関連の実装
-func NewUserPersistence() repository.UserRepository {
-	return &userPersistence{}
+func NewUserPersistence(db db.Ext) repository.UserRepository {
+	return &userPersistence{db: db}
 }
 
 type user struct {
@@ -98,15 +99,16 @@ func convertUser(u *user) *domain.User {
 }
 
 type userPersistence struct {
+	db db.Ext
 }
 
 var _ repository.UserRepository = &userPersistence{}
 
 // Insert inserts new user to DB
-func (up *userPersistence) Insert(db db.Ext, user *domain.User) (int, error) {
+func (up *userPersistence) Insert(ctx context.Context, user *domain.User) (int, error) {
 	u := newUser(user)
 
-	res, err := sqlx.NamedExec(db, `
+	res, err := sqlx.NamedExec(up.db, `
 	INSERT INTO users (
 		email,
 		generation,
@@ -160,10 +162,10 @@ func (up *userPersistence) Insert(db db.Ext, user *domain.User) (int, error) {
 }
 
 // GetByID finds existing user by user's id
-func (up *userPersistence) GetByID(db db.Ext, id int) (*domain.User, error) {
+func (up *userPersistence) GetByID(ctx context.Context, id int) (*domain.User, error) {
 	var u user
 	if err := sqlx.Get(
-		db,
+		up.db,
 		&u,
 		`SELECT * FROM users WHERE id=?`,
 		id,
@@ -175,10 +177,10 @@ func (up *userPersistence) GetByID(db db.Ext, id int) (*domain.User, error) {
 }
 
 // GetBySlackID finds existing user by user's Slack ID(neither name nor display name)
-func (up *userPersistence) GetBySlackID(db db.Ext, slackID string) (*domain.User, error) {
+func (up *userPersistence) GetBySlackID(ctx context.Context, slackID string) (*domain.User, error) {
 	var u user
 	if err := sqlx.Get(
-		db,
+		up.db,
 		&u,
 		`SELECT * FROM users WHERE slack_id=?`,
 		slackID,
@@ -190,10 +192,10 @@ func (up *userPersistence) GetBySlackID(db db.Ext, slackID string) (*domain.User
 }
 
 // GetByID finds existing user by user's Email
-func (up *userPersistence) GetByEmail(db db.Ext, email string) (*domain.User, error) {
+func (up *userPersistence) GetByEmail(ctx context.Context, email string) (*domain.User, error) {
 	var u user
 	if err := sqlx.Get(
-		db,
+		up.db,
 		&u,
 		`SELECT * FROM users WHERE email=?`,
 		email,
@@ -205,11 +207,11 @@ func (up *userPersistence) GetByEmail(db db.Ext, email string) (*domain.User, er
 }
 
 // List returns all users
-func (up *userPersistence) List(db db.Ext) ([]*domain.User, error) {
+func (up *userPersistence) List(ctx context.Context) ([]*domain.User, error) {
 	users := []*user{}
 
 	if err := sqlx.Select(
-		db,
+		up.db,
 		&users,
 		`SELECT * FROM users`,
 	); err != nil {
@@ -226,7 +228,7 @@ func (up *userPersistence) List(db db.Ext) ([]*domain.User, error) {
 }
 
 // ListByID - ユーザIDが一致する全てのユーザを取得
-func (up *userPersistence) ListByID(db db.Ext, ids []int) ([]*domain.User, error) {
+func (up *userPersistence) ListByID(ctx context.Context, ids []int) ([]*domain.User, error) {
 	if len(ids) == 0 {
 		return []*domain.User{}, nil
 	}
@@ -240,7 +242,7 @@ func (up *userPersistence) ListByID(db db.Ext, ids []int) ([]*domain.User, error
 	users := []*user{}
 
 	if err := sqlx.Select(
-		db,
+		up.db,
 		&users,
 		query,
 		args...,
