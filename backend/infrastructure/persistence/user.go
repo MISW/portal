@@ -206,7 +206,8 @@ func (up *userPersistence) GetByEmail(db db.Ext, email string) (*domain.User, er
 
 // List returns all users
 func (up *userPersistence) List(db db.Ext) ([]*domain.User, error) {
-	var users []user
+	users := []*user{}
+
 	if err := sqlx.Select(
 		db,
 		&users,
@@ -236,7 +237,7 @@ func (up *userPersistence) ListByID(db db.Ext, ids []int) ([]*domain.User, error
 		return nil, xerrors.Errorf("failed to prepare query for IN clause: %w", err)
 	}
 
-	var users []user
+	users := []*user{}
 
 	if err := sqlx.Select(
 		db,
@@ -250,7 +251,7 @@ func (up *userPersistence) ListByID(db db.Ext, ids []int) ([]*domain.User, error
 	res := make([]*domain.User, 0, len(users))
 
 	for i := range res {
-		res = append(res, convertUser(&users[i]))
+		res = append(res, convertUser(users[i]))
 	}
 
 	return res, nil
