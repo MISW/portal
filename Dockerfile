@@ -5,6 +5,13 @@ RUN wget https://github.com/k0kubun/sqldef/releases/download/${SQLDEF_VERSION}/m
     && tar -C /usr/local/bin -xzvf mysqldef_linux_amd64.tar.gz \
     && rm mysqldef_linux_amd64.tar.gz
 
+
+ENV DBENV_VERSION v0.5.12
+RUN wget https://github.com/cs3238-tsuzu/dbenv/releases/download/${DBENV_VERSION}/dbenv_linux_x86_64.tar.gz \
+    && tar -C /usr/local/bin -xzvf dbenv_linux_x86_64.tar.gz \
+    && rm dbenv_linux_x86_64.tar.gz
+
+
 FROM golang:1.13 as build-backend
 
 ADD ./backend /backend
@@ -26,11 +33,12 @@ ADD ./frontend /frontend
 FROM alpine:3.9
 
 COPY --from=tools /usr/local/bin/mysqldef /bin
-COPY --from=build-backend /backend/portal /portal 
+COPY --from=tools /usr/local/bin/dbenv /bin
+COPY --from=build-backend /backend/portal /bin/portal 
 COPY --from=build-backend /backend/schema /schema
 # COPY --from=build-frontend /frontend/dist /dist 
 # COPY --from=build-frontend /resources /resources
+COPY ./scripts/* /bin/
 ADD ./config /config
 
-ENTRYPOINT [ "sh", "-c" ]
-CMD [ "/portal --addr=:${PORT:-80} --frontend=dir:///dist/ --resources=/resources --config-dir=/config" ]
+ENTRYPOINT [ "/bin/docker-entrypoint.sh" ]
