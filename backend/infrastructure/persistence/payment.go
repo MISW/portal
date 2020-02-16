@@ -109,12 +109,12 @@ func (psp *paymentStatusPersistence) ListUsersForPeriod(db db.Ext, period int) (
 	return pss, nil
 }
 
-// ListForUser returns all periods the user paid in
+// ListForUser returns all periods(ordered by desc) the user paid in
 func (psp *paymentStatusPersistence) ListPeriodsForUser(db db.Ext, userID int) ([]*domain.PaymentStatus, error) {
 	pss := []*domain.PaymentStatus{}
 
 	err := sqlx.Select(db, &pss,
-		`SELECT * FROM payment_statuses WHERE user_id=? ORDER BY period ASC`, userID)
+		`SELECT * FROM payment_statuses WHERE user_id=? ORDER BY period DESC`, userID)
 
 	if err != nil {
 		return nil, xerrors.Errorf("failed to get payment statuses for the userID(%d): %w", userID, err)
