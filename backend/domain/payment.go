@@ -9,7 +9,7 @@ import (
 // PaymentStatus - 支払い情報
 type PaymentStatus struct {
 	UserID     int `json:"user_id" yaml:"user_id"`
-	Authorizer int `json:"authorizer"`
+	Authorizer int `json:"authorizer" yaml:"authorizer"`
 
 	// Period - 支払い区間(201904, 201910のようにYYYYMM)
 	Period int `json:"period" yaml:"period"`

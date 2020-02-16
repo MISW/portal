@@ -19,14 +19,14 @@ func NewPaymentStatusPersistence() repository.PaymentStatusRepository {
 
 type paymentStatus struct {
 	ID         int `db:"id"`
-	UserID     int `json:"user_id" yaml:"user_id"`
-	Authorizer int `json:"authorizer"`
+	UserID     int `db:"user_id"`
+	Authorizer int `db:"authorizer"`
 
 	// Period - 支払い区間(201904, 201910のようにYYYYMM)
-	Period int `json:"period" yaml:"period"`
+	Period int `db:"period"`
 
-	CreatedAt time.Time `json:"created_at" yaml:"created_at"`
-	UpdatedAt time.Time `json:"updated_at" yaml:"updated_at"`
+	CreatedAt time.Time `db:"created_at"`
+	UpdatedAt time.Time `db:"updated_at"`
 }
 
 func newPaymentStatus(ps *domain.PaymentStatus) *paymentStatus {
