@@ -14,7 +14,6 @@ usage() {
     echo "-w: Wait for database to start" 1>&2
     exit 1
 }
-env
 
 while getopts :mqwh OPT
 do
