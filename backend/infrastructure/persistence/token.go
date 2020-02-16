@@ -103,7 +103,7 @@ func (tp *tokenPersistence) Delete(ctx context.Context, token string) error {
 }
 
 // DeleteAll - 特定ユーザのトークンを一生削除する
-func (tp *tokenPersistence) DeleteAll(ctx context.Context, userID string) error {
+func (tp *tokenPersistence) DeleteAll(ctx context.Context, userID int) error {
 	_, err := tp.db.Exec(`
 		DELETE FROM tokens WHERE user_id=?
 	`, userID)
