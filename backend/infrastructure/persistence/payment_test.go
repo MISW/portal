@@ -85,7 +85,7 @@ func insertTestPaymentStatusData(t *testing.T, conn db.Ext, psp repository.Payme
 	}
 }
 
-func TestInsert(t *testing.T) {
+func TestPaymentStatusInsert(t *testing.T) {
 	conn := testutil.NewSQLConn(t)
 
 	psp := persistence.NewPaymentStatusPersistence()
@@ -99,7 +99,7 @@ func TestInsert(t *testing.T) {
 	}
 }
 
-func TestGet(t *testing.T) {
+func TestPaymentStatusGet(t *testing.T) {
 	t.Run("get_latest", func(t *testing.T) {
 		conn := testutil.NewSQLConn(t)
 
@@ -118,7 +118,7 @@ func TestGet(t *testing.T) {
 
 }
 
-func TestList(t *testing.T) {
+func TestPaymentStatusList(t *testing.T) {
 	t.Run("for_period", func(t *testing.T) {
 		conn := testutil.NewSQLConn(t)
 
