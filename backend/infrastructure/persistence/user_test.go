@@ -32,6 +32,7 @@ var (
 		OtherCircles:         "WCE",
 		Workshops:            []string{"Programming", "CG", "MIDI"},
 		Squads:               []string{"Web", "Webデザイン"},
+		Role:                 domain.Admin,
 		SlackID:              "UAJXXXXXX",
 	}
 )

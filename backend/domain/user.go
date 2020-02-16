@@ -18,6 +18,23 @@ const (
 	Other SexType = "other" // not used
 )
 
+// RoleType - サークル員の種別
+type RoleType string
+
+const (
+	// Admin - 管理者(会員資格あり)
+	Admin RoleType = "admin"
+
+	// Member - 正式なメンバー(会員資格あり)
+	Member RoleType = "member"
+
+	// Retired - 引退済みのメンバー(会員資格あり)
+	Retired RoleType = "retired"
+
+	// NotMember - 未払い状態のメンバー(会員資格なし)
+	NotMember RoleType = "not_member"
+)
+
 // University - 所属大学
 type University struct {
 	Name       string `json:"name" yaml:"name"`
@@ -40,6 +57,7 @@ type User struct {
 	OtherCircles         string      `json:"other_circles" yaml:"other_circles"`
 	Workshops            []string    `json:"workshops" yaml:"workshops"`
 	Squads               []string    `json:"squads" yaml:"squads"`
+	Role                 RoleType    `json:"role" yaml:"role"`
 
 	// 外部サービス
 	SlackID string `json:"slack_id" yaml:"slack_id"`

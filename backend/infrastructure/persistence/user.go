@@ -35,6 +35,7 @@ type user struct {
 	OtherCircles         string `db:"other_circles"`
 	Workshops            string `db:"workshops"`
 	Squads               string `db:"squads"`
+	Role                 string `db:"role"`
 
 	// 外部サービス
 	SlackID sql.NullString `db:"slack_id"`
@@ -60,6 +61,7 @@ func newUser(u *domain.User) *user {
 		OtherCircles:         u.OtherCircles,
 		Workshops:            strings.Join(u.Workshops, "\n"),
 		Squads:               strings.Join(u.Squads, "\n"),
+		Role:                 string(u.Role),
 
 		SlackID: sql.NullString{
 			String: u.SlackID,
@@ -90,6 +92,7 @@ func convertUser(u *user) *domain.User {
 		OtherCircles:         u.OtherCircles,
 		Workshops:            strings.Split(u.Workshops, "\n"),
 		Squads:               strings.Split(u.Squads, "\n"),
+		Role:                 domain.RoleType(u.Role),
 
 		SlackID: u.SlackID.String,
 
