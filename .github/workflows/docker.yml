@@ -14,5 +14,5 @@ jobs:
       - if: github.actor != 'dependabot-preview[bot]'
         name: Docker build
         run: |
-          docker build . -t docker.pkg.github.com/misw/mmorpg2019/mmorpg2019-bundled:${{ github.sha }}
-          docker push docker.pkg.github.com/misw/mmorpg2019/mmorpg2019-bundled:${{ github.sha }}
+          docker build . -t docker.pkg.github.com/misw/portal/portal-server:${{ github.sha }}
+          docker push docker.pkg.github.com/misw/portal/portal-server:${{ github.sha }}
