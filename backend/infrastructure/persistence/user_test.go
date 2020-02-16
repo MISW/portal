@@ -215,7 +215,7 @@ func TestList(t *testing.T) {
 
 	})
 
-	t.Run("by_id_zero", func(t *testing.T) {
+	t.Run("by_no_id", func(t *testing.T) {
 		conn := testutil.NewSQLConn(t)
 
 		up := persistence.NewUserPersistence()

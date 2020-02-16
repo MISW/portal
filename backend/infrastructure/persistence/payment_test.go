@@ -137,7 +137,7 @@ func TestPaymentStatusList(t *testing.T) {
 
 		insertTestPaymentStatusData(t, conn, psp)
 
-		pss, err := psp.ListPeriodsForUser(conn, paymentStatusTemplate.Period)
+		pss, err := psp.ListPeriodsForUser(conn, paymentStatusTemplate.UserID)
 
 		if err != nil {
 			t.Fatalf("failed to list payment statuses: %+v", err)
