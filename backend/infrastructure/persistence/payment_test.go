@@ -133,7 +133,7 @@ func TestPaymentStatusList(t *testing.T) {
 		}
 
 		if expected := 2; len(pss) != expected {
-			t.Fatal("list should return %d payment statuses, but returned %d", expected, len(pss))
+			t.Fatalf("list should return %d payment statuses, but returned %d", expected, len(pss))
 		}
 
 		comparePaymentStatus(t, paymentStatusTemplate, pss[0])
@@ -154,7 +154,7 @@ func TestPaymentStatusList(t *testing.T) {
 		}
 
 		if expected := 2; len(pss) != expected {
-			t.Fatal("list should return %d payment statuses, but returned %d", expected, len(pss))
+			t.Fatalf("list should return %d payment statuses, but returned %d", expected, len(pss))
 		}
 
 		comparePaymentStatus(t, paymentStatusTemplate, pss[0])

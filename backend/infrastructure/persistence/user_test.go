@@ -171,7 +171,7 @@ func TestList(t *testing.T) {
 		}
 
 		if expected := 1; len(users) != expected {
-			t.Fatal("list should return %d users, but returned %d", expected, len(users))
+			t.Fatalf("list should return %d users, but returned %d", expected, len(users))
 		}
 
 		expectedUser := *userTemplate
@@ -200,7 +200,7 @@ func TestList(t *testing.T) {
 		}
 
 		if expected := 1; len(users) != expected {
-			t.Fatal("list should return %d users, but returned %d", expected, len(users))
+			t.Fatalf("list should return %d users, but returned %d", expected, len(users))
 		}
 
 		expectedUser := *userTemplate
@@ -229,7 +229,7 @@ func TestList(t *testing.T) {
 		}
 
 		if expected := 0; len(users) != expected {
-			t.Fatal("list should return %d users, but returned %d", expected, len(users))
+			t.Fatalf("list should return %d users, but returned %d", expected, len(users))
 		}
 
 	})
