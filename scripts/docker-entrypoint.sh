@@ -1,7 +1,7 @@
 #!/bin/sh
 
 if [[ -z "${DATABASE_URL}" ]]; then
-  DATABASE_URL="${CLEARDB_DATABASE_URL}"
+  export DATABASE_URL="${CLEARDB_DATABASE_URL}"
 fi
 
 eval "$(dbenv -)"
@@ -14,6 +14,7 @@ usage() {
     echo "-w: Wait for database to start" 1>&2
     exit 1
 }
+env
 
 while getopts :mqwh OPT
 do
@@ -33,7 +34,7 @@ done
 
 if [ "$WAIT" = "1" ]; then
     echo "Waiting for db"
-    dockerize -wait tcp://$DATABSE_HOST:$DATABASE_PORT -timeout 60s
+    dockerize -wait tcp://$DATABASE_HOST:$DATABASE_PORT -timeout 60s
 fi
 
 if [ "$MIGRATION" = "1" ]; then
