@@ -58,7 +58,7 @@ func comparePaymentStatus(t *testing.T, expected *domain.PaymentStatus, actual *
 	expected.CreatedAt = actual.CreatedAt
 	expected.UpdatedAt = actual.UpdatedAt
 
-	if diff := cmp.Diff(&expected, actual); diff != "" {
+	if diff := cmp.Diff(expected, actual); diff != "" {
 		t.Fatalf("users differ: %v", diff)
 	}
 }
