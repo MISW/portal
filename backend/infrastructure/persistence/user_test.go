@@ -49,6 +49,26 @@ func insertTestUserData(t *testing.T, up repository.UserRepository) int {
 	return id
 }
 
+func compareUser(t *testing.T, expected, actual *domain.User) {
+	e := *expected
+	expected = &e
+
+	if actual.CreatedAt.Before(time.Now().Add(-1*time.Minute)) || actual.CreatedAt.After(time.Now()) {
+		t.Fatalf("created_at is invalid: %+v", actual.CreatedAt)
+	}
+	if actual.UpdatedAt.Before(time.Now().Add(-1*time.Minute)) || actual.UpdatedAt.After(time.Now()) {
+		t.Fatalf("updated_at is invalid: %+v", actual.UpdatedAt)
+	}
+
+	expected.CreatedAt = actual.CreatedAt
+	expected.UpdatedAt = actual.UpdatedAt
+	expected.ID = actual.ID
+
+	if diff := cmp.Diff(expected, actual); diff != "" {
+		t.Fatalf("users differ: %v", diff)
+	}
+}
+
 func TestInsert(t *testing.T) {
 	conn := testutil.NewSQLConn(t)
 
@@ -58,6 +78,12 @@ func TestInsert(t *testing.T) {
 
 	if id == 0 {
 		t.Fatalf("id shoule not be 0, but %d", id)
+	}
+
+	_, err := up.Insert(context.Background(), userTemplate)
+
+	if err != domain.ErrEmailConflicts {
+		t.Fatalf("the second insert should return ErrEmailConflicts: %+v", err)
 	}
 }
 
@@ -75,22 +101,7 @@ func TestGet(t *testing.T) {
 			t.Fatalf("failed to get user by id: %+v", err)
 		}
 
-		if user.CreatedAt.Before(time.Now().Add(-1*time.Minute)) || user.CreatedAt.After(time.Now()) {
-			t.Fatalf("created_at is invalid: %+v", user.CreatedAt)
-		}
-		if user.UpdatedAt.Before(time.Now().Add(-1*time.Minute)) || user.UpdatedAt.After(time.Now()) {
-			t.Fatalf("updated_at is invalid: %+v", user.UpdatedAt)
-		}
-
-		expectedUser := *userTemplate
-
-		expectedUser.CreatedAt = user.CreatedAt
-		expectedUser.UpdatedAt = user.UpdatedAt
-		expectedUser.ID = id
-
-		if diff := cmp.Diff(&expectedUser, user); diff != "" {
-			t.Fatalf("users differ: %v", diff)
-		}
+		compareUser(t, userTemplate, user)
 	})
 
 	t.Run("get_by_email", func(t *testing.T) {
@@ -98,7 +109,7 @@ func TestGet(t *testing.T) {
 
 		up := persistence.NewUserPersistence(conn)
 
-		id := insertTestUserData(t, up)
+		insertTestUserData(t, up)
 
 		user, err := up.GetByEmail(context.Background(), userTemplate.Email)
 
@@ -106,22 +117,7 @@ func TestGet(t *testing.T) {
 			t.Fatalf("failed to get user by id: %+v", err)
 		}
 
-		if user.CreatedAt.Before(time.Now().Add(-1*time.Minute)) || user.CreatedAt.After(time.Now()) {
-			t.Fatalf("created_at is invalid: %+v", user.CreatedAt)
-		}
-		if user.UpdatedAt.Before(time.Now().Add(-1*time.Minute)) || user.UpdatedAt.After(time.Now()) {
-			t.Fatalf("updated_at is invalid: %+v", user.UpdatedAt)
-		}
-
-		expectedUser := *userTemplate
-
-		expectedUser.CreatedAt = user.CreatedAt
-		expectedUser.UpdatedAt = user.UpdatedAt
-		expectedUser.ID = id
-
-		if diff := cmp.Diff(&expectedUser, user); diff != "" {
-			t.Fatalf("users differ: %v", diff)
-		}
+		compareUser(t, userTemplate, user)
 	})
 
 	t.Run("get_by_slack", func(t *testing.T) {
@@ -129,7 +125,7 @@ func TestGet(t *testing.T) {
 
 		up := persistence.NewUserPersistence(conn)
 
-		id := insertTestUserData(t, up)
+		insertTestUserData(t, up)
 
 		user, err := up.GetBySlackID(context.Background(), userTemplate.SlackID)
 
@@ -137,22 +133,7 @@ func TestGet(t *testing.T) {
 			t.Fatalf("failed to get user by id: %+v", err)
 		}
 
-		if user.CreatedAt.Before(time.Now().Add(-1*time.Minute)) || user.CreatedAt.After(time.Now()) {
-			t.Fatalf("created_at is invalid: %+v", user.CreatedAt)
-		}
-		if user.UpdatedAt.Before(time.Now().Add(-1*time.Minute)) || user.UpdatedAt.After(time.Now()) {
-			t.Fatalf("updated_at is invalid: %+v", user.UpdatedAt)
-		}
-
-		expectedUser := *userTemplate
-
-		expectedUser.CreatedAt = user.CreatedAt
-		expectedUser.UpdatedAt = user.UpdatedAt
-		expectedUser.ID = id
-
-		if diff := cmp.Diff(&expectedUser, user); diff != "" {
-			t.Fatalf("users differ: %v", diff)
-		}
+		compareUser(t, userTemplate, user)
 	})
 
 }
@@ -163,7 +144,7 @@ func TestList(t *testing.T) {
 
 		up := persistence.NewUserPersistence(conn)
 
-		id := insertTestUserData(t, up)
+		insertTestUserData(t, up)
 
 		users, err := up.List(context.Background())
 
@@ -175,16 +156,7 @@ func TestList(t *testing.T) {
 			t.Fatalf("list should return %d users, but returned %d", expected, len(users))
 		}
 
-		expectedUser := *userTemplate
-
-		expectedUser.CreatedAt = users[0].CreatedAt
-		expectedUser.UpdatedAt = users[0].UpdatedAt
-		expectedUser.ID = id
-
-		if diff := cmp.Diff(&expectedUser, users[0]); diff != "" {
-			t.Fatalf("users differ: %v", diff)
-		}
-
+		compareUser(t, userTemplate, users[0])
 	})
 
 	t.Run("by_id_normal", func(t *testing.T) {
@@ -204,16 +176,7 @@ func TestList(t *testing.T) {
 			t.Fatalf("list should return %d users, but returned %d", expected, len(users))
 		}
 
-		expectedUser := *userTemplate
-
-		expectedUser.CreatedAt = users[0].CreatedAt
-		expectedUser.UpdatedAt = users[0].UpdatedAt
-		expectedUser.ID = id
-
-		if diff := cmp.Diff(&expectedUser, users[0]); diff != "" {
-			t.Fatalf("users differ: %v", diff)
-		}
-
+		compareUser(t, userTemplate, users[0])
 	})
 
 	t.Run("by_no_id", func(t *testing.T) {
@@ -232,7 +195,6 @@ func TestList(t *testing.T) {
 		if expected := 0; len(users) != expected {
 			t.Fatalf("list should return %d users, but returned %d", expected, len(users))
 		}
-
 	})
 
 }
