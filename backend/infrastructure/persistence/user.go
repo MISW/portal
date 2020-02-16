@@ -73,7 +73,7 @@ func newUser(u *domain.User) *user {
 	}
 }
 
-func convertUser(u *user) *domain.User {
+func parseUser(u *user) *domain.User {
 	return &domain.User{
 		ID:         u.ID,
 		Email:      u.Email,
@@ -178,7 +178,7 @@ func (up *userPersistence) GetByID(ctx context.Context, id int) (*domain.User, e
 		return nil, xerrors.Errorf("failed to find user by id: %w", err)
 	}
 
-	return convertUser(&u), nil
+	return parseUser(&u), nil
 }
 
 // GetBySlackID finds existing user by user's Slack ID(neither name nor display name)
@@ -193,7 +193,7 @@ func (up *userPersistence) GetBySlackID(ctx context.Context, slackID string) (*d
 		return nil, xerrors.Errorf("failed to find user by Slack ID: %w", err)
 	}
 
-	return convertUser(&u), nil
+	return parseUser(&u), nil
 }
 
 // GetByID finds existing user by user's Email
@@ -208,7 +208,7 @@ func (up *userPersistence) GetByEmail(ctx context.Context, email string) (*domai
 		return nil, xerrors.Errorf("failed to find user by Email: %w", err)
 	}
 
-	return convertUser(&u), nil
+	return parseUser(&u), nil
 }
 
 // List returns all users
@@ -226,7 +226,7 @@ func (up *userPersistence) List(ctx context.Context) ([]*domain.User, error) {
 	res := make([]*domain.User, 0, len(users))
 
 	for i := range users {
-		res = append(res, convertUser(users[i]))
+		res = append(res, parseUser(users[i]))
 	}
 
 	return res, nil
@@ -258,7 +258,7 @@ func (up *userPersistence) ListByID(ctx context.Context, ids []int) ([]*domain.U
 	res := make([]*domain.User, 0, len(users))
 
 	for i := range users {
-		res = append(res, convertUser(users[i]))
+		res = append(res, parseUser(users[i]))
 	}
 
 	return res, nil

@@ -13,7 +13,7 @@ import (
 	"golang.org/x/xerrors"
 )
 
-// NewPaymentStatusPersistence - ユーザのMySQL関連の実装
+// NewPaymentStatusPersistence - 支払状況のMySQL関連の実装
 func NewPaymentStatusPersistence(db db.Ext) repository.PaymentStatusRepository {
 	return &paymentStatusPersistence{db: db}
 }
