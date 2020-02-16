@@ -1,6 +1,10 @@
 package domain
 
-import "time"
+import (
+	"time"
+
+	"golang.org/x/xerrors"
+)
 
 // PaymentStatus - 支払い情報
 type PaymentStatus struct {
@@ -13,3 +17,11 @@ type PaymentStatus struct {
 	CreatedAt time.Time `json:"created_at" yaml:"created_at"`
 	UpdatedAt time.Time `json:"updated_at" yaml:"updated_at"`
 }
+
+var (
+	// ErrAlreadyPaid - 既に支払が完了している
+	ErrAlreadyPaid = xerrors.New("the user already paid")
+
+	// ErrNoPaymentStatus - 一件も支払履歴がない
+	ErrNoPaymentStatus = xerrors.New("not payment status")
+)

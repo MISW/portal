@@ -8,20 +8,20 @@ import (
 // UserRepository - User関連のDB操作
 type UserRepository interface {
 	// Insert - 新規サークル員の追加
-	Insert(DB db.Ext, user *domain.User) (int, error)
+	Insert(db db.Ext, user *domain.User) (int, error)
 
 	// GetByID - IDで検索
-	GetByID(DB db.Ext, id int) (*domain.User, error)
+	GetByID(db db.Ext, id int) (*domain.User, error)
 
 	// GetByID - Slack IDで検索
-	GetBySlackID(DB db.Ext, slackID string) (*domain.User, error)
+	GetBySlackID(db db.Ext, slackID string) (*domain.User, error)
 
 	// GetByEmail - Emailで検索
-	GetByEmail(DB db.Ext, email string) (*domain.User, error)
+	GetByEmail(db db.Ext, email string) (*domain.User, error)
 
 	// List - 全ユーザを取得
-	List(DB db.Ext) ([]*domain.User, error)
+	List(db db.Ext) ([]*domain.User, error)
 
 	// ListByID - ユーザIDが一致する全てのユーザを取得
-	ListByID(DB db.Ext, ids []int) ([]*domain.User, error)
+	ListByID(db db.Ext, ids []int) ([]*domain.User, error)
 }
