@@ -18,7 +18,7 @@ var (
 	tokenTemplate = &domain.Token{
 		UserID:    10,
 		Token:     "VERY_SECURE_TOKEN",
-		ExpiredAt: time.Unix(time.Now().Unix()0),
+		ExpiredAt: time.Unix(time.Now().Unix(), 0),
 	}
 
 	tokenTemplates = []*domain.Token{
