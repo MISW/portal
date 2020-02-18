@@ -175,6 +175,10 @@ func (up *userPersistence) GetByID(ctx context.Context, id int) (*domain.User, e
 		`SELECT * FROM users WHERE id=?`,
 		id,
 	); err != nil {
+		if err == sql.ErrNoRows {
+			return nil, domain.ErrNoUser
+		}
+
 		return nil, xerrors.Errorf("failed to find user by id: %w", err)
 	}
 
@@ -190,6 +194,10 @@ func (up *userPersistence) GetBySlackID(ctx context.Context, slackID string) (*d
 		`SELECT * FROM users WHERE slack_id=?`,
 		slackID,
 	); err != nil {
+		if err == sql.ErrNoRows {
+			return nil, domain.ErrNoUser
+		}
+
 		return nil, xerrors.Errorf("failed to find user by Slack ID: %w", err)
 	}
 
@@ -205,6 +213,10 @@ func (up *userPersistence) GetByEmail(ctx context.Context, email string) (*domai
 		`SELECT * FROM users WHERE email=?`,
 		email,
 	); err != nil {
+		if err == sql.ErrNoRows {
+			return nil, domain.ErrNoUser
+		}
+
 		return nil, xerrors.Errorf("failed to find user by Email: %w", err)
 	}
 

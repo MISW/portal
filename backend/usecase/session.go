@@ -99,15 +99,61 @@ func (us *sessionUsecase) Signup(ctx context.Context, user *domain.User) (token 
 
 // Login - OpenID ConnectのリダイレクトURLを生成する
 func (us *sessionUsecase) Login(ctx context.Context) (redirectURL, state string, err error) {
-	panic("not implemented")
+	url, state, err := us.authenticator.Login(ctx)
+
+	if err != nil {
+		return "", "", xerrors.Errorf("failed to generate redirect url for OpenID Connect: %w", err)
+	}
+
+	return url, state, nil
 }
+
+const (
+	auth0Prefix = "oauth2|slack|"
+)
 
 // Callback - OpenID Connectでのcallbackを受け取る
 func (us *sessionUsecase) Callback(ctx context.Context, expectedState, actualState, code string) (token string, err error) {
-	panic("not implemented")
+	res, err := us.authenticator.Callback(ctx, expectedState, actualState, code)
+
+	if err != nil {
+		return "", xerrors.Errorf("failed to verify your token: %w", err)
+	}
+
+	if !strings.HasPrefix(res.IDToken.Subject, auth0Prefix) {
+		return "", xerrors.Errorf("sub is invalid: %s", res.IDToken.Subject)
+	}
+
+	slackID := strings.TrimPrefix(res.IDToken.Subject, auth0Prefix)
+
+	user, err := us.userRepository.GetBySlackID(ctx, slackID)
+
+	if err != nil {
+		return "", xerrors.Errorf("failed to find user account associated with SlackID(%s): %w", slackID, err)
+	}
+
+	token, err = tokenutil.GenerateRandomToken()
+
+	if err != nil {
+		return "", xerrors.Errorf("failed to generate token: %w", err)
+	}
+
+	err = us.tokenRepository.Add(ctx, user.ID, token, time.Now().Add(10*24*time.Hour))
+
+	if err != nil {
+		return "", xerrors.Errorf("failed to insert new token: %w", err)
+	}
+
+	return token, nil
 }
 
 // Logout - トークンを無効化する
 func (us *sessionUsecase) Logout(ctx context.Context, token string) error {
-	panic("not implemented")
+	err := us.tokenRepository.Delete(ctx, token)
+
+	if err != nil {
+		return xerrors.Errorf("failed to delete the token: %w", err)
+	}
+
+	return nil
 }

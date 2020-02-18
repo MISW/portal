@@ -72,4 +72,7 @@ var (
 
 	// ErrSlackIDConflicts - Slack IDが既に登録されている
 	ErrSlackIDConflicts = xerrors.New("slack id conflicts")
+
+	// ErrNoUser - Userが存在しない
+	ErrNoUser = xerrors.New("no such user")
 )
