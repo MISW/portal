@@ -319,7 +319,7 @@ func (up *userPersistence) UpdateSlackID(ctx context.Context, id int, slackID st
 			return domain.ErrSlackIDConflicts
 		}
 
-		return xerrors.Errorf("failed to update user(%d): %w", user.ID, err)
+		return xerrors.Errorf("failed to update user(%d): %w", id, err)
 	}
 
 	return nil
@@ -334,7 +334,7 @@ func (up *userPersistence) UpdateRole(ctx context.Context, id int, role domain.R
 	`, string(role), id)
 
 	if err != nil {
-		return xerrors.Errorf("failed to update user(%d): %w", user.ID, err)
+		return xerrors.Errorf("failed to update user(%d): %w", id, err)
 	}
 
 	return nil
