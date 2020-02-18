@@ -25,4 +25,13 @@ type UserRepository interface {
 
 	// ListByID - ユーザIDが一致する全てのユーザを取得
 	ListByID(ctx context.Context, ids []int) ([]*domain.User, error)
+
+	// Update - ユーザのプロフィールを更新する(idで識別)
+	Update(ctx context.Context, user *domain.User) error
+
+	// UpdateSlackID - ユーザのSlack IDを更新する
+	UpdateSlackID(ctx context.Context, id int, slackID string) error
+
+	// UpdateRole - ユーザのroleを更新する
+	UpdateRole(ctx context.Context, id int, role domain.RoleType) error
 }

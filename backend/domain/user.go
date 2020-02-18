@@ -69,4 +69,7 @@ type User struct {
 var (
 	// ErrEmailConflicts - emailが既に登録されている
 	ErrEmailConflicts = xerrors.New("email conflicts")
+
+	// ErrSlackIDConflicts - Slack IDが既に登録されている
+	ErrSlackIDConflicts = xerrors.New("slack id conflicts")
 )

@@ -263,3 +263,79 @@ func (up *userPersistence) ListByID(ctx context.Context, ids []int) ([]*domain.U
 
 	return res, nil
 }
+
+// Update - ユーザのプロフィールを更新する
+func (up *userPersistence) Update(ctx context.Context, user *domain.User) error {
+	u := newUser(user)
+
+	_, err := sqlx.NamedExec(up.db, `
+	UPDATE users SET
+		email=:email,
+		generation=:generation,
+		name=:name,
+		kana=:kana,
+		handle=:handle,
+		sex=:sex,
+		university_name=:university_name,
+		university_department=:university_department,
+		university_subject=:university_subject,
+		student_id=:student_id,
+		emergency_phone_number=:emergency_phone_number,
+		other_circles=:other_circles,
+		workshops=:workshops,
+		squads=:squads,
+		role=:role,
+		slack_id=:slack_id
+	WHERE id=:id
+	`, u)
+
+	if err != nil {
+		if mysqlErr, ok := err.(*mysql.MySQLError); ok && mysqlErr.Number == 1062 {
+			return domain.ErrEmailConflicts
+		}
+
+		return xerrors.Errorf("failed to update user(%d): %w", user.ID, err)
+	}
+
+	return nil
+}
+
+// UpdateSlackID - ユーザのSlack IDを更新する
+func (up *userPersistence) UpdateSlackID(ctx context.Context, id int, slackID string) error {
+	var sid *string
+
+	if len(slackID) != 0 {
+		sid = &slackID
+	}
+
+	_, err := up.db.Exec(`
+	UPDATE users SET
+		slack_id=?
+	WHERE id=?
+	`, sid, id)
+
+	if err != nil {
+		if mysqlErr, ok := err.(*mysql.MySQLError); ok && mysqlErr.Number == 1062 {
+			return domain.ErrSlackIDConflicts
+		}
+
+		return xerrors.Errorf("failed to update user(%d): %w", user.ID, err)
+	}
+
+	return nil
+}
+
+// UpdateRole - ユーザのroleを更新する
+func (up *userPersistence) UpdateRole(ctx context.Context, id int, role domain.RoleType) error {
+	_, err := up.db.Exec(`
+	UPDATE users SET
+		role=?
+	WHERE id=?
+	`, string(role), id)
+
+	if err != nil {
+		return xerrors.Errorf("failed to update user(%d): %w", user.ID, err)
+	}
+
+	return nil
+}
