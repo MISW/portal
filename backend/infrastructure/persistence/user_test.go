@@ -35,6 +35,27 @@ var (
 		Role:                 domain.Admin,
 		SlackID:              "UAJXXXXXX",
 	}
+
+	userTemplate2 = &domain.User{
+		Email:      "mischan2@example.com",
+		Generation: 54,
+		Name:       "みす ちゃん2号",
+		Kana:       "ミス チャンニゴウ",
+		Handle:     "mischan2",
+		Sex:        domain.Women,
+		University: &domain.University{
+			Name:       "早稲田大学",
+			Department: "基幹理工学部",
+			Subject:    "情報通信学科",
+		},
+		StudentID:            "1W180000-1",
+		EmergencyPhoneNumber: "0120117117",
+		OtherCircles:         "WCE",
+		Workshops:            []string{"Programming", "CG", "MIDI"},
+		Squads:               []string{"Web", "Webデザイン"},
+		Role:                 domain.Admin,
+		SlackID:              "UAJXXXXXX",
+	}
 )
 
 func insertTestUserData(t *testing.T, up repository.UserRepository) int {
@@ -197,4 +218,82 @@ func TestList(t *testing.T) {
 		}
 	})
 
+}
+
+func TestUpdate(t *testing.T) {
+	t.Run("normal", func(t *testing.T) {
+		conn := testutil.NewSQLConn(t)
+
+		up := persistence.NewUserPersistence(conn)
+
+		id := insertTestUserData(t, up)
+
+		tmp2 := *userTemplate2
+
+		tmp2.ID = id
+
+		err := up.Update(context.Background(), &tmp2)
+
+		if err != nil {
+			t.Fatalf("failed to update user: %+v", err)
+		}
+
+		user, err := up.GetByID(context.Background(), id)
+
+		if err != nil {
+			t.Fatalf("failed to get user: %+v", err)
+		}
+
+		compareUser(t, &tmp2, user)
+	})
+
+	t.Run("role", func(t *testing.T) {
+		conn := testutil.NewSQLConn(t)
+
+		up := persistence.NewUserPersistence(conn)
+
+		id := insertTestUserData(t, up)
+
+		updatedRole := domain.NotMember
+		err := up.UpdateRole(context.Background(), id, updatedRole)
+
+		if err != nil {
+			t.Fatalf("failed to update role: %+v", err)
+		}
+
+		user, err := up.GetByID(context.Background(), id)
+
+		if err != nil {
+			t.Fatalf("failed to get user: %+v", err)
+		}
+
+		if user.Role != updatedRole {
+			t.Fatalf("role is not updated: %s(expected: %s)", user.Role, updatedRole)
+		}
+	})
+
+	t.Run("slack id", func(t *testing.T) {
+		conn := testutil.NewSQLConn(t)
+
+		up := persistence.NewUserPersistence(conn)
+
+		id := insertTestUserData(t, up)
+
+		updatedSlackID := "SLACKID"
+		err := up.UpdateSlackID(context.Background(), id, updatedSlackID)
+
+		if err != nil {
+			t.Fatalf("failed to update slack id: %+v", err)
+		}
+
+		user, err := up.GetByID(context.Background(), id)
+
+		if err != nil {
+			t.Fatalf("failed to get user: %+v", err)
+		}
+
+		if user.SlackID != updatedSlackID {
+			t.Fatalf("slack id is not updated: %s(expected: %s)", user.SlackID, updatedSlackID)
+		}
+	})
 }
