@@ -27,6 +27,9 @@ type SessionUsecase interface {
 
 	// Logout - トークンを無効化する
 	Logout(ctx context.Context, token string) error
+
+	// Validate - トークンの有効性を検証しユーザを取得する
+	Validate(ctx context.Context, token string) (user *domain.User, err error)
 }
 
 // NewSessionUsecase - ユーザ関連のユースケースを初期化
@@ -156,4 +159,25 @@ func (us *sessionUsecase) Logout(ctx context.Context, token string) error {
 	}
 
 	return nil
+}
+
+// Validate - トークンの有効性を検証しユーザを取得する
+func (us *sessionUsecase) Validate(ctx context.Context, token string) (user *domain.User, err error) {
+	tk, err := us.tokenRepository.GetByToken(ctx, token)
+
+	if err == domain.ErrNoToken {
+		return nil, fronterrors.NewForbidden("トークンが無効です")
+	}
+
+	if err != nil {
+		return nil, xerrors.Errorf("failed to find token: %w", err)
+	}
+
+	user, err = us.userRepository.GetByID(ctx, tk.UserID)
+
+	if err != nil {
+		return nil, xerrors.Errorf("failed to find user: %w", err)
+	}
+
+	return user, nil
 }
