@@ -26,3 +26,4 @@ CREATE TABLE users (
 
 ALTER TABLE users ADD INDEX handle_index(handle);
 ALTER TABLE users ADD INDEX generation_index(generation);
+ALTER TABLE users ADD INDEX role_index(role);
