@@ -24,7 +24,7 @@ func RespondMessage(ctx echo.Context, err error) error {
 
 func respondMessage(e echo.Context, code int, message string) error {
 	return e.JSON(code, map[string]string{
-		"code":    http.StatusText(code),
+		"status":  http.StatusText(code),
 		"message": message,
 	})
 }
