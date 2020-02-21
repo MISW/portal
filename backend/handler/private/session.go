@@ -40,6 +40,7 @@ func (s *sessionHandler) Logout(e echo.Context) error {
 
 	err = s.su.Logout(e.Request().Context(), ck.Value)
 
+	ck.Value = ""
 	ck.Expires = time.Now().Add(-1 * time.Hour)
 	e.SetCookie(ck)
 
