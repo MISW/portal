@@ -2,6 +2,7 @@ package public
 
 import (
 	"net/http"
+	"time"
 
 	"github.com/MISW/Portal/backend/internal/cookies"
 	"github.com/MISW/Portal/backend/internal/fronterrors"
@@ -79,4 +80,15 @@ func (s *sessionHandler) Callback(e echo.Context) error {
 		)
 	}
 
+	cookie = new(http.Cookie)
+
+	cookie.HttpOnly = true
+	cookie.Secure = true
+	cookie.Name = cookies.TokenCookieKey
+	cookie.Value = token
+	cookie.MaxAge = int(30 * 24 * time.Hour / time.Second)
+
+	e.SetCookie(cookie)
+
+	return e.Redirect(http.StatusTemporaryRedirect, "/")
 }
