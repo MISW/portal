@@ -75,7 +75,7 @@ func (tp *tokenPersistence) GetByToken(ctx context.Context, tk string) (*domain.
 	res := &token{}
 
 	err := tp.db.QueryRowx(`
-		SELECT * FROM tokens WHERE token=? AND expired_at < CURRENT_TIMESTAMP
+		SELECT * FROM tokens WHERE token=? AND expired_at > CURRENT_TIMESTAMP
 	`, tk).StructScan(res)
 
 	if err != nil {
