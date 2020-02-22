@@ -19,6 +19,7 @@ import (
 	"github.com/labstack/gommon/log"
 	"go.uber.org/dig"
 	"golang.org/x/xerrors"
+	"gopkg.in/yaml.v2"
 )
 
 func initDig(cfg *config.Config, addr string) *dig.Container {
@@ -101,6 +102,9 @@ func initDig(cfg *config.Config, addr string) *dig.Container {
 
 func initHandler(cfg *config.Config, addr string) *echo.Echo {
 	e := echo.New()
+
+	c, _ := yaml.Marshal(e.Routes())
+	e.Logger.Infof("addr: %s,\nconfig: %s", addr, c)
 
 	digc := initDig(cfg, addr)
 
