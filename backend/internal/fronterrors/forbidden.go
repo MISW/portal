@@ -19,7 +19,7 @@ type Forbidden struct {
 }
 
 var _ error = &Forbidden{}
-var _ ErrorResponse = &BadRequest{}
+var _ ErrorResponse = &Forbidden{}
 
 func (e Forbidden) Error() string {
 	return e.message
