@@ -1,4 +1,4 @@
-package main
+package cmd
 
 import (
 	"context"
@@ -9,6 +9,7 @@ import (
 	"github.com/MISW/Portal/backend/interfaces/api/private"
 	"github.com/MISW/Portal/backend/interfaces/api/public"
 	"github.com/MISW/Portal/backend/internal/db"
+	"github.com/MISW/Portal/backend/internal/middleware"
 	"github.com/MISW/Portal/backend/internal/oidc"
 	"github.com/MISW/Portal/backend/usecase"
 	_ "github.com/go-sql-driver/mysql"
@@ -70,14 +71,28 @@ func initDig(cfg *config.Config, addr string) *dig.Container {
 	c.Provide(private.NewSessionHandler)
 	c.Provide(public.NewSessionHandler)
 
+	c.Provide(middleware.NewAuthMiddleware)
+
 	return c
 }
 
 func initHandler(cfg *config.Config, addr string) *echo.Echo {
 	e := echo.New()
 
-	e.Group("/api/public/", middleware.KeyAuth(func(key string, c echo.Context) (bool, error) {
-		return key == "valid-key", nil
-	}))
+	digc := initDig(cfg, addr)
 
+	digc.Invoke(func(auth middleware.AuthMiddleware, sh private.SessionHandler) {
+		g := e.Group("/api/private/", auth.Authenticate)
+
+		g.POST("/logout", sh.Logout)
+	})
+
+	digc.Invoke(func(sh public.SessionHandler) {
+		g := e.Group("/api/public/")
+
+		g.POST("/login", sh.Login)
+		g.POST("/callback", sh.Callback)
+	})
+
+	return e
 }

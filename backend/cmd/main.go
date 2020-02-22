@@ -4,7 +4,6 @@ import (
 	"os"
 
 	"github.com/MISW/Portal/backend/config"
-	"github.com/labstack/echo/v4"
 )
 
 // Run - エントリーポイント
@@ -27,5 +26,9 @@ func Run() {
 	}
 	addr = ":" + addr
 
-	initHandler(cfg, addr)
+	handler := initHandler(cfg, addr)
+
+	if err := handler.Start(addr); err != nil {
+		panic(err)
+	}
 }

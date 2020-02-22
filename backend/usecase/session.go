@@ -166,7 +166,7 @@ func (us *sessionUsecase) Validate(ctx context.Context, token string) (user *dom
 	tk, err := us.tokenRepository.GetByToken(ctx, token)
 
 	if err == domain.ErrNoToken {
-		return nil, fronterrors.Unauthorized("トークンが無効です")
+		return nil, fronterrors.NewUnauthorized("トークンが無効です")
 	}
 
 	if err != nil {

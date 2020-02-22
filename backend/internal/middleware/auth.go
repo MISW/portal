@@ -17,6 +17,7 @@ func NewAuthMiddleware(su usecase.SessionUsecase) AuthMiddleware {
 
 // AuthMiddleware - echoの認証middleware
 type AuthMiddleware interface {
+	Authenticate(next echo.HandlerFunc) echo.HandlerFunc
 }
 
 type authMiddleware struct {
