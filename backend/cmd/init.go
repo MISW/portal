@@ -16,6 +16,7 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jmoiron/sqlx"
 	"github.com/labstack/echo/v4"
+	"github.com/labstack/gommon/log"
 	"go.uber.org/dig"
 	"golang.org/x/xerrors"
 )
@@ -94,6 +95,8 @@ func initHandler(cfg *config.Config, addr string) *echo.Echo {
 		g.POST("/login", sh.Login)
 		g.GET("/callback", sh.Callback)
 	})
+
+	e.Logger.SetLevel(log.DEBUG)
 
 	e.Logger.Infof("dig container: %s", digc.String())
 
