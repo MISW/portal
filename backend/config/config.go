@@ -1,7 +1,9 @@
 package config
 
 import (
+	"io"
 	"os"
+	"strings"
 
 	"golang.org/x/xerrors"
 	"gopkg.in/yaml.v2"
@@ -24,15 +26,24 @@ type Config struct {
 
 // ReadConfig - configを読み込む
 func ReadConfig(name string) (*Config, error) {
-	fp, err := os.Open(name)
+	var reader io.Reader
 
-	if err != nil {
-		return nil, xerrors.Errorf("failed to read config: %w", err)
+	if strings.HasPrefix(name, "env://") {
+		reader = strings.NewReader(os.Getenv(strings.TrimPrefix(name, "env://")))
+	} else {
+		fp, err := os.Open(name)
+
+		if err != nil {
+			return nil, xerrors.Errorf("failed to read config: %w", err)
+		}
+
+		reader = fp
+		defer fp.Close()
 	}
 
 	cfg := &Config{}
 
-	err = yaml.NewDecoder(fp).Decode(cfg)
+	err := yaml.NewDecoder(reader).Decode(cfg)
 
 	if err != nil {
 		return nil, xerrors.Errorf("failed to parse config: %w", err)
