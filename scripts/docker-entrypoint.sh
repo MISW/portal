@@ -4,6 +4,10 @@ if [[ -z "${DATABASE_URL}" ]]; then
   export DATABASE_URL="${CLEARDB_DATABASE_URL}"
 fi
 
+if [[ -z "${OIDC_REDIRECT_URL}" ]]; then
+  export DATABASE_URL="https://${HEROKU_APP_NAME}.herokuapp.com/api/public/callback"
+fi
+
 eval "$(dbenv -)"
 
 usage() {

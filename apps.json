@@ -6,7 +6,26 @@
     ],
     "buildpacks": [],
     "description": "",
-    "env": {},
+    "env": {
+        "PORTAL_CONFIG": {
+            "value": "env://PORTAL_CONFIG_YAML"
+        },
+        "PORTAL_CONFIG_YAML": {
+            "value": "{}"
+        },
+        "HEROKU_APP_NAME": {
+            "required": true
+        },
+        "OIDC_CLIENT_ID": {
+            "value": "45zg1XLOuhQD2RBzRc59ZSS2NBSgDGSx"
+        },
+        "OIDC_CLIENT_SECRET": {
+            "value": "DuHpDpN-37yb61pe_x1yTgB65PeYwll-C2taNHmAAMqGWAkl5JKp3mtOCVXrmaUL",
+        },
+        "OIDC_PROVIDER_URL": {
+            "value": "https://misw.auth0.com/"
+        }
+    },
     "formation": {},
     "name": "misw-portal",
     "scripts": {},
