@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"context"
+	"encoding/json"
 	"time"
 
 	"github.com/MISW/Portal/backend/config"
@@ -93,6 +94,11 @@ func initHandler(cfg *config.Config, addr string) *echo.Echo {
 		g.POST("/login", sh.Login)
 		g.GET("/callback", sh.Callback)
 	})
+
+	e.Logger.Infof("dig container: %s", digc.String())
+
+	routes, _ := json.MarshalIndent(e.Routes(), "", "  ")
+	e.Logger.Infof("all routes in echo: %s", string(routes))
 
 	return e
 }
