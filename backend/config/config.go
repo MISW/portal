@@ -53,5 +53,18 @@ func ReadConfig(name string) (*Config, error) {
 		cfg.Database = os.Getenv("DATABASE_URL")
 	}
 
+	if cfg.OpenIDConnect.RedirectURL == "" {
+		cfg.OpenIDConnect.RedirectURL = os.Getenv("OIDC_REDIRECT_URL")
+	}
+	if cfg.OpenIDConnect.ClientID == "" {
+		cfg.OpenIDConnect.ClientID = os.Getenv("OIDC_CLIENT_ID")
+	}
+	if cfg.OpenIDConnect.ClientSecret == "" {
+		cfg.OpenIDConnect.ClientSecret = os.Getenv("OIDC_CLIENT_SECRET")
+	}
+	if cfg.OpenIDConnect.ProviderURL == "" {
+		cfg.OpenIDConnect.ProviderURL = os.Getenv("OIDC_PROVIDER_URL")
+	}
+
 	return cfg, nil
 }
