@@ -74,9 +74,10 @@ func initDig(cfg *config.Config, addr string) *dig.Container {
 }
 
 func initHandler(cfg *config.Config, addr string) *echo.Echo {
-	// e := echo.New()
+	e := echo.New()
 
-	// e.Group("/api/public/", middleware.KeyAuth(func(key string, c echo.Context) (bool, error) {
-	// 	return key == "valid-key", nil
-	// }))
+	e.Group("/api/public/", middleware.KeyAuth(func(key string, c echo.Context) (bool, error) {
+		return key == "valid-key", nil
+	}))
+
 }

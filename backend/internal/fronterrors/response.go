@@ -9,6 +9,8 @@ import (
 // ErrorResponse - エラーメッセージをJSONとして返却するインターフェース
 type ErrorResponse interface {
 	RespondError(e echo.Context) error
+
+	error
 }
 
 // RespondMessage - ステータスコードに紐づけられたエラーであればechoのresponseを返す

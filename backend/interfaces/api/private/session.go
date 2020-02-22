@@ -34,7 +34,7 @@ func (s *sessionHandler) Logout(e echo.Context) error {
 	if err != nil {
 		return fronterrors.RespondMessage(
 			e,
-			fronterrors.NewForbidden("unauthorized"),
+			fronterrors.NewUnauthorized("unauthorized"),
 		)
 	}
 
