@@ -59,21 +59,42 @@ func initDig(cfg *config.Config, addr string) *dig.Container {
 
 		return conn, nil
 	})
-
 	if err != nil {
 		panic(err)
 	}
 
-	c.Provide(persistence.NewPaymentStatusPersistence)
-	c.Provide(persistence.NewTokenPersistence)
-	c.Provide(persistence.NewUserPersistence)
+	err = c.Provide(persistence.NewPaymentStatusPersistence)
+	if err != nil {
+		panic(err)
+	}
 
-	c.Provide(usecase.NewSessionUsecase)
+	err = c.Provide(persistence.NewTokenPersistence)
+	if err != nil {
+		panic(err)
+	}
 
-	c.Provide(private.NewSessionHandler)
-	c.Provide(public.NewSessionHandler)
+	err = c.Provide(persistence.NewUserPersistence)
+	if err != nil {
+		panic(err)
+	}
+	err = c.Provide(usecase.NewSessionUsecase)
+	if err != nil {
+		panic(err)
+	}
 
-	c.Provide(middleware.NewAuthMiddleware)
+	err = c.Provide(private.NewSessionHandler)
+	if err != nil {
+		panic(err)
+	}
+	err = c.Provide(public.NewSessionHandler)
+	if err != nil {
+		panic(err)
+	}
+
+	err = c.Provide(middleware.NewAuthMiddleware)
+	if err != nil {
+		panic(err)
+	}
 
 	return c
 }
@@ -83,18 +104,26 @@ func initHandler(cfg *config.Config, addr string) *echo.Echo {
 
 	digc := initDig(cfg, addr)
 
-	digc.Invoke(func(auth middleware.AuthMiddleware, sh private.SessionHandler) {
+	err := digc.Invoke(func(auth middleware.AuthMiddleware, sh private.SessionHandler) {
 		g := e.Group("/api/private/", auth.Authenticate)
 
 		g.POST("/logout", sh.Logout)
 	})
 
-	digc.Invoke(func(sh public.SessionHandler) {
+	if err != nil {
+		panic(err)
+	}
+
+	err = digc.Invoke(func(sh public.SessionHandler) {
 		g := e.Group("/api/public/")
 
 		g.POST("/login", sh.Login)
 		g.GET("/callback", sh.Callback)
 	})
+
+	if err != nil {
+		panic(err)
+	}
 
 	e.Logger.SetLevel(log.DEBUG)
 
