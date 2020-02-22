@@ -49,5 +49,9 @@ func ReadConfig(name string) (*Config, error) {
 		return nil, xerrors.Errorf("failed to parse config: %w", err)
 	}
 
+	if cfg.Database == "" {
+		cfg.Database = os.Getenv("DATABASE_URL")
+	}
+
 	return cfg, nil
 }
