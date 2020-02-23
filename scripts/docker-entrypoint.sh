@@ -1,7 +1,11 @@
 #!/bin/sh
 
 if [[ -z "${DATABASE_URL}" ]]; then
-  export DATABASE_URL="${CLEARDB_DATABASE_URL}"
+  if [[ -n "${JAWSDB_URL}" ]]; then
+    export DATABASE_URL="${JAWSDB_URL}"
+  else
+    export DATABASE_URL="${CLEARDB_DATABASE_URL}"
+  fi
 fi
 
 if [[ -z "${OIDC_REDIRECT_URL}" ]]; then
