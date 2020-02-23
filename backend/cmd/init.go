@@ -3,8 +3,8 @@ package cmd
 import (
 	"context"
 	"encoding/json"
-	"time"
 	"fmt"
+	"time"
 
 	"github.com/MISW/Portal/backend/config"
 	"github.com/MISW/Portal/backend/infrastructure/persistence"
@@ -111,7 +111,7 @@ func initHandler(cfg *config.Config, addr string) *echo.Echo {
 	digc := initDig(cfg, addr)
 
 	err := digc.Invoke(func(auth middleware.AuthMiddleware, sh private.SessionHandler) {
-		g := e.Group("/api/private/", auth.Authenticate)
+		g := e.Group("/api/private", auth.Authenticate)
 
 		g.POST("/logout", sh.Logout)
 	})
@@ -121,7 +121,7 @@ func initHandler(cfg *config.Config, addr string) *echo.Echo {
 	}
 
 	err = digc.Invoke(func(sh public.SessionHandler) {
-		g := e.Group("/api/public/")
+		g := e.Group("/api/public")
 
 		g.POST("/login", sh.Login)
 		g.GET("/callback", sh.Callback)
