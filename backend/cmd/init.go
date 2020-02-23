@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"net/http"
 	"time"
 
 	"github.com/MISW/Portal/backend/config"
@@ -13,6 +14,7 @@ import (
 	"github.com/MISW/Portal/backend/internal/db"
 	"github.com/MISW/Portal/backend/internal/middleware"
 	"github.com/MISW/Portal/backend/internal/oidc"
+	files "github.com/MISW/Portal/backend/test_files"
 	"github.com/MISW/Portal/backend/usecase"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jmoiron/sqlx"
@@ -130,6 +132,10 @@ func initHandler(cfg *config.Config, addr string) *echo.Echo {
 	if err != nil {
 		panic(err)
 	}
+
+	e.GET("/", echo.HandlerFunc(func(e echo.Context) error {
+		return e.HTML(http.StatusOK, files.Login)
+	}))
 
 	e.Logger.SetLevel(log.DEBUG)
 
