@@ -72,7 +72,7 @@ func (s *sessionHandler) Callback(e echo.Context) error {
 	token, err := s.su.Callback(e.Request().Context(), expectedState, state, code)
 
 	if err != nil {
-		e.Logger().Infof("failed to validate token: %w", err)
+		e.Logger().Infof("failed to validate token: %+v", err)
 
 		return fronterrors.RespondMessage(
 			e,
