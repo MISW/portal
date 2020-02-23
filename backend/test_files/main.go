@@ -7,12 +7,13 @@ const Login = `
 	<button id="btn">Login</button>
 	<script>
 		document.getElementById("btn").addEventListener("click", function(){
-			location.href = (await fetch(
+			location.href = (await (await fetch(
 				'/api/public/login',
 				{
+                    method: 'POST',
 					credentials: 'include'  
 				}
-			)).redirect_url;
+			)).json()).redirect_url;
 		});
 	</script>
 </body>
