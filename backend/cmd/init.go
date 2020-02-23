@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"time"
+	"fmt"
 
 	"github.com/MISW/Portal/backend/config"
 	"github.com/MISW/Portal/backend/infrastructure/persistence"
@@ -52,6 +53,7 @@ func initDig(cfg *config.Config, addr string) *dig.Container {
 	}
 
 	err = c.Provide(func() (db.Ext, error) {
+		fmt.Println(cfg.Database)
 		conn, err := sqlx.Connect("mysql", cfg.Database)
 
 		if err != nil {
