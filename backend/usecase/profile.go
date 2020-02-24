@@ -20,7 +20,7 @@ type ProfileUsecase interface {
 }
 
 // NewProfileUsecase - ユーザ関連のユースケースを初期化
-func NewProfileUsecase(userRepository repository.UserRepository, paymentStatusRepository repository.PaymentStatusRepository) NewProfileUsecase {
+func NewProfileUsecase(userRepository repository.UserRepository, paymentStatusRepository repository.PaymentStatusRepository) ProfileUsecase {
 	return &profileUsecase{
 		userRepository:          userRepository,
 		paymentStatusRepository: paymentStatusRepository,
