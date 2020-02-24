@@ -1,116 +1,121 @@
 import React from 'react';
-import Avatar from '@material-ui/core/Avatar';
-import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
 import Link from '@material-ui/core/Link';
-import Grid from '@material-ui/core/Grid';
-import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
-import Container from '@material-ui/core/Container';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import Paper from '@material-ui/core/Paper';
+import { Stepper, Step, StepLabel } from '@material-ui/core';
+import Button from '@material-ui/core/Button'
 
-function Copyright() {
-  return (
-    <Typography variant="body2" color="textSecondary" align="center">
-      {'Copyright © '}
-      <Link color="inherit" href="https://material-ui.com/">
-        Your Website
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
+
 
 const useStyles = makeStyles(theme => ({
   paper: {
-    marginTop: theme.spacing(8),
+    marginTop: theme.spacing(3),
+    marginBottom: theme.spacing(3),
+    padding: theme.spacing(2),
+    [theme.breakpoints.up(600 + theme.spacing(3) * 2)]: {
+      marginTop: theme.spacing(6),
+      marginBottom: theme.spacing(6),
+      padding: theme.spacing(2)
+    }
+  },
+  stepper: {
+    padding: theme.spacing(3, 0, 5)
+  },
+  buttons: {
     display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
+    justifyContent: 'flex-end'
   },
-  avatar: {
-    margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main,
-  },
-  form: {
-    width: '100%', // Fix IE 11 issue.
-    marginTop: theme.spacing(1),
-  },
-  submit: {
-    margin: theme.spacing(3, 0, 2),
-  },
+  button: {
+    marginTop: theme.spacing(3),
+    marginLeft: theme.spacing(1)
+  }
 }));
 
-export default function SignIn() {
-  const classes = useStyles();
-
-  return (
-    <Container component="main" maxWidth="xs">
-      <CssBaseline />
-      <div className={classes.paper}>
-        <Avatar className={classes.avatar}>
-          あいこん
-        </Avatar>
-        <Typography component="h1" variant="h5">
-          Sign in
-        </Typography>
-        <form className={classes.form} noValidate>
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            id="email"
-            label="Email Address"
-            name="email"
-            autoComplete="email"
-            autoFocus
-          />
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            name="password"
-            label="Password"
-            type="password"
-            id="password"
-            autoComplete="current-password"
-          />
-          <FormControlLabel
-            control={<Checkbox value="remember" color="primary" />}
-            label="Remember me"
-          />
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            color="primary"
-            className={classes.submit}
-          >
-            Sign In
-          </Button>
-          <Grid container>
-            <Grid item xs>
-              <Link href="#" variant="body2">
-                Forgot password?
-              </Link>
-            </Grid>
-            <Grid item>
-              <Link href="#" variant="body2">
-                {"Don't have an account? Sign Up"}
-              </Link>
-            </Grid>
-          </Grid>
-        </form>
-      </div>
-      <Box mt={8}>
-        <Copyright />
-      </Box>
-    </Container>
-  );
+const steps = ['基本情報', '学籍情報', 'サークル内情報', 'QRコード読み取り'] as const
+const getStepContent = (step: number): JSX.Element => {
+  switch (step) {
+    case 0:
+      return <></>;
+    case 1:
+      return <></>;
+    case 2:
+      return <></>;
+    case 3:
+      return <></>;
+    default:
+      throw new Error('Unknown Step');
+  }
 }
+
+const RegisterForm: React.FC<{}> = (props: {}) => {
+  const classes = useStyles();
+  const [activeStep, setActiveStep] = React.useState(0)
+
+  const handleNext = () => {
+    setActiveStep(activeStep + 1)
+  }
+  const handleBack = () => {
+    setActiveStep(activeStep - 1)
+  }
+  return (
+  <>
+    <Paper className={classes.paper}>
+      <Typography component="h1" variant="h4" align="center">
+        Register
+      </Typography>
+      <Stepper activeStep={activeStep}className={classes.stepper}>
+        {
+          steps.map(label => (
+            <Step key={label}>
+              <StepLabel>{label}</StepLabel>
+            </Step>
+          ))
+        }
+      </Stepper>
+      <>
+        {activeStep === steps.length? (
+          <>
+            <Typography variant="h5" >
+              QRコードを会計に読み取ってもらってくれよな!
+            </Typography>
+            <Typography variant="subtitle1">
+              ここにQRコードが出ます
+            </Typography>
+          </>
+        ) : (
+          <>
+            {getStepContent(activeStep)}
+            <div className={classes.buttons}>
+              {activeStep != 0 && (
+                <Button 
+                  variant="contained"
+                  onClick={handleBack}
+                  className={classes.button}
+                >
+                  Back
+                </Button>
+              )}
+              {activeStep != steps.length - 1 && (
+                <Button
+                  variant="contained"
+                  className={classes.button}
+                  color="primary"
+                  onClick={handleNext}
+                >
+                  Next
+                </Button>
+              )}
+            </div>
+          </>
+        )}
+      </>
+    </Paper>
+  </>
+);
+}
+
+export default RegisterForm;
