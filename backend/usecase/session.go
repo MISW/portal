@@ -8,7 +8,7 @@ import (
 
 	"github.com/MISW/Portal/backend/domain"
 	"github.com/MISW/Portal/backend/domain/repository"
-	"github.com/MISW/Portal/backend/internal/fronterrors"
+	"github.com/MISW/Portal/backend/internal/rest"
 	"github.com/MISW/Portal/backend/internal/oidc"
 	"github.com/MISW/Portal/backend/internal/tokenutil"
 	"golang.org/x/xerrors"
@@ -60,7 +60,7 @@ func (us *sessionUsecase) Signup(ctx context.Context, user *domain.User) (token 
 	for i := range user.Squads {
 		for j := range invalidWordsForSquads {
 			if strings.Contains(user.Squads[i], invalidWordsForSquads[j]) {
-				return "", fronterrors.NewBadRequest("班の名前に使えない文字を含んでいます")
+				return "", rest.NewBadRequest("班の名前に使えない文字を含んでいます")
 			}
 		}
 	}
@@ -69,16 +69,16 @@ func (us *sessionUsecase) Signup(ctx context.Context, user *domain.User) (token 
 	user.Role = domain.NotMember
 
 	if user.Sex != domain.Men && user.Sex != domain.Women {
-		return "", fronterrors.NewBadRequest("性別の値が不正です")
+		return "", rest.NewBadRequest("性別の値が不正です")
 	}
 	if !emailValidator.MatchString(user.Email) {
-		return "", fronterrors.NewBadRequest("メールアドレスの形式が不正です")
+		return "", rest.NewBadRequest("メールアドレスの形式が不正です")
 	}
 
 	id, err := us.userRepository.Insert(ctx, user)
 
 	if xerrors.Is(err, domain.ErrEmailConflicts) {
-		return "", fronterrors.NewBadRequest("メールアドレスが既に利用されています")
+		return "", rest.NewBadRequest("メールアドレスが既に利用されています")
 	}
 
 	if err != nil {
@@ -166,7 +166,7 @@ func (us *sessionUsecase) Validate(ctx context.Context, token string) (user *dom
 	tk, err := us.tokenRepository.GetByToken(ctx, token)
 
 	if err == domain.ErrNoToken {
-		return nil, fronterrors.NewUnauthorized("トークンが無効です")
+		return nil, rest.NewUnauthorized("トークンが無効です")
 	}
 
 	if err != nil {

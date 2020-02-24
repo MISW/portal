@@ -1,4 +1,4 @@
-package fronterrors
+package rest
 
 import (
 	"net/http"
@@ -24,9 +24,18 @@ func RespondMessage(ctx echo.Context, err error) error {
 	return e.RespondError(ctx)
 }
 
+// RespondOK - 正常終了した際の結果を返す
+func RespondOK(ctx echo.Context, json map[string]interface{}) error {
+	json["status"] = http.StatusText(code)
+	json["status_code"] = code
+
+	return ctx.JSON(json)
+}
+
 func respondMessage(e echo.Context, code int, message string) error {
-	return e.JSON(code, map[string]string{
-		"status":  http.StatusText(code),
-		"message": message,
+	return e.JSON(code, map[string]interface{}{
+		"status_code": code,
+		"status":      http.StatusText(code),
+		"message":     message,
 	})
 }
