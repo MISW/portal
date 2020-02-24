@@ -19,3 +19,26 @@ const Login = `
 </body>
 </html>
 `
+
+const Callback = `
+<!DOCTYPE html>
+<html>
+<body>
+	<button id="btn">Login</button>
+	<script>
+		const urlParams = new URLSearchParams(window.location.search);
+
+		const code = urlParams.get('code');
+		const state = urlParams.get('state');
+
+		fetch(
+			"/api/public/callback",
+			{
+				credentials: "include",
+				method: "POST"
+			}
+		)
+	</script>
+</body>
+</html>
+`
