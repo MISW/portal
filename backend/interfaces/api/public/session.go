@@ -106,7 +106,7 @@ func (s *sessionHandler) Callback(e echo.Context) error {
 
 	e.SetCookie(cookie)
 
-	return e.Redirect(http.StatusTemporaryRedirect, "/")
+	return rest.RespondOK(e, nil)
 }
 
 func (s *sessionHandler) Signup(e echo.Context) error {
