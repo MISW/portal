@@ -2,7 +2,7 @@ package middleware
 
 import (
 	"github.com/MISW/Portal/backend/internal/cookies"
-	"github.com/MISW/Portal/backend/internal/fronterrors"
+	"github.com/MISW/Portal/backend/internal/rest"
 	"github.com/MISW/Portal/backend/usecase"
 	"github.com/labstack/echo/v4"
 	"golang.org/x/xerrors"
@@ -29,16 +29,16 @@ func (m *authMiddleware) Authenticate(next echo.HandlerFunc) echo.HandlerFunc {
 		ck, err := c.Cookie(cookies.TokenCookieKey)
 
 		if err != nil {
-			return fronterrors.RespondMessage(
+			return rest.RespondMessage(
 				c,
-				fronterrors.NewUnauthorized("ログインしていません"),
+				rest.NewUnauthorized("ログインしていません"),
 			)
 		}
 
 		user, err := m.su.Validate(c.Request().Context(), ck.Value)
 
-		if err, ok := err.(fronterrors.ErrorResponse); ok {
-			return fronterrors.RespondMessage(c, err)
+		if err, ok := err.(rest.ErrorResponse); ok {
+			return rest.RespondMessage(c, err)
 		}
 
 		if err != nil {

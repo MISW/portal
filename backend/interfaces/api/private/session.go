@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/MISW/Portal/backend/internal/cookies"
-	"github.com/MISW/Portal/backend/internal/fronterrors"
+	"github.com/MISW/Portal/backend/internal/rest"
 	"github.com/MISW/Portal/backend/usecase"
 	"github.com/labstack/echo/v4"
 )
@@ -32,9 +32,9 @@ func (s *sessionHandler) Logout(e echo.Context) error {
 	ck, err := e.Cookie(cookies.TokenCookieKey)
 
 	if err != nil {
-		return fronterrors.RespondMessage(
+		return rest.RespondMessage(
 			e,
-			fronterrors.NewUnauthorized("unauthorized"),
+			rest.NewUnauthorized("unauthorized"),
 		)
 	}
 

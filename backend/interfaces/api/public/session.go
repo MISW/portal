@@ -1,11 +1,13 @@
 package public
 
 import (
+	"fmt"
 	"net/http"
 	"time"
 
+	"github.com/MISW/Portal/backend/domain"
 	"github.com/MISW/Portal/backend/internal/cookies"
-	"github.com/MISW/Portal/backend/internal/fronterrors"
+	"github.com/MISW/Portal/backend/internal/rest"
 	"github.com/MISW/Portal/backend/usecase"
 	"github.com/labstack/echo/v4"
 	"golang.org/x/xerrors"
@@ -16,6 +18,8 @@ type SessionHandler interface {
 	Login(e echo.Context) error
 
 	Callback(e echo.Context) error
+
+	Signup(e echo.Context) error
 }
 
 // NewSessionHandler - SessionHandlerを初期化
@@ -61,9 +65,9 @@ func (s *sessionHandler) Callback(e echo.Context) error {
 	cookie, err := e.Cookie(cookies.StateCookieKey)
 
 	if err != nil {
-		return fronterrors.RespondMessage(
+		return rest.RespondMessage(
 			e,
-			fronterrors.NewBadRequest("state is not set"),
+			rest.NewBadRequest("state is not set"),
 		)
 	}
 
@@ -74,13 +78,49 @@ func (s *sessionHandler) Callback(e echo.Context) error {
 	if err != nil {
 		e.Logger().Infof("failed to validate token: %+v", err)
 
-		return fronterrors.RespondMessage(
+		return rest.RespondMessage(
 			e,
-			fronterrors.NewBadRequest("failed to validate token"),
+			rest.NewBadRequest("failed to validate token"),
 		)
 	}
 
 	cookie = new(http.Cookie)
+
+	cookie.HttpOnly = true
+	cookie.Secure = true
+	cookie.Name = cookies.TokenCookieKey
+	cookie.Value = token
+	cookie.MaxAge = int(30 * 24 * time.Hour / time.Second)
+
+	e.SetCookie(cookie)
+
+	return e.Redirect(http.StatusTemporaryRedirect, "/")
+}
+
+func (s *sessionHandler) Signup(e echo.Context) error {
+	u := &domain.User{}
+
+	if err := e.Bind(u); err != nil {
+		return rest.RespondMessage(
+			e,
+			rest.NewBadRequest(
+				fmt.Sprintf("リクエストデータが不正です(%v)", err),
+			),
+		)
+	}
+
+	token, err := s.su.Signup(e.Request().Context(), u)
+
+	var frerr rest.ErrorResponse
+	if xerrors.As(err, &frerr) {
+		return rest.RespondMessage(e, frerr)
+	}
+
+	if err != nil {
+		return xerrors.Errorf("signup failed: %w", err)
+	}
+
+	cookie := new(http.Cookie)
 
 	cookie.HttpOnly = true
 	cookie.Secure = true
