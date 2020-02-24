@@ -89,6 +89,11 @@ func initDig(cfg *config.Config, addr string) *dig.Container {
 	if err != nil {
 		panic(err)
 	}
+	err = c.Provide(private.NewProfileHandler)
+	if err != nil {
+		panic(err)
+	}
+
 	err = c.Provide(public.NewSessionHandler)
 	if err != nil {
 		panic(err)
@@ -114,6 +119,14 @@ func initHandler(cfg *config.Config, addr string) *echo.Echo {
 		g := e.Group("/api/private", auth.Authenticate)
 
 		g.POST("/logout", sh.Logout)
+
+		digc.Invoke(func(ph private.ProfileHandler) {
+			prof := g.Group("/profile")
+
+			prof.GET("", ph.Get)
+			prof.POST("", ph.Update)
+			prof.GET("/payment_statuses", ph.GetPaymentStatuses)
+		})
 	})
 
 	if err != nil {
