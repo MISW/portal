@@ -26,10 +26,15 @@ func RespondMessage(ctx echo.Context, err error) error {
 
 // RespondOK - 正常終了した際の結果を返す
 func RespondOK(ctx echo.Context, json map[string]interface{}) error {
+	if json == nil {
+		json = map[string]interface{}{}
+	}
+	code := http.StatusOK
+
 	json["status"] = http.StatusText(code)
 	json["status_code"] = code
 
-	return ctx.JSON(json)
+	return ctx.JSON(code, json)
 }
 
 func respondMessage(e echo.Context, code int, message string) error {

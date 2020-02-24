@@ -52,10 +52,12 @@ func (s *sessionHandler) Login(e echo.Context) error {
 
 	e.SetCookie(cookie)
 
-	return e.JSON(http.StatusOK, map[string]string{
-		"status":       http.StatusText(http.StatusOK),
-		"redirect_url": redirectURL,
-	})
+	return rest.RespondOK(
+		e,
+		map[string]interface{}{
+			"redirect_url": redirectURL,
+		},
+	)
 }
 
 func (s *sessionHandler) Callback(e echo.Context) error {
@@ -130,5 +132,8 @@ func (s *sessionHandler) Signup(e echo.Context) error {
 
 	e.SetCookie(cookie)
 
-	return e.Redirect(http.StatusTemporaryRedirect, "/")
+	return rest.RespondOK(
+		e,
+		map[string]interface{}{},
+	)
 }
