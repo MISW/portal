@@ -9,6 +9,8 @@ import (
 // ErrorResponse - エラーメッセージをJSONとして返却するインターフェース
 type ErrorResponse interface {
 	RespondError(e echo.Context) error
+
+	error
 }
 
 // RespondMessage - ステータスコードに紐づけられたエラーであればechoのresponseを返す
@@ -24,7 +26,7 @@ func RespondMessage(ctx echo.Context, err error) error {
 
 func respondMessage(e echo.Context, code int, message string) error {
 	return e.JSON(code, map[string]string{
-		"code":    http.StatusText(code),
+		"status":  http.StatusText(code),
 		"message": message,
 	})
 }
