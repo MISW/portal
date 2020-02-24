@@ -35,7 +35,8 @@ const Callback = `
 			"/api/public/callback",
 			{
 				credentials: "include",
-				method: "POST"
+				method: "POST",
+				body: {code, state},
 			}
 		)
 	</script>
