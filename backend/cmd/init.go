@@ -148,6 +148,9 @@ func initHandler(cfg *config.Config, addr string) *echo.Echo {
 	e.GET("/", echo.HandlerFunc(func(e echo.Context) error {
 		return e.HTML(http.StatusOK, files.Login)
 	}))
+	e.GET("/callback", echo.HandlerFunc(func(e echo.Context) error {
+		return e.HTML(http.StatusOK, files.Callback)
+	}))
 
 	e.Logger.SetLevel(log.DEBUG)
 
