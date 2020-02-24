@@ -35,6 +35,9 @@ const Callback = `
 			{
 				credentials: "include",
 				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				}
 				body: JSON.stringify({code, state}),
 			}
 		).then(function() {
