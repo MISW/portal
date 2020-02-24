@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"time"
 
 	"github.com/MISW/Portal/backend/config"
 	"github.com/MISW/Portal/backend/infrastructure/persistence"
@@ -29,8 +28,7 @@ func initDig(cfg *config.Config, addr string) *dig.Container {
 	c := dig.New()
 
 	err := c.Provide(func() (oidc.Authenticator, error) {
-		ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-		defer cancel()
+		ctx := context.Background()
 
 		oidcCfg := cfg.OpenIDConnect
 
