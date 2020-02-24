@@ -3,7 +3,7 @@ import { NextPage } from "next";
 import { DefaultLayout } from "../components/layout/DefaultLayout";
 import Link from "next/link";
 import Button from "@material-ui/core/Button";
-import SignIn from "../components/RegistrationForm"
+import RegisterForm from "../components/RegistrationForm"
 
 const Page: NextPage = () => (
   <>
@@ -19,8 +19,8 @@ const Page: NextPage = () => (
           会員情報設定
         </Button>
       </Link>
+      <RegisterForm />
     </DefaultLayout>
-  <SignIn />
   </>
 );
 
