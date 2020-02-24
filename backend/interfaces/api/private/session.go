@@ -1,7 +1,6 @@
 package private
 
 import (
-	"net/http"
 	"time"
 
 	"github.com/MISW/Portal/backend/internal/cookies"
@@ -44,5 +43,5 @@ func (s *sessionHandler) Logout(e echo.Context) error {
 	ck.Expires = time.Now().Add(-1 * time.Hour)
 	e.SetCookie(ck)
 
-	return e.NoContent(http.StatusNoContent)
+	return rest.RespondOK(e, nil)
 }

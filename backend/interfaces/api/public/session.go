@@ -132,8 +132,5 @@ func (s *sessionHandler) Signup(e echo.Context) error {
 
 	e.SetCookie(cookie)
 
-	return rest.RespondOK(
-		e,
-		map[string]interface{}{},
-	)
+	return rest.RespondOK(e, nil)
 }
