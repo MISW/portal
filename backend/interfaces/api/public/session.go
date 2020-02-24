@@ -61,8 +61,17 @@ func (s *sessionHandler) Login(e echo.Context) error {
 }
 
 func (s *sessionHandler) Callback(e echo.Context) error {
-	code := e.QueryParam("code")
-	state := e.QueryParam("state")
+	oauth2Param := &struct {
+		Code  string `json:"code" query:"code"`
+		State string `json:"state" query:"state"`
+	}{}
+
+	if err := e.Bind(oauth2Param); err != nil {
+		return rest.RespondMessage(
+			e,
+			rest.NewBadRequest("code and state is not set"),
+		)
+	}
 
 	cookie, err := e.Cookie(cookies.StateCookieKey)
 
@@ -75,7 +84,7 @@ func (s *sessionHandler) Callback(e echo.Context) error {
 
 	expectedState := cookie.Value
 
-	token, err := s.su.Callback(e.Request().Context(), expectedState, state, code)
+	token, err := s.su.Callback(e.Request().Context(), expectedState, oauth2Param.State, oauth2Param.Code)
 
 	if err != nil {
 		e.Logger().Infof("failed to validate token: %+v", err)

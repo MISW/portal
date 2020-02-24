@@ -137,7 +137,7 @@ func initHandler(cfg *config.Config, addr string) *echo.Echo {
 		g := e.Group("/api/public")
 
 		g.POST("/login", sh.Login)
-		g.GET("/callback", sh.Callback)
+		g.POST("/callback", sh.Callback)
 		g.POST("/signup", sh.Signup)
 	})
 
