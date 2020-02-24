@@ -61,10 +61,11 @@ func (s *sessionHandler) Login(e echo.Context) error {
 }
 
 func (s *sessionHandler) Callback(e echo.Context) error {
-	oauth2Param := &struct {
+	type OAuth2Param struct {
 		Code  string `json:"code" query:"code"`
 		State string `json:"state" query:"state"`
-	}{}
+	}
+	oauth2Param := &OAuth2Param{}
 
 	if err := e.Bind(oauth2Param); err != nil {
 		return rest.RespondMessage(
