@@ -24,7 +24,6 @@ const Callback = `
 <!DOCTYPE html>
 <html>
 <body>
-	<button id="btn">Login</button>
 	<script>
 		const urlParams = new URLSearchParams(window.location.search);
 
@@ -36,9 +35,11 @@ const Callback = `
 			{
 				credentials: "include",
 				method: "POST",
-				body: {code, state},
+				body: JSON.stringify({code, state}),
 			}
-		)
+		).then(function() {
+			location.href = "/";
+		});
 	</script>
 </body>
 </html>
