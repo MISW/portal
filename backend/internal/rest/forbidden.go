@@ -1,4 +1,4 @@
-package fronterrors
+package rest
 
 import (
 	"net/http"
