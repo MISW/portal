@@ -125,7 +125,7 @@ func initHandler(cfg *config.Config, addr string) *echo.Echo {
 
 		g.POST("/login", sh.Login)
 		g.GET("/callback", sh.Callback)
-		g.GET("/signup", sh.Signup)
+		g.POST("/signup", sh.Signup)
 	})
 
 	if err != nil {
