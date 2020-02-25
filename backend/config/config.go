@@ -17,11 +17,20 @@ type OpenIDConnect struct {
 	ProviderURL  string `json:"provider_url" yaml:"provider_url"`
 }
 
+// Email - Email周りの設定
+type Email struct {
+	SMTPServer string `json:"smtp_server" yaml:"smtp_server"`
+	Username   string `json:"username" yaml:"username"`
+	Password   string `json:"password" yaml:"password"`
+	From       string `json:"from" yaml:"from"`
+}
+
 // Config - 各種設定用
 type Config struct {
 	Database string `json:"database" yaml:"database"`
 
 	OpenIDConnect OpenIDConnect `json:"oidc" yaml:"oidc"`
+	Email         Email         `json:"email" yaml:"email"`
 }
 
 // ReadConfig - configを読み込む
@@ -64,6 +73,19 @@ func ReadConfig(name string) (*Config, error) {
 	}
 	if cfg.OpenIDConnect.ProviderURL == "" {
 		cfg.OpenIDConnect.ProviderURL = os.Getenv("OIDC_PROVIDER_URL")
+	}
+
+	if cfg.Email.SMTPServer == "" {
+		cfg.Email.SMTPServer = os.Getenv("SMTP_SERVER")
+	}
+	if cfg.Email.Username == "" {
+		cfg.Email.Username = os.Getenv("SMTP_USERNAME")
+	}
+	if cfg.Email.Password == "" {
+		cfg.Email.Password = os.Getenv("SMTP_PASSWORD")
+	}
+	if cfg.Email.From == "" {
+		cfg.Email.From = os.Getenv("SMTP_FROM")
 	}
 
 	return cfg, nil
