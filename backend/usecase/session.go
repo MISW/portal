@@ -2,14 +2,13 @@ package usecase
 
 import (
 	"context"
-	"regexp"
 	"strings"
 	"time"
 
 	"github.com/MISW/Portal/backend/domain"
 	"github.com/MISW/Portal/backend/domain/repository"
-	"github.com/MISW/Portal/backend/internal/rest"
 	"github.com/MISW/Portal/backend/internal/oidc"
+	"github.com/MISW/Portal/backend/internal/rest"
 	"github.com/MISW/Portal/backend/internal/tokenutil"
 	"golang.org/x/xerrors"
 )
@@ -49,30 +48,13 @@ type sessionUsecase struct {
 
 var _ SessionUsecase = &sessionUsecase{}
 
-var (
-	emailValidator = regexp.MustCompile(`^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$`)
-
-	invalidWordsForSquads = []string{"\n", "\r"}
-)
-
 // SignUp - ユーザ新規登録
 func (us *sessionUsecase) Signup(ctx context.Context, user *domain.User) (token string, err error) {
-	for i := range user.Squads {
-		for j := range invalidWordsForSquads {
-			if strings.Contains(user.Squads[i], invalidWordsForSquads[j]) {
-				return "", rest.NewBadRequest("班の名前に使えない文字を含んでいます")
-			}
-		}
-	}
-
 	user.SlackID = ""
 	user.Role = domain.NotMember
 
-	if user.Sex != domain.Men && user.Sex != domain.Women {
-		return "", rest.NewBadRequest("性別の値が不正です")
-	}
-	if !emailValidator.MatchString(user.Email) {
-		return "", rest.NewBadRequest("メールアドレスの形式が不正です")
+	if err := user.Validate(); err != nil {
+		return "", err
 	}
 
 	id, err := us.userRepository.Insert(ctx, user)

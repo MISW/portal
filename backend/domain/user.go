@@ -1,8 +1,11 @@
 package domain
 
 import (
+	"regexp"
+	"strings"
 	"time"
 
+	"github.com/MISW/Portal/backend/internal/rest"
 	"golang.org/x/xerrors"
 )
 
@@ -64,6 +67,31 @@ type User struct {
 
 	CreatedAt time.Time `json:"created_at" yaml:"created_at"`
 	UpdatedAt time.Time `json:"updated_at" yaml:"updated_at"`
+}
+
+var (
+	emailValidator = regexp.MustCompile(`^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$`)
+
+	invalidWordsForSquads = []string{"\n", "\r"}
+)
+
+func (user *User) Validate() error {
+	for i := range user.Squads {
+		for j := range invalidWordsForSquads {
+			if strings.Contains(user.Squads[i], invalidWordsForSquads[j]) {
+				return rest.NewBadRequest("班の名前に使えない文字を含んでいます")
+			}
+		}
+	}
+
+	if user.Sex != Men && user.Sex != Women {
+		return rest.NewBadRequest("性別の値が不正です")
+	}
+	if !emailValidator.MatchString(user.Email) {
+		return rest.NewBadRequest("メールアドレスの形式が不正です")
+	}
+
+	return nil
 }
 
 var (

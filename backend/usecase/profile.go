@@ -49,6 +49,11 @@ func (pu *profileUsecase) Get(ctx context.Context, userID int) (*domain.User, er
 func (pu *profileUsecase) Update(ctx context.Context, registeredUser, user *domain.User) (*domain.User, error) {
 	user.SlackID = registeredUser.SlackID
 	user.Role = registeredUser.Role
+	user.Generation = registeredUser.Generation
+
+	if err := user.Validate(); err != nil {
+		return nil, err
+	}
 
 	if err := pu.userRepository.Update(ctx, user); err != nil {
 		return nil, xerrors.Errorf("failed to update user(%d): %w", user.ID, err)
