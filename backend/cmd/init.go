@@ -4,7 +4,8 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"net/http"
+	"net/url"
+	"os"
 
 	"github.com/MISW/Portal/backend/config"
 	"github.com/MISW/Portal/backend/infrastructure/persistence"
@@ -13,11 +14,11 @@ import (
 	"github.com/MISW/Portal/backend/internal/db"
 	"github.com/MISW/Portal/backend/internal/middleware"
 	"github.com/MISW/Portal/backend/internal/oidc"
-	files "github.com/MISW/Portal/backend/test_files"
 	"github.com/MISW/Portal/backend/usecase"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jmoiron/sqlx"
 	"github.com/labstack/echo/v4"
+	echomw "github.com/labstack/echo/v4/middleware"
 	"github.com/labstack/gommon/log"
 	"go.uber.org/dig"
 	"golang.org/x/xerrors"
@@ -107,6 +108,27 @@ func initDig(cfg *config.Config, addr string) *dig.Container {
 	return c
 }
 
+func initReverseProxy(e *echo.Echo) {
+	addr, ok := os.LookupEnv("NEXT_SERVER")
+
+	if !ok {
+		addr = "http://localhost:3000"
+	}
+
+	url, err := url.Parse(addr)
+	if err != nil {
+		e.Logger.Fatal(err)
+	}
+	targets := []*echomw.ProxyTarget{
+		{
+			URL: url,
+		},
+	}
+
+	g := e.Group("/")
+	g.Use(echomw.Proxy(echomw.NewRoundRobinBalancer(targets)))
+}
+
 func initHandler(cfg *config.Config, addr string) *echo.Echo {
 	e := echo.New()
 
@@ -145,12 +167,13 @@ func initHandler(cfg *config.Config, addr string) *echo.Echo {
 		panic(err)
 	}
 
-	e.GET("/", echo.HandlerFunc(func(e echo.Context) error {
-		return e.HTML(http.StatusOK, files.Login)
-	}))
-	e.GET("/callback", echo.HandlerFunc(func(e echo.Context) error {
-		return e.HTML(http.StatusOK, files.Callback)
-	}))
+	// e.GET("/", echo.HandlerFunc(func(e echo.Context) error {
+	// 	return e.HTML(http.StatusOK, files.Login)
+	// }))
+	// e.GET("/callback", echo.HandlerFunc(func(e echo.Context) error {
+	// 	return e.HTML(http.StatusOK, files.Callback)
+	// }))
+	initReverseProxy(e)
 
 	e.Logger.SetLevel(log.DEBUG)
 
