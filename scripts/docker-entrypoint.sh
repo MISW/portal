@@ -53,9 +53,9 @@ if [ "$QUIT" = "1" ]; then
     exit 0
 fi
 
-if [ "$ENVIRONMENT" = "prod"]; then
+if [ "$ENVIRONMENT" = "prod" ]; then
     npm start &
-elif [ "$ENVIRONMENT" = "dev"]; then
+elif [ "$ENVIRONMENT" = "dev" ]; then
     npm run dev &
 fi
 
