@@ -53,6 +53,12 @@ if [ "$QUIT" = "1" ]; then
     exit 0
 fi
 
+if [ "$ENVIRONMENT" = "prod"]; then
+    npm start &
+elif [ "$ENVIRONMENT" = "dev"]; then
+    npm run dev &
+fi
+
 export DATABASE_URL="$DATABASE_USER:$DATABASE_PASSWORD@tcp($DATABASE_HOST:$DATABASE_PORT)/$DATABASE_DB?parseTime=true"
 
 /bin/portal

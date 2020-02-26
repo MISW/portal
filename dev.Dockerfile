@@ -28,12 +28,12 @@ RUN cd /backend && go build \
     -tags 'osusergo netgo static_build' \
     -o ./portal
 
-FROM node:12.14.1-slim
+FROM node:12.14.1
 
 ADD ./frontend /frontend
 WORKDIR /frontend
 
-RUN npm install && npm build
+RUN npm install
 
 COPY --from=tools /usr/local/bin/dockerize /bin
 COPY --from=tools /usr/local/bin/mysqldef /bin
@@ -41,7 +41,7 @@ COPY --from=tools /usr/local/bin/dbenv /bin
 COPY --from=build-backend /backend/portal /bin/portal 
 COPY --from=build-backend /backend/schema /schema
 
-ENV ENVIRONMENT=prod
+ENV ENVIRONMENT=dev
 
 COPY ./scripts/* /bin/
 ADD ./config /config
