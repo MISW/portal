@@ -1,11 +1,10 @@
 package private
 
 import (
-	"net/http"
 	"time"
 
-	"github.com/MISW/Portal/backend/internal/cookie"
-	"github.com/MISW/Portal/backend/internal/fronterrors"
+	"github.com/MISW/Portal/backend/internal/cookies"
+	"github.com/MISW/Portal/backend/internal/rest"
 	"github.com/MISW/Portal/backend/usecase"
 	"github.com/labstack/echo/v4"
 )
@@ -29,19 +28,20 @@ type sessionHandler struct {
 }
 
 func (s *sessionHandler) Logout(e echo.Context) error {
-	ck, err := e.Cookie(cookie.TokenCookieKey)
+	ck, err := e.Cookie(cookies.TokenCookieKey)
 
 	if err != nil {
-		return fronterrors.RespondMessage(
+		return rest.RespondMessage(
 			e,
-			fronterrors.NewForbidden("unauthorized"),
+			rest.NewUnauthorized("unauthorized"),
 		)
 	}
 
 	err = s.su.Logout(e.Request().Context(), ck.Value)
 
+	ck.Value = ""
 	ck.Expires = time.Now().Add(-1 * time.Hour)
 	e.SetCookie(ck)
 
-	return e.NoContent(http.StatusNoContent)
+	return rest.RespondOK(e, nil)
 }
