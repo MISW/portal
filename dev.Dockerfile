@@ -28,7 +28,7 @@ RUN cd /backend && go build \
     -tags 'osusergo netgo static_build' \
     -o ./portal
 
-FROM node:12.14.1
+FROM node:12.14.1-alpine
 
 ADD ./frontend /frontend
 WORKDIR /frontend
