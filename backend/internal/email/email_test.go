@@ -1,3 +1,5 @@
+// +build domestic
+
 package email_test
 
 import (
