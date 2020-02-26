@@ -1,7 +1,15 @@
 #!/bin/sh
 
 if [[ -z "${DATABASE_URL}" ]]; then
-  export DATABASE_URL="${CLEARDB_DATABASE_URL}"
+  if [[ -n "${JAWSDB_URL}" ]]; then
+    export DATABASE_URL="${JAWSDB_URL}"
+  else
+    export DATABASE_URL="${CLEARDB_DATABASE_URL}"
+  fi
+fi
+
+if [[ -z "${OIDC_REDIRECT_URL}" ]]; then
+  export OIDC_REDIRECT_URL="https://${HEROKU_APP_NAME}.herokuapp.com/callback"
 fi
 
 eval "$(dbenv -)"
@@ -38,11 +46,13 @@ fi
 
 if [ "$MIGRATION" = "1" ]; then
     echo "Running migration"
-    cat /schema/*.sql | mysqldef --user=$DATABSE_USER --password=$DATABASE_PASSWORD --host=$DATABASE_HOST -P $DATABASE_PORT $DATABASE_DB
+    cat /schema/*.sql | mysqldef --user=$DATABASE_USER --password=$DATABASE_PASSWORD --host=$DATABASE_HOST -P $DATABASE_PORT $DATABASE_DB
 fi
 
 if [ "$QUIT" = "1" ]; then
     exit 0
 fi
+
+export DATABASE_URL="$DATABASE_USER:$DATABASE_PASSWORD@tcp($DATABASE_HOST:$DATABASE_PORT)/$DATABASE_DB?parseTime=true"
 
 /bin/portal

@@ -55,6 +55,10 @@ type authenticator struct {
 
 // Callback - 外部からのCallbackを検証する
 func (author *authenticator) Callback(ctx context.Context, expectedState, actualState, code string) (*AuthResult, error) {
+	if err := bcrypt.CompareHashAndPassword([]byte(actualState), []byte(expectedState)); err != nil {
+		return nil, xerrors.Errorf("state does not match: %w", err)
+	}
+
 	token, err := author.config.Exchange(ctx, code)
 	if err != nil {
 		return nil, xerrors.Errorf("failed to exchange code: %w", err)

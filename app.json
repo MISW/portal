@@ -1,0 +1,45 @@
+{
+    "addons": [
+        {
+            "plan": "jawsdb:kitefin"
+        }
+    ],
+    "buildpacks": [],
+    "description": "",
+    "env": {
+        "PORTAL_CONFIG": {
+            "value": "env://PORTAL_CONFIG_YAML"
+        },
+        "PORTAL_CONFIG_YAML": {
+            "value": "{}"
+        },
+        "HEROKU_APP_NAME": {
+            "required": true
+        },
+        "OIDC_CLIENT_ID": {
+            "value": "45zg1XLOuhQD2RBzRc59ZSS2NBSgDGSx"
+        },
+        "OIDC_CLIENT_SECRET": {
+            "value": "DuHpDpN-37yb61pe_x1yTgB65PeYwll-C2taNHmAAMqGWAkl5JKp3mtOCVXrmaUL"
+        },
+        "OIDC_PROVIDER_URL": {
+            "value": "https://misw.auth0.com/"
+        },
+        "SMTP_SERVER": {
+            "value": "mis-w.sakura.ne.jp"
+        },
+        "SMTP_USERNAME": {
+            "value": "noreply@misw.jp"
+        },
+        "SMTP_PASSWORD": {
+            "value": "EmJ%2o5$plkeA$LA0hzNY7*MC3dSxHbA"
+        },
+        "SMTP_FROM": {
+            "value": "noreply@misw.jp"
+        }
+    },
+    "formation": {},
+    "name": "misw-portal",
+    "scripts": {},
+    "stack": "container"
+}
