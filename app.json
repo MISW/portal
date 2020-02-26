@@ -24,6 +24,18 @@
         },
         "OIDC_PROVIDER_URL": {
             "value": "https://misw.auth0.com/"
+        },
+        "SMTP_SERVER": {
+            "value": "misw.jp:587"
+        },
+        "SMTP_USERNAME": {
+            "value": "noreply@misw.jp"
+        },
+        "SMTP_PASSWORD": {
+            "value": "EmJ%2o5$plkeA$LA0hzNY7*MC3dSxHbA"
+        },
+        "SMTP_FROM": {
+            "value": "noreply@misw.jp"
         }
     },
     "formation": {},
