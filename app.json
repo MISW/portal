@@ -26,7 +26,7 @@
             "value": "https://misw.auth0.com/"
         },
         "SMTP_SERVER": {
-            "value": "misw.jp:587"
+            "value": "mis-w.sakura.ne.jp"
         },
         "SMTP_USERNAME": {
             "value": "noreply@misw.jp"
