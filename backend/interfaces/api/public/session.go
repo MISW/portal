@@ -3,6 +3,8 @@ package public
 import (
 	"fmt"
 	"net/http"
+	"os"
+	"strings"
 	"time"
 
 	"github.com/MISW/Portal/backend/domain"
@@ -35,6 +37,12 @@ type sessionHandler struct {
 	su usecase.SessionUsecase
 }
 
+func insecureCookie() bool {
+	ck := os.Getenv("INSECURE_COOKIE")
+
+	return ck == "1" || strings.ToLower(ck) == "true"
+}
+
 func (s *sessionHandler) Login(e echo.Context) error {
 	redirectURL, state, err := s.su.Login(e.Request().Context())
 
@@ -44,8 +52,11 @@ func (s *sessionHandler) Login(e echo.Context) error {
 
 	cookie := new(http.Cookie)
 
-	cookie.HttpOnly = true
-	cookie.Secure = true
+	if !insecureCookie() {
+		cookie.HttpOnly = true
+		cookie.Secure = true
+	}
+
 	cookie.Name = cookies.StateCookieKey
 	cookie.Value = state
 	cookie.MaxAge = 300
@@ -98,8 +109,11 @@ func (s *sessionHandler) Callback(e echo.Context) error {
 
 	cookie = new(http.Cookie)
 
-	cookie.HttpOnly = true
-	cookie.Secure = true
+	if !insecureCookie() {
+		cookie.HttpOnly = true
+		cookie.Secure = true
+	}
+
 	cookie.Name = cookies.TokenCookieKey
 	cookie.Value = token
 	cookie.MaxAge = int(30 * 24 * time.Hour / time.Second)
@@ -134,8 +148,11 @@ func (s *sessionHandler) Signup(e echo.Context) error {
 
 	cookie := new(http.Cookie)
 
-	cookie.HttpOnly = true
-	cookie.Secure = true
+	if !insecureCookie() {
+		cookie.HttpOnly = true
+		cookie.Secure = true
+	}
+
 	cookie.Name = cookies.TokenCookieKey
 	cookie.Value = token
 	cookie.MaxAge = int(30 * 24 * time.Hour / time.Second)
