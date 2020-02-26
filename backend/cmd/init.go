@@ -125,8 +125,7 @@ func initReverseProxy(e *echo.Echo) {
 		},
 	}
 
-	g := e.Group("/")
-	g.Use(echomw.Proxy(echomw.NewRoundRobinBalancer(targets)))
+	e.Group("/*", echomw.Proxy(echomw.NewRoundRobinBalancer(targets)))
 }
 
 func initHandler(cfg *config.Config, addr string) *echo.Echo {
