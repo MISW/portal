@@ -1,0 +1,27 @@
+version: "3"
+
+services:
+  app:
+    build:
+      dockerfile: dev.Dockerfile
+      context: .
+    env_file: ./dev.env
+    ports:
+      - 10080:10080
+    volumes:
+      - ./frontend:/frontend
+
+  mysql:
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: portal
+      TZ: "Asia/Tokyo"
+    command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    volumes:
+      - mysql:/var/lib/mysql
+    ports:
+      - 3306:3306
+
+volumes:
+  mysql:

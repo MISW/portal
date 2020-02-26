@@ -16,3 +16,9 @@ jobs:
         run: |
           docker build . -t docker.pkg.github.com/misw/portal/portal-server:${{ github.sha }}
           docker push docker.pkg.github.com/misw/portal/portal-server:${{ github.sha }}
+
+      - if: github.actor != 'dependabot-preview[bot]'
+        name: Dev Docker build
+        run: |
+          docker build . -f dev.Dockerfile -t docker.pkg.github.com/misw/portal/portal-server-dev:${{ github.sha }}
+          docker push docker.pkg.github.com/misw/portal/portal-server-dev:${{ github.sha }}
