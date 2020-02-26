@@ -33,7 +33,7 @@ FROM node:12.14.1-alpine
 ADD ./frontend /frontend
 WORKDIR /frontend
 
-RUN npm install && npm build
+RUN npm install && npm run build
 
 COPY --from=tools /usr/local/bin/dockerize /bin
 COPY --from=tools /usr/local/bin/mysqldef /bin

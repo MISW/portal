@@ -54,7 +54,7 @@ if [ "$QUIT" = "1" ]; then
 fi
 
 if [ "$ENVIRONMENT" = "prod" ]; then
-    npm start &
+    npm run start &
 elif [ "$ENVIRONMENT" = "dev" ]; then
     npm run dev &
 fi
