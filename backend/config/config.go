@@ -1,6 +1,7 @@
 package config
 
 import (
+	"html/template"
 	"io"
 	"os"
 	"strings"
@@ -17,12 +18,72 @@ type OpenIDConnect struct {
 	ProviderURL  string `json:"provider_url" yaml:"provider_url"`
 }
 
+// EmailTemplate - Emailのテンプレート
+type EmailTemplate struct {
+	Subject *template.Template `json:"subject" yaml:"subject"`
+	Body    *template.Template `json:"body" yaml:"body"`
+}
+
+// EmailTemplates - Emailのテンプレートたち
+type EmailTemplates struct {
+	// EmailVerification - 登録時のメール送信
+	EmailVerification *EmailTemplate `json:"email_verification" yaml:"email_verification"`
+}
+
+// EmailTemplate - Email本文のフォーマット設定
+type EmailTemplateBase struct {
+	Subject string `json:"subject" yaml:"subject"`
+	Body    string `json:"body" yaml:"body"`
+}
+
+func (b *EmailTemplateBase) parse() (*EmailTemplate, error) {
+	subj, err := template.New("").Parse(b.Subject)
+
+	if err != nil {
+		return nil, xerrors.Errorf("failed to parse subjet: %w", err)
+	}
+
+	body, err := template.New("").Parse(b.Body)
+
+	if err != nil {
+		return nil, xerrors.Errorf("failed to parse subjet: %w", err)
+	}
+
+	return &EmailTemplate{
+		Subject: subj,
+		Body:    body,
+	}, nil
+}
+
+// EmailTemplatesBase - Emailのテンプレート(テンプレートエンジン用)
+type EmailTemplatesBase struct {
+	// EmailVerification - 登録時のメール送信
+	EmailVerification EmailTemplateBase `json:"email_verification" yaml:"email_verification"`
+}
+
+func (b *EmailTemplatesBase) parse() (*EmailTemplates, error) {
+	et, err := b.EmailVerification.parse()
+
+	if err != nil {
+		return nil, xerrors.Errorf("failed to parse email verification template: %w", err)
+	}
+
+	return &EmailTemplates{
+		EmailVerification: et,
+	}, nil
+}
+
 // Email - Email周りの設定
 type Email struct {
 	SMTPServer string `json:"smtp_server" yaml:"smtp_server"`
 	Username   string `json:"username" yaml:"username"`
 	Password   string `json:"password" yaml:"password"`
 	From       string `json:"from" yaml:"from"`
+
+	Templates struct {
+		// EmailVerification - 登録時のメール送信
+		EmailVerification EmailTemplate `json:"email_verification" yaml:"email_verification"`
+	} `json:"templates" yaml:"templates"`
 }
 
 // Config - 各種設定用

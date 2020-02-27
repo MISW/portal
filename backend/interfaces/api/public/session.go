@@ -135,7 +135,7 @@ func (s *sessionHandler) Signup(e echo.Context) error {
 		)
 	}
 
-	token, err := s.su.Signup(e.Request().Context(), u)
+	err := s.su.Signup(e.Request().Context(), u)
 
 	var frerr rest.ErrorResponse
 	if xerrors.As(err, &frerr) {
@@ -145,19 +145,6 @@ func (s *sessionHandler) Signup(e echo.Context) error {
 	if err != nil {
 		return xerrors.Errorf("signup failed: %w", err)
 	}
-
-	cookie := new(http.Cookie)
-
-	if !insecureCookie() {
-		cookie.HttpOnly = true
-		cookie.Secure = true
-	}
-
-	cookie.Name = cookies.TokenCookieKey
-	cookie.Value = token
-	cookie.MaxAge = int(30 * 24 * time.Hour / time.Second)
-
-	e.SetCookie(cookie)
 
 	return rest.RespondOK(e, nil)
 }
