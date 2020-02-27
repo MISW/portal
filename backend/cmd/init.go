@@ -3,7 +3,6 @@ package cmd
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"net/url"
 	"os"
 
@@ -12,6 +11,7 @@ import (
 	"github.com/MISW/Portal/backend/interfaces/api/private"
 	"github.com/MISW/Portal/backend/interfaces/api/public"
 	"github.com/MISW/Portal/backend/internal/db"
+	"github.com/MISW/Portal/backend/internal/email"
 	"github.com/MISW/Portal/backend/internal/middleware"
 	"github.com/MISW/Portal/backend/internal/oidc"
 	"github.com/MISW/Portal/backend/usecase"
@@ -53,8 +53,20 @@ func initDig(cfg *config.Config, addr string) *dig.Container {
 		panic(err)
 	}
 
+	err = c.Provide(func() email.Sender {
+		return email.NewSender(
+			cfg.Email.SMTPServer,
+			cfg.Email.Username,
+			cfg.Email.Password,
+			cfg.Email.From,
+		)
+	})
+
+	if err != nil {
+		panic(err)
+	}
+
 	err = c.Provide(func() (db.Ext, error) {
-		fmt.Println(cfg.Database)
 		conn, err := sqlx.Connect("mysql", cfg.Database)
 
 		if err != nil {
@@ -101,6 +113,11 @@ func initDig(cfg *config.Config, addr string) *dig.Container {
 	}
 
 	err = c.Provide(middleware.NewAuthMiddleware)
+	if err != nil {
+		panic(err)
+	}
+
+	err = c.Provide(cfg.Email.Templates)
 	if err != nil {
 		panic(err)
 	}

@@ -5,8 +5,10 @@ import (
 	"strings"
 	"time"
 
+	"github.com/MISW/Portal/backend/config"
 	"github.com/MISW/Portal/backend/domain"
 	"github.com/MISW/Portal/backend/domain/repository"
+	"github.com/MISW/Portal/backend/internal/email"
 	"github.com/MISW/Portal/backend/internal/oidc"
 	"github.com/MISW/Portal/backend/internal/rest"
 	"github.com/MISW/Portal/backend/internal/tokenutil"
@@ -16,7 +18,7 @@ import (
 // SessionUsecase - login/signup/logoutなどのセッション周りの処理
 type SessionUsecase interface {
 	// SignUp - ユーザ新規登録
-	Signup(ctx context.Context, user *domain.User) (token string, err error)
+	Signup(ctx context.Context, user *domain.User) error
 
 	// Login - OpenID ConnectのリダイレクトURLを生成する
 	Login(ctx context.Context) (redirectURL, state string, err error)
@@ -32,11 +34,13 @@ type SessionUsecase interface {
 }
 
 // NewSessionUsecase - ユーザ関連のユースケースを初期化
-func NewSessionUsecase(userRepository repository.UserRepository, tokenRepository repository.TokenRepository, authenticator oidc.Authenticator) SessionUsecase {
+func NewSessionUsecase(userRepository repository.UserRepository, tokenRepository repository.TokenRepository, authenticator oidc.Authenticator, mailer email.Sender, mailTemplates *config.EmailTemplates) SessionUsecase {
 	return &sessionUsecase{
 		userRepository:  userRepository,
 		tokenRepository: tokenRepository,
 		authenticator:   authenticator,
+		mailer:          mailer,
+		mailTemplates:   mailTemplates,
 	}
 }
 
@@ -44,42 +48,34 @@ type sessionUsecase struct {
 	userRepository  repository.UserRepository
 	tokenRepository repository.TokenRepository
 	authenticator   oidc.Authenticator
+	mailer          email.Sender
+	mailTemplates   *config.EmailTemplates
 }
 
 var _ SessionUsecase = &sessionUsecase{}
 
 // SignUp - ユーザ新規登録
-func (us *sessionUsecase) Signup(ctx context.Context, user *domain.User) (token string, err error) {
+func (us *sessionUsecase) Signup(ctx context.Context, user *domain.User) error {
 	user.SlackID = ""
-	user.Role = domain.NotMember
+	user.Role = domain.NewMember
 
 	if err := user.Validate(); err != nil {
-		return "", err
+		return err
 	}
 
-	id, err := us.userRepository.Insert(ctx, user)
+	_, err := us.userRepository.Insert(ctx, user)
 
 	if xerrors.Is(err, domain.ErrEmailConflicts) {
-		return "", rest.NewBadRequest("メールアドレスが既に利用されています")
+		return rest.NewBadRequest("メールアドレスが既に利用されています")
 	}
 
 	if err != nil {
-		return "", xerrors.Errorf("failed to insert new user: %w", err)
+		return xerrors.Errorf("failed to insert new user: %w", err)
 	}
 
-	token, err = tokenutil.GenerateRandomToken()
+	us.mailer.Send(user.Email, "", "")
 
-	if err != nil {
-		return "", xerrors.Errorf("failed to generate token: %w", err)
-	}
-
-	err = us.tokenRepository.Add(ctx, id, token, time.Now().Add(10*24*time.Hour))
-
-	if err != nil {
-		return "", xerrors.Errorf("failed to insert new token: %w", err)
-	}
-
-	return token, nil
+	return nil
 }
 
 // Login - OpenID ConnectのリダイレクトURLを生成する
