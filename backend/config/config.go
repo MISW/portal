@@ -2,41 +2,42 @@ package config
 
 import (
 	"context"
+	"fmt"
 	"html/template"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/heetch/confita"
 	"github.com/heetch/confita/backend"
-	"github.com/heetch/confita/backend/env"
 	"github.com/heetch/confita/backend/file"
 	"golang.org/x/xerrors"
 )
 
 // OpenIDConnect - Auth0のOpenID Connectの認証設定
 type OpenIDConnect struct {
-	ClientID     string `config:"oifc_client_id"`
-	ClientSecret string `config:"oifc_client_secret"`
-	RedirectURL  string `config:"oifc_redirect_url"`
-	ProviderURL  string `config:"oifc_provider_url"`
+	ClientID     string `config:"oidc-client-id" json:"client_id" yaml:"client_id"`
+	ClientSecret string `config:"oidc-client-secret" json:"client_secret" yaml:"client_secret"`
+	RedirectURL  string `config:"oidc-redirect-url" json:"redirect_url" yaml:"redirect_url"`
+	ProviderURL  string `config:"oidc-provider-url" json:"provider_url" yaml:"provider_url"`
 }
 
 // EmailTemplate - Emailのテンプレート
 type EmailTemplate struct {
-	Subject *template.Template `json:"subject" yaml:"subject"`
-	Body    *template.Template `json:"body" yaml:"body"`
+	Subject *template.Template
+	Body    *template.Template
 }
 
 // EmailTemplates - Emailのテンプレートたち
 type EmailTemplates struct {
 	// EmailVerification - 登録時のメール送信
-	EmailVerification *EmailTemplate `json:"email_verification" yaml:"email_verification"`
+	EmailVerification *EmailTemplate
 }
 
 // EmailTemplateBase - Email本文のフォーマット設定
 type EmailTemplateBase struct {
-	Subject string `config:"-"`
-	Body    string `config:"-"`
+	Subject string `config:"-" json:"subject" yaml:"subject"`
+	Body    string `config:"-" json:"body" yaml:"body"`
 }
 
 func (b *EmailTemplateBase) parse() (*EmailTemplate, error) {
@@ -78,26 +79,45 @@ func (b *EmailTemplatesBase) parse() (*EmailTemplates, error) {
 
 // Email - Email周りの設定
 type Email struct {
-	SMTPServer string `config:"smtp_server"`
-	Username   string `config:"smtp_username"`
-	Password   string `config:"smtp_password"`
-	From       string `config:"smtp_from"`
+	SMTPServer string `config:"smtp_server" json:"smtp_server" yaml:"smtp_server"`
+	Username   string `config:"smtp_username" json:"username" yaml:"username"`
+	Password   string `config:"smtp_password" json:"password" yaml:"password"`
+	From       string `config:"smtp_from" json:"from" yaml:"from"`
 
-	Templates EmailTemplateBase
+	Templates EmailTemplatesBase `json:"templates" yaml:"templates"`
 }
 
 // Config - 各種設定用
 type Config struct {
-	Database string `config:"database-url"`
+	Database string `config:"database-url" json:"database" yaml:"database"`
 
-	OpenIDConnect OpenIDConnect
-	Email         Email
+	OpenIDConnect OpenIDConnect `json:"oidc" yaml:"oidc"`
+	Email         Email         `json:"email" yaml:"email"`
+}
+
+// NewBackend creates a configuration loader that loads from the environment.
+// If the key is not found, this backend tries again by turning any kebabcase key to snakecase and
+// lowercase letters to uppercase.
+func NewBackend() backend.Backend {
+	return backend.Func("env", func(ctx context.Context, key string) ([]byte, error) {
+		if val := os.Getenv(key); val != "" {
+			return []byte(val), nil
+		}
+		key = strings.Replace(strings.ToUpper(key), "-", "_", -1)
+		fmt.Println(key)
+		if val := os.Getenv(key); val != "" {
+			return []byte(val), nil
+		}
+		return nil, backend.ErrNotFound
+	})
 }
 
 // ReadConfig - configを読み込む
-func ReadConfig(name string) (*Config, error) {
+func ReadConfig() (*Config, error) {
+
+	fmt.Println(strings.Join(os.Environ(), "\n"))
 	var bs []backend.Backend = []backend.Backend{
-		env.NewBackend(),
+		NewBackend(),
 		file.NewOptionalBackend("/etc/portal/portal.yml"),
 	}
 	if home, err := os.UserHomeDir(); err == nil {

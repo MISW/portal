@@ -8,12 +8,7 @@ import (
 
 // Run - エントリーポイント
 func Run() {
-	configName, ok := os.LookupEnv("PORTAL_CONFIG")
-	if !ok {
-		configName = "./portal.yaml"
-	}
-
-	cfg, err := config.ReadConfig(configName)
+	cfg, err := config.ReadConfig()
 
 	if err != nil {
 		panic(err)
