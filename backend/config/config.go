@@ -22,59 +22,48 @@ type OpenIDConnect struct {
 	ProviderURL  string `config:"oidc-provider-url" json:"provider_url" yaml:"provider_url"`
 }
 
-// EmailTemplate - Emailのテンプレート
+// EmailTemplate - Email本文のフォーマット設定
 type EmailTemplate struct {
-	Subject *template.Template
-	Body    *template.Template
-}
-
-// EmailTemplates - Emailのテンプレートたち
-type EmailTemplates struct {
-	// EmailVerification - 登録時のメール送信
-	EmailVerification *EmailTemplate
-}
-
-// EmailTemplateBase - Email本文のフォーマット設定
-type EmailTemplateBase struct {
 	Subject string `config:"-" json:"subject" yaml:"subject"`
 	Body    string `config:"-" json:"body" yaml:"body"`
+
+	SubjectTemplate *template.Template `config:"-"`
+	BodyTeamplte    *template.Template `config:"-"`
 }
 
-func (b *EmailTemplateBase) parse() (*EmailTemplate, error) {
+func (b *EmailTemplate) parse() error {
 	subj, err := template.New("").Parse(b.Subject)
 
 	if err != nil {
-		return nil, xerrors.Errorf("failed to parse subjet: %w", err)
+		return xerrors.Errorf("failed to parse subjet: %w", err)
 	}
 
 	body, err := template.New("").Parse(b.Body)
 
 	if err != nil {
-		return nil, xerrors.Errorf("failed to parse subjet: %w", err)
+		return xerrors.Errorf("failed to parse subjet: %w", err)
 	}
 
-	return &EmailTemplate{
-		Subject: subj,
-		Body:    body,
-	}, nil
+	b.SubjectTemplate = subj
+	b.BodyTeamplte = body
+
+	return nil
 }
 
-// EmailTemplatesBase - Emailのテンプレート(テンプレートエンジン用)
-type EmailTemplatesBase struct {
+// EmailTemplates - Emailのテンプレート(テンプレートエンジン用)
+type EmailTemplates struct {
 	// EmailVerification - 登録時のメール送信
-	EmailVerification EmailTemplateBase
+	EmailVerification EmailTemplate
 }
 
-func (b *EmailTemplatesBase) parse() (*EmailTemplates, error) {
-	et, err := b.EmailVerification.parse()
+func (b *EmailTemplates) parse() error {
+	err := b.EmailVerification.parse()
 
 	if err != nil {
-		return nil, xerrors.Errorf("failed to parse email verification template: %w", err)
+		return xerrors.Errorf("failed to generate template for email verification: %w", err)
 	}
 
-	return &EmailTemplates{
-		EmailVerification: et,
-	}, nil
+	return nil
 }
 
 // Email - Email周りの設定
@@ -84,7 +73,7 @@ type Email struct {
 	Password   string `config:"smtp_password" json:"password" yaml:"password"`
 	From       string `config:"smtp_from" json:"from" yaml:"from"`
 
-	Templates EmailTemplatesBase `json:"templates" yaml:"templates"`
+	Templates EmailTemplates `json:"templates" yaml:"templates"`
 }
 
 // Config - 各種設定用
@@ -134,6 +123,10 @@ func ReadConfig() (*Config, error) {
 
 	if err != nil {
 		return nil, xerrors.Errorf("failed to load config: %w", err)
+	}
+
+	if err := cfg.Email.Templates.parse(); err != nil {
+		return nil, xerrors.Errorf("failed to load templates: %w", err)
 	}
 
 	return cfg, nil
