@@ -15,8 +15,8 @@ var (
 
 	defaultConfig = &Config{
 		Email: Email{
-			Templates: EmailTemplatesBase{
-				EmailVerification: EmailTemplateBase{
+			Templates: EmailTemplates{
+				EmailVerification: EmailTemplate{
 					Subject: emailVerificationSubject,
 					Body:    emailVerificationBody,
 				},

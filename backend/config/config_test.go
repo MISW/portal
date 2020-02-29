@@ -60,6 +60,9 @@ func TestLoadConfigFromEnv(t *testing.T) {
 		t.Fatal("failed to load config: %w", err)
 	}
 
+	cfg.Email.Templates.EmailVerification.SubjectTemplate = nil
+	cfg.Email.Templates.EmailVerification.BodyTeamplte = nil
+
 	if *cfg != *envExpectedConfig {
 		t.Fatalf("config does not match: expected: %v actual: %v", *envExpectedConfig, *cfg)
 	}
