@@ -3,9 +3,7 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import { Stepper, Step, StepLabel } from '@material-ui/core';
-import Button from '@material-ui/core/Button'
-
-type FormName = 'join' | 'setting';
+import Button from '@material-ui/core/Button';
 
 const useStyles = makeStyles(theme => ({
   paper: {
@@ -31,7 +29,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const steps = ['基本情報', '学籍情報', 'サークル内情報', '確認'] as const
+const steps = ['基本情報', '学籍情報', 'サークル内情報', '確認'] as const;
 
 const getStepContent = (step: number): JSX.Element => {
   switch (step) {
@@ -46,25 +44,26 @@ const getStepContent = (step: number): JSX.Element => {
     default:
       throw new Error('Unknown Step');
   }
-}
+};
 
-const RegisterForm: React.FC<{}> = (props: {}) => {
+export type RegisterFormProps = { formName: string };
+
+const RegisterForm: React.FC<RegisterFormProps> = (props: RegisterFormProps) => {
   const classes = useStyles();
-  const [activeStep, setActiveStep] = React.useState(0)
+  const [activeStep, setActiveStep] = React.useState(0);
 
   const handleNext = () => {
-    setActiveStep(activeStep + 1)
-  }
+    setActiveStep(activeStep + 1);
+  };
   const handleBack = () => {
-    setActiveStep(activeStep - 1)
-  }
+    setActiveStep(activeStep - 1);
+  };
   return (
-  <>
     <Paper className={classes.paper}>
       <Typography component="h1" variant="h4" align="center">
-        会員登録
+        {props.formName}
       </Typography>
-      <Stepper activeStep={activeStep}className={classes.stepper}>
+      <Stepper activeStep={activeStep} className={classes.stepper}>
         {
           steps.map(label => (
             <Step key={label}>
@@ -73,46 +72,30 @@ const RegisterForm: React.FC<{}> = (props: {}) => {
           ))
         }
       </Stepper>
-      <>
-        {activeStep === steps.length? (
-          <>
-            <Typography variant="h5" >
-              QRコードを会計に読み取ってもらってくれよな!
-            </Typography>
-            <Typography variant="subtitle1">
-              ここにQRコードが出ます
-            </Typography>
-          </>
-        ) : (
-          <>
-            {getStepContent(activeStep)}
-            <div className={classes.buttons}>
-              {activeStep != 0 && (
-                <Button 
-                  variant="contained"
-                  onClick={handleBack}
-                  className={classes.button}
-                >
-                  Back
-                </Button>
-              )}
-              {activeStep != steps.length - 1 && (
-                <Button
-                  variant="contained"
-                  className={classes.button}
-                  color="primary"
-                  onClick={handleNext}
-                >
-                  Next
-                </Button>
-              )}
-            </div>
-          </>
+      {getStepContent(activeStep)}
+      <div className={classes.buttons}>
+        {activeStep !== 0 && (
+          <Button
+            variant="contained"
+            onClick={handleBack}
+            className={classes.button}
+          >
+            Back
+          </Button>
         )}
-      </>
+        {activeStep !== steps.length - 1 && (
+          <Button
+            variant="contained"
+            className={classes.button}
+            color="primary"
+            onClick={handleNext}
+          >
+            Next
+          </Button>
+        )}
+      </div>
     </Paper>
-  </>
-);
-}
+  );
+};
 
 export default RegisterForm;

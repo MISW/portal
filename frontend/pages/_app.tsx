@@ -6,9 +6,23 @@ import { ThemeProvider } from '@material-ui/styles'
 import { CssBaseline, createMuiTheme } from '@material-ui/core'
 import { Auth, AuthContext } from '../auth/auth'
 import { NextPageContext } from 'next'
+import fetch from 'isomorphic-unfetch'
+
 
 const App = (props: AppProps & {auth: Auth}) => {
-  React.useEffect(() => {
+  React.useEffect( () => {
+    (async () => {
+      const json = await fetch('http://localhost:10080/api/public/login', {
+        headers: {
+          'Accept': 'applicaton/json, */*',
+          'Content-type': 'application/json'
+        },
+        method: 'POST'
+      }).then(res => res.json())
+      .catch( err => console.error(err));
+      console.log(json.redirect_url)
+
+    })()
     const jssStyles = document.querySelector('#jss-server-side')
     if (jssStyles && jssStyles.parentNode) {
       jssStyles.parentNode.removeChild(jssStyles);
@@ -27,7 +41,7 @@ const App = (props: AppProps & {auth: Auth}) => {
 
 App.getInitialProps = async ({
   Component,
-  ctx
+  ctx,
 }: {
   Component: any
   ctx: NextPageContext
