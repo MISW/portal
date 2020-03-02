@@ -1,6 +1,7 @@
 package usecase
 
 import (
+	"bytes"
 	"context"
 	"strings"
 	"time"
@@ -36,20 +37,20 @@ type SessionUsecase interface {
 // NewSessionUsecase - ユーザ関連のユースケースを初期化
 func NewSessionUsecase(userRepository repository.UserRepository, tokenRepository repository.TokenRepository, authenticator oidc.Authenticator, mailer email.Sender, mailTemplates *config.EmailTemplates) SessionUsecase {
 	return &sessionUsecase{
-		userRepository:  userRepository,
-		tokenRepository: tokenRepository,
-		authenticator:   authenticator,
-		mailer:          mailer,
-		mailTemplates:   mailTemplates,
+		userRepository:             userRepository,
+		tokenRepository:            tokenRepository,
+		authenticator:              authenticator,
+		mailer:                     mailer,
+		emailVerificationTemplates: mailTemplates.EmailVerification,
 	}
 }
 
 type sessionUsecase struct {
-	userRepository  repository.UserRepository
-	tokenRepository repository.TokenRepository
-	authenticator   oidc.Authenticator
-	mailer          email.Sender
-	mailTemplates   *config.EmailTemplates
+	userRepository             repository.UserRepository
+	tokenRepository            repository.TokenRepository
+	authenticator              oidc.Authenticator
+	mailer                     email.Sender
+	emailVerificationTemplates *config.EmailTemplate
 }
 
 var _ SessionUsecase = &sessionUsecase{}
@@ -73,7 +74,23 @@ func (us *sessionUsecase) Signup(ctx context.Context, user *domain.User) error {
 		return xerrors.Errorf("failed to insert new user: %w", err)
 	}
 
-	us.mailer.Send(user.Email, "", "")
+	metadata := map[string]string{
+		"VerificationLink": "",
+	}
+
+	subject := bytes.NewBuffer(nil)
+	body := bytes.NewBuffer(nil)
+
+	if err := us.emailVerificationTemplates.SubjectTemplate.Execute(subject, metadata); err != nil {
+		return xerrors.Errorf("failed to execute the template for the subject: %w", err)
+	}
+	if err := us.emailVerificationTemplates.BodyTeamplte.Execute(body, metadata); err != nil {
+		return xerrors.Errorf("failed to execute the template for the body: %w", err)
+	}
+
+	if err := us.mailer.Send(user.Email, subject.String(), body.String()); err != nil {
+		return xerrors.Errorf("failed to send email to verify the email address(%s): %w", user.Email, err)
+	}
 
 	return nil
 }

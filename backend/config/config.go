@@ -53,7 +53,7 @@ func (b *EmailTemplate) parse() error {
 // EmailTemplates - Emailのテンプレート(テンプレートエンジン用)
 type EmailTemplates struct {
 	// EmailVerification - 登録時のメール送信
-	EmailVerification EmailTemplate
+	EmailVerification *EmailTemplate
 }
 
 func (b *EmailTemplates) parse() error {
