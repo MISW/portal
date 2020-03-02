@@ -85,6 +85,10 @@ func initDig(cfg *config.Config, addr string) *dig.Container {
 	if err != nil {
 		panic(err)
 	}
+	err = c.Provide(usecase.NewProfileUsecase)
+	if err != nil {
+		panic(err)
+	}
 
 	err = c.Provide(private.NewSessionHandler)
 	if err != nil {
