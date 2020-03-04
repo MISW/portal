@@ -22,6 +22,8 @@ type SessionHandler interface {
 	Callback(e echo.Context) error
 
 	Signup(e echo.Context) error
+
+	VerifyEmail(e echo.Context) error
 }
 
 // NewSessionHandler - SessionHandlerを初期化
