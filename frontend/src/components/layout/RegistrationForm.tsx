@@ -4,6 +4,9 @@ import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import { Stepper, Step, StepLabel } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
+import FundamentalInfo from './forms/FundamentalInfo';
+import UniversityInfo from './forms/UniversityInfo';
+import CircleInfo from './forms/CircleInfo';
 
 const useStyles = makeStyles(theme => ({
   paper: {
@@ -34,11 +37,11 @@ const steps = ['基本情報', '学籍情報', 'サークル内情報', '確認'
 const getStepContent = (step: number): JSX.Element => {
   switch (step) {
     case 0:
-      return <>実装予定</>;
+      return <FundamentalInfo />;
     case 1:
-      return <></>;
+      return <UniversityInfo />;
     case 2:
-      return <></>;
+      return <CircleInfo />;
     case 3:
       return <></>;
     default:
