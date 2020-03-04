@@ -7,11 +7,13 @@ import (
 	"os"
 
 	"github.com/MISW/Portal/backend/config"
+	"github.com/MISW/Portal/backend/domain/repository"
 	"github.com/MISW/Portal/backend/infrastructure/persistence"
 	"github.com/MISW/Portal/backend/interfaces/api/private"
 	"github.com/MISW/Portal/backend/interfaces/api/public"
 	"github.com/MISW/Portal/backend/internal/db"
 	"github.com/MISW/Portal/backend/internal/email"
+	"github.com/MISW/Portal/backend/internal/jwt"
 	"github.com/MISW/Portal/backend/internal/middleware"
 	"github.com/MISW/Portal/backend/internal/oidc"
 	"github.com/MISW/Portal/backend/usecase"
@@ -93,7 +95,24 @@ func initDig(cfg *config.Config, addr string) *dig.Container {
 	if err != nil {
 		panic(err)
 	}
-	err = c.Provide(usecase.NewSessionUsecase)
+	err = c.Provide(func(
+		userRepository repository.UserRepository,
+		tokenRepository repository.TokenRepository,
+		authenticator oidc.Authenticator,
+		mailer email.Sender,
+		mailTemplates *config.EmailTemplates,
+		jwtProvider jwt.JWTProvider,
+	) usecase.SessionUsecase {
+		return usecase.NewSessionUsecase(
+			userRepository,
+			tokenRepository,
+			authenticator,
+			mailer,
+			mailTemplates,
+			jwtProvider,
+			cfg.BaseURL,
+		)
+	})
 	if err != nil {
 		panic(err)
 	}
@@ -113,6 +132,13 @@ func initDig(cfg *config.Config, addr string) *dig.Container {
 	}
 
 	err = c.Provide(middleware.NewAuthMiddleware)
+	if err != nil {
+		panic(err)
+	}
+
+	err = c.Provide(func() (jwt.JWTProvider, error) {
+		return jwt.NewJWTProvider(cfg.JWTPrivateKeyPath)
+	})
 	if err != nil {
 		panic(err)
 	}

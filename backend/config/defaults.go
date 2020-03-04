@@ -14,6 +14,7 @@ var (
 `
 
 	defaultConfig = &Config{
+		BaseURL: "http://localhost:10080/",
 		Email: Email{
 			Templates: EmailTemplates{
 				EmailVerification: &EmailTemplate{

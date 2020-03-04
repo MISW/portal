@@ -3,6 +3,9 @@ package usecase
 import (
 	"bytes"
 	"context"
+	"fmt"
+	"path"
+	"strconv"
 	"strings"
 	"time"
 
@@ -10,6 +13,7 @@ import (
 	"github.com/MISW/Portal/backend/domain"
 	"github.com/MISW/Portal/backend/domain/repository"
 	"github.com/MISW/Portal/backend/internal/email"
+	"github.com/MISW/Portal/backend/internal/jwt"
 	"github.com/MISW/Portal/backend/internal/oidc"
 	"github.com/MISW/Portal/backend/internal/rest"
 	"github.com/MISW/Portal/backend/internal/tokenutil"
@@ -32,16 +36,29 @@ type SessionUsecase interface {
 
 	// Validate - トークンの有効性を検証しユーザを取得する
 	Validate(ctx context.Context, token string) (user *domain.User, err error)
+
+	// VerifyEmail - Eメール認証用のトークンを受け取ってログイン用トークンを返す
+	VerifyEmail(ctx context.Context, verifyToken string) (token string, err error)
 }
 
 // NewSessionUsecase - ユーザ関連のユースケースを初期化
-func NewSessionUsecase(userRepository repository.UserRepository, tokenRepository repository.TokenRepository, authenticator oidc.Authenticator, mailer email.Sender, mailTemplates *config.EmailTemplates) SessionUsecase {
+func NewSessionUsecase(
+	userRepository repository.UserRepository,
+	tokenRepository repository.TokenRepository,
+	authenticator oidc.Authenticator,
+	mailer email.Sender,
+	mailTemplates *config.EmailTemplates,
+	jwtProvider jwt.JWTProvider,
+	baseURL string,
+) SessionUsecase {
 	return &sessionUsecase{
 		userRepository:             userRepository,
 		tokenRepository:            tokenRepository,
 		authenticator:              authenticator,
 		mailer:                     mailer,
 		emailVerificationTemplates: mailTemplates.EmailVerification,
+		jwtProvider:                jwtProvider,
+		baseURL:                    baseURL,
 	}
 }
 
@@ -51,6 +68,8 @@ type sessionUsecase struct {
 	authenticator              oidc.Authenticator
 	mailer                     email.Sender
 	emailVerificationTemplates *config.EmailTemplate
+	jwtProvider                jwt.JWTProvider
+	baseURL                    string
 }
 
 var _ SessionUsecase = &sessionUsecase{}
@@ -58,13 +77,13 @@ var _ SessionUsecase = &sessionUsecase{}
 // SignUp - ユーザ新規登録
 func (us *sessionUsecase) Signup(ctx context.Context, user *domain.User) error {
 	user.SlackID = ""
-	user.Role = domain.NewMember
+	user.Role = domain.EmailUnverified
 
 	if err := user.Validate(); err != nil {
 		return err
 	}
 
-	_, err := us.userRepository.Insert(ctx, user)
+	id, err := us.userRepository.Insert(ctx, user)
 
 	if xerrors.Is(err, domain.ErrEmailConflicts) {
 		return rest.NewBadRequest("メールアドレスが既に利用されています")
@@ -74,8 +93,17 @@ func (us *sessionUsecase) Signup(ctx context.Context, user *domain.User) error {
 		return xerrors.Errorf("failed to insert new user: %w", err)
 	}
 
+	token, err := us.jwtProvider.GenerateWithMap(map[string]interface{}{
+		"kind": "email_verification",
+		"uid":  strconv.Itoa(id),
+	})
+
+	if err != nil {
+		return xerrors.Errorf("failed to generate token for email verification: %w", err)
+	}
+
 	metadata := map[string]string{
-		"VerificationLink": "",
+		"VerificationLink": path.Join(us.baseURL, "/email_verification?token="+token),
 	}
 
 	subject := bytes.NewBuffer(nil)
@@ -175,4 +203,53 @@ func (us *sessionUsecase) Validate(ctx context.Context, token string) (user *dom
 	}
 
 	return user, nil
+}
+
+// VerifyEmail - メールアドレスの検証(メールに届いたリンクを受け取る)
+func (us *sessionUsecase) VerifyEmail(ctx context.Context, verifyToken string) (token string, err error) {
+	claims, err := us.jwtProvider.ParseAsMap(verifyToken)
+
+	if err != nil {
+		return "", rest.NewBadRequest(
+			fmt.Sprintf("invalid token(%v)", err),
+		)
+	}
+
+	if claims["kind"] != "email_verification" {
+		return "", rest.NewBadRequest(
+			fmt.Sprintf("invalid token(%v)", err),
+		)
+	}
+
+	uidString, ok := claims["uid"].(string)
+
+	if !ok {
+		return "", rest.NewBadRequest("invalid token")
+	}
+
+	uid, err := strconv.Atoi(uidString)
+
+	if err != nil {
+		return "", rest.NewBadRequest("invalid token(invalid character is contained)")
+	}
+
+	err = us.userRepository.UpdateRole(ctx, uid, domain.NotMember)
+
+	if err != nil {
+		return "", xerrors.Errorf("failed to update user's role: %w", err)
+	}
+
+	token, err = tokenutil.GenerateRandomToken()
+
+	if err != nil {
+		return "", xerrors.Errorf("failed to generate token: %w", err)
+	}
+
+	err = us.tokenRepository.Add(ctx, uid, token, time.Now().Add(10*24*time.Hour))
+
+	if err != nil {
+		return "", xerrors.Errorf("failed to insert new token: %w", err)
+	}
+
+	return token, nil
 }

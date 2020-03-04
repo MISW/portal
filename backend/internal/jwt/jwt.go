@@ -13,6 +13,12 @@ type JWTProvider interface {
 	GenerateWithMap(claims map[string]interface{}) (string, error)
 
 	Generate(sc *jwt.StandardClaims) (string, error)
+
+	Parse(tokenString string) (*jwt.Token, error)
+
+	ParseAsMap(tokenString string) (map[string]interface{}, error)
+
+	ParseAsStandard(tokenString string) (*jwt.StandardClaims, error)
 }
 
 // NewJWTProvider - initialize jwt provider
