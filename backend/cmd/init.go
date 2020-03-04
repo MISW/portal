@@ -203,6 +203,7 @@ func initHandler(cfg *config.Config, addr string) *echo.Echo {
 		g.POST("/login", sh.Login)
 		g.POST("/callback", sh.Callback)
 		g.POST("/signup", sh.Signup)
+		g.POST("/verify_email", sh.VerifyEmail)
 	})
 
 	if err != nil {
