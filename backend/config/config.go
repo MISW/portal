@@ -78,9 +78,9 @@ type Email struct {
 
 // Config - 各種設定用
 type Config struct {
-	Database          string `config:"database-url" json:"database" yaml:"database"`
-	BaseURL           string `config:"base-url" json:"base_url" yaml:"base_url"`
-	JWTPrivateKeyPath string `config:"jwt-private-key-path" json:"jwt_private_key_path" yaml:"jwt_private_key_path"`
+	Database string `config:"database-url" json:"database" yaml:"database"`
+	BaseURL  string `config:"base-url" json:"base_url" yaml:"base_url"`
+	JWTKey   string `config:"jwt-key" json:"jwt_key" yaml:"jwt_key"`
 
 	OpenIDConnect OpenIDConnect `json:"oidc" yaml:"oidc"`
 	Email         Email         `json:"email" yaml:"email"`

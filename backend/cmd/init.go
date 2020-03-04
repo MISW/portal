@@ -137,7 +137,7 @@ func initDig(cfg *config.Config, addr string) *dig.Container {
 	}
 
 	err = c.Provide(func() (jwt.JWTProvider, error) {
-		return jwt.NewJWTProvider(cfg.JWTPrivateKeyPath)
+		return jwt.NewJWTProvider(cfg.JWTKey)
 	})
 	if err != nil {
 		panic(err)

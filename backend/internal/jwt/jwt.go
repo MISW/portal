@@ -1,9 +1,6 @@
 package jwt
 
 import (
-	"crypto/rsa"
-	"io/ioutil"
-
 	"github.com/dgrijalva/jwt-go"
 	"golang.org/x/xerrors"
 )
@@ -22,26 +19,14 @@ type JWTProvider interface {
 }
 
 // NewJWTProvider - initialize jwt provider
-func NewJWTProvider(name string) (JWTProvider, error) {
-	b, err := ioutil.ReadFile(name)
-
-	if err != nil {
-		return nil, xerrors.Errorf("failed to load the file(%s): %w", name, err)
-	}
-
-	key, err := jwt.ParseRSAPrivateKeyFromPEM(b)
-
-	if err != nil {
-		return nil, xerrors.Errorf("failed to load the private key: %w", err)
-	}
-
+func NewJWTProvider(key string) (JWTProvider, error) {
 	return &jwtProvider{
-		key: key,
+		key: []byte(key),
 	}, nil
 }
 
 type jwtProvider struct {
-	key *rsa.PrivateKey
+	key []byte
 }
 
 var _ JWTProvider = &jwtProvider{}
