@@ -148,3 +148,41 @@ func (s *sessionHandler) Signup(e echo.Context) error {
 
 	return rest.RespondOK(e, nil)
 }
+
+func (s *sessionHandler) VerifyEmail(e echo.Context) error {
+	type VerifyEmailParams struct {
+		Token string `json:"token" query:"token"`
+	}
+	params := &VerifyEmailParams{}
+
+	err := e.Bind(params)
+
+	if err != nil {
+		return rest.RespondMessage(e, rest.NewBadRequest("token is missing"))
+	}
+
+	token, err := s.su.VerifyEmail(e.Request().Context(), params.Token)
+
+	if err, ok := err.(rest.ErrorResponse); ok {
+		return rest.RespondMessage(e, err)
+	}
+
+	if err != nil {
+		return xerrors.Errorf("failed to verify email address: %w", err)
+	}
+
+	cookie := new(http.Cookie)
+
+	if !insecureCookie() {
+		cookie.HttpOnly = true
+		cookie.Secure = true
+	}
+
+	cookie.Name = cookies.TokenCookieKey
+	cookie.Value = token
+	cookie.MaxAge = int(30 * 24 * time.Hour / time.Second)
+
+	e.SetCookie(cookie)
+
+	return rest.RespondOK(e, nil)
+}
