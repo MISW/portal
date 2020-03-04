@@ -24,7 +24,7 @@ export const getProfile = async (): Promise<User> => {
     method: 'GET'
   });
   if (res.status >= 400) {
-    return Promise.reject(`Error: status-code >= 404`);
+    return Promise.reject(`Error: status-code >= 400`);
   }
   const body = await res.json() as User;
   return body;

@@ -25,7 +25,8 @@ const Page: NextPage = () => {
       });
       const body = await res.json();
       if (res.status >= 400) {
-        throw new Error(`Status >= 400 message = ${body.message}, response=${res}`);
+        console.error(res);
+        throw new Error(`Status >= 400 message = ${body.message}`);
       }
       await router.push('/');
     };
