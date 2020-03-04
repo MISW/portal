@@ -1,12 +1,13 @@
-import React from "react";
-import AppBar from "@material-ui/core/AppBar";
-import Toolbar from "@material-ui/core/Toolbar";
-import Typography from "@material-ui/core/Typography";
+import React from 'react';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
 import { makeStyles, Theme } from '@material-ui/core/styles';
-import { IconButton, MenuItem, Menu } from "@material-ui/core";
-import MenuIcon from "@material-ui/icons/Menu"
-import AccountCircle from "@material-ui/icons/AccountCircle"
-import MUILink from "@material-ui/core/Link"
+import { IconButton, MenuItem, Menu } from '@material-ui/core';
+import MenuIcon from '@material-ui/icons/Menu';
+import AccountCircle from '@material-ui/icons/AccountCircle';
+import MUILink from '@material-ui/core/Link';
+import NextLink from 'next/link';
 
 const useStyles = makeStyles((theme: Theme) => ({
   appBar: {
@@ -29,7 +30,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   title: {
     flexGrow: 1
   }
-}))
+}));
 
 const Copyright: React.FC = () => {
   return (
@@ -42,7 +43,7 @@ const Copyright: React.FC = () => {
       {'.'}
     </Typography>
   );
-}
+};
 
 export const DefaultLayout: React.FC = ({ children }) => {
   const classes = useStyles();
@@ -54,7 +55,7 @@ export const DefaultLayout: React.FC = ({ children }) => {
   };
 
   const handleClose = () => {
-    setAnchorEl(null)
+    setAnchorEl(null);
   };
   return (
     <>
@@ -92,8 +93,16 @@ export const DefaultLayout: React.FC = ({ children }) => {
                 open={open}
                 onClose={handleClose}
               >
-                <MenuItem onClick={handleClose}>Profile</MenuItem>
-                <MenuItem onClick={handleClose}>My account</MenuItem>
+                <MenuItem>
+                  <NextLink href="/profile">
+                    <span>Profile</span>
+                  </NextLink>
+                </MenuItem>
+                <MenuItem>
+                  <NextLink href="/setting">
+                    <span>Setting</span>
+                  </NextLink>
+                </MenuItem>
               </Menu>
             </div>
           </Toolbar>
@@ -104,5 +113,5 @@ export const DefaultLayout: React.FC = ({ children }) => {
       </main>
       <Copyright />
     </>
-  )
+  );
 };

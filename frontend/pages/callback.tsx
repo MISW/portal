@@ -12,7 +12,7 @@ const Page: NextPage = () => {
       const code = params.get('code');
       const state = params.get('state');
       if (code === null || state === null) {
-        throw new Error('There is no status and code in query parameter')
+        throw new Error('There is no status and code in query parameter');
       }
       const res = await fetch(`${location.protocol}//${location.host}/api/public/callback`, {
         headers: {

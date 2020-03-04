@@ -17,15 +17,16 @@ const App = (props: AppProps) => {
       case '/callback':
         return;
       default:
+        let unmounted = false;
         (async () => {
           const isLogginIn = await checkLoggingIn();
-          if (!isLogginIn) {
+          if (!isLogginIn && !unmounted) {
             await router.push('/login');
           } else {
             console.log('already logging in');
           }
         })().catch(err => { throw err; });
-        return;
+      return () => { unmounted = true; };
     }
   }, []);
   useEffect( () => {

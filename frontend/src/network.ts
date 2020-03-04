@@ -1,3 +1,4 @@
+import { User } from './user';
 
 export const login = async () => {
   const res = await fetch(`${location.protocol}//${location.host}/api/public/login`, {
@@ -12,6 +13,21 @@ export const login = async () => {
   }
   const body = await res.json();
   location.href = body.redirect_url;
+};
+
+export const getProfile = async (): Promise<User> => {
+  const res = await fetch(`${location.protocol}//${location.host}/api/private/profile`, {
+    headers: {
+      'Accept': 'applicaton/json, */*',
+    },
+    credentials: 'include',
+    method: 'GET'
+  });
+  if (res.status >= 400) {
+    return Promise.reject(`Error: status-code >= 404`);
+  }
+  const body = await res.json() as User;
+  return body;
 };
 
 export const checkLoggingIn = async (): Promise<boolean>   => {

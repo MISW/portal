@@ -8,7 +8,7 @@ const Page: NextPage = () => {
   useEffect(() => {
     login()
       .catch( err => { throw err; });
-  });;
+  });
   return (
     <DefaultLayout>
       Trying Login...
