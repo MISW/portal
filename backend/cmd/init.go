@@ -143,8 +143,8 @@ func initDig(cfg *config.Config, addr string) *dig.Container {
 		panic(err)
 	}
 
-	err = c.Provide(func() config.EmailTemplates {
-		return cfg.Email.Templates
+	err = c.Provide(func() *config.EmailTemplates {
+		return &cfg.Email.Templates
 	})
 	if err != nil {
 		panic(err)
