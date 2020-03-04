@@ -1,11 +1,11 @@
-import React from "react";
-import { NextPage } from "next";
-import { DefaultLayout } from "../components/layout/DefaultLayout";
+import React from 'react';
+import { NextPage } from 'next';
+import { DefaultLayout } from '../src/components/layout/DefaultLayout';
+import RegisterForm from '../src/components/layout/RegistrationForm';
 
 const Page: NextPage = () => (
   <DefaultLayout>
-    <h1>会員情報設定</h1>
-    ここにすばらしい会員登録フォームができます!
+    <RegisterForm formName="会員情報設定"/>
   </DefaultLayout>
 );
 
