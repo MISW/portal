@@ -220,7 +220,12 @@ func initHandler(cfg *config.Config, addr string) *echo.Echo {
 	// }))
 	initReverseProxy(e)
 
-	e.Logger.SetLevel(log.DEBUG)
+	if os.Getenv("DEBUG_MODE") != "" {
+		e.Logger.SetLevel(log.DEBUG)
+		e.Debug = true
+	} else {
+		e.Logger.SetLevel(log.INFO)
+	}
 
 	e.Logger.Infof("dig container: %s", digc.String())
 
