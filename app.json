@@ -36,6 +36,12 @@
         },
         "SMTP_FROM": {
             "value": "noreply@misw.jp"
+        },
+        "JWT_KEY": {
+            "value": "very_secure_jwt_password"
+        },
+        "DEBUG_MODE": {
+            "value": "1"
         }
     },
     "formation": {},
