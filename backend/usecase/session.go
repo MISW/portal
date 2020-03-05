@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"fmt"
+	"net/url"
 	"path"
 	"strconv"
 	"strings"
@@ -102,8 +103,16 @@ func (us *sessionUsecase) Signup(ctx context.Context, user *domain.User) error {
 		return xerrors.Errorf("failed to generate token for email verification: %w", err)
 	}
 
+	u, err := url.Parse(us.baseURL)
+
+	if err != nil {
+		return xerrors.Errorf("base url is invalid(%s): %w", us.baseURL, err)
+	}
+
+	u.Path = path.Join(u.Path, "/verify_email?token="+token)
+
 	metadata := map[string]string{
-		"VerificationLink": path.Join(us.baseURL, "/email_verification?token="+token),
+		"VerificationLink": u.String(),
 	}
 
 	subject := bytes.NewBuffer(nil)
