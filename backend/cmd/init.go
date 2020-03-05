@@ -3,15 +3,17 @@ package cmd
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"net/url"
 	"os"
 
 	"github.com/MISW/Portal/backend/config"
+	"github.com/MISW/Portal/backend/domain/repository"
 	"github.com/MISW/Portal/backend/infrastructure/persistence"
 	"github.com/MISW/Portal/backend/interfaces/api/private"
 	"github.com/MISW/Portal/backend/interfaces/api/public"
 	"github.com/MISW/Portal/backend/internal/db"
+	"github.com/MISW/Portal/backend/internal/email"
+	"github.com/MISW/Portal/backend/internal/jwt"
 	"github.com/MISW/Portal/backend/internal/middleware"
 	"github.com/MISW/Portal/backend/internal/oidc"
 	"github.com/MISW/Portal/backend/usecase"
@@ -53,8 +55,20 @@ func initDig(cfg *config.Config, addr string) *dig.Container {
 		panic(err)
 	}
 
+	err = c.Provide(func() email.Sender {
+		return email.NewSender(
+			cfg.Email.SMTPServer,
+			cfg.Email.Username,
+			cfg.Email.Password,
+			cfg.Email.From,
+		)
+	})
+
+	if err != nil {
+		panic(err)
+	}
+
 	err = c.Provide(func() (db.Ext, error) {
-		fmt.Println(cfg.Database)
 		conn, err := sqlx.Connect("mysql", cfg.Database)
 
 		if err != nil {
@@ -81,7 +95,24 @@ func initDig(cfg *config.Config, addr string) *dig.Container {
 	if err != nil {
 		panic(err)
 	}
-	err = c.Provide(usecase.NewSessionUsecase)
+	err = c.Provide(func(
+		userRepository repository.UserRepository,
+		tokenRepository repository.TokenRepository,
+		authenticator oidc.Authenticator,
+		mailer email.Sender,
+		mailTemplates *config.EmailTemplates,
+		jwtProvider jwt.JWTProvider,
+	) usecase.SessionUsecase {
+		return usecase.NewSessionUsecase(
+			userRepository,
+			tokenRepository,
+			authenticator,
+			mailer,
+			mailTemplates,
+			jwtProvider,
+			cfg.BaseURL,
+		)
+	})
 	if err != nil {
 		panic(err)
 	}
@@ -105,6 +136,20 @@ func initDig(cfg *config.Config, addr string) *dig.Container {
 	}
 
 	err = c.Provide(middleware.NewAuthMiddleware)
+	if err != nil {
+		panic(err)
+	}
+
+	err = c.Provide(func() (jwt.JWTProvider, error) {
+		return jwt.NewJWTProvider(cfg.JWTKey)
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	err = c.Provide(func() *config.EmailTemplates {
+		return &cfg.Email.Templates
+	})
 	if err != nil {
 		panic(err)
 	}
@@ -164,6 +209,7 @@ func initHandler(cfg *config.Config, addr string) *echo.Echo {
 		g.POST("/login", sh.Login)
 		g.POST("/callback", sh.Callback)
 		g.POST("/signup", sh.Signup)
+		g.POST("/verify_email", sh.VerifyEmail)
 	})
 
 	if err != nil {
@@ -178,7 +224,12 @@ func initHandler(cfg *config.Config, addr string) *echo.Echo {
 	// }))
 	initReverseProxy(e)
 
-	e.Logger.SetLevel(log.DEBUG)
+	if os.Getenv("DEBUG_MODE") != "" {
+		e.Logger.SetLevel(log.DEBUG)
+		e.Debug = true
+	} else {
+		e.Logger.SetLevel(log.INFO)
+	}
 
 	e.Logger.Infof("dig container: %s", digc.String())
 

@@ -1,12 +1,20 @@
 package usecase
 
 import (
+	"bytes"
 	"context"
+	"fmt"
+	"net/url"
+	"path"
+	"strconv"
 	"strings"
 	"time"
 
+	"github.com/MISW/Portal/backend/config"
 	"github.com/MISW/Portal/backend/domain"
 	"github.com/MISW/Portal/backend/domain/repository"
+	"github.com/MISW/Portal/backend/internal/email"
+	"github.com/MISW/Portal/backend/internal/jwt"
 	"github.com/MISW/Portal/backend/internal/oidc"
 	"github.com/MISW/Portal/backend/internal/rest"
 	"github.com/MISW/Portal/backend/internal/tokenutil"
@@ -16,7 +24,7 @@ import (
 // SessionUsecase - login/signup/logoutなどのセッション周りの処理
 type SessionUsecase interface {
 	// SignUp - ユーザ新規登録
-	Signup(ctx context.Context, user *domain.User) (token string, err error)
+	Signup(ctx context.Context, user *domain.User) error
 
 	// Login - OpenID ConnectのリダイレクトURLを生成する
 	Login(ctx context.Context) (redirectURL, state string, err error)
@@ -29,57 +37,99 @@ type SessionUsecase interface {
 
 	// Validate - トークンの有効性を検証しユーザを取得する
 	Validate(ctx context.Context, token string) (user *domain.User, err error)
+
+	// VerifyEmail - Eメール認証用のトークンを受け取ってログイン用トークンを返す
+	VerifyEmail(ctx context.Context, verifyToken string) (token string, err error)
 }
 
 // NewSessionUsecase - ユーザ関連のユースケースを初期化
-func NewSessionUsecase(userRepository repository.UserRepository, tokenRepository repository.TokenRepository, authenticator oidc.Authenticator) SessionUsecase {
+func NewSessionUsecase(
+	userRepository repository.UserRepository,
+	tokenRepository repository.TokenRepository,
+	authenticator oidc.Authenticator,
+	mailer email.Sender,
+	mailTemplates *config.EmailTemplates,
+	jwtProvider jwt.JWTProvider,
+	baseURL string,
+) SessionUsecase {
 	return &sessionUsecase{
-		userRepository:  userRepository,
-		tokenRepository: tokenRepository,
-		authenticator:   authenticator,
+		userRepository:             userRepository,
+		tokenRepository:            tokenRepository,
+		authenticator:              authenticator,
+		mailer:                     mailer,
+		emailVerificationTemplates: mailTemplates.EmailVerification,
+		jwtProvider:                jwtProvider,
+		baseURL:                    baseURL,
 	}
 }
 
 type sessionUsecase struct {
-	userRepository  repository.UserRepository
-	tokenRepository repository.TokenRepository
-	authenticator   oidc.Authenticator
+	userRepository             repository.UserRepository
+	tokenRepository            repository.TokenRepository
+	authenticator              oidc.Authenticator
+	mailer                     email.Sender
+	emailVerificationTemplates *config.EmailTemplate
+	jwtProvider                jwt.JWTProvider
+	baseURL                    string
 }
 
 var _ SessionUsecase = &sessionUsecase{}
 
 // SignUp - ユーザ新規登録
-func (us *sessionUsecase) Signup(ctx context.Context, user *domain.User) (token string, err error) {
+func (us *sessionUsecase) Signup(ctx context.Context, user *domain.User) error {
 	user.SlackID = ""
-	user.Role = domain.NotMember
+	user.Role = domain.EmailUnverified
 
 	if err := user.Validate(); err != nil {
-		return "", err
+		return err
 	}
 
 	id, err := us.userRepository.Insert(ctx, user)
 
 	if xerrors.Is(err, domain.ErrEmailConflicts) {
-		return "", rest.NewBadRequest("メールアドレスが既に利用されています")
+		return rest.NewBadRequest("メールアドレスが既に利用されています")
 	}
 
 	if err != nil {
-		return "", xerrors.Errorf("failed to insert new user: %w", err)
+		return xerrors.Errorf("failed to insert new user: %w", err)
 	}
 
-	token, err = tokenutil.GenerateRandomToken()
+	token, err := us.jwtProvider.GenerateWithMap(map[string]interface{}{
+		"kind": "email_verification",
+		"uid":  strconv.Itoa(id),
+	})
 
 	if err != nil {
-		return "", xerrors.Errorf("failed to generate token: %w", err)
+		return xerrors.Errorf("failed to generate token for email verification: %w", err)
 	}
 
-	err = us.tokenRepository.Add(ctx, id, token, time.Now().Add(10*24*time.Hour))
+	u, err := url.Parse(us.baseURL)
 
 	if err != nil {
-		return "", xerrors.Errorf("failed to insert new token: %w", err)
+		return xerrors.Errorf("base url is invalid(%s): %w", us.baseURL, err)
 	}
 
-	return token, nil
+	u.Path = path.Join(u.Path, "/verify_email?token="+token)
+
+	metadata := map[string]string{
+		"VerificationLink": u.String(),
+	}
+
+	subject := bytes.NewBuffer(nil)
+	body := bytes.NewBuffer(nil)
+
+	if err := us.emailVerificationTemplates.SubjectTemplate.Execute(subject, metadata); err != nil {
+		return xerrors.Errorf("failed to execute the template for the subject: %w", err)
+	}
+	if err := us.emailVerificationTemplates.BodyTeamplte.Execute(body, metadata); err != nil {
+		return xerrors.Errorf("failed to execute the template for the body: %w", err)
+	}
+
+	if err := us.mailer.Send(user.Email, subject.String(), body.String()); err != nil {
+		return xerrors.Errorf("failed to send email to verify the email address(%s): %w", user.Email, err)
+	}
+
+	return nil
 }
 
 // Login - OpenID ConnectのリダイレクトURLを生成する
@@ -162,4 +212,53 @@ func (us *sessionUsecase) Validate(ctx context.Context, token string) (user *dom
 	}
 
 	return user, nil
+}
+
+// VerifyEmail - メールアドレスの検証(メールに届いたリンクを受け取る)
+func (us *sessionUsecase) VerifyEmail(ctx context.Context, verifyToken string) (token string, err error) {
+	claims, err := us.jwtProvider.ParseAsMap(verifyToken)
+
+	if err != nil {
+		return "", rest.NewBadRequest(
+			fmt.Sprintf("invalid token(%v)", err),
+		)
+	}
+
+	if claims["kind"] != "email_verification" {
+		return "", rest.NewBadRequest(
+			fmt.Sprintf("invalid token(%v)", err),
+		)
+	}
+
+	uidString, ok := claims["uid"].(string)
+
+	if !ok {
+		return "", rest.NewBadRequest("invalid token")
+	}
+
+	uid, err := strconv.Atoi(uidString)
+
+	if err != nil {
+		return "", rest.NewBadRequest("invalid token(invalid character is contained)")
+	}
+
+	err = us.userRepository.UpdateRole(ctx, uid, domain.NotMember)
+
+	if err != nil {
+		return "", xerrors.Errorf("failed to update user's role: %w", err)
+	}
+
+	token, err = tokenutil.GenerateRandomToken()
+
+	if err != nil {
+		return "", xerrors.Errorf("failed to generate token: %w", err)
+	}
+
+	err = us.tokenRepository.Add(ctx, uid, token, time.Now().Add(10*24*time.Hour))
+
+	if err != nil {
+		return "", xerrors.Errorf("failed to insert new token: %w", err)
+	}
+
+	return token, nil
 }

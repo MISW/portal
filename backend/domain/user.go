@@ -36,6 +36,12 @@ const (
 
 	// NotMember - 未払い状態のメンバー(会員資格なし)
 	NotMember RoleType = "not_member"
+
+	// NewMember - 新規登録(支払い未確認)のメンバー(会員資格なし) 自動削除
+	NewMember RoleType = "new_member"
+
+	// EmailUnverified - 新規登録(支払い未確認、メール未確認)のメンバー(会員資格なし) 自動削除
+	EmailUnverified RoleType = "email_unverified"
 )
 
 // University - 所属大学

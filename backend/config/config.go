@@ -1,91 +1,134 @@
 package config
 
 import (
-	"io"
+	"context"
+	"fmt"
+	"html/template"
 	"os"
+	"path/filepath"
 	"strings"
 
+	"github.com/heetch/confita"
+	"github.com/heetch/confita/backend"
+	"github.com/heetch/confita/backend/file"
 	"golang.org/x/xerrors"
-	"gopkg.in/yaml.v2"
 )
 
 // OpenIDConnect - Auth0のOpenID Connectの認証設定
 type OpenIDConnect struct {
-	ClientID     string `json:"client_id" yaml:"client_id"`
-	ClientSecret string `json:"client_secret" yaml:"client_secret"`
-	RedirectURL  string `json:"redirect_url" yaml:"redirect_url"`
-	ProviderURL  string `json:"provider_url" yaml:"provider_url"`
+	ClientID     string `config:"oidc-client-id" json:"client_id" yaml:"client_id"`
+	ClientSecret string `config:"oidc-client-secret" json:"client_secret" yaml:"client_secret"`
+	RedirectURL  string `config:"oidc-redirect-url" json:"redirect_url" yaml:"redirect_url"`
+	ProviderURL  string `config:"oidc-provider-url" json:"provider_url" yaml:"provider_url"`
+}
+
+// EmailTemplate - Email本文のフォーマット設定
+type EmailTemplate struct {
+	Subject string `config:"-" json:"subject" yaml:"subject"`
+	Body    string `config:"-" json:"body" yaml:"body"`
+
+	SubjectTemplate *template.Template `config:"-"`
+	BodyTeamplte    *template.Template `config:"-"`
+}
+
+func (b *EmailTemplate) parse() error {
+	subj, err := template.New("").Parse(b.Subject)
+
+	if err != nil {
+		return xerrors.Errorf("failed to parse subjet: %w", err)
+	}
+
+	body, err := template.New("").Parse(b.Body)
+
+	if err != nil {
+		return xerrors.Errorf("failed to parse subjet: %w", err)
+	}
+
+	b.SubjectTemplate = subj
+	b.BodyTeamplte = body
+
+	return nil
+}
+
+// EmailTemplates - Emailのテンプレート(テンプレートエンジン用)
+type EmailTemplates struct {
+	// EmailVerification - 登録時のメール送信
+	EmailVerification *EmailTemplate
+}
+
+func (b *EmailTemplates) parse() error {
+	err := b.EmailVerification.parse()
+
+	if err != nil {
+		return xerrors.Errorf("failed to generate template for email verification: %w", err)
+	}
+
+	return nil
 }
 
 // Email - Email周りの設定
 type Email struct {
-	SMTPServer string `json:"smtp_server" yaml:"smtp_server"`
-	Username   string `json:"username" yaml:"username"`
-	Password   string `json:"password" yaml:"password"`
-	From       string `json:"from" yaml:"from"`
+	SMTPServer string `config:"smtp_server" json:"smtp_server" yaml:"smtp_server"`
+	Username   string `config:"smtp_username" json:"username" yaml:"username"`
+	Password   string `config:"smtp_password" json:"password" yaml:"password"`
+	From       string `config:"smtp_from" json:"from" yaml:"from"`
+
+	Templates EmailTemplates `json:"templates" yaml:"templates"`
 }
 
 // Config - 各種設定用
 type Config struct {
-	Database string `json:"database" yaml:"database"`
+	Database string `config:"database-url" json:"database" yaml:"database"`
+	BaseURL  string `config:"base-url" json:"base_url" yaml:"base_url"`
+	JWTKey   string `config:"jwt-key" json:"jwt_key" yaml:"jwt_key"`
 
 	OpenIDConnect OpenIDConnect `json:"oidc" yaml:"oidc"`
 	Email         Email         `json:"email" yaml:"email"`
 }
 
-// ReadConfig - configを読み込む
-func ReadConfig(name string) (*Config, error) {
-	var reader io.Reader
-
-	if strings.HasPrefix(name, "env://") {
-		reader = strings.NewReader(os.Getenv(strings.TrimPrefix(name, "env://")))
-	} else {
-		fp, err := os.Open(name)
-
-		if err != nil {
-			return nil, xerrors.Errorf("failed to read config: %w", err)
+// NewBackend creates a configuration loader that loads from the environment.
+// If the key is not found, this backend tries again by turning any kebabcase key to snakecase and
+// lowercase letters to uppercase.
+func NewBackend() backend.Backend {
+	return backend.Func("env", func(ctx context.Context, key string) ([]byte, error) {
+		if val := os.Getenv(key); val != "" {
+			return []byte(val), nil
 		}
+		key = strings.Replace(strings.ToUpper(key), "-", "_", -1)
+		fmt.Println(key)
+		if val := os.Getenv(key); val != "" {
+			return []byte(val), nil
+		}
+		return nil, backend.ErrNotFound
+	})
+}
 
-		reader = fp
-		defer fp.Close()
+// ReadConfig - configを読み込む
+func ReadConfig() (*Config, error) {
+
+	fmt.Println(strings.Join(os.Environ(), "\n"))
+	var bs []backend.Backend = []backend.Backend{
+		NewBackend(),
+		file.NewOptionalBackend("/etc/portal/portal.yml"),
+	}
+	if home, err := os.UserHomeDir(); err == nil {
+		bs = append(bs, file.NewOptionalBackend(filepath.Join(home, ".config", "portal.yml")))
+	}
+	if wd, err := os.Getwd(); err == nil {
+		bs = append(bs, file.NewOptionalBackend(filepath.Join(wd, "portal.yml")))
 	}
 
-	cfg := &Config{}
+	cfg := newDefaultConfig()
+	loader := confita.NewLoader(bs...)
 
-	err := yaml.NewDecoder(reader).Decode(cfg)
+	err := loader.Load(context.Background(), cfg)
 
 	if err != nil {
-		return nil, xerrors.Errorf("failed to parse config: %w", err)
+		return nil, xerrors.Errorf("failed to load config: %w", err)
 	}
 
-	if cfg.Database == "" {
-		cfg.Database = os.Getenv("DATABASE_URL")
-	}
-
-	if cfg.OpenIDConnect.RedirectURL == "" {
-		cfg.OpenIDConnect.RedirectURL = os.Getenv("OIDC_REDIRECT_URL")
-	}
-	if cfg.OpenIDConnect.ClientID == "" {
-		cfg.OpenIDConnect.ClientID = os.Getenv("OIDC_CLIENT_ID")
-	}
-	if cfg.OpenIDConnect.ClientSecret == "" {
-		cfg.OpenIDConnect.ClientSecret = os.Getenv("OIDC_CLIENT_SECRET")
-	}
-	if cfg.OpenIDConnect.ProviderURL == "" {
-		cfg.OpenIDConnect.ProviderURL = os.Getenv("OIDC_PROVIDER_URL")
-	}
-
-	if cfg.Email.SMTPServer == "" {
-		cfg.Email.SMTPServer = os.Getenv("SMTP_SERVER")
-	}
-	if cfg.Email.Username == "" {
-		cfg.Email.Username = os.Getenv("SMTP_USERNAME")
-	}
-	if cfg.Email.Password == "" {
-		cfg.Email.Password = os.Getenv("SMTP_PASSWORD")
-	}
-	if cfg.Email.From == "" {
-		cfg.Email.From = os.Getenv("SMTP_FROM")
+	if err := cfg.Email.Templates.parse(); err != nil {
+		return nil, xerrors.Errorf("failed to load templates: %w", err)
 	}
 
 	return cfg, nil
