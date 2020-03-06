@@ -242,7 +242,7 @@ func (us *sessionUsecase) VerifyEmail(ctx context.Context, verifyToken string) (
 		return "", rest.NewBadRequest("invalid token(invalid character is contained)")
 	}
 
-	err = us.userRepository.UpdateRole(ctx, uid, domain.NotMember)
+	err = us.userRepository.UpdateRole(ctx, uid, domain.NewMember)
 
 	if err != nil {
 		return "", xerrors.Errorf("failed to update user's role: %w", err)
