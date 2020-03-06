@@ -18,6 +18,14 @@ type PaymentStatus struct {
 	UpdatedAt time.Time `json:"updated_at" yaml:"updated_at"`
 }
 
+type PaymentTransaction struct {
+	Token string
+	UserID int `json:"user_id" yaml:"user_id"`
+
+	CreatedAt time.Time `json:"created_at" yaml:"created_at"`
+	ExpiredAt time.Time `json:"expired_at" yaml:"expired_at"`
+}
+
 var (
 	// ErrAlreadyPaid - 既に支払が完了している
 	ErrAlreadyPaid = xerrors.New("the user already paid")
