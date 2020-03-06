@@ -25,7 +25,7 @@ type PaymentStatusRepository interface {
 // PaymentTransactionRepository - サークル費支払い時のトークン管理
 type PaymentTransactionRepository interface {
 	// Add - 新しい支払情報の追加
-	Add(ctx context.Context, userID, token string, expiredAt time.Time) error
+	Add(ctx context.Context, userID int, token string, expiredAt time.Time) error
 
 	Get(ctx context.Context, token string) (*domain.PaymentTransaction, error)
 

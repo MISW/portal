@@ -19,7 +19,7 @@ type PaymentStatus struct {
 }
 
 type PaymentTransaction struct {
-	Token string
+	Token string `json:"token" yaml:"token"`
 	UserID int `json:"user_id" yaml:"user_id"`
 
 	CreatedAt time.Time `json:"created_at" yaml:"created_at"`
@@ -31,5 +31,8 @@ var (
 	ErrAlreadyPaid = xerrors.New("the user already paid")
 
 	// ErrNoPaymentStatus - 一件も支払履歴がない
-	ErrNoPaymentStatus = xerrors.New("not payment status")
+	ErrNoPaymentStatus = xerrors.New("no payment status")
+
+	// ErrNoPaymentTransaction - 支払い処理トランザクションが存在しない
+	ErrNoPaymentTransaction = xerrors.New("no  transaction")
 )
