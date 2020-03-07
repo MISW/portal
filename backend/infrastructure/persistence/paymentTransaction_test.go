@@ -15,18 +15,20 @@ import (
 )
 
 var (
+	now = time.Unix(time.Now().Unix(), 0)
+
 	paymentTransactionTestData1 = &domain.PaymentTransaction{
 		Token:  "token1",
 		UserID: 1,
 
-		ExpiredAt: time.Now().Add(30 * time.Second),
+		ExpiredAt: now.Add(30 * time.Second),
 	}
 
 	paymentTransactionTestData2 = &domain.PaymentTransaction{
 		Token:  "token2",
 		UserID: 1,
 
-		ExpiredAt: time.Now().Add(-30 * time.Second), // Expired
+		ExpiredAt: now.Add(-30 * time.Second), // Expired
 	}
 
 	paymentTransactionTestData = []*domain.PaymentTransaction{
