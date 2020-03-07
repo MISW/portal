@@ -96,7 +96,7 @@ func (ptp paymentTransactionPersistence) Delete(ctx context.Context, token strin
 }
 
 func (ptp paymentTransactionPersistence) RevokeExpired(ctx context.Context) error {
-	query := `DELETE FROM payment_transactions WHERE expired_at > CURRENT_TIMESTAMP`
+	query := `DELETE FROM payment_transactions WHERE expired_at < CURRENT_TIMESTAMP`
 
 	_, err := ptp.db.Exec(query)
 
