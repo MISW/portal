@@ -3,12 +3,13 @@ package persistence
 import (
 	"context"
 	"database/sql"
+	"time"
+
 	"github.com/MISW/Portal/backend/domain"
 	"github.com/MISW/Portal/backend/domain/repository"
 	"github.com/MISW/Portal/backend/internal/db"
 	"github.com/jmoiron/sqlx"
 	"golang.org/x/xerrors"
-	"time"
 )
 
 // NewPaymentTransactionPersistence - 支払状況のMySQL関連の実装
@@ -72,7 +73,14 @@ func (ptp paymentTransactionPersistence) Get(ctx context.Context, token string) 
 		return nil, xerrors.Errorf("failed to find payment transaction: %w", err)
 	}
 
-	return pt, nil
+	res := &domain.PaymentTransaction{
+		Token:     pt.Token,
+		UserID:    pt.UserID,
+		CreatedAt: pt.CreatedAt,
+		ExpiredAt: pt.ExpiredAt,
+	}
+
+	return res, nil
 }
 
 func (ptp paymentTransactionPersistence) Delete(ctx context.Context, token string) error {
