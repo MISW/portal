@@ -5,7 +5,6 @@ import { getProfile } from '../../src/network';
 import { User } from '../../src/user';
 import { Typography } from '@material-ui/core';
 
-
 const Page: NextPage = () => {
   const [myProfile, setMyProfile] = useState<User | null>(null);
   useEffect(() => {

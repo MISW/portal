@@ -37,3 +37,11 @@ export interface User {
   created_at: number;
   updated_at: number;
 }
+
+export type UserDataForSignUp = Omit<User,
+  | 'id'
+  | 'slack_id'
+  | 'role'
+  | 'created_at'
+  | 'updated_at'
+>;

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { NextPage } from 'next';
 import { DefaultLayout } from '../src/components/layout/DefaultLayout';
 import { useRouter } from 'next/router';
@@ -6,7 +6,7 @@ import { Typography } from '@material-ui/core';
 
 const Page: NextPage = () => {
   const router = useRouter();
-  React.useEffect(() => {
+  useEffect(() => {
     const sendStatus = async () => {
       const params =  new URLSearchParams(location.search);
       const code = params.get('code');
