@@ -63,7 +63,7 @@ func (ptp paymentTransactionPersistence) Get(ctx context.Context, token string) 
 `
 
 	pt := &paymentTransaction{}
-	err := sqlx.Get(ptp.db, pt, query)
+	err := sqlx.Get(ptp.db, pt, query, token)
 
 	if err != nil {
 		if err == sql.ErrNoRows {
