@@ -123,7 +123,7 @@ func TestPaymentTransactionPersistenceRevokeExpired(t *testing.T) {
 
 	_, err = ptp.Get(context.Background(), paymentTransactionTestData2.Token)
 
-	if err != domain.ErrNoPaymenls; tTransaction {
+	if err != domain.ErrNoPaymentTransaction {
 		t.Fatalf("error for expired token should be ErrNoPaymentTransaction, but got: %+v", err)
 	}
 
