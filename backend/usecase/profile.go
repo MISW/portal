@@ -95,10 +95,16 @@ func (pu *profileUsecase) GetPaymentTransaction(ctx context.Context, userID int)
 		return nil, xerrors.Errorf("failed to generate token: %w", err)
 	}
 
-	pt, err := pu.transactionRepository.Add(ctx, userID, token, time.Now().Add(1*time.Minute))
+	err = pu.transactionRepository.Add(ctx, userID, token, time.Now().Add(1*time.Minute))
 
 	if err != nil {
 		return nil, xerrors.Errorf("failed to add new payment transaction(%d): %w", userID, err)
+	}
+
+	pt, err := pu.transactionRepository.Get(ctx, token)
+
+	if err != nil {
+		return nil, xerrors.Errorf("failed to get the payment transaction(%d): %w", userID, err)
 	}
 
 	return pt, nil

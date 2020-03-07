@@ -19,8 +19,8 @@ type PaymentStatus struct {
 }
 
 type PaymentTransaction struct {
-	Token string `json:"token" yaml:"token"`
-	UserID int `json:"user_id" yaml:"user_id"`
+	Token  string `json:"token" yaml:"token"`
+	UserID int    `json:"user_id" yaml:"user_id"`
 
 	CreatedAt time.Time `json:"created_at" yaml:"created_at"`
 	ExpiredAt time.Time `json:"expired_at" yaml:"expired_at"`
