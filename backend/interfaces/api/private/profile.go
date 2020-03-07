@@ -20,6 +20,9 @@ type ProfileHandler interface {
 
 	// GetPaymentStatuses - 自分自身の支払い状況を取得する
 	GetPaymentStatuses(e echo.Context) error
+
+	// GetPaymentTransaction - 支払い用トークンを生成する
+	GetPaymentTransaction(e echo.Context) error
 }
 
 // NewProfileHandler - ProfileHandlerを初期化
@@ -79,6 +82,25 @@ func (ph *profileHandler) GetPaymentStatuses(e echo.Context) error {
 		e,
 		map[string]interface{}{
 			"payment_statuses": ps,
+		},
+	)
+}
+
+// GetPaymentTransaction - 支払い用トークンを生成する
+func (ph *profileHandler) GetPaymentTransaction(e echo.Context) error {
+	user := e.Get(middleware.UserKey).(*domain.User)
+
+	pt, err := ph.su.GetPaymentTransaction(e.Request().Context(), user.ID)
+
+	if err != nil {
+		return xerrors.Errorf("failed to generate payment transaction: %w", err)
+	}
+
+	return rest.RespondOKAny(
+		e,
+		map[string]interface{}{
+			"token":      pt.Token,
+			"expired_at": pt.ExpiredAt,
 		},
 	)
 }

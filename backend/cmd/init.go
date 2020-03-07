@@ -202,6 +202,7 @@ func initHandler(cfg *config.Config, addr string) *echo.Echo {
 			prof.GET("", ph.Get)
 			prof.POST("", ph.Update)
 			prof.GET("/payment_statuses", ph.GetPaymentStatuses)
+			prof.POST("/payment_transaction", ph.GetPaymentTransaction)
 		})
 	})
 
