@@ -1,93 +1,79 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
+import { FormControl, FormLabel, RadioGroup, Radio, InputLabel, Select, MenuItem, Checkbox, ListItemText, Input } from '@material-ui/core';
 
-export default function CircleInfo() {
+type Workshop = 'プログラミング' | 'CG' | 'MIDI';
+
+export default function FundamentalInfo() {
+  const [generation, setGeneration] = useState(55);
+  const [belongToWorkshop, setWorkshops] = useState<Record<Workshop, boolean>>({
+    'プログラミング': true,
+    'CG': false,
+    'MIDI': false
+  });
   return (
     <React.Fragment>
-      <Typography variant="h6" gutterBottom>
-        Shipping address
-      </Typography>
+      {/* 代,  ハンドルネーム, 研究会, 班, 他のサークル, */}
       <Grid container spacing={3}>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            required
-            id="firstName"
-            name="firstName"
-            label="First name"
-            fullWidth
-            autoComplete="fname"
-          />
+        <Grid item xs={12}>
+          <FormControl component="fieldset">
+            <FormLabel component="legend">代</FormLabel>
+            <RadioGroup aria-label="gender" name="gender" value={generation} onChange={(e) => {setGeneration(parseInt(e.target.value, 10));}}>
+              <Grid container>
+                {((y: number) => [y + 2, y + 1, y])(53).map((y: number, i: number) => (
+                  <FormControlLabel
+                    value={y}
+                    key={y}
+                    control={<Radio color="primary" />}
+                    label={`${y}代 (学部${i + 1}年)`}
+                    labelPlacement="start"
+                  />
+                ))}
+              </Grid>
+            </RadioGroup>
+          </FormControl>
         </Grid>
         <Grid item xs={12} sm={6}>
           <TextField
             required
-            id="lastName"
-            name="lastName"
-            label="Last name"
+            id="handle"
+            name="handle"
+            label="ハンドルネーム"
             fullWidth
-            autoComplete="lname"
           />
         </Grid>
         <Grid item xs={12}>
-          <TextField
+          <FormControl
             required
-            id="address1"
-            name="address1"
-            label="Address line 1"
-            fullWidth
-            autoComplete="billing address-line1"
-          />
+          >
+            <InputLabel id="demo-mutiple-checkbox-label">研究会(複数可)</InputLabel>
+            <Select
+              labelId="demo-mutiple-checkbox-label"
+              id="demo-mutiple-checkbox"
+              multiple
+              value={Object.entries(belongToWorkshop).filter(([_, b]) => b).map(([w, _]) => w)}
+              // onChange={handleChange}
+              input={<Input />}
+              renderValue={selected => (selected as string[]).join(', ')}
+              // MenuProps={MenuProps}
+            >
+              {Object.entries(belongToWorkshop).map( ([workshop, isBelonging]) => (
+                  <MenuItem key={workshop} value={workshop}>
+                    <Checkbox checked={isBelonging} />
+                    <ListItemText primary={workshop} />
+                  </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
         </Grid>
         <Grid item xs={12}>
           <TextField
-            id="address2"
-            name="address2"
-            label="Address line 2"
+            id="squads"
+            name="squads"
+            label="班"
             fullWidth
-            autoComplete="billing address-line2"
-          />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            required
-            id="city"
-            name="city"
-            label="City"
-            fullWidth
-            autoComplete="billing address-level2"
-          />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <TextField id="state" name="state" label="State/Province/Region" fullWidth />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            required
-            id="zip"
-            name="zip"
-            label="Zip / Postal code"
-            fullWidth
-            autoComplete="billing postal-code"
-          />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            required
-            id="country"
-            name="country"
-            label="Country"
-            fullWidth
-            autoComplete="billing country"
-          />
-        </Grid>
-        <Grid item xs={12}>
-          <FormControlLabel
-            control={<Checkbox color="secondary" name="saveAddress" value="yes" />}
-            label="Use this address for payment details"
           />
         </Grid>
       </Grid>

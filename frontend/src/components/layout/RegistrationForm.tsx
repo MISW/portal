@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
@@ -7,6 +7,7 @@ import Button from '@material-ui/core/Button';
 import FundamentalInfo from './forms/FundamentalInfo';
 import UniversityInfo from './forms/UniversityInfo';
 import CircleInfo from './forms/CircleInfo';
+import { UserDataForSignUp } from '../../user';
 
 const useStyles = makeStyles(theme => ({
   paper: {
@@ -53,7 +54,8 @@ export type RegisterFormProps = { formName: string };
 
 const RegisterForm: React.FC<RegisterFormProps> = (props: RegisterFormProps) => {
   const classes = useStyles();
-  const [activeStep, setActiveStep] = React.useState(0);
+  const [activeStep, setActiveStep] = useState(0);
+  const [userData, setUserData]  = useState<Partial<UserDataForSignUp>>({});
 
   const handleNext = () => {
     setActiveStep(activeStep + 1);
