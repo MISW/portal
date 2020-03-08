@@ -1,7 +1,7 @@
 import React from 'react';
-import RegisterForm from '../src/components/layout/RegistrationForm';
 import { NextPage } from 'next';
 import { DefaultLayout } from '../src/components/layout/DefaultLayout';
+import RegisterForm from '../src/components/layout/RegisterForm';
 
 const Page: NextPage<{}> = _ => {
   return (

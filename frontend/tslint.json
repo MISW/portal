@@ -9,7 +9,8 @@
         "semicolon": [true, "always"],
         "quotemark": [true, "single", "jsx-double"],
         "react-hooks-nesting": "error",
-        "no-floating-promises": true
+        "no-floating-promises": true,
+        "array-type": false
     },
     "rulesDirectory": []
 }
