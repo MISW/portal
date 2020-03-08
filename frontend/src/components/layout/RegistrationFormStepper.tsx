@@ -1,13 +1,9 @@
-import React, { useState, ReactNode } from 'react';
+import React, { ReactNode } from 'react';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import { Stepper, Step, StepLabel } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
-import FundamentalInfo from './FundamentalInfo';
-import UniversityInfo from './UniversityInfo';
-import CircleInfo from './CircleInfo';
-import { UserForSignUp } from '../../user';
 
 const useStyles = makeStyles(theme => ({
   paper: {
@@ -32,23 +28,6 @@ const useStyles = makeStyles(theme => ({
     marginLeft: theme.spacing(1)
   }
 }));
-
-// const steps = ['基本情報', '学籍情報', 'サークル内情報', '確認'];
-
-// const getStepContent = (step: number): JSX.Element => {
-//   switch (step) {
-//     case 0:
-//       return <FundamentalInfo />;
-//     case 1:
-//       return <UniversityInfo />;
-//     case 2:
-//       return <CircleInfo />;
-//     case 3:
-//       return <></>;
-//     default:
-//       throw new Error('Unknown Step');
-//   }
-// };
 
 const RegisterFormStepper: React.FC<{
   formName: string;
