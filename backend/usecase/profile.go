@@ -2,6 +2,9 @@ package usecase
 
 import (
 	"context"
+	"time"
+
+	"github.com/MISW/Portal/backend/internal/tokenutil"
 
 	"github.com/MISW/Portal/backend/domain"
 	"github.com/MISW/Portal/backend/domain/repository"
@@ -17,19 +20,24 @@ type ProfileUsecase interface {
 
 	// GetPaymentStatuses - 自分自身の支払い状況を取得する
 	GetPaymentStatuses(ctx context.Context, userID int) ([]*domain.PaymentStatus, error)
+
+	// GetPaymentStatuses - 支払いを行うためのトークンを取得する
+	GetPaymentTransaction(ctx context.Context, userID int) (*domain.PaymentTransaction, error)
 }
 
 // NewProfileUsecase - ユーザ関連のユースケースを初期化
-func NewProfileUsecase(userRepository repository.UserRepository, paymentStatusRepository repository.PaymentStatusRepository) ProfileUsecase {
+func NewProfileUsecase(userRepository repository.UserRepository, paymentStatusRepository repository.PaymentStatusRepository, transactionRepository repository.PaymentTransactionRepository) ProfileUsecase {
 	return &profileUsecase{
 		userRepository:          userRepository,
 		paymentStatusRepository: paymentStatusRepository,
+		transactionRepository:   transactionRepository,
 	}
 }
 
 type profileUsecase struct {
 	userRepository          repository.UserRepository
 	paymentStatusRepository repository.PaymentStatusRepository
+	transactionRepository   repository.PaymentTransactionRepository
 }
 
 var _ ProfileUsecase = &profileUsecase{}
@@ -77,4 +85,27 @@ func (pu *profileUsecase) GetPaymentStatuses(ctx context.Context, userID int) ([
 	}
 
 	return ps, nil
+}
+
+// GetPaymentStatuses - 支払いを行うためのトークンを取得する
+func (pu *profileUsecase) GetPaymentTransaction(ctx context.Context, userID int) (*domain.PaymentTransaction, error) {
+	token, err := tokenutil.GenerateRandomToken()
+
+	if err != nil {
+		return nil, xerrors.Errorf("failed to generate token: %w", err)
+	}
+
+	err = pu.transactionRepository.Add(ctx, userID, token, time.Now().Add(1*time.Minute))
+
+	if err != nil {
+		return nil, xerrors.Errorf("failed to add new payment transaction(%d): %w", userID, err)
+	}
+
+	pt, err := pu.transactionRepository.Get(ctx, token)
+
+	if err != nil {
+		return nil, xerrors.Errorf("failed to get the payment transaction(%d): %w", userID, err)
+	}
+
+	return pt, nil
 }
