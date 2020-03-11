@@ -5,7 +5,6 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import { FormControl, FormLabel, RadioGroup, Radio, InputLabel, Select, MenuItem, Checkbox, ListItemText, Input } from '@material-ui/core';
 import { UserForSignUp } from '../../user';
 
-type Workshop = 'プログラミング' | 'CG' | 'MIDI';
 
 export const GenerationSelector: React.FC<{
   value?: number
@@ -23,7 +22,7 @@ export const GenerationSelector: React.FC<{
           aria-label="gender"
           name="gender"
           value={props.value ?? gen1stYear}
-          onChange={(e) => {props.onChange(parseInt(e.target.value, 10))}}
+          onChange={(e) => {props.onChange(parseInt(e.target.value, 10));}}
         >
           <Grid container>
             {[gen1stYear, gen1stYear - 1, gen1stYear - 2].map((y: number, i: number) => (
@@ -59,16 +58,13 @@ export const HandleNameForm: React.FC<{
   </Grid>
 );
 
-// TODO: onChangeに対応する
 export const WorkshopsForm: React.FC<{
-  defaultValue?: string[]
-  onChange: (props: Workshop[]) => void;
+  value?: string[]
+  onChange: (props: string[]) => void;
 }> = (props) => {
-  const [belongToWorkshop, setWorkshops] = useState<Record<Workshop, boolean>>({
-    'プログラミング': true,
-    'CG': false,
-    'MIDI': false
-  });
+  const allWorkshops = ['プログラミング', 'CG', 'MIDI'] as const ;
+
+  const workshops = new Set(props.value ?? []);
 
   return (
     <Grid item xs={12}>
@@ -80,16 +76,16 @@ export const WorkshopsForm: React.FC<{
           labelId="demo-mutiple-checkbox-label"
           id="demo-mutiple-checkbox"
           multiple
-          value={Object.entries(belongToWorkshop).filter(([_, b]) => b).map(([w, _]) => w)}
-          // onChange={handleChange}
+          value={Array.from(workshops)}
+          onChange={(e) => props.onChange([...(e.target.value as string[])])}
           input={<Input />}
           renderValue={selected => (selected as string[]).join(', ')}
           // MenuProps={MenuProps}
         >
-          {Object.entries(belongToWorkshop).map( ([workshop, isBelonging]) => (
-              <MenuItem key={workshop} value={workshop}>
-                <Checkbox checked={isBelonging} />
-                <ListItemText primary={workshop} />
+          {allWorkshops.map( option => (
+              <MenuItem key={option} value={option}>
+                <Checkbox checked={workshops.has(option) } />
+                <ListItemText primary={option} />
               </MenuItem>
           ))}
         </Select>
@@ -109,7 +105,6 @@ export const SquadsForm: React.FC<{
       label="班"
       fullWidth
       defaultValue={props.defaultValue ?? ''}
-      // TODO:
       onChange={(e) => props.onChange(e.target.value.split(' '))}
     />
   </Grid>
@@ -136,7 +131,6 @@ const CircleInfo: React.FC<{
   user: Partial<UserForSignUp>
   onChange: (user: Partial<UserForSignUp>) => void
 }> = ({user, onChange}) => {
-  
   return (
     <React.Fragment>
       <Grid container spacing={3}>
@@ -152,7 +146,7 @@ const CircleInfo: React.FC<{
         />
         {/* 研究会 */}
         <WorkshopsForm
-          defaultValue={user.workshops}
+          value={user.workshops}
           onChange={(workshops) => onChange({ ...user, workshops })}
         />
         {/* 班 */}

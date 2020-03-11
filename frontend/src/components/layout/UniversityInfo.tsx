@@ -15,10 +15,10 @@ const UniversityInfo: React.FC<{
       ...user,
       university: {
         name: univName,
-        department, 
+        department,
         subject
       }
-    })
+    });
   }, [univName, department, subject]);
   return (
     <React.Fragment>

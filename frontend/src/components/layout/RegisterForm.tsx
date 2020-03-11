@@ -4,6 +4,7 @@ import UniversityInfo from './UniversityInfo';
 import CircleInfo from './CircleInfo';
 import FundametalInfo from './FundamentalInfo';
 import { UserForSignUp } from '../../user';
+import Confirm from './Confirm';
 
 const steps = ['基本情報', '学籍情報', 'サークル内情報', '確認'];
 
@@ -14,9 +15,9 @@ const getStepContent = (step: number, user: Partial<UserForSignUp>, onChange: (u
     case 1:
       return <UniversityInfo user={user} onChange={onChange}/>;
     case 2:
-      return <CircleInfo user={user} onChange={onChange}/>;
+      return <CircleInfo user={user} onChange={onChange} />;
     case 3:
-      return <></>;
+      return <Confirm user={user} />;
     default:
       throw new Error('Unknown Step');
   }
@@ -34,7 +35,7 @@ const RegisterForm: React.FC<{formName: string}> = (props) => {
       handleBack={() => setActiveStep(activeStep - 1)}
       activeStep={activeStep}
     >
-      {getStepContent(activeStep, user, (u) => {setUser(u); console.log(u)})}
+      {getStepContent(activeStep, user, (u) => {setUser(u); console.log(u);})}
     </RegisterFormStepper>
   );
 };

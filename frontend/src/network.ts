@@ -1,7 +1,9 @@
-import { User } from './user';
+import { User, UserForSignUp } from './user';
+
+const getHostAPI = () => `${location.protocol}//${location.host}/api`;
 
 export const login = async () => {
-  const res = await fetch(`${location.protocol}//${location.host}/api/public/login`, {
+  const res = await fetch(`${getHostAPI()}/public/login`, {
     headers: {
       'Accept': 'applicaton/json, */*',
       'Content-type': 'application/json'
@@ -16,7 +18,7 @@ export const login = async () => {
 };
 
 export const getProfile = async (): Promise<User> => {
-  const res = await fetch(`${location.protocol}//${location.host}/api/private/profile`, {
+  const res = await fetch(`${getHostAPI()}/private/profile`, {
     headers: {
       'Accept': 'applicaton/json, */*',
     },
@@ -24,6 +26,7 @@ export const getProfile = async (): Promise<User> => {
     method: 'GET'
   });
   if (res.status >= 400) {
+    console.log(res);
     return Promise.reject(`Error: status-code >= 400`);
   }
   const body = await res.json() as User;
@@ -31,7 +34,7 @@ export const getProfile = async (): Promise<User> => {
 };
 
 export const checkLoggingIn = async (): Promise<boolean>   => {
-  const res = await fetch(`${location.protocol}//${location.host}/api/private/profile`, {
+  const res = await fetch(`${getHostAPI()}/private/profile`, {
     headers: {
       'Accept': 'applicaton/json, */*',
     },
@@ -46,5 +49,22 @@ export const checkLoggingIn = async (): Promise<boolean>   => {
       return false;
     default:
       return Promise.reject(`Fail to catch response ${res}`);
+  }
+};
+
+export const signUp = async (user: UserForSignUp) => {
+  const body = JSON.stringify(user);
+  console.log(body);
+
+  const res = await fetch(`${getHostAPI()}/public/signup`, {
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    method: 'POST',
+    body
+  });
+  if (res.status >= 400) {
+    console.log(res);
+    return Promise.reject(`Error: status-code >= 400`);
   }
 };
