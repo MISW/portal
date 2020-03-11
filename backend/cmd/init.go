@@ -19,7 +19,7 @@ import (
 	"github.com/MISW/Portal/backend/usecase"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jmoiron/sqlx"
-	"github.com/labstack/echo/v4"
+	echo "github.com/labstack/echo/v4"
 	echomw "github.com/labstack/echo/v4/middleware"
 	"github.com/labstack/gommon/log"
 	"go.uber.org/dig"
@@ -56,6 +56,10 @@ func initDig(cfg *config.Config, addr string) *dig.Container {
 	}
 
 	err = c.Provide(func() email.Sender {
+		if os.Getenv("DEBUG_MODE") == "1" {
+			return email.NewMock()
+		}
+
 		return email.NewSender(
 			cfg.Email.SMTPServer,
 			cfg.Email.Username,
@@ -95,6 +99,12 @@ func initDig(cfg *config.Config, addr string) *dig.Container {
 	if err != nil {
 		panic(err)
 	}
+
+	err = c.Provide(persistence.NewPaymentTransactionPersistence)
+	if err != nil {
+		panic(err)
+	}
+
 	err = c.Provide(func(
 		userRepository repository.UserRepository,
 		tokenRepository repository.TokenRepository,
@@ -196,6 +206,7 @@ func initHandler(cfg *config.Config, addr string) *echo.Echo {
 			prof.GET("", ph.Get)
 			prof.POST("", ph.Update)
 			prof.GET("/payment_statuses", ph.GetPaymentStatuses)
+			prof.POST("/payment_transaction", ph.GetPaymentTransaction)
 		})
 	})
 
