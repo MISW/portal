@@ -12,9 +12,9 @@ const getStepContent = (step: number, user: Partial<UserForSignUp>, onChange: (u
     case 0:
       return <FundametalInfo user={user} onChange={onChange}/>;
     case 1:
-      return <UniversityInfo />;
+      return <UniversityInfo user={user} onChange={onChange}/>;
     case 2:
-      return <CircleInfo/>;
+      return <CircleInfo user={user} onChange={onChange}/>;
     case 3:
       return <></>;
     default:
