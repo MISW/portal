@@ -3,7 +3,7 @@ import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import { RadioGroup, Radio, FormControl, FormLabel } from '@material-ui/core';
-import { UserForSignUp, SexType } from '../../user';
+import { UserForSignUp } from '../../user';
 
 const FundametalInfo: React.FC<{
   user: Partial<UserForSignUp>
@@ -17,20 +17,13 @@ const FundametalInfo: React.FC<{
   const [kanaLastName, setKanaLastName] = useState(kanaName[0]);
   const [kanaFirstName, setKanaFirstName] = useState(kanaName[1]);
 
-  const [sex, setSex] = useState<SexType>(props.user.sex ?? 'women' as SexType);
-  const [email, setEmail] = useState<string>(props.user.email ?? '');
-  const [phoneNumber, setPhoneNumber] = useState<string>(props.user.emergency_phone_number ?? '');
-
   useEffect(() => {
     props.onChange({
       ...props.user,
       name: `${lastName} ${firstName}`,
       kana: `${kanaLastName} ${kanaFirstName}`,
-      sex,
-      email,
-      emergency_phone_number: phoneNumber
     });
-  }, [lastName, firstName, kanaLastName, kanaFirstName, sex, phoneNumber, email]);
+  }, [lastName, firstName, kanaLastName, kanaFirstName]);
 
 
   return (
@@ -98,7 +91,17 @@ const FundametalInfo: React.FC<{
         <Grid item xs={12} sm={6}>
           <FormControl component="fieldset">
             <FormLabel component="legend">性別</FormLabel>
-            <RadioGroup aria-label="gender" name="gender" value={sex} onChange={(e) => {setSex(e.target.value as ('women' | 'men'));}}>
+            <RadioGroup
+              aria-label="gender"
+              name="gender"
+              value={props.user.sex ?? 'women'}
+              onChange={(e) => {
+                props.onChange({
+                  ...props.user,
+                  sex: e.target.value as ('women' | 'men')
+                })
+              }}
+            >
               <Grid container>
                 <FormControlLabel
                   value="women"
@@ -124,8 +127,13 @@ const FundametalInfo: React.FC<{
             label="緊急連絡先(電話番号)"
             fullWidth
             autoComplete="tel-national"
-            defaultValue={phoneNumber}
-            onBlur={(e) => setPhoneNumber(e.target.value)}
+            defaultValue={props.user.emergency_phone_number ?? ''}
+            onBlur={(e) => 
+              props.onChange({
+                ...props.user,
+                emergency_phone_number: e.target.value
+              })
+            }
           />
         </Grid>
         <Grid item xs={12}>
@@ -136,8 +144,13 @@ const FundametalInfo: React.FC<{
             label="メールアドレス"
             fullWidth
             autoComplete="email"
-            defaultValue={email}
-            onBlur={(e) => setEmail(e.target.value)}
+            defaultValue={props.user.email ?? ''}
+            onBlur={(e) => 
+              props.onChange({
+                ...props.user,
+                email: e.target.value
+              })
+            }
           />
         </Grid>
       </Grid>
