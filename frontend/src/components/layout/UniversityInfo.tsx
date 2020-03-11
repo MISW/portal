@@ -4,12 +4,12 @@ import TextField from '@material-ui/core/TextField';
 import { UserForSignUp } from '../../user';
 
 const UniversityInfo: React.FC<{
-  user: Partial<UserForSignUp>
-  onChange: (user: Partial<UserForSignUp>) => void
+  user: UserForSignUp
+  onChange: (user: UserForSignUp) => void
 }> = ({ user, onChange }) => {
-  const [univName, setUnivName] = useState(user.university?.name ?? '早稲田大学');
-  const [department, setDepartment] = useState(user.university?.department ?? '');
-  const [subject, setSubject] = useState(user.university?.subject ?? '');
+  const [univName, setUnivName] = useState(user.university.name);
+  const [department, setDepartment] = useState(user.university.department);
+  const [subject, setSubject] = useState(user.university.subject);
   useEffect(() => {
     onChange({
       ...user,
@@ -64,7 +64,7 @@ const UniversityInfo: React.FC<{
             name="studentID"
             label="学籍番号 XXXXXX-X"
             fullWidth
-            defaultValue={user.student_id ?? ''}
+            defaultValue={user.student_id}
             onBlur={(e) =>
               onChange({
                 ...user,

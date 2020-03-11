@@ -6,14 +6,14 @@ import { RadioGroup, Radio, FormControl, FormLabel } from '@material-ui/core';
 import { UserForSignUp } from '../../user';
 
 const FundametalInfo: React.FC<{
-  user: Partial<UserForSignUp>
-  onChange: (user: Partial<UserForSignUp>) => void
+  user: UserForSignUp
+  onChange: (user: UserForSignUp) => void
 }> = (props) =>  {
-  const name = (props.user.name?.split(/\s+/)) ?? ['', ''];
+  const name = (props.user.name.split(/\s+/));
   const [lastName, setLastName] = useState(name[0]);
   const [firstName, setFirstName] = useState(name[1]);
 
-  const kanaName = (props.user.kana?.split(/\s+/)) ?? ['', ''];
+  const kanaName = (props.user.kana.split(/\s+/));
   const [kanaLastName, setKanaLastName] = useState(kanaName[0]);
   const [kanaFirstName, setKanaFirstName] = useState(kanaName[1]);
 
@@ -94,7 +94,7 @@ const FundametalInfo: React.FC<{
             <RadioGroup
               aria-label="gender"
               name="gender"
-              value={props.user.sex ?? 'women'}
+              value={props.user.sex}
               onChange={(e) => {
                 props.onChange({
                   ...props.user,
@@ -127,7 +127,7 @@ const FundametalInfo: React.FC<{
             label="緊急連絡先(電話番号)"
             fullWidth
             autoComplete="tel-national"
-            defaultValue={props.user.emergency_phone_number ?? ''}
+            defaultValue={props.user.emergency_phone_number}
             onBlur={(e) =>
               props.onChange({
                 ...props.user,
@@ -144,7 +144,7 @@ const FundametalInfo: React.FC<{
             label="メールアドレス"
             fullWidth
             autoComplete="email"
-            defaultValue={props.user.email ?? ''}
+            defaultValue={props.user.email}
             onBlur={(e) =>
               props.onChange({
                 ...props.user,
