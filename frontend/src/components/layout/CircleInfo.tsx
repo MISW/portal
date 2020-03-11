@@ -7,12 +7,10 @@ import { UserForSignUp } from '../../user';
 
 
 export const GenerationSelector: React.FC<{
-  value?: number
+  value: number
+  gen1stYear: number
   onChange: (generation: number) => void
 }> = (props) => {
-  const now = new Date();
-  const businessYear= now.getFullYear() - (now.getMonth() >= 4 ? 0 : 1);
-  const gen1stYear = businessYear - 1969 + 4;
 
   return (
     <Grid item xs={12}>
@@ -21,11 +19,11 @@ export const GenerationSelector: React.FC<{
         <RadioGroup
           aria-label="gender"
           name="gender"
-          value={props.value ?? gen1stYear}
+          value={props.value}
           onChange={(e) => {props.onChange(parseInt(e.target.value, 10));}}
         >
           <Grid container>
-            {[gen1stYear, gen1stYear - 1, gen1stYear - 2].map((y: number, i: number) => (
+            {[props.gen1stYear, props.gen1stYear - 1, props.gen1stYear - 2].map((y: number, i: number) => (
               <FormControlLabel
                 value={y}
                 key={y}
@@ -42,7 +40,7 @@ export const GenerationSelector: React.FC<{
 };
 
 export const HandleNameForm: React.FC<{
-  defaultValue?: string
+  defaultValue: string
   onChange: (props: string) => void
 }> = (props) => (
   <Grid item xs={12} sm={6}>
@@ -52,19 +50,19 @@ export const HandleNameForm: React.FC<{
       name="handle"
       label="ハンドルネーム"
       fullWidth
-      defaultValue={props.defaultValue ?? ''}
+      defaultValue={props.defaultValue}
       onChange={(e) => props.onChange(e.target.value)}
     />
   </Grid>
 );
 
 export const WorkshopsForm: React.FC<{
-  value?: string[]
+  value: string[]
   onChange: (props: string[]) => void;
 }> = (props) => {
   const allWorkshops = ['プログラミング', 'CG', 'MIDI'] as const ;
 
-  const workshops = new Set(props.value ?? []);
+  const workshops = new Set(props.value);
 
   return (
     <Grid item xs={12}>
@@ -95,7 +93,7 @@ export const WorkshopsForm: React.FC<{
 };
 
 export const SquadsForm: React.FC<{
-  defaultValue?: string[]
+  defaultValue: string[]
   onChange: (props: string[]) => void
 }> = (props) => (
   <Grid item xs={12}>
@@ -104,14 +102,14 @@ export const SquadsForm: React.FC<{
       name="squads"
       label="班"
       fullWidth
-      defaultValue={props.defaultValue ?? ''}
+      defaultValue={props.defaultValue}
       onChange={(e) => props.onChange(e.target.value.split(' '))}
     />
   </Grid>
 );
 
 export const OtherCircleForm: React.FC<{
-  defaultValue?: string
+  defaultValue: string
   onChange: (props: string) => void
 }> = (props) => (
   <Grid item xs={12}>
@@ -120,7 +118,7 @@ export const OtherCircleForm: React.FC<{
       name="otherCircle`"
       label="ほか所属サークル"
       fullWidth
-      defaultValue={props.defaultValue ?? ''}
+      defaultValue={props.defaultValue}
       onChange={(e) => props.onChange(e.target.value)}
     />
   </Grid>
@@ -128,14 +126,16 @@ export const OtherCircleForm: React.FC<{
 
 
 const CircleInfo: React.FC<{
-  user: Partial<UserForSignUp>
-  onChange: (user: Partial<UserForSignUp>) => void
-}> = ({user, onChange}) => {
+  user: UserForSignUp
+  onChange: (user: UserForSignUp) => void
+  gen1stYear: number
+}> = ({user, onChange, gen1stYear}) => {
   return (
     <React.Fragment>
       <Grid container spacing={3}>
         {/* 代 */}
         <GenerationSelector
+          gen1stYear={gen1stYear}
           value={user.generation}
           onChange={(generation) => onChange({ ...user, generation })}
         />
