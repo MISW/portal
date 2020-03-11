@@ -99,7 +99,7 @@ const FundametalInfo: React.FC<{
                 props.onChange({
                   ...props.user,
                   sex: e.target.value as ('women' | 'men')
-                })
+                });
               }}
             >
               <Grid container>
@@ -128,7 +128,7 @@ const FundametalInfo: React.FC<{
             fullWidth
             autoComplete="tel-national"
             defaultValue={props.user.emergency_phone_number ?? ''}
-            onBlur={(e) => 
+            onBlur={(e) =>
               props.onChange({
                 ...props.user,
                 emergency_phone_number: e.target.value
@@ -145,7 +145,7 @@ const FundametalInfo: React.FC<{
             fullWidth
             autoComplete="email"
             defaultValue={props.user.email ?? ''}
-            onBlur={(e) => 
+            onBlur={(e) =>
               props.onChange({
                 ...props.user,
                 email: e.target.value
