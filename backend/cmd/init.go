@@ -56,6 +56,10 @@ func initDig(cfg *config.Config, addr string) *dig.Container {
 	}
 
 	err = c.Provide(func() email.Sender {
+		if os.Getenv("DEBUG_MODE") == "1" {
+			return email.NewMock()
+		}
+
 		return email.NewSender(
 			cfg.Email.SMTPServer,
 			cfg.Email.Username,
