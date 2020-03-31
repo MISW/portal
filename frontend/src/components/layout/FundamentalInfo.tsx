@@ -10,12 +10,12 @@ const FundametalInfo: React.FC<{
   onChange: (user: UserForSignUp) => void
 }> = (props) =>  {
   const name = (props.user.name.split(/\s+/));
-  const [lastName, setLastName] = useState(name[0]);
-  const [firstName, setFirstName] = useState(name[1]);
+  const [lastName, setLastName] = useState(name[0] ?? '');
+  const [firstName, setFirstName] = useState(name[1] ?? '');
 
   const kanaName = (props.user.kana.split(/\s+/));
-  const [kanaLastName, setKanaLastName] = useState(kanaName[0]);
-  const [kanaFirstName, setKanaFirstName] = useState(kanaName[1]);
+  const [kanaLastName, setKanaLastName] = useState(kanaName[0] ?? '');
+  const [kanaFirstName, setKanaFirstName] = useState(kanaName[1] ?? '');
 
   useEffect(() => {
     props.onChange({
@@ -24,7 +24,6 @@ const FundametalInfo: React.FC<{
       kana: `${kanaLastName} ${kanaFirstName}`,
     });
   }, [lastName, firstName, kanaLastName, kanaFirstName]);
-
 
   return (
     <React.Fragment>

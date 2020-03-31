@@ -38,7 +38,7 @@ const UniversityInfo: React.FC<{
         <Grid item xs={12} sm={6}>
           <TextField
             required
-            id="departmant"
+            id="department"
             name="department"
             label="学部"
             fullWidth

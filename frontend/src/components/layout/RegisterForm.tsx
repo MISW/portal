@@ -23,8 +23,6 @@ const getStepContent = (step: number, gen1stYear: number,  user: UserForSignUp, 
   }
 };
 
-
-
 const RegisterForm: React.FC<{formName: string}> = (props) => {
 
   const now = new Date();

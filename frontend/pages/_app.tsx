@@ -16,6 +16,8 @@ const App = (props: AppProps) => {
         return;
       case '/callback':
         return;
+      case '/verify_email':
+        return;
       default:
         let unmounted = false;
         (async () => {
