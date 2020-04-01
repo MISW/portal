@@ -34,7 +34,7 @@ const RegisterForm: React.FC<{ formName: string; user?: UserForSignUp; onSubmit:
   props
 ) => {
   const now = new Date();
-  const businessYear = now.getFullYear() - (now.getMonth() >= 4 ? 0 : 1);
+  const businessYear = now.getFullYear() - (now.getMonth() + 1 >= 4 ? 0 : 1);
   const gen1stYear = businessYear - 1969 + 4;
 
   const [activeStep, setActiveStep] = useState(0);

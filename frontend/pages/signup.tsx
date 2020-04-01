@@ -6,10 +6,10 @@ import { signUp } from "../src/network";
 import { UserForSignUp } from "../src/user";
 
 const Page: NextPage<{}> = () => {
-  const emailSent = useState<boolean>(false);
+  const [emailSent, setEmailSent] = useState<boolean>(false);
   const onSubmit = (user: UserForSignUp) => {
     signUp(user)
-      .then(() => console.log("signUp!"))
+      .then(() => setEmailSent(true))
       .catch((err) => console.error(err));
   };
 
