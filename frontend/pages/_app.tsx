@@ -1,38 +1,43 @@
 // https://github.com/mui-org/material-ui/blob/master/examples/nextjs/pages/_app.js 参照
 
-import React, { useEffect } from 'react';
-import { AppProps } from 'next/app';
-import { ThemeProvider } from '@material-ui/styles';
-import { CssBaseline, createMuiTheme } from '@material-ui/core';
-import { NextPageContext } from 'next';
-import { useRouter } from 'next/router';
-import { checkLoggingIn } from '../src/network';
+import React, { useEffect } from "react";
+import { AppProps } from "next/app";
+import { ThemeProvider } from "@material-ui/styles";
+import { CssBaseline, createMuiTheme } from "@material-ui/core";
+import { NextPageContext } from "next";
+import { useRouter } from "next/router";
+import { checkLoggingIn } from "../src/network";
 
 const App = (props: AppProps) => {
   const router = useRouter();
-  useEffect( () => {
+  useEffect(() => {
     switch (router.pathname) {
-      case '/signup':
+      case "/signup":
         return;
-      case '/callback':
+      case "/callback":
         return;
-      case '/verify_email':
+      case "/verify_email":
         return;
-      default:
+      default: {
         let unmounted = false;
         (async () => {
           const isLogginIn = await checkLoggingIn();
           if (!isLogginIn && !unmounted) {
-            await router.push('/login');
+            await router.push("/login");
           } else {
-            console.log('already logging in');
+            console.log("already logging in");
           }
-        })().catch(err => { throw err; });
-      return () => { unmounted = true; };
+        })().catch((err) => {
+          throw err;
+        });
+        return () => {
+          unmounted = true;
+        };
+      }
     }
   }, []);
-  useEffect( () => {
-    const jssStyles = document.querySelector('#jss-server-side');
+  useEffect(() => {
+    const jssStyles = document.querySelector("#jss-server-side");
     if (jssStyles && jssStyles.parentNode) {
       jssStyles.parentNode.removeChild(jssStyles);
     }
@@ -46,16 +51,8 @@ const App = (props: AppProps) => {
   );
 };
 
-App.getInitialProps = async ({
-  Component,
-  ctx,
-}: {
-  Component: any
-  ctx: NextPageContext
-}) => {
-  const pageProps = Component.getInitialProps
-    ? await Component.getInitialProps({...ctx})
-    : {};
+App.getInitialProps = async ({ Component, ctx }: { Component: any; ctx: NextPageContext }) => {
+  const pageProps = Component.getInitialProps ? await Component.getInitialProps({ ...ctx }) : {};
   return { pageProps };
 };
 

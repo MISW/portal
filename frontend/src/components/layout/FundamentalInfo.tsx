@@ -1,21 +1,21 @@
-import React, { useState, useEffect } from 'react';
-import Grid from '@material-ui/core/Grid';
-import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import { RadioGroup, Radio, FormControl, FormLabel } from '@material-ui/core';
-import { UserForSignUp } from '../../user';
+import React, { useState, useEffect } from "react";
+import Grid from "@material-ui/core/Grid";
+import TextField from "@material-ui/core/TextField";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import { RadioGroup, Radio, FormControl, FormLabel } from "@material-ui/core";
+import { UserForSignUp } from "../../user";
 
-const FundametalInfo: React.FC<{
-  user: UserForSignUp
-  onChange: (user: UserForSignUp) => void
-}> = (props) =>  {
-  const name = (props.user.name.split(/\s+/));
-  const [lastName, setLastName] = useState(name[0] ?? '');
-  const [firstName, setFirstName] = useState(name[1] ?? '');
+const FundamentalInfo: React.FC<{
+  user: UserForSignUp;
+  onChange: (user: UserForSignUp) => void;
+}> = (props) => {
+  const name = props.user.name.split(/\s+/);
+  const [lastName, setLastName] = useState(name[0] ?? "");
+  const [firstName, setFirstName] = useState(name[1] ?? "");
 
-  const kanaName = (props.user.kana.split(/\s+/));
-  const [kanaLastName, setKanaLastName] = useState(kanaName[0] ?? '');
-  const [kanaFirstName, setKanaFirstName] = useState(kanaName[1] ?? '');
+  const kanaName = props.user.kana.split(/\s+/);
+  const [kanaLastName, setKanaLastName] = useState(kanaName[0] ?? "");
+  const [kanaFirstName, setKanaFirstName] = useState(kanaName[1] ?? "");
 
   useEffect(() => {
     props.onChange({
@@ -38,7 +38,8 @@ const FundametalInfo: React.FC<{
             defaultValue={name[0]}
             autoComplete="family-name"
             onBlur={(e) => {
-              setLastName(e.target.value.split(/\s|'　'/g).join(''));
+              // eslint-disable-next-line no-irregular-whitespace
+              setLastName(e.target.value.split(/\s|'　'/g).join(""));
             }}
           />
         </Grid>
@@ -52,7 +53,8 @@ const FundametalInfo: React.FC<{
             autoComplete="given-name"
             defaultValue={name[1]}
             onBlur={(e) => {
-              setFirstName(e.target.value.split(/\s|'　'/g).join(''));
+              // eslint-disable-next-line no-irregular-whitespace
+              setFirstName(e.target.value.split(/\s|'　'/g).join(""));
             }}
           />
         </Grid>
@@ -66,8 +68,10 @@ const FundametalInfo: React.FC<{
             autoComplete="lname kana"
             defaultValue={kanaName[0]}
             onBlur={(e) => {
+              // eslint-disable-next-line no-irregular-whitespace
               console.log(Boolean(e.target.value.match(/^[ァ-ヶー　]+$/)));
-              setKanaLastName(e.target.value.split(/\s|'　'/g).join(''));
+              // eslint-disable-next-line no-irregular-whitespace
+              setKanaLastName(e.target.value.split(/\s|'　'/g).join(""));
             }}
           />
         </Grid>
@@ -82,8 +86,10 @@ const FundametalInfo: React.FC<{
             defaultValue={kanaName[1]}
             onBlur={(e) => {
               const s = e.target.value;
+              // eslint-disable-next-line no-irregular-whitespace
               console.log(Boolean(s.match(/^[ァ-ヶー　]+$/)));
-              setKanaFirstName(s.split(/\s|'　'/g).join(''));
+              // eslint-disable-next-line no-irregular-whitespace
+              setKanaFirstName(s.split(/\s|'　'/g).join(""));
             }}
           />
         </Grid>
@@ -97,23 +103,13 @@ const FundametalInfo: React.FC<{
               onChange={(e) => {
                 props.onChange({
                   ...props.user,
-                  sex: e.target.value as ('women' | 'men')
+                  sex: e.target.value as "women" | "men",
                 });
               }}
             >
               <Grid container>
-                <FormControlLabel
-                  value="women"
-                  control={<Radio color="primary" />}
-                  label="女"
-                  labelPlacement="start"
-                />
-                <FormControlLabel
-                  value="men"
-                  control={<Radio color="primary" />}
-                  label="男"
-                  labelPlacement="start"
-                />
+                <FormControlLabel value="women" control={<Radio color="primary" />} label="女" labelPlacement="start" />
+                <FormControlLabel value="men" control={<Radio color="primary" />} label="男" labelPlacement="start" />
               </Grid>
             </RadioGroup>
           </FormControl>
@@ -130,7 +126,8 @@ const FundametalInfo: React.FC<{
             onBlur={(e) =>
               props.onChange({
                 ...props.user,
-                emergency_phone_number: e.target.value
+                // eslint-disable-next-line @typescript-eslint/camelcase
+                emergency_phone_number: e.target.value,
               })
             }
           />
@@ -147,7 +144,7 @@ const FundametalInfo: React.FC<{
             onBlur={(e) =>
               props.onChange({
                 ...props.user,
-                email: e.target.value
+                email: e.target.value,
               })
             }
           />
@@ -157,4 +154,4 @@ const FundametalInfo: React.FC<{
   );
 };
 
-export default FundametalInfo;
+export default FundamentalInfo;
