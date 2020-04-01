@@ -1,27 +1,26 @@
 import React, { useEffect } from "react";
-import { NextPage } from "next";
 import { DefaultLayout } from "../src/components/layout/DefaultLayout";
+import Typography from "@material-ui/core/Typography";
 import { useRouter } from "next/router";
-import { Typography } from "@material-ui/core";
+import { NextPage } from "next";
 
 const Page: NextPage = () => {
   const router = useRouter();
   useEffect(() => {
-    const sendStatus = async () => {
+    const sendEmailToken = async () => {
       const params = new URLSearchParams(location.search);
-      const code = params.get("code");
-      const state = params.get("state");
-      if (code === null || state === null) {
+      const token = params.get("token");
+      if (token === null) {
         throw new Error("There is no status and code in query parameter");
       }
-      const res = await fetch(`${location.protocol}//${location.host}/api/public/callback`, {
+      const res = await fetch(`${location.protocol}//${location.host}/api/public/verify_email`, {
         headers: {
-          Accept: "applicaton/json, */*",
+          Accept: "application/json, */*",
           "Content-type": "application/json",
         },
         credentials: "include",
         method: "POST",
-        body: JSON.stringify({ code, state }),
+        body: JSON.stringify({ token }),
       });
       const body = await res.json();
       if (res.status >= 400) {
@@ -30,12 +29,14 @@ const Page: NextPage = () => {
       }
       await router.push("/");
     };
-    sendStatus().catch((err) => {
+    sendEmailToken().catch((err) => {
       throw err;
     });
   });
   return (
     <DefaultLayout>
+      <Typography>verify email</Typography>
+
       <Typography>Loading...</Typography>
     </DefaultLayout>
   );

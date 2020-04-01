@@ -1,19 +1,19 @@
-export type SexType = 'men' | 'women' | 'other';
+export type SexType = "men" | "women" | "other";
 
 export type RoleType =
   // 管理者(会員資格あり)
-  | 'admin'
+  | "admin"
   // 正式なメンバー(会員資格あり)
-  | 'member'
+  | "member"
   // 引退済みのメンバー(会員資格あり)
-  | 'retired'
+  | "retired"
   // 未払い状態のメンバー(会員資格なし)
-  | 'not_member';
+  | "not_member";
 
 export interface University {
-  name:       string;
+  name: string;
   department: string;
-  subject:    string;
+  subject: string;
 }
 
 export interface User {
@@ -37,3 +37,5 @@ export interface User {
   created_at: number;
   updated_at: number;
 }
+
+export type UserForSignUp = Omit<User, "id" | "slack_id" | "role" | "created_at" | "updated_at">;
