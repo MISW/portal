@@ -4,16 +4,21 @@ import { Button } from "@material-ui/core";
 import { signUp } from "../../network";
 
 const Confirm: React.FC<{
-  user: UserForSignUp;
-}> = ({ user }) => {
+  onSubmit: () => void;
+  // TODO: validate-result
+}> = (props) => {
   const filled = true; // TODO:
-  const handleClick = () =>
-    signUp(user as UserForSignUp)
-      .then(() => console.log("signUp!"))
-      .catch((err) => console.error(err));
   if (filled) {
     return (
-      <Button className="button" variant="contained" color="primary" onClick={handleClick}>
+      <Button
+        className="button"
+        variant="contained"
+        color="primary"
+        onClick={(e) => {
+          e.preventDefault();
+          props.onSubmit();
+        }}
+      >
         提出
       </Button>
     );
