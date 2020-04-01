@@ -50,6 +50,7 @@ module.exports = {
             "error",
             "always"
         ],
+        "@typescript-eslint/camelcase": ["error", { "properties": "never" }],
         "@typescript-eslint/explicit-function-return-type": 0,
         "@typescript-eslint/no-explicit-any": 0,
         "react-hooks/rules-of-hooks": "error",
