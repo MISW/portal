@@ -29,23 +29,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-// const steps = ['基本情報', '学籍情報', 'サークル内情報', '確認'];
-
-// const getStepContent = (step: number): JSX.Element => {
-//   switch (step) {
-//     case 0:
-//       return <FundamentalInfo />;
-//     case 1:
-//       return <UniversityInfo />;
-//     case 2:
-//       return <CircleInfo />;
-//     case 3:
-//       return <></>;
-//     default:
-//       throw new Error('Unknown Step');
-//   }
-// };
-
 const RegisterFormStepper: React.FC<{
   formName: string;
   children: ReactNode;

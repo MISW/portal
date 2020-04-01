@@ -1,12 +1,22 @@
-import React from 'react';
-import RegisterForm from '../src/components/layout/RegistrationForm';
-import { NextPage } from 'next';
-import { DefaultLayout } from '../src/components/layout/DefaultLayout';
+import React, { useState } from "react";
+import { NextPage } from "next";
+import { DefaultLayout } from "../src/components/layout/DefaultLayout";
+import RegisterForm from "../src/components/layout/RegisterForm";
+import { signUp } from "../src/network";
+import { UserForSignUp } from "../src/user";
 
-const Page: NextPage<{}> = _ => {
+const Page: NextPage<{}> = () => {
+  const emailSent = useState<boolean>(false);
+  const onSubmit = (user: UserForSignUp) => {
+    signUp(user)
+      .then(() => console.log("signUp!"))
+      .catch((err) => console.error(err));
+  };
+
   return (
     <DefaultLayout>
-      <RegisterForm formName="会員登録"></RegisterForm>
+      <RegisterForm formName="会員登録" onSubmit={onSubmit}></RegisterForm>
+      {emailSent && "emailが送信されました!"}
     </DefaultLayout>
   );
 };
