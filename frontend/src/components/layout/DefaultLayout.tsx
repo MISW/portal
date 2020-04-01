@@ -93,15 +93,14 @@ export const DefaultLayout: React.FC = ({ children }) => {
                 open={open}
                 onClose={handleClose}
               >
+                {/* // TODO: うまくクリックに反応しなかった気がする */}
                 <MenuItem>
                   <NextLink href="/profile">
                     <span>Profile</span>
                   </NextLink>
                 </MenuItem>
                 <MenuItem>
-                  <NextLink href="/setting">
-                    <span>Setting</span>
-                  </NextLink>
+                  <a>Log out(TODO:)</a>
                 </MenuItem>
               </Menu>
             </div>

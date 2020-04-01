@@ -3,7 +3,7 @@ import { NextPage } from "next";
 import { DefaultLayout } from "../src/components/layout/DefaultLayout";
 import RegisterForm from "../src/components/layout/RegisterForm";
 import { UserForSignUp } from "../src/user";
-import { signUp, getProfile } from "../src/network";
+import { getProfile, updateProfile } from "../src/network";
 
 const Page: NextPage = () => {
   const [user, setUser] = useState<UserForSignUp>();
@@ -11,12 +11,14 @@ const Page: NextPage = () => {
     getProfile().then((u) => setUser(u));
   }, []);
   const onSubmit = (user: UserForSignUp) => {
-    signUp(user)
-      .then(() => console.log("signUp!"))
+    updateProfile(user)
+      .then((u) => console.log(u))
       .catch((err) => console.error(err));
   };
   return (
-    <DefaultLayout>{user ? <RegisterForm formName="会員情報設定" onSubmit={onSubmit} /> : "Loading..."}</DefaultLayout>
+    <DefaultLayout>
+      {user ? <RegisterForm formName="会員情報設定" user={user} onSubmit={onSubmit} /> : "Loading..."}
+    </DefaultLayout>
   );
 };
 

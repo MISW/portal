@@ -8,7 +8,7 @@ const Page: NextPage = () => {
   return (
     <DefaultLayout>
       <h1>ここにすばらしいポータルサイトができます</h1>
-      <NextLink href="/setting">
+      <NextLink href="/profile">
         <Button className="button" variant="contained" color="primary">
           会員情報設定
         </Button>
