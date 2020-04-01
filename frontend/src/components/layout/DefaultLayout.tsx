@@ -1,46 +1,46 @@
-import React from 'react';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
-import { makeStyles, Theme } from '@material-ui/core/styles';
-import { IconButton, MenuItem, Menu } from '@material-ui/core';
-import MenuIcon from '@material-ui/icons/Menu';
-import AccountCircle from '@material-ui/icons/AccountCircle';
-import MUILink from '@material-ui/core/Link';
-import NextLink from 'next/link';
+import React from "react";
+import AppBar from "@material-ui/core/AppBar";
+import Toolbar from "@material-ui/core/Toolbar";
+import Typography from "@material-ui/core/Typography";
+import { makeStyles, Theme } from "@material-ui/core/styles";
+import { IconButton, MenuItem, Menu } from "@material-ui/core";
+import MenuIcon from "@material-ui/icons/Menu";
+import AccountCircle from "@material-ui/icons/AccountCircle";
+import MUILink from "@material-ui/core/Link";
+import NextLink from "next/link";
 
 const useStyles = makeStyles((theme: Theme) => ({
   appBar: {
-    postion: 'relative',
-    flexGrow: 1
+    postion: "relative",
+    flexGrow: 1,
   },
   menuButton: {
     marginRight: theme.spacing(2),
   },
   layout: {
-    width: 'auto',
+    width: "auto",
     marginLeft: theme.spacing(2),
     marginRight: theme.spacing(2),
     [theme.breakpoints.up(600 + theme.spacing(2) * 2)]: {
       width: 600,
-      marginLeft: 'auto',
-      marginRight: 'auto'
-    }
+      marginLeft: "auto",
+      marginRight: "auto",
+    },
   },
   title: {
-    flexGrow: 1
-  }
+    flexGrow: 1,
+  },
 }));
 
 const Copyright: React.FC = () => {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
-      {'Copyright © '}
+      {"Copyright © "}
       <MUILink color="inherit" href="https://misw.jp">
         MISW
-      </MUILink>{' '}
+      </MUILink>{" "}
       2020
-      {'.'}
+      {"."}
     </Typography>
   );
 };
@@ -82,13 +82,13 @@ export const DefaultLayout: React.FC = ({ children }) => {
                 id="menu-appbar"
                 anchorEl={anchorEl}
                 anchorOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
+                  vertical: "top",
+                  horizontal: "right",
                 }}
                 keepMounted
                 transformOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
+                  vertical: "top",
+                  horizontal: "right",
                 }}
                 open={open}
                 onClose={handleClose}
@@ -108,9 +108,7 @@ export const DefaultLayout: React.FC = ({ children }) => {
           </Toolbar>
         </AppBar>
       </div>
-      <main className={classes.layout}>
-        {children}
-      </main>
+      <main className={classes.layout}>{children}</main>
       <Copyright />
     </>
   );

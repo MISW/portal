@@ -1,9 +1,8 @@
-import React from 'react';
-import { DefaultLayout } from '../src/components/layout/DefaultLayout';
-import NextLink from 'next/link';
-import Button from '@material-ui/core/Button';
-import { NextPage } from 'next';
-
+import React from "react";
+import { DefaultLayout } from "../src/components/layout/DefaultLayout";
+import NextLink from "next/link";
+import Button from "@material-ui/core/Button";
+import { NextPage } from "next";
 
 const Page: NextPage = () => {
   return (

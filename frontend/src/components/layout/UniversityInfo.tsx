@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react';
-import Grid from '@material-ui/core/Grid';
-import TextField from '@material-ui/core/TextField';
-import { UserForSignUp } from '../../user';
+import React, { useEffect, useState } from "react";
+import Grid from "@material-ui/core/Grid";
+import TextField from "@material-ui/core/TextField";
+import { UserForSignUp } from "../../user";
 
 const UniversityInfo: React.FC<{
-  user: UserForSignUp
-  onChange: (user: UserForSignUp) => void
+  user: UserForSignUp;
+  onChange: (user: UserForSignUp) => void;
 }> = ({ user, onChange }) => {
   const [univName, setUnivName] = useState(user.university.name);
   const [department, setDepartment] = useState(user.university.department);
@@ -16,13 +16,13 @@ const UniversityInfo: React.FC<{
       university: {
         name: univName,
         department,
-        subject
-      }
+        subject,
+      },
     });
   }, [univName, department, subject]);
   return (
     <React.Fragment>
-      {/* 学校名　学部 学科 学年 学籍番号 */}
+      {/* 学校名 学部 学科 学年 学籍番号 */}
       <Grid container spacing={3}>
         <Grid item xs={12}>
           <TextField
@@ -68,6 +68,7 @@ const UniversityInfo: React.FC<{
             onBlur={(e) =>
               onChange({
                 ...user,
+                // eslint-disable-next-line @typescript-eslint/camelcase
                 student_id: e.target.value,
               })
             }
