@@ -109,7 +109,11 @@ func (us *sessionUsecase) Signup(ctx context.Context, user *domain.User) error {
 		return xerrors.Errorf("base url is invalid(%s): %w", us.baseURL, err)
 	}
 
-	u.Path = path.Join(u.Path, "/verify_email?token="+token)
+	query := url.Values{}
+	query.Add("token", token)
+
+	u.Path = path.Join(u.Path, "/verify_email")
+	u.RawQuery = query.Encode()
 
 	metadata := map[string]string{
 		"VerificationLink": u.String(),

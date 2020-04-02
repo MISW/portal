@@ -57,6 +57,8 @@ if [ "$QUIT" = "1" ]; then
     exit 0
 fi
 
+npm install
+
 if [ "$ENVIRONMENT" = "prod" ]; then
     npm run start &
 elif [ "$ENVIRONMENT" = "dev" ]; then
