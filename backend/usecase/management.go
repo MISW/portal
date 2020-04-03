@@ -2,6 +2,9 @@ package usecase
 
 import (
 	"context"
+	"time"
+
+	"github.com/MISW/Portal/backend/internal/rest"
 
 	"golang.org/x/xerrors"
 
@@ -16,7 +19,7 @@ type ManagementUsecase interface {
 	ListUsers(ctx context.Context) ([]*domain.User, error)
 
 	// AuthorizeTransaction - 支払い済登録申請を許可する
-	AuthorizeTransaction(token string) error
+	AuthorizeTransaction(ctx context.Context, token string) error
 }
 
 type managementUsecase struct {
@@ -50,6 +53,22 @@ func (mu *managementUsecase) ListUsers(ctx context.Context) ([]*domain.User, err
 	return users, nil
 }
 
-func (mu *managementUsecase) AuthorizeTransaction(token string) error {
-	panic("implement me")
+func (mu *managementUsecase) AuthorizeTransaction(ctx context.Context, token string) error {
+	transaction, err := mu.paymentTransactionRepository.Get(ctx, token)
+
+	if err != nil {
+		if xerrors.Is(err, domain.ErrNoPaymentTransaction) {
+			return rest.NewBadRequest("無効なトークンです")
+		}
+
+		return xerrors.Errorf("failed to get payment transaction: %w", err)
+	}
+
+	if time.Now().After(transaction.ExpiredAt) {
+		return rest.NewBadRequest("無効なトークンです")
+	}
+
+	//transaction.UserID
+
+	return nil
 }
