@@ -19,13 +19,14 @@ type ManagementUsecase interface {
 	ListUsers(ctx context.Context) ([]*domain.User, error)
 
 	// AuthorizeTransaction - 支払い済登録申請を許可する
-	AuthorizeTransaction(ctx context.Context, token string) error
+	AuthorizeTransaction(ctx context.Context, token string, authorizer int) error
 }
 
 type managementUsecase struct {
 	userRepository               repository.UserRepository
 	paymentStatusRepository      repository.PaymentStatusRepository
 	paymentTransactionRepository repository.PaymentTransactionRepository
+	appConfigRepository          repository.AppConfigRepository
 }
 
 // NewManagementUsecase - management usecaseの初期化
@@ -33,11 +34,13 @@ func NewManagementUsecase(
 	userRepository repository.UserRepository,
 	paymentStatusRepository repository.PaymentStatusRepository,
 	paymentTransactionRepository repository.PaymentTransactionRepository,
+	appConfigRepository repository.AppConfigRepository,
 ) ManagementUsecase {
 	return &managementUsecase{
 		userRepository:               userRepository,
 		paymentStatusRepository:      paymentStatusRepository,
 		paymentTransactionRepository: paymentTransactionRepository,
+		appConfigRepository:          appConfigRepository,
 	}
 }
 
@@ -53,7 +56,7 @@ func (mu *managementUsecase) ListUsers(ctx context.Context) ([]*domain.User, err
 	return users, nil
 }
 
-func (mu *managementUsecase) AuthorizeTransaction(ctx context.Context, token string) error {
+func (mu *managementUsecase) AuthorizeTransaction(ctx context.Context, token string, authorizer int) error {
 	transaction, err := mu.paymentTransactionRepository.Get(ctx, token)
 
 	if err != nil {
@@ -68,7 +71,25 @@ func (mu *managementUsecase) AuthorizeTransaction(ctx context.Context, token str
 		return rest.NewBadRequest("無効なトークンです")
 	}
 
-	//transaction.UserID
+	pp, err := mu.appConfigRepository.GetPaymentPeriod()
+
+	if err != nil {
+		return xerrors.Errorf("failed to get active payment period from global settings: %w", err)
+	}
+
+	err = mu.paymentStatusRepository.Add(ctx, transaction.UserID, pp, authorizer)
+
+	if xerrors.Is(err, domain.ErrAlreadyPaid) {
+		return rest.NewConflict("既に支払い済みです")
+	}
+
+	if err != nil {
+		return xerrors.Errorf("failed to add  user(%d)'s payment status  %d for %d: %w", transaction.UserID, pp, err)
+	}
+
+	if err := mu.paymentTransactionRepository.Delete(ctx, token); err != nil {
+		return xerrors.Errorf("failed to delete payment transaction token: %w", err)
+	}
 
 	return nil
 }
