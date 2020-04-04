@@ -62,7 +62,7 @@ func (acp *appConfigPersistence) getValue(key string) (string, error) {
 	err := sqlx.Get(
 		acp.db,
 		&value,
-		"SELECT value FROM appconfig WHERE key=?",
+		"SELECT configvalue FROM appconfig WHERE configkey=?",
 		key,
 	)
 
@@ -74,7 +74,7 @@ func (acp *appConfigPersistence) getValue(key string) (string, error) {
 }
 
 func (acp *appConfigPersistence) setValue(key, value string) error {
-	_, err := acp.db.Exec("INSERT INTO appconfig (key, value) VALUES (?, ?) ON DUPLICATE KEY UPDATE value=?", key, value, value)
+	_, err := acp.db.Exec("INSERT INTO appconfig (configkey, configvalue) VALUES (?, ?) ON DUPLICATE KEY UPDATE configvalue=?", key, value, value)
 
 	if err != nil {
 		return xerrors.Errorf("failed to get value from appconfig table: %w", err)
