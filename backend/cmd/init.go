@@ -144,6 +144,10 @@ func initDig(cfg *config.Config, addr string) *dig.Container {
 	if err != nil {
 		panic(err)
 	}
+	err = c.Provide(private.NewManagementHandler)
+	if err != nil {
+		panic(err)
+	}
 
 	err = c.Provide(public.NewSessionHandler)
 	if err != nil {
@@ -200,19 +204,32 @@ func initHandler(cfg *config.Config, addr string) *echo.Echo {
 
 	digc := initDig(cfg, addr)
 
-	err := digc.Invoke(func(auth middleware.AuthMiddleware, sh private.SessionHandler) {
+	err := digc.Invoke(func(auth middleware.AuthMiddleware, sh private.SessionHandler) error {
 		g := e.Group("/api/private", auth.Authenticate)
 
 		g.POST("/logout", sh.Logout)
 
-		digc.Invoke(func(ph private.ProfileHandler) {
+		if err := digc.Invoke(func(ph private.ProfileHandler) {
 			prof := g.Group("/profile")
 
 			prof.GET("", ph.Get)
 			prof.POST("", ph.Update)
 			prof.GET("/payment_statuses", ph.GetPaymentStatuses)
 			prof.POST("/payment_transaction", ph.GetPaymentTransaction)
-		})
+		}); err != nil {
+			return err
+		}
+
+		if err := digc.Invoke(func(mh private.ManagementHandler) {
+			prof := g.Group("/management")
+
+			prof.GET("/list_users", mh.ListUsers)
+			prof.POST("/payment_transaction", mh.AuthorizeTransaction)
+		}); err != nil {
+			return err
+		}
+
+		return nil
 	})
 
 	if err != nil {
