@@ -28,7 +28,7 @@ func TestAppConfig_PaymentPeriod(t *testing.T) {
 
 	if period, err := acp.GetPaymentPeriod(); err != nil {
 		t.Fatalf("failed to get updated value: %+v", err)
-	} else if period != 202004 {
+	} else if period != newValue {
 		t.Fatalf("updated value is different from %d: %+v", newValue, period)
 	}
 }
