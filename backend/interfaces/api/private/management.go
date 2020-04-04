@@ -46,7 +46,7 @@ func (mh *managementHandler) ListUsers(e echo.Context) error {
 		return xerrors.Errorf("failed to list users: %w", err)
 	}
 
-	e.JSON(http.StatusOK, users)
+	return e.JSON(http.StatusOK, users)
 }
 
 // AuthorizeTransaction - 支払い申請を許可する
