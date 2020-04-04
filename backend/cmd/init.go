@@ -7,6 +7,7 @@ import (
 	"os"
 
 	"github.com/MISW/Portal/backend/config"
+	"github.com/MISW/Portal/backend/domain"
 	"github.com/MISW/Portal/backend/domain/repository"
 	"github.com/MISW/Portal/backend/infrastructure/persistence"
 	"github.com/MISW/Portal/backend/interfaces/api/private"
@@ -222,6 +223,7 @@ func initHandler(cfg *config.Config, addr string) *echo.Echo {
 
 		if err := digc.Invoke(func(mh private.ManagementHandler) {
 			prof := g.Group("/management")
+			prof.Use(middleware.NewRoleValidationMiddleware(domain.Admin).Authenticate)
 
 			prof.GET("/list_users", mh.ListUsers)
 			prof.POST("/payment_transaction", mh.AuthorizeTransaction)
