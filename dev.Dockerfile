@@ -30,6 +30,8 @@ RUN cd /backend && go build \
 
 FROM node:12.14.1-alpine
 
+RUN apk add --update --no-cache ca-certificates tzdata
+
 ADD ./frontend /frontend
 WORKDIR /frontend
 
