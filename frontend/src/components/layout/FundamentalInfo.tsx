@@ -2,156 +2,216 @@ import React, { useState, useEffect } from "react";
 import Grid from "@material-ui/core/Grid";
 import TextField from "@material-ui/core/TextField";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
-import { RadioGroup, Radio, FormControl, FormLabel } from "@material-ui/core";
-import { UserProfile } from "../../user";
+import { RadioGroup, Radio, FormControl, FormLabel, useRadioGroup } from "@material-ui/core";
+import { UserProfile, UserValidation, SexType } from "../../user";
+
+const NameField: React.FC<{
+  name: string;
+  valid: boolean;
+  onChange: (name: string) => void;
+}> = ({ name, onChange, valid }) => {
+  const nameArray = name.split(/\s+/);
+  const lastName = nameArray[0] ?? "";
+  const firstName = nameArray[1] ?? "";
+
+  const [edited, setEdited] = useState(false);
+
+  return (
+    <>
+      <Grid item xs={12} sm={6}>
+        <TextField
+          required
+          id="lastName"
+          name="lastName"
+          label="姓"
+          fullWidth
+          error={!valid && edited}
+          defaultValue={lastName}
+          autoComplete="family-name"
+          onBlur={(e) => {
+            // eslint-disable-next-line no-irregular-whitespace
+            onChange(`${e.target.value.split(/\s|'　'/g)} ${firstName}`);
+            setEdited(true);
+          }}
+        />
+      </Grid>
+      <Grid item xs={12} sm={6}>
+        <TextField
+          required
+          id="firstName"
+          name="firstName"
+          label="名"
+          fullWidth
+          autoComplete="given-name"
+          defaultValue={firstName}
+          error={!valid && edited}
+          onBlur={(e) => {
+            // eslint-disable-next-line no-irregular-whitespace
+            onChange(`${lastName} ${e.target.value.split(/\s|'　'/g)}`);
+            setEdited(true);
+          }}
+        />
+      </Grid>
+    </>
+  );
+};
+
+const KanaNameField: React.FC<{
+  name: string;
+  valid: boolean;
+  onChange: (name: string) => void;
+}> = ({ name, onChange, valid }) => {
+  const nameArray = name.split(/\s+/);
+  const lastName = nameArray[0] ?? "";
+  const firstName = nameArray[1] ?? "";
+
+  const [edited, setEdited] = useState(false);
+
+  return (
+    <>
+      <Grid item xs={12} sm={6}>
+        <TextField
+          required
+          id="kanaLastName"
+          name="kanaLastName"
+          label="セイ"
+          error={!valid && edited}
+          fullWidth
+          autoComplete="lname kana"
+          defaultValue={lastName}
+          onBlur={(e) => {
+            // eslint-disable-next-line no-irregular-whitespace
+            console.log(Boolean(e.target.value.match(/^[ァ-ヶー　]+$/)));
+            // eslint-disable-next-line no-irregular-whitespace
+            onChange(`${e.target.value.split(/\s|'　'/g)} ${firstName}`);
+            setEdited(true);
+          }}
+        />
+      </Grid>
+      <Grid item xs={12} sm={6}>
+        <TextField
+          required
+          id="kanaFirstName"
+          name="kanaFirstName"
+          label="メイ"
+          fullWidth
+          error={!valid && edited}
+          autoComplete="fname kana"
+          defaultValue={firstName}
+          onBlur={(e) => {
+            const s = e.target.value;
+            // eslint-disable-next-line no-irregular-whitespace
+            console.log(Boolean(s.match(/^[ァ-ヶー　]+$/)));
+            // eslint-disable-next-line no-irregular-whitespace
+            onChange(`${lastName} ${e.target.value.split(/\s|'　'/g)}`);
+            setEdited(true);
+          }}
+        />
+      </Grid>
+    </>
+  );
+};
+
+const GenderField: React.FC<{ sex: SexType; onChange: (gender: SexType) => void; valid: boolean }> = ({
+  sex,
+  onChange,
+  valid,
+}) => {
+  const [edited, setEdited] = useState(false);
+  return (
+    <Grid item xs={12} sm={6}>
+      <FormControl component="fieldset">
+        <FormLabel component="legend" error={!valid && edited}>
+          性別
+        </FormLabel>
+        <RadioGroup
+          aria-label="gender"
+          name="gender"
+          value={sex}
+          onChange={(e) => {
+            onChange(e.target.value as "women" | "men");
+            setEdited(true);
+          }}
+        >
+          <Grid container>
+            <FormControlLabel value="women" control={<Radio color="primary" />} label="女" labelPlacement="start" />
+            <FormControlLabel value="men" control={<Radio color="primary" />} label="男" labelPlacement="start" />
+          </Grid>
+        </RadioGroup>
+      </FormControl>
+    </Grid>
+  );
+};
+
+const PhoneNumberField: React.FC<{ phoneNumber: string; onChange: (phoneNumber: string) => void; valid: boolean }> = ({
+  phoneNumber,
+  valid,
+  onChange,
+}) => {
+  const [edited, setEdited] = useState(false);
+  return (
+    <Grid item xs={12} sm={6}>
+      <TextField
+        required
+        id="phone-number"
+        name="address1"
+        label="緊急連絡先(電話番号)"
+        fullWidth
+        autoComplete="tel-national"
+        defaultValue={phoneNumber}
+        error={!valid && edited}
+        onBlur={(e) => {
+          onChange(e.target.value);
+          setEdited(true);
+        }}
+      />
+    </Grid>
+  );
+};
+
+const EmailField: React.FC<{ email: string; valid: boolean; onChange: (email: string) => void }> = ({
+  email,
+  onChange,
+  valid,
+}) => {
+  const [edited, setEdited] = useState(false);
+  return (
+    <Grid item xs={12}>
+      <TextField
+        required
+        id="email"
+        name="email"
+        label="メールアドレス"
+        fullWidth
+        autoComplete="email"
+        defaultValue={email}
+        error={!valid && edited}
+        onBlur={(e) => {
+          onChange(e.target.value);
+          setEdited(true);
+        }}
+      />
+    </Grid>
+  );
+};
 
 const FundamentalInfo: React.FC<{
   user: UserProfile;
+  valid: UserValidation;
   onChange: (user: UserProfile) => void;
-}> = (props) => {
-  const name = props.user.name.split(/\s+/);
-  const [lastName, setLastName] = useState(name[0] ?? "");
-  const [firstName, setFirstName] = useState(name[1] ?? "");
-
-  const kanaName = props.user.kana.split(/\s+/);
-  const [kanaLastName, setKanaLastName] = useState(kanaName[0] ?? "");
-  const [kanaFirstName, setKanaFirstName] = useState(kanaName[1] ?? "");
-
-  useEffect(() => {
-    props.onChange({
-      ...props.user,
-      name: `${lastName} ${firstName}`,
-      kana: `${kanaLastName} ${kanaFirstName}`,
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [lastName, firstName, kanaLastName, kanaFirstName]);
-
+}> = ({ user, valid, onChange }) => {
   return (
-    <React.Fragment>
-      <Grid container spacing={3}>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            required
-            id="lastName"
-            name="lastName"
-            label="姓"
-            fullWidth
-            defaultValue={name[0]}
-            autoComplete="family-name"
-            onBlur={(e) => {
-              // eslint-disable-next-line no-irregular-whitespace
-              setLastName(e.target.value.split(/\s|'　'/g).join(""));
-            }}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            required
-            id="firstName"
-            name="firstName"
-            label="名"
-            fullWidth
-            autoComplete="given-name"
-            defaultValue={name[1]}
-            onBlur={(e) => {
-              // eslint-disable-next-line no-irregular-whitespace
-              setFirstName(e.target.value.split(/\s|'　'/g).join(""));
-            }}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            required
-            id="kanaLastName"
-            name="kanaLastName"
-            label="セイ"
-            fullWidth
-            autoComplete="lname kana"
-            defaultValue={kanaName[0]}
-            onBlur={(e) => {
-              // eslint-disable-next-line no-irregular-whitespace
-              console.log(Boolean(e.target.value.match(/^[ァ-ヶー　]+$/)));
-              // eslint-disable-next-line no-irregular-whitespace
-              setKanaLastName(e.target.value.split(/\s|'　'/g).join(""));
-            }}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            required
-            id="kanaFirstName"
-            name="kanaFirstName"
-            label="メイ"
-            fullWidth
-            autoComplete="fname kana"
-            defaultValue={kanaName[1]}
-            onBlur={(e) => {
-              const s = e.target.value;
-              // eslint-disable-next-line no-irregular-whitespace
-              console.log(Boolean(s.match(/^[ァ-ヶー　]+$/)));
-              // eslint-disable-next-line no-irregular-whitespace
-              setKanaFirstName(s.split(/\s|'　'/g).join(""));
-            }}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <FormControl component="fieldset">
-            <FormLabel component="legend">性別</FormLabel>
-            <RadioGroup
-              aria-label="gender"
-              name="gender"
-              value={props.user.sex}
-              onChange={(e) => {
-                props.onChange({
-                  ...props.user,
-                  sex: e.target.value as "women" | "men",
-                });
-              }}
-            >
-              <Grid container>
-                <FormControlLabel value="women" control={<Radio color="primary" />} label="女" labelPlacement="start" />
-                <FormControlLabel value="men" control={<Radio color="primary" />} label="男" labelPlacement="start" />
-              </Grid>
-            </RadioGroup>
-          </FormControl>
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            required
-            id="phone-number"
-            name="address1"
-            label="緊急連絡先(電話番号)"
-            fullWidth
-            autoComplete="tel-national"
-            defaultValue={props.user.emergency_phone_number}
-            onBlur={(e) =>
-              props.onChange({
-                ...props.user,
-                // eslint-disable-next-line @typescript-eslint/camelcase
-                emergency_phone_number: e.target.value,
-              })
-            }
-          />
-        </Grid>
-        <Grid item xs={12}>
-          <TextField
-            required
-            id="email"
-            name="email"
-            label="メールアドレス"
-            fullWidth
-            autoComplete="email"
-            defaultValue={props.user.email}
-            onBlur={(e) =>
-              props.onChange({
-                ...props.user,
-                email: e.target.value,
-              })
-            }
-          />
-        </Grid>
-      </Grid>
-    </React.Fragment>
+    <Grid container spacing={3}>
+      <NameField name={user.name} valid={valid.name} onChange={(name: string) => onChange({ ...user, name })} />
+      <KanaNameField name={user.kana} valid={valid.kana} onChange={(kana: string) => onChange({ ...user, kana })} />
+      <GenderField sex={user.sex} valid={valid.sex} onChange={(sex: SexType) => onChange({ ...user, sex })} />
+      <PhoneNumberField
+        phoneNumber={user.emergency_phone_number}
+        valid={valid.emergency_phone_number}
+        onChange={(phoneNumber: string) => onChange({ ...user, emergency_phone_number: phoneNumber })}
+      />
+      <EmailField email={user.email} valid={valid.email} onChange={(email: string) => onChange({ ...user, email })} />
+    </Grid>
   );
 };
 
