@@ -1,4 +1,4 @@
-import { User, UserForSignUp as UserProfile } from "./user";
+import { User, UserProfile } from "./user";
 
 const getHostAPI = () => `${location.protocol}//${location.host}/api`;
 

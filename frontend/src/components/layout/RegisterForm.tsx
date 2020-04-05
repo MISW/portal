@@ -3,7 +3,7 @@ import RegisterFormStepper from "./RegistrationFormStepper";
 import UniversityInfo from "./UniversityInfo";
 import CircleInfo from "./CircleInfo";
 import FundamentalInfo from "./FundamentalInfo";
-import { UserProfile } from "../../user";
+import { UserProfile, UserValidation } from "../../user";
 import Confirm from "./Confirm";
 
 const steps = ["基本情報", "学籍情報", "サークル内情報", "確認"];
@@ -12,6 +12,7 @@ const StepContent: React.FC<{
   step: number;
   gen1stYear: number;
   user: UserProfile;
+  valid: UserValidation;
   onChange: (user: UserProfile) => void;
   onSubmit: () => void;
 }> = (props) => {
@@ -60,12 +61,8 @@ const RegisterForm: React.FC<{ formName: string; user?: UserProfile; onSubmit: (
         }
   );
 
-  type UserValidation = { [P in keyof Omit<UserProfile, "university">]: boolean } & {
-    university: { [P in keyof UserProfile["university"]]: boolean };
-  };
-
   const valid: UserValidation = {
-    email: /^+@+$/.test(user.email),
+    email: /^\S+@\S+$/.test(user.email),
     generation: true,
     name: /^\S+\s\S+$/.test(user.name),
     kana: /^\S+\s\S+$/.test(user.kana),
@@ -82,6 +79,7 @@ const RegisterForm: React.FC<{ formName: string; user?: UserProfile; onSubmit: (
     workshops: user.workshops.length !== 0,
     squads: true,
   };
+  console.log(valid);
 
   return (
     <RegisterFormStepper
@@ -95,6 +93,7 @@ const RegisterForm: React.FC<{ formName: string; user?: UserProfile; onSubmit: (
         step={activeStep}
         gen1stYear={gen1stYear}
         user={user}
+        valid={valid}
         onChange={(u) => {
           setUser(u);
           console.log(u);
