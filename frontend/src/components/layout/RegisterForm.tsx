@@ -18,7 +18,7 @@ const StepContent: React.FC<{
 }> = (props) => {
   switch (props.step) {
     case 0:
-      return <FundamentalInfo user={props.user} onChange={props.onChange} />;
+      return <FundamentalInfo user={props.user} valid={props.valid} onChange={props.onChange} />;
     case 1:
       return <UniversityInfo user={props.user} onChange={props.onChange} />;
     case 2:
