@@ -62,7 +62,7 @@ npm install
 if [ "$ENVIRONMENT" = "prod" ]; then
     npm run start &
 elif [ "$ENVIRONMENT" = "dev" ]; then
-    npm run dev &
+    npm run docker &
 fi
 
 export DATABASE_URL="$DATABASE_USER:$DATABASE_PASSWORD@tcp($DATABASE_HOST:$DATABASE_PORT)/$DATABASE_DB?parseTime=true"
