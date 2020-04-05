@@ -39,3 +39,7 @@ export interface User {
 }
 
 export type UserProfile = Omit<User, "id" | "slack_id" | "role" | "created_at" | "updated_at">;
+
+export type UserValidation = { [P in keyof Omit<UserProfile, "university">]: boolean } & {
+  university: { [P in keyof UserProfile["university"]]: boolean };
+};
