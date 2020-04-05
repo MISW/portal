@@ -22,7 +22,9 @@ const StepContent: React.FC<{
     case 1:
       return <UniversityInfo user={props.user} onChange={props.onChange} />;
     case 2:
-      return <CircleInfo user={props.user} onChange={props.onChange} gen1stYear={props.gen1stYear} />;
+      return (
+        <CircleInfo user={props.user} valid={props.valid} onChange={props.onChange} gen1stYear={props.gen1stYear} />
+      );
     case 3:
       return <Confirm onSubmit={props.onSubmit} />;
     default:
