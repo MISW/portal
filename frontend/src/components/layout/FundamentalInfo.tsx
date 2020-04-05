@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Grid from "@material-ui/core/Grid";
 import TextField from "@material-ui/core/TextField";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
-import { RadioGroup, Radio, FormControl, FormLabel, useRadioGroup } from "@material-ui/core";
+import { RadioGroup, Radio, FormControl, FormLabel } from "@material-ui/core";
 import { UserProfile, UserValidation, SexType } from "../../user";
 
 const NameField: React.FC<{
