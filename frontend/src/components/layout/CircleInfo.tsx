@@ -77,8 +77,10 @@ export const WorkshopsForm: React.FC<{
 
   return (
     <Grid item xs={12}>
-      <FormControl required>
-        <InputLabel id="demo-mutiple-checkbox-label">研究会(複数可)</InputLabel>
+      <FormControl required fullWidth>
+        <InputLabel id="demo-mutiple-checkbox-label" shrink={true}>
+          研究会(複数可)
+        </InputLabel>
         <Select
           labelId="demo-multiple-checkbox-label"
           id="demo-multiple-checkbox"
