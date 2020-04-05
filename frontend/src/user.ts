@@ -38,4 +38,4 @@ export interface User {
   updated_at: number;
 }
 
-export type UserForSignUp = Omit<User, "id" | "slack_id" | "role" | "created_at" | "updated_at">;
+export type UserProfile = Omit<User, "id" | "slack_id" | "role" | "created_at" | "updated_at">;

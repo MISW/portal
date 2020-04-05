@@ -3,11 +3,11 @@ import Grid from "@material-ui/core/Grid";
 import TextField from "@material-ui/core/TextField";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import { RadioGroup, Radio, FormControl, FormLabel } from "@material-ui/core";
-import { UserForSignUp } from "../../user";
+import { UserProfile } from "../../user";
 
 const FundamentalInfo: React.FC<{
-  user: UserForSignUp;
-  onChange: (user: UserForSignUp) => void;
+  user: UserProfile;
+  onChange: (user: UserProfile) => void;
 }> = (props) => {
   const name = props.user.name.split(/\s+/);
   const [lastName, setLastName] = useState(name[0] ?? "");
@@ -23,6 +23,7 @@ const FundamentalInfo: React.FC<{
       name: `${lastName} ${firstName}`,
       kana: `${kanaLastName} ${kanaFirstName}`,
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [lastName, firstName, kanaLastName, kanaFirstName]);
 
   return (

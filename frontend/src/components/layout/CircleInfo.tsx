@@ -14,7 +14,7 @@ import {
   ListItemText,
   Input,
 } from "@material-ui/core";
-import { UserForSignUp } from "../../user";
+import { UserProfile } from "../../user";
 
 export const GenerationSelector: React.FC<{
   value: number;
@@ -136,8 +136,8 @@ export const OtherCircleForm: React.FC<{
 );
 
 const CircleInfo: React.FC<{
-  user: UserForSignUp;
-  onChange: (user: UserForSignUp) => void;
+  user: UserProfile;
+  onChange: (user: UserProfile) => void;
   gen1stYear: number;
 }> = ({ user, onChange, gen1stYear }) => {
   return (
