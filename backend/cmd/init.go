@@ -3,10 +3,10 @@ package cmd
 import (
 	"context"
 	"encoding/json"
-	"net/url"
 	"os"
 
 	"github.com/MISW/Portal/backend/config"
+	"github.com/MISW/Portal/backend/domain"
 	"github.com/MISW/Portal/backend/domain/repository"
 	"github.com/MISW/Portal/backend/infrastructure/persistence"
 	"github.com/MISW/Portal/backend/interfaces/api/private"
@@ -20,7 +20,6 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jmoiron/sqlx"
 	echo "github.com/labstack/echo/v4"
-	echomw "github.com/labstack/echo/v4/middleware"
 	"github.com/labstack/gommon/log"
 	"go.uber.org/dig"
 	"golang.org/x/xerrors"
@@ -105,6 +104,11 @@ func initDig(cfg *config.Config, addr string) *dig.Container {
 		panic(err)
 	}
 
+	err = c.Provide(persistence.NewAppConfigPersistence)
+	if err != nil {
+		panic(err)
+	}
+
 	err = c.Provide(func(
 		userRepository repository.UserRepository,
 		tokenRepository repository.TokenRepository,
@@ -130,12 +134,20 @@ func initDig(cfg *config.Config, addr string) *dig.Container {
 	if err != nil {
 		panic(err)
 	}
+	err = c.Provide(usecase.NewManagementUsecase)
+	if err != nil {
+		panic(err)
+	}
 
 	err = c.Provide(private.NewSessionHandler)
 	if err != nil {
 		panic(err)
 	}
 	err = c.Provide(private.NewProfileHandler)
+	if err != nil {
+		panic(err)
+	}
+	err = c.Provide(private.NewManagementHandler)
 	if err != nil {
 		panic(err)
 	}
@@ -167,26 +179,6 @@ func initDig(cfg *config.Config, addr string) *dig.Container {
 	return c
 }
 
-func initReverseProxy(e *echo.Echo) {
-	addr, ok := os.LookupEnv("NEXT_SERVER")
-
-	if !ok {
-		addr = "http://localhost:3000"
-	}
-
-	url, err := url.Parse(addr)
-	if err != nil {
-		e.Logger.Fatal(err)
-	}
-	targets := []*echomw.ProxyTarget{
-		{
-			URL: url,
-		},
-	}
-
-	e.Group("/*", echomw.Proxy(echomw.NewRoundRobinBalancer(targets)))
-}
-
 func initHandler(cfg *config.Config, addr string) *echo.Echo {
 	e := echo.New()
 
@@ -195,19 +187,33 @@ func initHandler(cfg *config.Config, addr string) *echo.Echo {
 
 	digc := initDig(cfg, addr)
 
-	err := digc.Invoke(func(auth middleware.AuthMiddleware, sh private.SessionHandler) {
+	err := digc.Invoke(func(auth middleware.AuthMiddleware, sh private.SessionHandler) error {
 		g := e.Group("/api/private", auth.Authenticate)
 
 		g.POST("/logout", sh.Logout)
 
-		digc.Invoke(func(ph private.ProfileHandler) {
+		if err := digc.Invoke(func(ph private.ProfileHandler) {
 			prof := g.Group("/profile")
 
 			prof.GET("", ph.Get)
 			prof.POST("", ph.Update)
 			prof.GET("/payment_statuses", ph.GetPaymentStatuses)
 			prof.POST("/payment_transaction", ph.GetPaymentTransaction)
-		})
+		}); err != nil {
+			return err
+		}
+
+		if err := digc.Invoke(func(mh private.ManagementHandler) {
+			prof := g.Group("/management")
+			prof.Use(middleware.NewRoleValidationMiddleware(domain.Admin).Authenticate)
+
+			prof.GET("/list_users", mh.ListUsers)
+			prof.POST("/authorize_transaction", mh.AuthorizeTransaction)
+		}); err != nil {
+			return err
+		}
+
+		return nil
 	})
 
 	if err != nil {
@@ -226,14 +232,6 @@ func initHandler(cfg *config.Config, addr string) *echo.Echo {
 	if err != nil {
 		panic(err)
 	}
-
-	// e.GET("/", echo.HandlerFunc(func(e echo.Context) error {
-	// 	return e.HTML(http.StatusOK, files.Login)
-	// }))
-	// e.GET("/callback", echo.HandlerFunc(func(e echo.Context) error {
-	// 	return e.HTML(http.StatusOK, files.Callback)
-	// }))
-	initReverseProxy(e)
 
 	if os.Getenv("DEBUG_MODE") != "" {
 		e.Logger.SetLevel(log.DEBUG)
