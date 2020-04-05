@@ -18,7 +18,7 @@ export const Header: React.FC = () => (
       <Link href="/links">
         <a className="link">Links</a>
       </Link>
-      <Link href="/setting">
+      <Link href="/profile">
         <a className="link">会員情報設定</a>
       </Link>
     </div>
