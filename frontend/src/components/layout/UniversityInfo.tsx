@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import Grid from "@material-ui/core/Grid";
 import TextField from "@material-ui/core/TextField";
-import { UserForSignUp } from "../../user";
+import { UserProfile } from "../../user";
 
 const UniversityInfo: React.FC<{
-  user: UserForSignUp;
-  onChange: (user: UserForSignUp) => void;
+  user: UserProfile;
+  onChange: (user: UserProfile) => void;
 }> = ({ user, onChange }) => {
   const [univName, setUnivName] = useState(user.university.name);
   const [department, setDepartment] = useState(user.university.department);
@@ -19,6 +19,7 @@ const UniversityInfo: React.FC<{
         subject,
       },
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [univName, department, subject]);
   return (
     <React.Fragment>

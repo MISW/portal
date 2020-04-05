@@ -1,7 +1,5 @@
 import React from "react";
-import { UserForSignUp } from "../../user";
 import { Button } from "@material-ui/core";
-import { signUp } from "../../network";
 
 const Confirm: React.FC<{
   onSubmit: () => void;
