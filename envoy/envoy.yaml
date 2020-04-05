@@ -15,6 +15,7 @@ static_resources:
               typed_config:
                 "@type": type.googleapis.com/envoy.config.filter.network.http_connection_manager.v2.HttpConnectionManager
                 stat_prefix: ingress_http
+                stream_idle_timeout: 0s
                 codec_type: AUTO
                 route_config:
                   name: local_route
