@@ -20,7 +20,7 @@ const StepContent: React.FC<{
     case 0:
       return <FundamentalInfo user={props.user} valid={props.valid} onChange={props.onChange} />;
     case 1:
-      return <UniversityInfo user={props.user} onChange={props.onChange} />;
+      return <UniversityInfo user={props.user} valid={props.valid} onChange={props.onChange} />;
     case 2:
       return (
         <CircleInfo user={props.user} valid={props.valid} onChange={props.onChange} gen1stYear={props.gen1stYear} />
@@ -75,7 +75,7 @@ const RegisterForm: React.FC<{ formName: string; user?: UserProfile; onSubmit: (
       department: /^\S+$/.test(user.university.department),
       subject: true,
     },
-    student_id: true,
+    student_id: /^\S+$/.test(user.student_id), // TODO: ガバガバ
     emergency_phone_number: /^(0[5-9]0[0-9]{8}|0[1-9][1-9][0-9]{7})$/.test(user.emergency_phone_number),
     other_circles: true,
     workshops: user.workshops.length !== 0,
