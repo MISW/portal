@@ -230,7 +230,7 @@ func initHandler(cfg *config.Config, addr string) *echo.Echo {
 			prof.Use(middleware.NewRoleValidationMiddleware(domain.Admin).Authenticate)
 
 			prof.GET("/list_users", mh.ListUsers)
-			prof.POST("/payment_transaction", mh.AuthorizeTransaction)
+			prof.POST("/authorize_transaction", mh.AuthorizeTransaction)
 		}); err != nil {
 			return err
 		}
