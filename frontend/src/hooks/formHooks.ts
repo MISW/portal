@@ -1,3 +1,12 @@
+import { useState } from "react";
+
+export const useValidateAfterEdited = (valid: boolean) => {
+  const [edited, setEdited] = useState(false);
+  const touch = () => setEdited(true);
+  const error = !valid && edited;
+  return { touch, error };
+};
+
 // wip
 // export const useUser = (user?: UserProfile) => {
 //   const now = new Date();

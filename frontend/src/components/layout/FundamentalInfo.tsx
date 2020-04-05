@@ -4,6 +4,7 @@ import TextField from "@material-ui/core/TextField";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import { RadioGroup, Radio, FormControl, FormLabel } from "@material-ui/core";
 import { UserProfile, UserValidation, SexType } from "../../user";
+import { useValidateAfterEdited } from "../../hooks/formHooks";
 
 const NameField: React.FC<{
   name: string;
@@ -14,7 +15,7 @@ const NameField: React.FC<{
   const lastName = nameArray[0] ?? "";
   const firstName = nameArray[1] ?? "";
 
-  const [edited, setEdited] = useState(false);
+  const { touch, error } = useValidateAfterEdited(valid);
 
   return (
     <>
@@ -25,13 +26,13 @@ const NameField: React.FC<{
           name="lastName"
           label="姓"
           fullWidth
-          error={!valid && edited}
+          error={error}
           defaultValue={lastName}
           autoComplete="family-name"
           onBlur={(e) => {
             // eslint-disable-next-line no-irregular-whitespace
             onChange(`${e.target.value.split(/\s|'　'/g)} ${firstName}`);
-            setEdited(true);
+            touch();
           }}
         />
       </Grid>
@@ -44,11 +45,11 @@ const NameField: React.FC<{
           fullWidth
           autoComplete="given-name"
           defaultValue={firstName}
-          error={!valid && edited}
+          error={error}
           onBlur={(e) => {
             // eslint-disable-next-line no-irregular-whitespace
             onChange(`${lastName} ${e.target.value.split(/\s|'　'/g)}`);
-            setEdited(true);
+            touch();
           }}
         />
       </Grid>
@@ -65,7 +66,7 @@ const KanaNameField: React.FC<{
   const lastName = nameArray[0] ?? "";
   const firstName = nameArray[1] ?? "";
 
-  const [edited, setEdited] = useState(false);
+  const { touch, error } = useValidateAfterEdited(valid);
 
   return (
     <>
@@ -75,7 +76,7 @@ const KanaNameField: React.FC<{
           id="kanaLastName"
           name="kanaLastName"
           label="セイ"
-          error={!valid && edited}
+          error={error}
           fullWidth
           autoComplete="lname kana"
           defaultValue={lastName}
@@ -84,7 +85,7 @@ const KanaNameField: React.FC<{
             console.log(Boolean(e.target.value.match(/^[ァ-ヶー　]+$/)));
             // eslint-disable-next-line no-irregular-whitespace
             onChange(`${e.target.value.split(/\s|'　'/g)} ${firstName}`);
-            setEdited(true);
+            touch();
           }}
         />
       </Grid>
@@ -95,7 +96,7 @@ const KanaNameField: React.FC<{
           name="kanaFirstName"
           label="メイ"
           fullWidth
-          error={!valid && edited}
+          error={error}
           autoComplete="fname kana"
           defaultValue={firstName}
           onBlur={(e) => {
@@ -104,7 +105,7 @@ const KanaNameField: React.FC<{
             console.log(Boolean(s.match(/^[ァ-ヶー　]+$/)));
             // eslint-disable-next-line no-irregular-whitespace
             onChange(`${lastName} ${e.target.value.split(/\s|'　'/g)}`);
-            setEdited(true);
+            touch();
           }}
         />
       </Grid>
@@ -112,16 +113,11 @@ const KanaNameField: React.FC<{
   );
 };
 
-const GenderField: React.FC<{ sex: SexType; onChange: (gender: SexType) => void; valid: boolean }> = ({
-  sex,
-  onChange,
-  valid,
-}) => {
-  const [edited, setEdited] = useState(false);
+const GenderField: React.FC<{ sex: SexType; onChange: (gender: SexType) => void }> = ({ sex, onChange }) => {
   return (
     <Grid item xs={12} sm={6}>
       <FormControl component="fieldset">
-        <FormLabel component="legend" error={!valid && edited}>
+        <FormLabel component="legend" required>
           性別
         </FormLabel>
         <RadioGroup
@@ -130,7 +126,6 @@ const GenderField: React.FC<{ sex: SexType; onChange: (gender: SexType) => void;
           value={sex}
           onChange={(e) => {
             onChange(e.target.value as "women" | "men");
-            setEdited(true);
           }}
         >
           <Grid container>
@@ -148,7 +143,7 @@ const PhoneNumberField: React.FC<{ phoneNumber: string; onChange: (phoneNumber: 
   valid,
   onChange,
 }) => {
-  const [edited, setEdited] = useState(false);
+  const { touch, error } = useValidateAfterEdited(valid);
   return (
     <Grid item xs={12} sm={6}>
       <TextField
@@ -159,10 +154,10 @@ const PhoneNumberField: React.FC<{ phoneNumber: string; onChange: (phoneNumber: 
         fullWidth
         autoComplete="tel-national"
         defaultValue={phoneNumber}
-        error={!valid && edited}
+        error={error}
         onBlur={(e) => {
           onChange(e.target.value);
-          setEdited(true);
+          touch();
         }}
       />
     </Grid>
@@ -174,7 +169,7 @@ const EmailField: React.FC<{ email: string; valid: boolean; onChange: (email: st
   onChange,
   valid,
 }) => {
-  const [edited, setEdited] = useState(false);
+  const { touch, error } = useValidateAfterEdited(valid);
   return (
     <Grid item xs={12}>
       <TextField
@@ -185,10 +180,10 @@ const EmailField: React.FC<{ email: string; valid: boolean; onChange: (email: st
         fullWidth
         autoComplete="email"
         defaultValue={email}
-        error={!valid && edited}
+        error={error}
         onBlur={(e) => {
           onChange(e.target.value);
-          setEdited(true);
+          touch();
         }}
       />
     </Grid>
@@ -204,7 +199,7 @@ const FundamentalInfo: React.FC<{
     <Grid container spacing={3}>
       <NameField name={user.name} valid={valid.name} onChange={(name: string) => onChange({ ...user, name })} />
       <KanaNameField name={user.kana} valid={valid.kana} onChange={(kana: string) => onChange({ ...user, kana })} />
-      <GenderField sex={user.sex} valid={valid.sex} onChange={(sex: SexType) => onChange({ ...user, sex })} />
+      <GenderField sex={user.sex} onChange={(sex: SexType) => onChange({ ...user, sex })} />
       <PhoneNumberField
         phoneNumber={user.emergency_phone_number}
         valid={valid.emergency_phone_number}
