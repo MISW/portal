@@ -38,7 +38,8 @@ type user struct {
 	Role                 string `db:"role"`
 
 	// 外部サービス
-	SlackID sql.NullString `db:"slack_id"`
+	SlackID   sql.NullString `db:"slack_id"`
+	DiscordID sql.NullString `db:"discord_id"`
 
 	CreatedAt time.Time `db:"created_at"`
 	UpdatedAt time.Time `db:"updated_at"`
@@ -67,6 +68,10 @@ func newUser(u *domain.User) *user {
 			String: u.SlackID,
 			Valid:  len(u.SlackID) != 0,
 		},
+		DiscordID: sql.NullString{
+			String: u.DiscordID,
+			Valid:  len(u.DiscordID) != 0,
+		},
 
 		CreatedAt: u.CreatedAt,
 		UpdatedAt: u.UpdatedAt,
@@ -94,7 +99,8 @@ func parseUser(u *user) *domain.User {
 		Squads:               strings.Split(u.Squads, "\n"),
 		Role:                 domain.RoleType(u.Role),
 
-		SlackID: u.SlackID.String,
+		SlackID:   u.SlackID.String,
+		DiscordID: u.DiscordID.String,
 
 		CreatedAt: u.CreatedAt,
 		UpdatedAt: u.UpdatedAt,

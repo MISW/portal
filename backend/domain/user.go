@@ -69,7 +69,8 @@ type User struct {
 	Role                 RoleType    `json:"role" yaml:"role"`
 
 	// 外部サービス
-	SlackID string `json:"slack_id" yaml:"slack_id"`
+	SlackID   string `json:"slack_id" yaml:"slack_id"`
+	DiscordID string `json:"discord_id,omitempty" yaml:"discord_id,omitempty"`
 
 	CreatedAt time.Time `json:"created_at" yaml:"created_at"`
 	UpdatedAt time.Time `json:"updated_at" yaml:"updated_at"`
@@ -95,6 +96,9 @@ func (user *User) Validate() error {
 	}
 	if !emailValidator.MatchString(user.Email) {
 		return rest.NewBadRequest("メールアドレスの形式が不正です")
+	}
+	if len(user.DiscordID) == 0 {
+		return rest.NewBadRequest("Discord IDを入力してください")
 	}
 
 	return nil
