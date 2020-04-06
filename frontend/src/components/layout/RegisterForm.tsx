@@ -36,7 +36,7 @@ const StepContent: React.FC<{
         />
       );
     case 3:
-      return <Confirm onSubmit={onSubmit} />;
+      return <Confirm user={user} valid={valid} onSubmit={onSubmit} />;
     default:
       throw new Error("Unknown Step");
   }
