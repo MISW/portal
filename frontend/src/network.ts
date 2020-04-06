@@ -1,23 +1,6 @@
-import { UserAllInfoJSON, UserProfile, UserInfoJSON } from "./user";
+import { UserAllInfoJSON, UserProfile, UserInfoJSON, toUserProfile, toUserInfoJSON } from "./user";
 
 const getHostAPI = () => `${location.protocol}//${location.host}/api`;
-const toUserProfile = (json: UserInfoJSON): UserProfile => {
-  return {
-    ...json,
-    otherCircles: json.other_circles,
-    studentId: json.student_id,
-    phoneNumber: json.emergency_phone_number
-  }
-}
-
-const toUserInfoJSON = (profile: UserProfile): UserInfoJSON => {
-  return {
-    ...profile,
-    other_circles: profile.otherCircles,
-    student_id: profile.studentId,
-    emergency_phone_number: profile.phoneNumber
-  }
-}
 
 export const login = async () => {
   const res = await fetch(`${getHostAPI()}/public/login`, {
