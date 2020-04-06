@@ -5,7 +5,7 @@ import Paper from "@material-ui/core/Paper";
 import { Stepper, Step, StepLabel } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 
-const useStyles = makeStyles((theme) => ({
+export const useStyles = makeStyles((theme) => ({
   paper: {
     marginTop: theme.spacing(3),
     marginBottom: theme.spacing(3),
