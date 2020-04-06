@@ -63,14 +63,9 @@ export const checkLoggingIn = async (): Promise<boolean> => {
   });
   const body = await res.json();
   console.log(body);
-  switch (body.status) {
-    case "OK":
-      return true;
-    case "Unauthorized":
-      return false;
-    default:
-      return Promise.reject(`Fail to catch response ${res}`);
-  }
+
+  // TODO: ガバガバ
+  return res.status < 400;
 };
 
 export const signUp = async (user: UserProfile) => {
