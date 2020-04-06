@@ -156,10 +156,10 @@ const GenderField: React.FC<{
 };
 
 const PhoneNumberField: React.FC<{
-  phoneNumber: string;
-  onChange: (phoneNumber: string) => void;
+  emergencyPhoneNumber: string;
+  onChange: (emergencyPhoneNumber: string) => void;
   valid: boolean;
-}> = ({ phoneNumber, valid, onChange }) => {
+}> = ({ emergencyPhoneNumber, valid, onChange }) => {
   const { touch, error } = useValidateAfterEdited(valid);
   return (
     <Grid item xs={12} sm={6}>
@@ -170,7 +170,7 @@ const PhoneNumberField: React.FC<{
         label="緊急連絡先(電話番号)"
         fullWidth
         autoComplete="tel-national"
-        defaultValue={phoneNumber}
+        defaultValue={emergencyPhoneNumber}
         error={error}
         onBlur={(e) => {
           onChange(e.target.value);
@@ -222,8 +222,8 @@ const FundamentalInfo: React.FC<{
       <KanaNameField name={user.kana} valid={valid.kana} onChange={setKana} />
       <GenderField sex={user.sex} onChange={setSex} />
       <PhoneNumberField
-        phoneNumber={user.phoneNumber}
-        valid={valid.phoneNumber}
+        emergencyPhoneNumber={user.emergencyPhoneNumber}
+        valid={valid.emergencyPhoneNumber}
         onChange={setPhoneNumber}
       />
       <EmailField email={user.email} valid={valid.email} onChange={setEmail} />

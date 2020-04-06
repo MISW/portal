@@ -27,8 +27,8 @@ export const useUser = (gen1stYear: number, user?: Partial<UserProfile>) => {
     user?.university?.subject ?? ""
   );
   const [studentId, setStudentId] = useState<string>(user?.studentId ?? "");
-  const [phoneNumber, setPhoneNumber] = useState<string>(
-    user?.phoneNumber ?? ""
+  const [emergencyPhoneNumber, setPhoneNumber] = useState<string>(
+    user?.emergencyPhoneNumber ?? ""
   );
   const [otherCircles, setOtherCircles] = useState<string>(
     user?.otherCircles ?? ""
@@ -46,7 +46,7 @@ export const useUser = (gen1stYear: number, user?: Partial<UserProfile>) => {
     handle,
     sex,
     studentId,
-    phoneNumber,
+    emergencyPhoneNumber,
     otherCircles,
     workshops,
     squads,
@@ -104,7 +104,7 @@ export const useUserWithValidation = (
       subject: true,
     },
     studentId: /^\S+$/.test(u.studentId), // TODO: ガバガバ
-    phoneNumber: /^(0[5-9]0[0-9]{8}|0[1-9][1-9][0-9]{7})$/.test(u.phoneNumber),
+    emergencyPhoneNumber: /^(0[5-9]0[0-9]{8}|0[1-9][1-9][0-9]{7})$/.test(u.emergencyPhoneNumber),
     otherCircles: true,
     workshops: u.workshops.length !== 0,
     squads: true,

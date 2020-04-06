@@ -21,10 +21,10 @@ const App = (props: AppProps) => {
       default: {
         let unmounted = false;
         (async () => {
-          const isLogginIn = await checkLoggingIn();
-          if (!isLogginIn && !unmounted) {
+          const isLoggingIn = await checkLoggingIn();
+          if (!isLoggingIn && !unmounted) {
             await router.push("/login");
-            console.log("loggedin!");
+            console.log("please log in!");
           } else {
             console.log("already logging in");
           }
