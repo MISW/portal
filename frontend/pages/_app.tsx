@@ -24,7 +24,7 @@ const App = (props: AppProps) => {
           const isLoggingIn = await checkLoggingIn();
           if (!isLoggingIn && !unmounted) {
             await router.push("/login");
-            console.log("please log in!");
+            console.log("please login!");
           } else {
             console.log("already logging in");
           }
