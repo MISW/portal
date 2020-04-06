@@ -69,8 +69,8 @@ export const HandleNameForm: React.FC<FormContentProps<string>> = ({ value, erro
   );
 };
 export const WorkshopsForm: React.FC<FormContentProps<Array<string>>> = ({ value, error, onChange }) => {
-  const allWorkshops = ["プログラミング", "CG", "MIDI"] as const;
-  const workshops = new Set(value);
+  const allWorkshops = ["プログラミング", "CG", "MIDI"];
+  const workshops = new Set(value.filter((s: string) => allWorkshops.includes(s)));
 
   return (
     <Grid item xs={12}>
@@ -85,6 +85,7 @@ export const WorkshopsForm: React.FC<FormContentProps<Array<string>>> = ({ value
           value={Array.from(workshops)}
           onChange={(e) => {
             onChange([...(e.target.value as string[])]);
+            console.log(e.target.value);
           }}
           input={<Input />}
           renderValue={(selected) => (selected as string[]).join(", ")}

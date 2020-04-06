@@ -6,7 +6,9 @@ import FundamentalInfo from "./FundamentalInfo";
 import { UserProfile } from "../../user";
 import Confirm from "./Confirm";
 import {
-  useUser, UserProfileHooks, UserValidation
+  useUser,
+  UserProfileHooks,
+  UserValidation,
 } from "../../hooks/formHooks";
 
 const steps = ["基本情報", "学籍情報", "サークル内情報", "確認"];
@@ -18,19 +20,14 @@ const StepContent: React.FC<{
   valid: UserValidation;
   userHooks: UserProfileHooks;
   onSubmit: () => void;
-}> = ({ step, genFirstYear, user, onSubmit, valid, userHooks}) => {
+}> = ({ step, genFirstYear, user, onSubmit, valid, userHooks }) => {
   switch (step) {
     case 0:
       return <FundamentalInfo userHooks={userHooks} />;
     case 1:
       return <UniversityInfo userHooks={userHooks} />;
     case 2:
-      return (
-        <CircleInfo
-          userHooks ={userHooks}
-          genFirstYear={genFirstYear}
-        />
-      );
+      return <CircleInfo userHooks={userHooks} genFirstYear={genFirstYear} />;
     case 3:
       return <Confirm user={user} valid={valid} onSubmit={onSubmit} />;
     default:
@@ -48,8 +45,7 @@ const RegisterForm: React.FC<{
   const now = new Date();
   const businessYear = now.getFullYear() - (now.getMonth() + 1 >= 4 ? 0 : 1);
   const genFirstYear = businessYear - 1969 + 4;
-  const {user, valid, userHooks} = useUser(genFirstYear, props.user);
-  console.log(valid);
+  const { user, valid, userHooks } = useUser(genFirstYear, props.user);
 
   return (
     <RegisterFormStepper

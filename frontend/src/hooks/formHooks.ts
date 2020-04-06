@@ -1,59 +1,77 @@
-import { useState } from "react";
-import { UserProfile, SexType } from "../user";
+import { useState, useCallback, useMemo } from "react";
+import { UserProfile } from "../user";
 
-export const useStateWithValidate = <T>(initialValue: T, validate?: (value: T) => boolean) => {
+export const useStateWithValidate = <T>(
+  initialValue: T,
+  validate?: (value: T) => boolean
+) => {
   const [value, setValue] = useState<T>(initialValue);
   const [edited, setEdited] = useState<boolean>(false);
-  const onChange = (v: T) => {setEdited(true); setValue(v); };
-  const valid = !validate ? true : validate(value);
-  const error = !valid && edited;
-  const touch = () => setEdited(true);
-  return {value, onChange, error, touch, valid};
-} 
+  const onChange = useCallback((v: T) => {
+    setEdited(true);
+    setValue(v);
+  }, [setEdited, setValue]);
+  const valid = useMemo(() => validate ? validate(value) : true, [value, validate]);
+  const error = useMemo(() => !valid && edited, [valid, edited]);
+  return { value, onChange, error, valid };
+};
 
 // const hoge: React.FC<FormContentProp<number>> = (props) => {
 //   return <></>
 // };
+// 上記のように使う
 export interface FormContentProps<T> {
-  value: T, onChange: (newValue: T) => void; error: boolean;
+  value: T;
+  onChange: (newValue: T) => void;
+  error: boolean;
 }
-
 
 const useUserHooks = (genFirstYear: number, user?: Partial<UserProfile>) => {
   return {
-    email: useStateWithValidate(user?.email ?? "", /^\S+@\S+$/.test),
+    email: useStateWithValidate(user?.email ?? "", (value) => /^\S+@\S+$/.test(value)),
     generation: useStateWithValidate(user?.generation ?? genFirstYear),
-    name: useStateWithValidate(user?.name ?? "", /^\S+\s\S+$/.test),
-    kana: useStateWithValidate(user?.kana ?? "", /^\S+\s\S+$/.test),
-    handle: useStateWithValidate(user?.handle ?? "", /^\S+$/.test),
+    name: useStateWithValidate(user?.name ?? "", (value) => /^\S+\s\S+$/.test(value)),
+    kana: useStateWithValidate(user?.kana ?? "", (value) => /^\S+\s\S+$/.test(value)),
+    handle: useStateWithValidate(user?.handle ?? "", (value) => /^\S+$/.test(value)),
     sex: useStateWithValidate(user?.sex ?? "women"),
     univName: useStateWithValidate(
       user?.university?.name ?? "早稲田大学",
-      /^\S+$/.test
+      (value) => /^\S+$/.test(value)
     ),
     department: useStateWithValidate(
       user?.university?.department ?? "",
-      /^\S+$/.test
+      (value) => /^\S+$/.test(value)
     ),
     subject: useStateWithValidate(user?.university?.subject ?? ""),
-    studentId: useStateWithValidate(user?.studentId ?? "", /^\S+$/.test),
+    studentId: useStateWithValidate(user?.studentId ?? "", (value) => /^\S+$/.test(value)),
     emergencyPhoneNumber: useStateWithValidate(
       user?.emergencyPhoneNumber ?? "",
-      /^(0[5-9]0[0-9]{8}|0[1-9][1-9][0-9]{7})$/.test
+      (value) => /^(0[5-9]0[0-9]{8}|0[1-9][1-9][0-9]{7})$/.test(value)
     ),
     otherCircles: useStateWithValidate(user?.otherCircles ?? ""),
-    workshops: useStateWithValidate(user?.workshops ?? [], value => value.length !== 0),
+    workshops: useStateWithValidate(
+      user?.workshops ?? [],
+      (value) => value.length !== 0
+    ),
     squads: useStateWithValidate(user?.squads ?? []),
   };
-}
+};
 
 export type UserProfileHooks = ReturnType<typeof useUserHooks>;
-export type UserValidation = {[P in keyof UserProfileHooks]: boolean};
+export type UserValidation = { [P in keyof UserProfileHooks]: boolean };
 
-export const useUser = (genFirstYear: number, user?: Partial<UserProfile>): {user: UserProfile, valid: UserValidation; userHooks: UserProfileHooks; } => {
+export const useUser = (
+  genFirstYear: number,
+  user?: Partial<UserProfile>
+): {
+  user: UserProfile;
+  valid: UserValidation;
+  userHooks: UserProfileHooks;
+} => {
   const h = useUserHooks(genFirstYear, user);
   return {
     user: {
+      id: user?.id,
       email: h.email.value,
       generation: h.generation.value,
       name: h.name.value,
@@ -67,9 +85,9 @@ export const useUser = (genFirstYear: number, user?: Partial<UserProfile>): {use
       },
       studentId: h.studentId.value,
       emergencyPhoneNumber: h.emergencyPhoneNumber.value,
-      otherCircles: h.otherCircles.value, 
+      otherCircles: h.otherCircles.value,
       workshops: h.workshops.value,
-      squads: h.squads.value
+      squads: h.squads.value,
     },
     valid: {
       email: h.email.valid,
@@ -83,15 +101,13 @@ export const useUser = (genFirstYear: number, user?: Partial<UserProfile>): {use
       subject: h.subject.valid,
       studentId: h.studentId.valid,
       emergencyPhoneNumber: h.emergencyPhoneNumber.valid,
-      otherCircles: h.otherCircles.valid, 
+      otherCircles: h.otherCircles.valid,
       workshops: h.workshops.valid,
-      squads: h.squads.valid
+      squads: h.squads.valid,
     },
-    userHooks: h
-  }
-}
-
-
+    userHooks: h,
+  };
+};
 
 // export const useValidateAfterEdited = (valid: boolean) => {
 //   const [edited, setEdited] = useState(false);
