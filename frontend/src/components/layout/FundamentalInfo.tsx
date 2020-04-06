@@ -1,10 +1,14 @@
-import React, { useState } from "react";
+import React from "react";
 import Grid from "@material-ui/core/Grid";
 import TextField from "@material-ui/core/TextField";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import { RadioGroup, Radio, FormControl, FormLabel } from "@material-ui/core";
-import { UserProfile, UserValidation, SexType } from "../../user";
-import { useValidateAfterEdited } from "../../hooks/formHooks";
+import { UserProfile, SexType } from "../../user";
+import {
+  useValidateAfterEdited,
+  SetUserProfileFuncs,
+  UserValidation,
+} from "../../hooks/formHooks";
 
 const NameField: React.FC<{
   name: string;
@@ -113,7 +117,10 @@ const KanaNameField: React.FC<{
   );
 };
 
-const GenderField: React.FC<{ sex: SexType; onChange: (gender: SexType) => void }> = ({ sex, onChange }) => {
+const GenderField: React.FC<{
+  sex: SexType;
+  onChange: (gender: SexType) => void;
+}> = ({ sex, onChange }) => {
   return (
     <Grid item xs={12} sm={6}>
       <FormControl component="fieldset">
@@ -129,8 +136,18 @@ const GenderField: React.FC<{ sex: SexType; onChange: (gender: SexType) => void 
           }}
         >
           <Grid container>
-            <FormControlLabel value="women" control={<Radio color="primary" />} label="女" labelPlacement="start" />
-            <FormControlLabel value="men" control={<Radio color="primary" />} label="男" labelPlacement="start" />
+            <FormControlLabel
+              value="women"
+              control={<Radio color="primary" />}
+              label="女"
+              labelPlacement="start"
+            />
+            <FormControlLabel
+              value="men"
+              control={<Radio color="primary" />}
+              label="男"
+              labelPlacement="start"
+            />
           </Grid>
         </RadioGroup>
       </FormControl>
@@ -138,11 +155,11 @@ const GenderField: React.FC<{ sex: SexType; onChange: (gender: SexType) => void 
   );
 };
 
-const PhoneNumberField: React.FC<{ phoneNumber: string; onChange: (phoneNumber: string) => void; valid: boolean }> = ({
-  phoneNumber,
-  valid,
-  onChange,
-}) => {
+const PhoneNumberField: React.FC<{
+  phoneNumber: string;
+  onChange: (phoneNumber: string) => void;
+  valid: boolean;
+}> = ({ phoneNumber, valid, onChange }) => {
   const { touch, error } = useValidateAfterEdited(valid);
   return (
     <Grid item xs={12} sm={6}>
@@ -164,11 +181,11 @@ const PhoneNumberField: React.FC<{ phoneNumber: string; onChange: (phoneNumber: 
   );
 };
 
-const EmailField: React.FC<{ email: string; valid: boolean; onChange: (email: string) => void }> = ({
-  email,
-  onChange,
-  valid,
-}) => {
+const EmailField: React.FC<{
+  email: string;
+  valid: boolean;
+  onChange: (email: string) => void;
+}> = ({ email, onChange, valid }) => {
   const { touch, error } = useValidateAfterEdited(valid);
   return (
     <Grid item xs={12}>
@@ -193,19 +210,23 @@ const EmailField: React.FC<{ email: string; valid: boolean; onChange: (email: st
 const FundamentalInfo: React.FC<{
   user: UserProfile;
   valid: UserValidation;
-  onChange: (user: UserProfile) => void;
-}> = ({ user, valid, onChange }) => {
+  setFuncs: SetUserProfileFuncs;
+}> = ({
+  user,
+  valid,
+  setFuncs: { setName, setKana, setSex, setPhoneNumber, setEmail },
+}) => {
   return (
     <Grid container spacing={3}>
-      <NameField name={user.name} valid={valid.name} onChange={(name: string) => onChange({ ...user, name })} />
-      <KanaNameField name={user.kana} valid={valid.kana} onChange={(kana: string) => onChange({ ...user, kana })} />
-      <GenderField sex={user.sex} onChange={(sex: SexType) => onChange({ ...user, sex })} />
+      <NameField name={user.name} valid={valid.name} onChange={setName} />
+      <KanaNameField name={user.kana} valid={valid.kana} onChange={setKana} />
+      <GenderField sex={user.sex} onChange={setSex} />
       <PhoneNumberField
-        phoneNumber={user.emergency_phone_number}
-        valid={valid.emergency_phone_number}
-        onChange={(phoneNumber: string) => onChange({ ...user, emergency_phone_number: phoneNumber })}
+        phoneNumber={user.phoneNumber}
+        valid={valid.phoneNumber}
+        onChange={setPhoneNumber}
       />
-      <EmailField email={user.email} valid={valid.email} onChange={(email: string) => onChange({ ...user, email })} />
+      <EmailField email={user.email} valid={valid.email} onChange={setEmail} />
     </Grid>
   );
 };
