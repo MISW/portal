@@ -1,8 +1,8 @@
 import React, { useEffect } from "react";
 import Grid from "@material-ui/core/Grid";
 import TextField from "@material-ui/core/TextField";
-import { UserProfile, UserValidation } from "../../user";
-import { useValidateAfterEdited } from "../../hooks/formHooks";
+import { useValidateAfterEdited, UserValidation, SetUserProfileFuncs } from "../../hooks/formHooks";
+import { UserProfile } from "../../user";
 
 const SchoolNameField: React.FC<{ value: string; valid: boolean; onChange: (value: string) => void }> = ({
   value,
@@ -106,54 +106,30 @@ const StudentIDField: React.FC<{ value: string; valid: boolean; onChange: (value
 const UniversityInfo: React.FC<{
   user: UserProfile;
   valid: UserValidation;
-  onChange: (user: UserProfile) => void;
-}> = ({ user, onChange, valid }) => {
-  const university = user.university;
-  const { name: univName, department, subject } = university;
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [univName, department, subject]);
+  setFuncs: SetUserProfileFuncs;
+}> = ({ user ,setFuncs: {setUnivName, setDepartment, setSubject, setStudentId}, valid }) => {
+  const { name: univName, department, subject } = user.university;
   return (
     <Grid container spacing={3}>
       <SchoolNameField
-        value={user.university.name}
+        value={univName}
         valid={valid.university.name}
-        onChange={(name: string) =>
-          onChange({
-            ...user,
-            university: { ...university, name },
-          })
-        }
+        onChange={setUnivName}
       />
       <DepartmentField
-        value={user.university.department}
+        value={department}
         valid={valid.university.department}
-        onChange={(department: string) =>
-          onChange({
-            ...user,
-            university: { ...university, department },
-          })
-        }
+        onChange={setDepartment}
       />
       <SubjectField
-        value={user.university.subject}
+        value={subject}
         valid={valid.university.subject}
-        onChange={(subject: string) =>
-          onChange({
-            ...user,
-            university: { ...university, subject },
-          })
-        }
+        onChange={setSubject}
       />
       <StudentIDField
-        value={user.student_id}
-        valid={valid.student_id}
-        onChange={(value: string) =>
-          onChange({
-            ...user,
-            student_id: value,
-          })
-        }
+        value={user.studentId}
+        valid={valid.studentId}
+        onChange={setStudentId}
       />
     </Grid>
   );

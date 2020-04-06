@@ -15,7 +15,8 @@ import {
   Input,
   FormHelperText,
 } from "@material-ui/core";
-import { UserProfile, UserValidation } from "../../user";
+import { UserProfile } from "../../user";
+import { SetUserProfileFuncs, UserValidation } from "../../hooks/formHooks";
 
 export const GenerationSelector: React.FC<{
   value: number;
@@ -155,32 +156,32 @@ export const OtherCircleForm: React.FC<{
 const CircleInfo: React.FC<{
   user: UserProfile;
   valid: UserValidation;
-  onChange: (user: UserProfile) => void;
+  setFuncs: SetUserProfileFuncs;
   gen1stYear: number;
-}> = ({ user, onChange, valid, gen1stYear }) => {
+}> = ({ user, setFuncs: {setGeneration, setHandle, setWorkshops, setOtherCircles, setSquads}, valid, gen1stYear }) => {
   return (
     <React.Fragment>
       <Grid container spacing={3}>
         <GenerationSelector
           gen1stYear={gen1stYear}
           value={user.generation}
-          onChange={(generation) => onChange({ ...user, generation })}
+          onChange={setGeneration}
         />
         <HandleNameForm
           defaultValue={user.handle}
           valid={valid.handle}
-          onChange={(handle) => onChange({ ...user, handle })}
+          onChange={setHandle}
         />
         <WorkshopsForm
           value={user.workshops}
           valid={valid.workshops}
-          onChange={(workshops) => onChange({ ...user, workshops })}
+          onChange={setWorkshops}
         />
-        <SquadsForm defaultValue={user.squads} onChange={(squads) => onChange({ ...user, squads })} />
+        <SquadsForm defaultValue={user.squads} onChange={setSquads} />
         <OtherCircleForm
-          defaultValue={user.other_circles}
+          defaultValue={user.otherCircles}
           // eslint-disable-next-line @typescript-eslint/camelcase
-          onChange={(other_circles) => onChange({ ...user, other_circles })}
+          onChange={setOtherCircles}
         />
       </Grid>
     </React.Fragment>

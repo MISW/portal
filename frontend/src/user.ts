@@ -16,7 +16,7 @@ export interface University {
   subject: string;
 }
 
-export interface User {
+export interface UserAllInfoJSON {
   id: number;
   email: string;
   generation: number;
@@ -38,8 +38,10 @@ export interface User {
   updated_at: number;
 }
 
-export type UserProfile = Omit<User, "id" | "slack_id" | "role" | "created_at" | "updated_at">;
+export type UserInfoJSON = Omit<UserAllInfoJSON, "id" | "slack_id" | "role" | "created_at" | "updated_at">;
 
-export type UserValidation = { [P in keyof Omit<UserProfile, "university">]: boolean } & {
-  university: { [P in keyof UserProfile["university"]]: boolean };
+export type UserProfile = Omit<UserInfoJSON, "other_circles" | "emergency_phone_number" | "student_id"> & {
+  otherCircles: UserAllInfoJSON["other_circles"];
+  phoneNumber: UserAllInfoJSON["emergency_phone_number"];
+  studentId: UserAllInfoJSON["student_id"]
 };

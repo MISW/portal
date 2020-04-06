@@ -1,6 +1,23 @@
-import { User, UserProfile } from "./user";
+import { UserAllInfoJSON, UserProfile, UserInfoJSON } from "./user";
 
 const getHostAPI = () => `${location.protocol}//${location.host}/api`;
+const toUserProfile = (json: UserInfoJSON): UserProfile => {
+  return {
+    ...json,
+    otherCircles: json.other_circles,
+    studentId: json.student_id,
+    phoneNumber: json.emergency_phone_number
+  }
+}
+
+const toUserInfoJSON = (profile: UserProfile): UserInfoJSON => {
+  return {
+    ...profile,
+    other_circles: profile.otherCircles,
+    student_id: profile.studentId,
+    emergency_phone_number: profile.phoneNumber
+  }
+}
 
 export const login = async () => {
   const res = await fetch(`${getHostAPI()}/public/login`, {
@@ -17,7 +34,7 @@ export const login = async () => {
   location.href = body.redirect_url;
 };
 
-export const getProfile = async (): Promise<User> => {
+export const getProfile = async (): Promise<UserProfile> => {
   const res = await fetch(`${getHostAPI()}/private/profile`, {
     headers: {
       Accept: "application/json, */*",
@@ -29,13 +46,13 @@ export const getProfile = async (): Promise<User> => {
     console.log(res);
     return Promise.reject("Error: status-code >= 400");
   }
-  const body = (await res.json()) as User;
+  const body = (await res.json()) as UserInfoJSON;
   console.log(body);
-  return body;
+  return toUserProfile(body);
 };
 
-export const updateProfile = async (user: UserProfile): Promise<User> => {
-  const body = JSON.stringify(user);
+export const updateProfile = async (user: UserProfile): Promise<UserProfile> => {
+  const body = JSON.stringify(toUserInfoJSON(user));
   console.log(body);
 
   const res = await fetch(`${getHostAPI()}/private/profile`, {
@@ -49,8 +66,8 @@ export const updateProfile = async (user: UserProfile): Promise<User> => {
     console.log(res);
     return Promise.reject("Error: status-code >= 400");
   }
-  const resUser = (res.json() as unknown) as User;
-  return resUser;
+  const resUser = (res.json() as unknown) as UserInfoJSON;
+  return toUserProfile(resUser);
 };
 
 export const checkLoggingIn = async (): Promise<boolean> => {
@@ -74,7 +91,7 @@ export const checkLoggingIn = async (): Promise<boolean> => {
 };
 
 export const signUp = async (user: UserProfile) => {
-  const body = JSON.stringify(user);
+  const body = JSON.stringify(toUserInfoJSON(user));
   console.log(body);
 
   const res = await fetch(`${getHostAPI()}/public/signup`, {
