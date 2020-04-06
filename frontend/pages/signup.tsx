@@ -4,19 +4,23 @@ import { DefaultLayout } from "../src/components/layout/DefaultLayout";
 import RegisterForm from "../src/components/layout/RegisterForm";
 import { signUp } from "../src/network";
 import { UserProfile } from "../src/user";
+import { Typography } from "@material-ui/core";
 
 const Page: NextPage<{}> = () => {
-  const [emailSent, setEmailSent] = useState<boolean>(false);
+  const [email, setEmail] = useState<string>();
   const onSubmit = (user: UserProfile) => {
     signUp(user)
-      .then(() => setEmailSent(true))
+      .then(() => setEmail(user.email))
       .catch((err) => console.error(err));
   };
 
   return (
     <DefaultLayout>
-      <RegisterForm formName="会員登録" onSubmit={onSubmit}></RegisterForm>
-      {emailSent && "emailが送信されました!"}
+      {email ? (
+        <Typography>{email} 宛に確認メールがが送信されました!</Typography>
+      ) : (
+        <RegisterForm formName="会員登録" onSubmit={onSubmit}></RegisterForm>
+      )}
     </DefaultLayout>
   );
 };
