@@ -39,6 +39,7 @@ export const useUser = (gen1stYear: number, user?: Partial<UserProfile>) => {
   const [squads, setSquads] = useState<Array<string>>(user?.squads ?? []);
 
   const retUser: UserProfile = {
+    id: user?.id,
     email,
     generation,
     name,

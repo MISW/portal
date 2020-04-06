@@ -40,13 +40,14 @@ export interface UserAllInfoJSON {
 
 export type UserInfoJSON = Omit<
   UserAllInfoJSON,
-  "id" | "slack_id" | "role" | "created_at" | "updated_at"
+  "slack_id" | "role" | "created_at" | "updated_at"
 >;
 
 export type UserProfile = Omit<
   UserInfoJSON,
-  "other_circles" | "emergency_phone_number" | "student_id"
+  "id" | "other_circles" | "emergency_phone_number" | "student_id"
 > & {
+  id?: string,
   otherCircles: UserAllInfoJSON["other_circles"];
   emergencyPhoneNumber: UserAllInfoJSON["emergency_phone_number"];
   studentId: UserAllInfoJSON["student_id"];

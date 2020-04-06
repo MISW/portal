@@ -16,7 +16,7 @@ const Page: NextPage = () => {
       }
       const res = await fetch(`${location.protocol}//${location.host}/api/public/callback`, {
         headers: {
-          Accept: "applicaton/json, */*",
+          Accept: "application/json, */*",
           "Content-type": "application/json",
         },
         credentials: "include",
