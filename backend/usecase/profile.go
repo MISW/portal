@@ -58,6 +58,7 @@ func (pu *profileUsecase) Update(ctx context.Context, registeredUser, user *doma
 	user.SlackID = registeredUser.SlackID
 	user.Role = registeredUser.Role
 	user.Generation = registeredUser.Generation
+	user.ID = registeredUser.ID
 
 	if err := user.Validate(); err != nil {
 		return nil, err
@@ -67,13 +68,13 @@ func (pu *profileUsecase) Update(ctx context.Context, registeredUser, user *doma
 		return nil, xerrors.Errorf("failed to update user(%d): %w", user.ID, err)
 	}
 
-	user, err := pu.userRepository.GetByID(ctx, user.ID)
+	updatedUser, err := pu.userRepository.GetByID(ctx, user.ID)
 
 	if err != nil {
 		return nil, xerrors.Errorf("failed to get user(%d): %w", user.ID, err)
 	}
 
-	return user, nil
+	return updatedUser, nil
 }
 
 // GetPaymentStatuses - 自分自身の支払い状況を取得する
