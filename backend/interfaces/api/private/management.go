@@ -72,5 +72,5 @@ func (mh *managementHandler) AuthorizeTransaction(e echo.Context) error {
 		return xerrors.Errorf("failed to authorize transaction: %w", err)
 	}
 
-	return nil
+	return rest.RespondOK(e, nil)
 }
