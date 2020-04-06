@@ -1,15 +1,13 @@
-import React, { useEffect } from "react";
+import React from "react";
 import Grid from "@material-ui/core/Grid";
 import TextField from "@material-ui/core/TextField";
-import { useValidateAfterEdited, UserValidation, SetUserProfileFuncs } from "../../hooks/formHooks";
-import { UserProfile } from "../../user";
+import { UserProfileHooks, FormContentProps } from "../../hooks/formHooks";
 
-const SchoolNameField: React.FC<{ value: string; valid: boolean; onChange: (value: string) => void }> = ({
+const SchoolNameField: React.FC<FormContentProps<string>> = ({
   value,
-  valid,
+  error,
   onChange,
 }) => {
-  const { touch, error } = useValidateAfterEdited(valid);
   return (
     <Grid item xs={12}>
       <TextField
@@ -22,19 +20,17 @@ const SchoolNameField: React.FC<{ value: string; valid: boolean; onChange: (valu
         error={error}
         onBlur={(e) => {
           onChange(e.target.value);
-          touch();
         }}
       />
     </Grid>
   );
 };
 
-const DepartmentField: React.FC<{ value: string; valid: boolean; onChange: (value: string) => void }> = ({
+const DepartmentField: React.FC<FormContentProps<string>> = ({
   value,
-  valid,
+  error,
   onChange,
 }) => {
-  const { touch, error } = useValidateAfterEdited(valid);
   return (
     <Grid item xs={12} sm={6}>
       <TextField
@@ -47,19 +43,17 @@ const DepartmentField: React.FC<{ value: string; valid: boolean; onChange: (valu
         error={error}
         onBlur={(e) => {
           onChange(e.target.value);
-          touch();
         }}
       />
     </Grid>
   );
 };
 
-const SubjectField: React.FC<{ value: string; valid: boolean; onChange: (value: string) => void }> = ({
+const SubjectField: React.FC<FormContentProps<string>> = ({
   value,
-  valid,
+  error,
   onChange,
 }) => {
-  const { touch, error } = useValidateAfterEdited(valid);
   return (
     <Grid item xs={12} sm={6}>
       <TextField
@@ -71,19 +65,17 @@ const SubjectField: React.FC<{ value: string; valid: boolean; onChange: (value: 
         error={error}
         onBlur={(e) => {
           onChange(e.target.value);
-          touch();
         }}
       />
     </Grid>
   );
 };
 
-const StudentIDField: React.FC<{ value: string; valid: boolean; onChange: (value: string) => void }> = ({
+const StudentIDField: React.FC<FormContentProps<string>> = ({
   value,
-  valid,
+  error,
   onChange,
 }) => {
-  const { touch, error } = useValidateAfterEdited(valid);
   return (
     <Grid item xs={12}>
       <TextField
@@ -96,7 +88,6 @@ const StudentIDField: React.FC<{ value: string; valid: boolean; onChange: (value
         error={error}
         onBlur={(e) => {
           onChange(e.target.value);
-          touch();
         }}
       />
     </Grid>
@@ -104,33 +95,14 @@ const StudentIDField: React.FC<{ value: string; valid: boolean; onChange: (value
 };
 
 const UniversityInfo: React.FC<{
-  user: UserProfile;
-  valid: UserValidation;
-  setFuncs: SetUserProfileFuncs;
-}> = ({ user ,setFuncs: {setUnivName, setDepartment, setSubject, setStudentId}, valid }) => {
-  const { name: univName, department, subject } = user.university;
+  userHooks: UserProfileHooks;
+}> = ({ userHooks: { univName, department, subject, studentId } }) => {
   return (
     <Grid container spacing={3}>
-      <SchoolNameField
-        value={univName}
-        valid={valid.university.name}
-        onChange={setUnivName}
-      />
-      <DepartmentField
-        value={department}
-        valid={valid.university.department}
-        onChange={setDepartment}
-      />
-      <SubjectField
-        value={subject}
-        valid={valid.university.subject}
-        onChange={setSubject}
-      />
-      <StudentIDField
-        value={user.studentId}
-        valid={valid.studentId}
-        onChange={setStudentId}
-      />
+      <SchoolNameField {...univName} />
+      <DepartmentField {...department} />
+      <SubjectField {...subject} />
+      <StudentIDField {...studentId} />
     </Grid>
   );
 };

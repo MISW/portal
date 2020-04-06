@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import Grid from "@material-ui/core/Grid";
 import TextField from "@material-ui/core/TextField";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
@@ -15,14 +15,11 @@ import {
   Input,
   FormHelperText,
 } from "@material-ui/core";
-import { UserProfile } from "../../user";
-import { SetUserProfileFuncs, UserValidation } from "../../hooks/formHooks";
+import { UserProfileHooks, FormContentProps } from "../../hooks/formHooks";
 
-export const GenerationSelector: React.FC<{
-  value: number;
-  gen1stYear: number;
-  onChange: (generation: number) => void;
-}> = (props) => {
+export const GenerationSelector: React.FC<FormContentProps<number> & {genFirstYear: number}> = ({
+  value, onChange, genFirstYear
+}) => {
   return (
     <Grid item xs={12}>
       <FormControl component="fieldset" required>
@@ -30,13 +27,13 @@ export const GenerationSelector: React.FC<{
         <RadioGroup
           aria-label="gender"
           name="gender"
-          value={props.value}
+          value={value}
           onChange={(e) => {
-            props.onChange(parseInt(e.target.value, 10));
+            onChange(parseInt(e.target.value, 10));
           }}
         >
           <Grid container>
-            {[props.gen1stYear, props.gen1stYear - 1, props.gen1stYear - 2].map((y: number, i: number) => (
+            {[genFirstYear, genFirstYear - 1, genFirstYear - 2].map((y: number, i: number) => (
               <FormControlLabel
                 value={y}
                 key={y}
@@ -52,13 +49,7 @@ export const GenerationSelector: React.FC<{
   );
 };
 
-export const HandleNameForm: React.FC<{
-  defaultValue: string;
-  valid: boolean;
-  onChange: (props: string) => void;
-}> = ({ defaultValue, valid, onChange }) => {
-  const [edited, setEdited] = useState(false);
-  const error = !valid && edited;
+export const HandleNameForm: React.FC<FormContentProps<string>> = ({ value, error, onChange }) => {
   return (
     <Grid item xs={12} sm={6}>
       <TextField
@@ -67,27 +58,19 @@ export const HandleNameForm: React.FC<{
         name="handle"
         label="ハンドルネーム"
         fullWidth
-        defaultValue={defaultValue}
+        defaultValue={value}
         error={error}
         onBlur={(e) => {
           onChange(e.target.value);
-          setEdited(true);
         }}
         helperText={error ? "入力されていません" : null}
       />
     </Grid>
   );
 };
-export const WorkshopsForm: React.FC<{
-  value: string[];
-  valid: boolean;
-  onChange: (props: string[]) => void;
-}> = ({ value, valid, onChange }) => {
+export const WorkshopsForm: React.FC<FormContentProps<Array<string>>> = ({ value, error, onChange }) => {
   const allWorkshops = ["プログラミング", "CG", "MIDI"] as const;
   const workshops = new Set(value);
-
-  const [edited, setEdited] = useState(false);
-  const error = !valid && edited;
 
   return (
     <Grid item xs={12}>
@@ -102,7 +85,6 @@ export const WorkshopsForm: React.FC<{
           value={Array.from(workshops)}
           onChange={(e) => {
             onChange([...(e.target.value as string[])]);
-            setEdited(true);
           }}
           input={<Input />}
           renderValue={(selected) => (selected as string[]).join(", ")}
@@ -121,67 +103,53 @@ export const WorkshopsForm: React.FC<{
   );
 };
 
-export const SquadsForm: React.FC<{
-  defaultValue: string[];
-  onChange: (props: string[]) => void;
-}> = (props) => (
+export const SquadsForm: React.FC<FormContentProps<Array<string>>> = ({value, onChange}) => (
   <Grid item xs={12}>
     <TextField
       id="squads"
       name="squads"
       label="班"
       fullWidth
-      defaultValue={props.defaultValue}
-      onChange={(e) => props.onChange(e.target.value.split(" "))}
+      defaultValue={value}
+      // TODO: 雑
+      onChange={(e) => onChange(e.target.value.split(" "))}
     />
   </Grid>
 );
 
-export const OtherCircleForm: React.FC<{
-  defaultValue: string;
-  onChange: (props: string) => void;
-}> = (props) => (
+export const OtherCircleForm: React.FC<FormContentProps<string>> = ({value, onChange}) => (
   <Grid item xs={12}>
     <TextField
       id="otherCircle"
       name="otherCircle`"
       label="ほか所属サークル"
       fullWidth
-      defaultValue={props.defaultValue}
-      onChange={(e) => props.onChange(e.target.value)}
+      defaultValue={value}
+      onChange={(e) => onChange(e.target.value)}
     />
   </Grid>
 );
 
 const CircleInfo: React.FC<{
-  user: UserProfile;
-  valid: UserValidation;
-  setFuncs: SetUserProfileFuncs;
-  gen1stYear: number;
-}> = ({ user, setFuncs: {setGeneration, setHandle, setWorkshops, setOtherCircles, setSquads}, valid, gen1stYear }) => {
+  userHooks: UserProfileHooks;
+  genFirstYear: number;
+}> = ({ userHooks: {generation ,handle, workshops, otherCircles, squads}, genFirstYear}) => {
   return (
     <React.Fragment>
       <Grid container spacing={3}>
         <GenerationSelector
-          gen1stYear={gen1stYear}
-          value={user.generation}
-          onChange={setGeneration}
+          genFirstYear={genFirstYear}
+          {...generation}
         />
         <HandleNameForm
-          defaultValue={user.handle}
-          valid={valid.handle}
-          onChange={setHandle}
+          {...handle}
         />
         <WorkshopsForm
-          value={user.workshops}
-          valid={valid.workshops}
-          onChange={setWorkshops}
+          {...workshops}
         />
-        <SquadsForm defaultValue={user.squads} onChange={setSquads} />
+        <SquadsForm {...squads} />
         <OtherCircleForm
-          defaultValue={user.otherCircles}
-          // eslint-disable-next-line @typescript-eslint/camelcase
-          onChange={setOtherCircles}
+          {...otherCircles}
         />
       </Grid>
     </React.Fragment>
