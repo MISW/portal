@@ -6,33 +6,29 @@ import FundamentalInfo from "./FundamentalInfo";
 import { UserProfile } from "../../user";
 import Confirm from "./Confirm";
 import {
-  useUserWithValidation,
-  UserValidation,
-  SetUserProfileFuncs,
+  useUser, UserProfileHooks, UserValidation
 } from "../../hooks/formHooks";
 
 const steps = ["基本情報", "学籍情報", "サークル内情報", "確認"];
 
 const StepContent: React.FC<{
   step: number;
-  gen1stYear: number;
+  genFirstYear: number;
   user: UserProfile;
   valid: UserValidation;
-  setFuncs: SetUserProfileFuncs;
+  userHooks: UserProfileHooks;
   onSubmit: () => void;
-}> = ({ step, gen1stYear, user, valid, setFuncs, onSubmit }) => {
+}> = ({ step, genFirstYear, user, onSubmit, valid, userHooks}) => {
   switch (step) {
     case 0:
-      return <FundamentalInfo user={user} valid={valid} setFuncs={setFuncs} />;
+      return <FundamentalInfo userHooks={userHooks} />;
     case 1:
-      return <UniversityInfo user={user} valid={valid} setFuncs={setFuncs} />;
+      return <UniversityInfo userHooks={userHooks} />;
     case 2:
       return (
         <CircleInfo
-          user={user}
-          valid={valid}
-          setFuncs={setFuncs}
-          gen1stYear={gen1stYear}
+          userHooks ={userHooks}
+          genFirstYear={genFirstYear}
         />
       );
     case 3:
@@ -51,11 +47,8 @@ const RegisterForm: React.FC<{
 
   const now = new Date();
   const businessYear = now.getFullYear() - (now.getMonth() + 1 >= 4 ? 0 : 1);
-  const gen1stYear = businessYear - 1969 + 4;
-  const { user, setFuncs, valid } = useUserWithValidation(
-    gen1stYear,
-    props.user
-  );
+  const genFirstYear = businessYear - 1969 + 4;
+  const {user, valid, userHooks} = useUser(genFirstYear, props.user);
   console.log(valid);
 
   return (
@@ -68,10 +61,10 @@ const RegisterForm: React.FC<{
     >
       <StepContent
         step={activeStep}
-        gen1stYear={gen1stYear}
+        genFirstYear={genFirstYear}
         user={user}
         valid={valid}
-        setFuncs={setFuncs}
+        userHooks={userHooks}
         onSubmit={() => props.onSubmit(user)}
       />
     </RegisterFormStepper>
