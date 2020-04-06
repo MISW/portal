@@ -171,6 +171,7 @@ const PhoneNumberField: React.FC<{
         fullWidth
         autoComplete="tel-national"
         defaultValue={emergencyPhoneNumber}
+        helperText="半角数字ハイフンなしで入力"
         error={error}
         onBlur={(e) => {
           onChange(e.target.value);
