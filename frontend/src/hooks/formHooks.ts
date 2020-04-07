@@ -1,10 +1,7 @@
 import { useState, useCallback, useMemo } from "react";
 import { UserProfile } from "../user";
 
-export const useStateWithValidate = <T>(
-  initialValue: T,
-  validate?: (value: T) => boolean
-) => {
+export const useStateWithValidate = <T>(initialValue: T, validate?: (value: T) => boolean) => {
   const [value, setValue] = useState<T>(initialValue);
   const [edited, setEdited] = useState<boolean>(false);
   const onChange = useCallback(
@@ -14,10 +11,7 @@ export const useStateWithValidate = <T>(
     },
     [setEdited, setValue]
   );
-  const valid = useMemo(() => (validate ? validate(value) : true), [
-    value,
-    validate,
-  ]);
+  const valid = useMemo(() => (validate ? validate(value) : true), [value, validate]);
   const error = useMemo(() => !valid && edited, [valid, edited]);
   return { value, onChange, error, valid };
 };
@@ -35,41 +29,21 @@ export interface FormContentProps<T> {
 // user情報を操作するためのフックを返す.
 const useUserHooks = (genFirstYear: number, user?: Partial<UserProfile>) => {
   return {
-    email: useStateWithValidate(user?.email ?? "", (value) =>
-      /^\S+@\S+$/.test(value)
-    ),
+    email: useStateWithValidate(user?.email ?? "", (value) => /^\S+@\S+$/.test(value)),
     generation: useStateWithValidate(user?.generation ?? genFirstYear),
-    name: useStateWithValidate(user?.name ?? "", (value) =>
-      /^\S+\s\S+$/.test(value)
-    ),
-    kana: useStateWithValidate(user?.kana ?? "", (value) =>
-      /^\S+\s\S+$/.test(value)
-    ),
-    handle: useStateWithValidate(user?.handle ?? "", (value) =>
-      /^\S+$/.test(value)
-    ),
+    name: useStateWithValidate(user?.name ?? "", (value) => /^\S+\s\S+$/.test(value)),
+    kana: useStateWithValidate(user?.kana ?? "", (value) => /^\S+\s\S+$/.test(value)),
+    handle: useStateWithValidate(user?.handle ?? "", (value) => /^\S+$/.test(value)),
     sex: useStateWithValidate(user?.sex ?? "women"),
-    univName: useStateWithValidate(
-      user?.university?.name ?? "早稲田大学",
-      (value) => /^\S+$/.test(value)
-    ),
-    department: useStateWithValidate(
-      user?.university?.department ?? "",
-      (value) => /^\S+$/.test(value)
-    ),
+    univName: useStateWithValidate(user?.university?.name ?? "早稲田大学", (value) => /^\S+$/.test(value)),
+    department: useStateWithValidate(user?.university?.department ?? "", (value) => /^\S+$/.test(value)),
     subject: useStateWithValidate(user?.university?.subject ?? ""),
-    studentId: useStateWithValidate(user?.studentId ?? "", (value) =>
-      /^\S+$/.test(value)
-    ),
-    emergencyPhoneNumber: useStateWithValidate(
-      user?.emergencyPhoneNumber ?? "",
-      (value) => /^(0[5-9]0[0-9]{8}|0[1-9][1-9][0-9]{7})$/.test(value)
+    studentId: useStateWithValidate(user?.studentId ?? "", (value) => /^\S+$/.test(value)),
+    emergencyPhoneNumber: useStateWithValidate(user?.emergencyPhoneNumber ?? "", (value) =>
+      /^(0[5-9]0[0-9]{8}|0[1-9][1-9][0-9]{7})$/.test(value)
     ),
     otherCircles: useStateWithValidate(user?.otherCircles ?? ""),
-    workshops: useStateWithValidate(
-      user?.workshops ?? [],
-      (value) => value.length !== 0
-    ),
+    workshops: useStateWithValidate(user?.workshops ?? [], (value) => value.length !== 0),
     squads: useStateWithValidate(user?.squads ?? []),
   };
 };

@@ -8,10 +8,7 @@ const Confirm: React.FC<{
   valid: UserValidation;
   onSubmit: () => void;
 }> = ({ user, valid, onSubmit }) => {
-  const filledCorrectly = Object.values(valid).reduce(
-    (prev, cur) => prev && cur,
-    true
-  );
+  const filledCorrectly = Object.values(valid).reduce((prev, cur) => prev && cur, true);
   return (
     <>
       <Button
@@ -26,11 +23,7 @@ const Confirm: React.FC<{
       >
         提出
       </Button>
-      {!filledCorrectly && (
-        <FormHelperText error>
-          フォームが正しく記入されていません
-        </FormHelperText>
-      )}
+      {!filledCorrectly && <FormHelperText error>フォームが正しく記入されていません</FormHelperText>}
     </>
   );
 };

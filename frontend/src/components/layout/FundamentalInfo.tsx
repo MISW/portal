@@ -4,10 +4,7 @@ import TextField from "@material-ui/core/TextField";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import { RadioGroup, Radio, FormControl, FormLabel } from "@material-ui/core";
 import { SexType } from "../../user";
-import {
-  UserProfileHooks,
-  FormContentProps,
-} from "../../hooks/formHooks";
+import { UserProfileHooks, FormContentProps } from "../../hooks/formHooks";
 
 const NameField: React.FC<FormContentProps<string>> = ({ value, onChange, error }) => {
   const nameArray = value.split(/\s+/);
@@ -52,7 +49,7 @@ const NameField: React.FC<FormContentProps<string>> = ({ value, onChange, error 
   );
 };
 
-const KanaNameField: React.FC<FormContentProps<string>> = ({value, onChange, error}) => {
+const KanaNameField: React.FC<FormContentProps<string>> = ({ value, onChange, error }) => {
   const nameArray = value.split(/\s+/);
   const lastName = nameArray[0] ?? "";
   const firstName = nameArray[1] ?? "";
@@ -100,7 +97,7 @@ const KanaNameField: React.FC<FormContentProps<string>> = ({value, onChange, err
   );
 };
 
-const GenderField: React.FC<FormContentProps<SexType>> = ({value, onChange }) => {
+const GenderField: React.FC<FormContentProps<SexType>> = ({ value, onChange }) => {
   return (
     <Grid item xs={12} sm={6}>
       <FormControl component="fieldset">
@@ -116,18 +113,8 @@ const GenderField: React.FC<FormContentProps<SexType>> = ({value, onChange }) =>
           }}
         >
           <Grid container>
-            <FormControlLabel
-              value="women"
-              control={<Radio color="primary" />}
-              label="女"
-              labelPlacement="start"
-            />
-            <FormControlLabel
-              value="men"
-              control={<Radio color="primary" />}
-              label="男"
-              labelPlacement="start"
-            />
+            <FormControlLabel value="women" control={<Radio color="primary" />} label="女" labelPlacement="start" />
+            <FormControlLabel value="men" control={<Radio color="primary" />} label="男" labelPlacement="start" />
           </Grid>
         </RadioGroup>
       </FormControl>
@@ -156,7 +143,7 @@ const PhoneNumberField: React.FC<FormContentProps<string>> = ({ value, onChange,
   );
 };
 
-const EmailField: React.FC<FormContentProps<string>> = ({value, onChange, error}) => {
+const EmailField: React.FC<FormContentProps<string>> = ({ value, onChange, error }) => {
   return (
     <Grid item xs={12}>
       <TextField
@@ -178,17 +165,13 @@ const EmailField: React.FC<FormContentProps<string>> = ({value, onChange, error}
 
 const FundamentalInfo: React.FC<{
   userHooks: UserProfileHooks;
-}> = ({
-  userHooks: {name, kana, sex, emergencyPhoneNumber, email}
-}) => {
+}> = ({ userHooks: { name, kana, sex, emergencyPhoneNumber, email } }) => {
   return (
     <Grid container spacing={3}>
       <NameField {...name} />
       <KanaNameField {...kana} />
       <GenderField {...sex} />
-      <PhoneNumberField
-        {...emergencyPhoneNumber }
-      />
+      <PhoneNumberField {...emergencyPhoneNumber} />
       <EmailField {...email} />
     </Grid>
   );

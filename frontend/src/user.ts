@@ -38,37 +38,21 @@ export interface UserAllInfoJSON {
   updated_at: number;
 }
 
-export type UserInfoJSON = Omit<
-  UserAllInfoJSON,
-  "slack_id" | "role" | "created_at" | "updated_at"
->;
+export type UserInfoJSON = Omit<UserAllInfoJSON, "slack_id" | "role" | "created_at" | "updated_at">;
 
-export type UserProfile = Omit<
-  UserInfoJSON,
-  "id" | "other_circles" | "emergency_phone_number" | "student_id"
-> & {
-  id?: string,
+export type UserProfile = Omit<UserInfoJSON, "id" | "other_circles" | "emergency_phone_number" | "student_id"> & {
+  id?: string;
   otherCircles: UserAllInfoJSON["other_circles"];
   emergencyPhoneNumber: UserAllInfoJSON["emergency_phone_number"];
   studentId: UserAllInfoJSON["student_id"];
 };
 
 export const toUserProfile = (json: UserInfoJSON): UserProfile => {
-  const toCamel = (s: string) =>
-    s.replace(/([-_][a-z])/gi, (m) =>
-      m.toUpperCase().replace("-", "").replace("_", "")
-    );
-  return Object.entries(json).reduce(
-    (prev, [k, v]) => ({ ...prev, [toCamel(k)]: v }),
-    {}
-  ) as UserProfile;
+  const toCamel = (s: string) => s.replace(/([-_][a-z])/gi, (m) => m.toUpperCase().replace("-", "").replace("_", ""));
+  return Object.entries(json).reduce((prev, [k, v]) => ({ ...prev, [toCamel(k)]: v }), {}) as UserProfile;
 };
 
 export const toUserInfoJSON = (profile: UserProfile): UserInfoJSON => {
-  const toSnake = (s: string) =>
-    s.replace(/[\w]([A-Z])/g, (m) => m[0] + "_" + m[1]).toLowerCase();
-  return Object.entries(profile).reduce(
-    (prev, [k, v]) => ({ ...prev, [toSnake(k)]: v }),
-    {}
-  ) as UserInfoJSON;
+  const toSnake = (s: string) => s.replace(/[\w]([A-Z])/g, (m) => m[0] + "_" + m[1]).toLowerCase();
+  return Object.entries(profile).reduce((prev, [k, v]) => ({ ...prev, [toSnake(k)]: v }), {}) as UserInfoJSON;
 };
