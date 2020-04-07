@@ -7,7 +7,7 @@ const Confirm: React.FC<{
   user: UserProfile;
   valid: UserValidation;
   onSubmit: () => void;
-}> = ({ user, valid, onSubmit }) => {
+}> = ({ valid, onSubmit }) => {
   const filledCorrectly = Object.values(valid).reduce((prev, cur) => prev && cur, true);
   return (
     <>
