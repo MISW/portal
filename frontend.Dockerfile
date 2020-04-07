@@ -12,8 +12,6 @@ WORKDIR /frontend
 
 RUN npm install
 
-ENV ENVIRONMENT=dev
-
 COPY ./scripts/* /bin/
 
 ENTRYPOINT [ "/bin/docker-entrypoint.frontend.sh" ]
