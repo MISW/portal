@@ -1,4 +1,4 @@
-import { UserAllInfoJSON, UserProfile, UserInfoJSON, toUserProfile, toUserInfoJSON } from "./user";
+import { UserProfile, UserInfoJSON, toUserProfile, toUserInfoJSON } from "./user";
 
 const getHostAPI = () => `${location.protocol}//${location.host}/api`;
 
@@ -49,7 +49,8 @@ export const updateProfile = async (user: UserProfile): Promise<UserProfile> => 
     console.log(res);
     return Promise.reject("Error: status-code >= 400");
   }
-  const resUser = (res.json() as unknown) as UserInfoJSON;
+  const resUser = ((await res.json()) as unknown) as UserInfoJSON;
+  console.log(resUser);
   return toUserProfile(resUser);
 };
 

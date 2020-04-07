@@ -1,7 +1,15 @@
 import { useState, useCallback, useMemo } from "react";
 import { UserProfile } from "../user";
 
-export const useStateWithValidate = <T>(initialValue: T, validate?: (value: T) => boolean) => {
+type UserHook<T> = {
+  value: T;
+  onChange: (v: T) => void;
+  error: boolean;
+  valid: boolean;
+  check: () => void;
+};
+
+export const useStateWithValidate = <T>(initialValue: T, validate?: (value: T) => boolean): UserHook<T> => {
   const [value, setValue] = useState<T>(initialValue);
   const [edited, setEdited] = useState<boolean>(false);
   const onChange = useCallback(
@@ -12,8 +20,9 @@ export const useStateWithValidate = <T>(initialValue: T, validate?: (value: T) =
     [setEdited, setValue]
   );
   const valid = useMemo(() => (validate ? validate(value) : true), [value, validate]);
+  const check = useCallback(() => setEdited(true), [setEdited]);
   const error = useMemo(() => !valid && edited, [valid, edited]);
-  return { value, onChange, error, valid };
+  return { value, onChange, error, valid, check };
 };
 
 // const hoge: React.FC<FormContentProp<number>> = (props) => {
@@ -35,9 +44,9 @@ const useUserHooks = (genFirstYear: number, user?: Partial<UserProfile>) => {
     kana: useStateWithValidate(user?.kana ?? "", (value) => /^\S+\s\S+$/.test(value)),
     handle: useStateWithValidate(user?.handle ?? "", (value) => /^\S+$/.test(value)),
     sex: useStateWithValidate(user?.sex ?? "women"),
-    univName: useStateWithValidate(user?.university?.name ?? "早稲田大学", (value) => /^\S+$/.test(value)),
-    department: useStateWithValidate(user?.university?.department ?? "", (value) => /^\S+$/.test(value)),
-    subject: useStateWithValidate(user?.university?.subject ?? ""),
+    univName: useStateWithValidate(user?.univName ?? "早稲田大学", (value) => /^\S+$/.test(value)),
+    department: useStateWithValidate(user?.department ?? "", (value) => /^\S+$/.test(value)),
+    subject: useStateWithValidate(user?.subject ?? ""),
     studentId: useStateWithValidate(user?.studentId ?? "", (value) => /^\S+$/.test(value)),
     emergencyPhoneNumber: useStateWithValidate(user?.emergencyPhoneNumber ?? "", (value) =>
       /^(0[5-9]0[0-9]{8}|0[1-9][1-9][0-9]{7})$/.test(value)
@@ -48,8 +57,8 @@ const useUserHooks = (genFirstYear: number, user?: Partial<UserProfile>) => {
   };
 };
 
-export type UserProfileHooks = ReturnType<typeof useUserHooks>;
-export type UserValidation = { [P in keyof UserProfileHooks]: boolean };
+export type UserProfileHooks = { [P in keyof UserProfile]: UserHook<UserProfile[P]> };
+export type UserValidation = { [P in keyof UserProfile]: boolean };
 
 export const useUser = (
   genFirstYear: number,
@@ -60,42 +69,14 @@ export const useUser = (
   userHooks: UserProfileHooks;
 } => {
   const h = useUserHooks(genFirstYear, user);
+  const retUser = Object.entries(h).reduce((prev, [k, v]) => ({ [k]: v.value, ...prev }), {}) as UserProfile;
+  const valid = Object.entries(h).reduce((prev, [k, v]) => ({ [k]: v.valid, ...prev }), {}) as UserValidation;
   return {
     user: {
       id: user?.id,
-      email: h.email.value,
-      generation: h.generation.value,
-      name: h.name.value,
-      kana: h.kana.value,
-      handle: h.handle.value,
-      sex: h.sex.value,
-      university: {
-        name: h.univName.value,
-        department: h.department.value,
-        subject: h.subject.value,
-      },
-      studentId: h.studentId.value,
-      emergencyPhoneNumber: h.emergencyPhoneNumber.value,
-      otherCircles: h.otherCircles.value,
-      workshops: h.workshops.value,
-      squads: h.squads.value,
+      ...retUser,
     },
-    valid: {
-      email: h.email.valid,
-      generation: h.generation.valid,
-      name: h.name.valid,
-      kana: h.kana.valid,
-      handle: h.handle.valid,
-      sex: h.sex.valid,
-      univName: h.univName.valid,
-      department: h.department.valid,
-      subject: h.subject.valid,
-      studentId: h.studentId.valid,
-      emergencyPhoneNumber: h.emergencyPhoneNumber.valid,
-      otherCircles: h.otherCircles.valid,
-      workshops: h.workshops.valid,
-      squads: h.squads.valid,
-    },
+    valid,
     userHooks: h,
   };
 };
