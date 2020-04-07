@@ -36,8 +36,6 @@ COPY --from=tools /usr/local/bin/dbenv /bin
 COPY --from=build-backend /backend/portal /bin/portal 
 COPY --from=build-backend /backend/schema /schema
 
-ENV ENVIRONMENT=dev
-
 COPY ./scripts/* /bin/
 ADD ./config /config
 
