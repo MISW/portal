@@ -20,9 +20,7 @@ const Page: NextPage<{}> = () => {
     <DefaultLayout>
       {email ? (
         <Paper className={classes.paper}>
-          <Typography align="center">
-            {email} 宛に確認メールがが送信されました! ✈
-          </Typography>
+          <Typography align="center">{email} 宛に確認メールがが送信されました! ✈</Typography>
         </Paper>
       ) : (
         <RegisterForm formName="会員登録" onSubmit={onSubmit}></RegisterForm>

@@ -5,11 +5,7 @@ import CircleInfo from "./CircleInfo";
 import FundamentalInfo from "./FundamentalInfo";
 import { UserProfile } from "../../user";
 import Confirm from "./Confirm";
-import {
-  useUser,
-  UserProfileHooks,
-  UserValidation,
-} from "../../hooks/formHooks";
+import { useUser, UserProfileHooks, UserValidation } from "../../hooks/formHooks";
 
 const steps = ["基本情報", "学籍情報", "サークル内情報", "確認"];
 

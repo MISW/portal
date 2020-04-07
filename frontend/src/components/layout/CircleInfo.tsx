@@ -17,8 +17,10 @@ import {
 } from "@material-ui/core";
 import { UserProfileHooks, FormContentProps } from "../../hooks/formHooks";
 
-export const GenerationSelector: React.FC<FormContentProps<number> & {genFirstYear: number}> = ({
-  value, onChange, genFirstYear
+export const GenerationSelector: React.FC<FormContentProps<number> & { genFirstYear: number }> = ({
+  value,
+  onChange,
+  genFirstYear,
 }) => {
   return (
     <Grid item xs={12}>
@@ -104,7 +106,7 @@ export const WorkshopsForm: React.FC<FormContentProps<Array<string>>> = ({ value
   );
 };
 
-export const SquadsForm: React.FC<FormContentProps<Array<string>>> = ({value, onChange}) => (
+export const SquadsForm: React.FC<FormContentProps<Array<string>>> = ({ value, onChange }) => (
   <Grid item xs={12}>
     <TextField
       id="squads"
@@ -118,7 +120,7 @@ export const SquadsForm: React.FC<FormContentProps<Array<string>>> = ({value, on
   </Grid>
 );
 
-export const OtherCircleForm: React.FC<FormContentProps<string>> = ({value, onChange}) => (
+export const OtherCircleForm: React.FC<FormContentProps<string>> = ({ value, onChange }) => (
   <Grid item xs={12}>
     <TextField
       id="otherCircle"
@@ -134,24 +136,15 @@ export const OtherCircleForm: React.FC<FormContentProps<string>> = ({value, onCh
 const CircleInfo: React.FC<{
   userHooks: UserProfileHooks;
   genFirstYear: number;
-}> = ({ userHooks: {generation ,handle, workshops, otherCircles, squads}, genFirstYear}) => {
+}> = ({ userHooks: { generation, handle, workshops, otherCircles, squads }, genFirstYear }) => {
   return (
     <React.Fragment>
       <Grid container spacing={3}>
-        <GenerationSelector
-          genFirstYear={genFirstYear}
-          {...generation}
-        />
-        <HandleNameForm
-          {...handle}
-        />
-        <WorkshopsForm
-          {...workshops}
-        />
+        <GenerationSelector genFirstYear={genFirstYear} {...generation} />
+        <HandleNameForm {...handle} />
+        <WorkshopsForm {...workshops} />
         <SquadsForm {...squads} />
-        <OtherCircleForm
-          {...otherCircles}
-        />
+        <OtherCircleForm {...otherCircles} />
       </Grid>
     </React.Fragment>
   );
