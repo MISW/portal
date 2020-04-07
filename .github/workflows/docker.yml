@@ -3,7 +3,7 @@ name: Docker
 on: [push]
 
 jobs:
-  build:
+  frontend:
     runs-on: ubuntu-latest
 
     steps:
@@ -19,6 +19,11 @@ jobs:
           dockerfile: frontend.Dockerfile
           tag_with_ref: true
           tag_with_sha: true
+  backend:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
 
       - name: Build Docker Image for API Server
         uses: docker/build-push-action@v1
