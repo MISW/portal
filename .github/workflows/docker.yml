@@ -3,22 +3,35 @@ name: Docker
 on: [push]
 
 jobs:
-  build:
+  frontend:
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v2
-      - name: Docker login
-        run: echo ${{ secrets.GITHUB_TOKEN }} | docker login --password-stdin -u misw docker.pkg.github.com
 
-      - if: github.actor != 'dependabot-preview[bot]'
-        name: Docker build
-        run: |
-          docker build . -t docker.pkg.github.com/misw/portal/portal-server:${{ github.sha }}
-          # docker push docker.pkg.github.com/misw/portal/portal-server:${{ github.sha }}
+      - name: Build Docker Image for Frontend
+        uses: docker/build-push-action@v1
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+          repository: portal/frontend
+          registry: registry.misw.jp
+          dockerfile: frontend.Dockerfile
+          tag_with_ref: true
+          tag_with_sha: true
+  backend:
+    runs-on: ubuntu-latest
 
-      - if: github.actor != 'dependabot-preview[bot]'
-        name: Dev Docker build
-        run: |
-          docker build . -f dev.Dockerfile -t docker.pkg.github.com/misw/portal/portal-server-dev:${{ github.sha }}
-          # docker push docker.pkg.github.com/misw/portal/portal-server-dev:${{ github.sha }}
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Build Docker Image for API Server
+        uses: docker/build-push-action@v1
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+          repository: portal/backend
+          registry: registry.misw.jp
+          dockerfile: backend.Dockerfile
+          tag_with_ref: true
+          tag_with_sha: true
