@@ -14,7 +14,7 @@ services:
 
   backend:
     build:
-      dockerfile: backend.dev.Dockerfile
+      dockerfile: backend.Dockerfile
       context: .
     env_file: ./dev.env
     volumes:
@@ -25,10 +25,11 @@ services:
       - "80"
     environment:
       TZ: "Azia/Tokyo"
+      ENVIRONMENT: dev
 
   frontend:
     build:
-      dockerfile: frontend.dev.Dockerfile
+      dockerfile: frontend.Dockerfile
       context: .
     env_file: ./dev.env
     volumes:
@@ -38,6 +39,7 @@ services:
       - "3000"
     environment:
       TZ: "Azia/Tokyo"
+      ENVIRONMENT: dev
 
   mysql:
     image: mysql:5.7
