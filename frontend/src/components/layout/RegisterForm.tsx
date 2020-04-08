@@ -1,64 +1,97 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import RegisterFormStepper from "./RegistrationFormStepper";
 import UniversityInfo from "./UniversityInfo";
 import CircleInfo from "./CircleInfo";
 import FundamentalInfo from "./FundamentalInfo";
 import { UserProfile } from "../../user";
 import Confirm from "./Confirm";
-import { useUser, UserProfileHooks, UserValidation } from "../../hooks/formHooks";
+import { useUser, UserProfileHooks } from "../../hooks/formHooks";
 
 const steps = ["基本情報", "学籍情報", "サークル内情報", "確認"];
 
-const StepContent: React.FC<{
-  step: number;
-  genFirstYear: number;
-  user: UserProfile;
-  valid: UserValidation;
-  userHooks: UserProfileHooks;
-  onSubmit: () => void;
-}> = ({ step, genFirstYear, user, onSubmit, valid, userHooks }) => {
-  switch (step) {
-    case 0:
-      return <FundamentalInfo userHooks={userHooks} />;
-    case 1:
-      return <UniversityInfo userHooks={userHooks} />;
-    case 2:
-      return <CircleInfo userHooks={userHooks} genFirstYear={genFirstYear} />;
-    case 3:
-      return <Confirm user={user} valid={valid} onSubmit={onSubmit} />;
-    default:
-      throw new Error("Unknown Step");
-  }
+const validateFormContents = (obj: Partial<UserProfileHooks>): boolean => {
+  const valid = Object.values(obj).every((v) => (v ? v.check() : true));
+  return valid;
 };
 
 const RegisterForm: React.FC<{
   formName: string;
   user?: Partial<UserProfile>;
   onSubmit: (user: UserProfile) => void;
-}> = (props) => {
-  const [activeStep, setActiveStep] = useState(0);
-
+}> = ({ formName, user, onSubmit }) => {
   const now = new Date();
   const businessYear = now.getFullYear() - (now.getMonth() + 1 >= 4 ? 0 : 1);
   const genFirstYear = businessYear - 1969 + 4;
-  const { user, valid, userHooks } = useUser(genFirstYear, props.user);
+
+  const { user: userData, valid, userHooks } = useUser(genFirstYear, user);
+  const [activeStep, setActiveStep] = useState(0);
+  const [nextDisabled, setNextDisabled] = useState(false);
+
+  const {
+    email,
+    generation,
+    name,
+    kana,
+    handle,
+    sex,
+    univName,
+    department,
+    subject,
+    studentId,
+    emergencyPhoneNumber,
+    otherCircles,
+    workshops,
+    squads,
+  } = userHooks;
+
+  const fundamentalInfo = { name, kana, email, sex, emergencyPhoneNumber };
+  const universityInfo = { univName, department, subject, studentId };
+  const circleInfo = { generation, handle, otherCircles, workshops, squads };
+
+  const contentHooks = [fundamentalInfo, universityInfo, circleInfo];
+
+  const handleSubmit = useCallback(() => onSubmit(userData), [userData, onSubmit]);
+  const handleNext = useCallback(() => {
+    const hook = contentHooks[activeStep];
+    const valid = validateFormContents(hook);
+    if (!valid) {
+      setNextDisabled(true);
+      return;
+    }
+    setActiveStep(activeStep + 1);
+  }, [activeStep, contentHooks]);
+  const handleBack = useCallback(() => setActiveStep(activeStep - 1), [activeStep]);
+
+  if (nextDisabled) {
+    const hook = contentHooks[activeStep];
+    const valid = Object.values(hook as Partial<UserProfileHooks>).every((v) => (v ? v.valid : true));
+    console.log(valid);
+    if (valid) setNextDisabled(false);
+  }
 
   return (
     <RegisterFormStepper
-      formName={props.formName}
+      formName={formName}
       steps={steps}
-      handleNext={() => setActiveStep(activeStep + 1)}
-      handleBack={() => setActiveStep(activeStep - 1)}
+      handleNext={handleNext}
+      handleBack={handleBack}
       activeStep={activeStep}
+      nextDisabled={nextDisabled}
     >
-      <StepContent
-        step={activeStep}
-        genFirstYear={genFirstYear}
-        user={user}
-        valid={valid}
-        userHooks={userHooks}
-        onSubmit={() => props.onSubmit(user)}
-      />
+      {((step: number) => {
+        switch (step) {
+          case 0:
+            return <FundamentalInfo userHooks={userHooks} />;
+          case 1:
+            return <UniversityInfo userHooks={userHooks} />;
+          case 2:
+            return <CircleInfo userHooks={userHooks} genFirstYear={genFirstYear} />;
+          case 3:
+            return <Confirm user={userData} valid={valid} onSubmit={handleSubmit} />;
+          default:
+            throw new Error("Unknown Step");
+        }
+      })(activeStep)}
     </RegisterFormStepper>
   );
 };

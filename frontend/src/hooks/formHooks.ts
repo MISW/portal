@@ -6,7 +6,7 @@ type UserHook<T> = {
   onChange: (v: T) => void;
   error: boolean;
   valid: boolean;
-  check: () => void;
+  check: () => boolean;
 };
 
 export const useStateWithValidate = <T>(initialValue: T, validate?: (value: T) => boolean): UserHook<T> => {
@@ -20,7 +20,10 @@ export const useStateWithValidate = <T>(initialValue: T, validate?: (value: T) =
     [setEdited, setValue]
   );
   const valid = useMemo(() => (validate ? validate(value) : true), [value, validate]);
-  const check = useCallback(() => setEdited(true), [setEdited]);
+  const check = useCallback(() => {
+    setEdited(true);
+    return valid;
+  }, [setEdited, valid]);
   const error = useMemo(() => !valid && edited, [valid, edited]);
   return { value, onChange, error, valid, check };
 };
@@ -68,15 +71,15 @@ export const useUser = (
   valid: UserValidation;
   userHooks: UserProfileHooks;
 } => {
-  const h = useUserHooks(genFirstYear, user);
-  const retUser = Object.entries(h).reduce((prev, [k, v]) => ({ [k]: v.value, ...prev }), {}) as UserProfile;
-  const valid = Object.entries(h).reduce((prev, [k, v]) => ({ [k]: v.valid, ...prev }), {}) as UserValidation;
+  const userHooks = useUserHooks(genFirstYear, user);
+  const retUser = Object.entries(userHooks).reduce((prev, [k, v]) => ({ [k]: v.value, ...prev }), {}) as UserProfile;
+  const valid = Object.entries(userHooks).reduce((prev, [k, v]) => ({ [k]: v.valid, ...prev }), {}) as UserValidation;
   return {
     user: {
       id: user?.id,
       ...retUser,
     },
     valid,
-    userHooks: h,
+    userHooks,
   };
 };
