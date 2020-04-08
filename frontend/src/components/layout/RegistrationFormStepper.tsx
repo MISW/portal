@@ -36,6 +36,7 @@ const RegisterFormStepper: React.FC<{
   steps: string[];
   handleNext: () => void;
   handleBack: () => void;
+  nextDisabled?: boolean;
 }> = (props) => {
   const classes = useStyles();
   return (
@@ -58,7 +59,13 @@ const RegisterFormStepper: React.FC<{
           </Button>
         )}
         {props.activeStep !== props.steps.length - 1 && (
-          <Button variant="contained" className={classes.button} color="primary" onClick={props.handleNext}>
+          <Button
+            variant="contained"
+            className={classes.button}
+            color="primary"
+            onClick={props.handleNext}
+            disabled={props.nextDisabled ?? false}
+          >
             Next
           </Button>
         )}
