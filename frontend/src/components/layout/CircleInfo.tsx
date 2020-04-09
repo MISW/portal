@@ -41,7 +41,7 @@ export const GenerationSelector: React.FC<FormContentProps<number> & { genFirstY
                 key={y}
                 control={<Radio color="primary" />}
                 label={`${y}代 (学部${i + 1}年)`}
-                labelPlacement="start"
+                labelPlacement="end"
               />
             ))}
           </Grid>

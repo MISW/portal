@@ -85,9 +85,6 @@ const KanaNameField: React.FC<FormContentProps<string>> = ({ value, onChange, er
           autoComplete="fname kana"
           defaultValue={firstName}
           onBlur={(e) => {
-            const s = e.target.value;
-            // eslint-disable-next-line no-irregular-whitespace
-            console.log(Boolean(s.match(/^[ァ-ヶー　]+$/)));
             // eslint-disable-next-line no-irregular-whitespace
             onChange(`${lastName} ${e.target.value.split(/\s|'　'/g)}`);
           }}
@@ -113,8 +110,8 @@ const GenderField: React.FC<FormContentProps<SexType>> = ({ value, onChange }) =
           }}
         >
           <Grid container>
-            <FormControlLabel value="women" control={<Radio color="primary" />} label="女" labelPlacement="start" />
-            <FormControlLabel value="men" control={<Radio color="primary" />} label="男" labelPlacement="start" />
+            <FormControlLabel value="women" control={<Radio color="primary" />} label="女" labelPlacement="end" />
+            <FormControlLabel value="men" control={<Radio color="primary" />} label="男" labelPlacement="end" />
           </Grid>
         </RadioGroup>
       </FormControl>

@@ -65,7 +65,6 @@ const RegisterForm: React.FC<{
   if (nextDisabled) {
     const hook = contentHooks[activeStep];
     const valid = Object.values(hook as Partial<UserProfileHooks>).every((v) => (v ? v.valid : true));
-    console.log(valid);
     if (valid) setNextDisabled(false);
   }
 
