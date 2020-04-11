@@ -1,31 +1,29 @@
 import React from "react";
-import { UserForSignUp } from "../../user";
-import { Button } from "@material-ui/core";
-import { signUp } from "../../network";
+import { Button, FormHelperText } from "@material-ui/core";
+import { UserProfile } from "../../user";
+import { UserValidation } from "../../hooks/formHooks";
 
 const Confirm: React.FC<{
+  user: UserProfile;
+  valid: UserValidation;
   onSubmit: () => void;
-  // TODO: validate-result
-}> = (props) => {
-  const filled = true; // TODO:
-  if (filled) {
-    return (
+}> = ({ valid, onSubmit }) => {
+  const filledCorrectly = Object.values(valid).reduce((prev, cur) => prev && cur, true);
+  return (
+    <>
       <Button
         className="button"
         variant="contained"
         color="primary"
         onClick={(e) => {
           e.preventDefault();
-          props.onSubmit();
+          onSubmit();
         }}
+        disabled={!filledCorrectly}
       >
         提出
       </Button>
-    );
-  }
-  return (
-    <>
-      <p>Not Filled</p>
+      {!filledCorrectly && <FormHelperText error>フォームが正しく記入されていません</FormHelperText>}
     </>
   );
 };
