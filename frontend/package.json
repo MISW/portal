@@ -7,7 +7,7 @@
     "dev": "next",
     "docker": "next --hostname 0.0.0.0",
     "build": "next build",
-    "start": "next start",
+    "start": "next start --hostname 0.0.0.0",
     "format": "eslint --fix 'src/**/*.{ts,tsx}' 'pages/**/*.{ts,tsx}'"
   },
   "keywords": [],
