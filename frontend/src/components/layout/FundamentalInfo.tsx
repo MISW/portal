@@ -106,12 +106,12 @@ const GenderField: React.FC<FormContentProps<SexType>> = ({ value, onChange }) =
           name="gender"
           value={value}
           onChange={(e) => {
-            onChange(e.target.value as "women" | "men");
+            onChange(e.target.value as "female" | "male");
           }}
         >
           <Grid container>
-            <FormControlLabel value="women" control={<Radio color="primary" />} label="女" labelPlacement="end" />
-            <FormControlLabel value="men" control={<Radio color="primary" />} label="男" labelPlacement="end" />
+            <FormControlLabel value="female" control={<Radio color="primary" />} label="女" labelPlacement="end" />
+            <FormControlLabel value="male" control={<Radio color="primary" />} label="男" labelPlacement="end" />
           </Grid>
         </RadioGroup>
       </FormControl>
