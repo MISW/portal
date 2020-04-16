@@ -85,3 +85,16 @@ export const signUp = async (user: UserProfile) => {
     return Promise.reject("Error: status-code >= 400");
   }
 };
+
+export const logout = async () => {
+  const res = await fetch(`${getHostAPI()}/private/logout`, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+    method: "POST",
+  });
+  if (res.status >= 400) {
+    console.error(res);
+    return Promise.reject("Error: status-code >= 400");
+  }
+};

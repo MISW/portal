@@ -1,12 +1,12 @@
 // https://github.com/mui-org/material-ui/blob/master/examples/nextjs/pages/_app.js 参照
 
-import React, { useEffect, createContext, useState } from "react";
+import React, { useEffect, createContext, useState, useCallback } from "react";
 import { AppProps } from "next/app";
 import { ThemeProvider } from "@material-ui/styles";
 import { CssBaseline, createMuiTheme } from "@material-ui/core";
 import { NextPageContext } from "next";
 import { useRouter } from "next/router";
-import { checkLoggingIn } from "../src/network";
+import { checkLoggingIn, logout } from "../src/network";
 import { DefaultLayout } from "../src/components/layout/DefaultLayout";
 
 export const loginContext = createContext(false);
@@ -18,24 +18,26 @@ const App = (props: AppProps) => {
     switch (router.pathname) {
       case "/signup":
         return;
+      case "/login":
+        return;
       case "/callback":
         return;
       case "/verify_email":
         return;
       default: {
         let unmounted = false;
-        (async () => {
-          const isLoginResult = await checkLoggingIn();
-          setIsLogin(isLoginResult);
-          if (!isLoginResult && !unmounted) {
-            await router.push("/login");
-            console.log("please login!");
-          } else {
-            console.log("already logging in");
-          }
-        })().catch((err) => {
-          throw err;
-        });
+        if (!isLogin) {
+          (async () => {
+            const isLoginResult = await checkLoggingIn();
+            if (!isLoginResult && !unmounted) {
+              await router.push("/login");
+            } else {
+              setIsLogin(true);
+            }
+          })().catch((err) => {
+            throw err;
+          });
+        }
         return () => {
           unmounted = true;
         };
@@ -48,12 +50,19 @@ const App = (props: AppProps) => {
       jssStyles.parentNode.removeChild(jssStyles);
     }
   });
+
+  const handleLogout = useCallback(async () => {
+    await logout();
+    setIsLogin(false);
+    router.push("/");
+  }, [router]);
+
   const { Component, pageProps } = props;
   return (
     <ThemeProvider theme={createMuiTheme({})}>
       <CssBaseline />
       <loginContext.Provider value={isLogin}>
-        <DefaultLayout>
+        <DefaultLayout onLogout={handleLogout}>
           <Component {...pageProps} />
         </DefaultLayout>
       </loginContext.Provider>
