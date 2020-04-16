@@ -85,7 +85,7 @@ const RegisterFormStepper: React.FC<{
             onClick={handleHome}
             className={classes.button}
           >
-            Home
+            Back to Home
           </Button>
         )}
       </div>
