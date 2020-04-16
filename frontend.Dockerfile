@@ -10,7 +10,7 @@ RUN apt-get update \
 ADD ./frontend /frontend
 WORKDIR /frontend
 
-RUN npm install
+RUN npm install && npm run build
 
 COPY ./scripts/* /bin/
 
