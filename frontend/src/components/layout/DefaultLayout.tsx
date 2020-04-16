@@ -46,7 +46,10 @@ const Copyright: React.FC = () => {
   );
 };
 
-export const DefaultLayout: React.FC<{ onLogout: () => void }> = ({ children, onLogout }) => {
+export const DefaultLayout: React.FC<{ onLogout: () => void }> = ({
+  children,
+  onLogout,
+}) => {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -62,17 +65,29 @@ export const DefaultLayout: React.FC<{ onLogout: () => void }> = ({ children, on
   }, []);
 
   const handleClickTitle = useCallback(() => router.push("/"), [router]);
-  const handleClickProfile = useCallback(() => router.push("/profile"), [router]);
+  const handleClickProfile = useCallback(() => router.push("/profile"), [
+    router,
+  ]);
 
   return (
     <>
       <div className="container">
         <AppBar position="static" color="default" className={classes.appBar}>
           <Toolbar>
-            <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
+            <IconButton
+              edge="start"
+              className={classes.menuButton}
+              color="inherit"
+              aria-label="menu"
+            >
               <MenuIcon />
             </IconButton>
-            <Typography variant="h6" color="inherit" className={classes.title} onClick={handleClickTitle}>
+            <Typography
+              variant="h6"
+              color="inherit"
+              className={classes.title}
+              onClick={handleClickTitle}
+            >
               MISW Portal
             </Typography>
             {isLogin && (
