@@ -7,7 +7,6 @@ import { IconButton, MenuItem, Menu } from "@material-ui/core";
 import MenuIcon from "@material-ui/icons/Menu";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import MUILink from "@material-ui/core/Link";
-import NextLink from "next/link";
 import { loginContext } from "../../../pages/_app";
 import { useRouter } from "next/router";
 
@@ -47,7 +46,7 @@ const Copyright: React.FC = () => {
   );
 };
 
-export const DefaultLayout: React.FC = ({ children }) => {
+export const DefaultLayout: React.FC<{ onLogout: () => void }> = ({ children, onLogout }) => {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -63,8 +62,7 @@ export const DefaultLayout: React.FC = ({ children }) => {
   }, []);
 
   const handleClickTitle = useCallback(() => router.push("/"), [router]);
-  const handleClickProfile = useCallback(() => router.push("/"), [router]);
-  const handleClickLogout = useCallback(() => console.log("TODO:"), []);
+  const handleClickProfile = useCallback(() => router.push("/profile"), [router]);
 
   return (
     <>
@@ -74,45 +72,40 @@ export const DefaultLayout: React.FC = ({ children }) => {
             <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
               <MenuIcon />
             </IconButton>
-            <NextLink href="/">
-              <Typography variant="h6" color="inherit" className={classes.title}>
-                MISW Portal
-              </Typography>
-            </NextLink>
-            <div>
-              <IconButton
-                aria-label="account of current user"
-                aria-controls="menu-appbar"
-                aria-haspopup="true"
-                onClick={handleMenu}
-                color="inherit"
-              >
-                <AccountCircle />
-              </IconButton>
-              <Menu
-                id="menu-appbar"
-                anchorEl={anchorEl}
-                anchorOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-                open={open}
-                onClose={handleClose}
-              >
-                {/* // TODO: うまくクリックに反応しなかった気がする */}
-                <MenuItem onClick={handleClickProfile}>Profile</MenuItem>
-                {isLogin && (
-                  <MenuItem>
-                    <a>Log out(TODO:)</a>
-                  </MenuItem>
-                )}
-              </Menu>
-            </div>
+            <Typography variant="h6" color="inherit" className={classes.title} onClick={handleClickTitle}>
+              MISW Portal
+            </Typography>
+            {isLogin && (
+              <div>
+                <IconButton
+                  aria-label="account of current user"
+                  aria-controls="menu-appbar"
+                  aria-haspopup="true"
+                  onClick={handleMenu}
+                  color="inherit"
+                >
+                  <AccountCircle />
+                </IconButton>
+                <Menu
+                  id="menu-appbar"
+                  anchorEl={anchorEl}
+                  anchorOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
+                  }}
+                  keepMounted
+                  transformOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
+                  }}
+                  open={open}
+                  onClose={handleClose}
+                >
+                  <MenuItem onClick={handleClickProfile}>Profile</MenuItem>
+                  <MenuItem onClick={onLogout}>Log out</MenuItem>
+                </Menu>
+              </div>
+            )}
           </Toolbar>
         </AppBar>
       </div>
