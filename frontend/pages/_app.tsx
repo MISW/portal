@@ -70,8 +70,16 @@ const App = (props: AppProps) => {
   );
 };
 
-App.getInitialProps = async ({ Component, ctx }: { Component: any; ctx: NextPageContext }) => {
-  const pageProps = Component.getInitialProps ? await Component.getInitialProps({ ...ctx }) : {};
+App.getInitialProps = async ({
+  Component,
+  ctx,
+}: {
+  Component: any;
+  ctx: NextPageContext;
+}) => {
+  const pageProps = Component.getInitialProps
+    ? await Component.getInitialProps({ ...ctx })
+    : {};
   return { pageProps };
 };
 
