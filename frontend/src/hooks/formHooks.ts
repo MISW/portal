@@ -46,7 +46,7 @@ const useUserHooks = (genFirstYear: number, user?: Partial<UserProfile>) => {
     name: useStateWithValidate(user?.name ?? "", (value) => /^\S+\s\S+$/.test(value)),
     kana: useStateWithValidate(user?.kana ?? "", (value) => /^[ァ-ヶー]+\s[ァ-ヶー]+$/.test(value)),
     handle: useStateWithValidate(user?.handle ?? "", (value) => /^\S+$/.test(value)),
-    sex: useStateWithValidate(user?.sex ?? "women"),
+    sex: useStateWithValidate(user?.sex ?? "female"),
     univName: useStateWithValidate(user?.univName ?? "早稲田大学", (value) => /^\S+$/.test(value)),
     department: useStateWithValidate(user?.department ?? "", (value) => /^\S+$/.test(value)),
     subject: useStateWithValidate(user?.subject ?? ""),
