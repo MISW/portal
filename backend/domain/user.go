@@ -13,10 +13,10 @@ import (
 type SexType string
 
 const (
-	// Men - 男性
-	Men SexType = "men"
-	// Women - 女性
-	Women SexType = "women"
+	// Male - 男性
+	Male SexType = "male"
+	// Female - 女性
+	Female SexType = "female"
 	// Other - その他
 	Other SexType = "other" // not used
 )
@@ -91,7 +91,7 @@ func (user *User) Validate() error {
 		}
 	}
 
-	if user.Sex != Men && user.Sex != Women {
+	if user.Sex != Male && user.Sex != Female {
 		return rest.NewBadRequest("性別の値が不正です")
 	}
 	if !emailValidator.MatchString(user.Email) {

@@ -1,4 +1,4 @@
-FROM golang:1.13 as tools
+FROM golang:1.14.1 as tools
 
 ENV DOCKERIZE_VERSION v0.6.1
 RUN wget https://github.com/jwilder/dockerize/releases/download/${DOCKERIZE_VERSION}/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
@@ -16,7 +16,7 @@ RUN wget https://github.com/cs3238-tsuzu/dbenv/releases/download/${DBENV_VERSION
     && rm dbenv_linux_x86_64.tar.gz
 
 
-FROM golang:1.13 as build-backend
+FROM golang:1.14.1 as build-backend
 
 ADD ./backend /backend
 ENV GO111MODULE=on
@@ -28,14 +28,7 @@ RUN cd /backend && go build \
     -tags 'osusergo netgo static_build' \
     -o ./portal
 
-FROM node:12.14.1-alpine
-
-RUN apk add --update --no-cache ca-certificates tzdata
-
-ADD ./frontend /frontend
-WORKDIR /frontend
-
-RUN npm install
+FROM golang:1.14.1
 
 COPY --from=tools /usr/local/bin/dockerize /bin
 COPY --from=tools /usr/local/bin/mysqldef /bin
@@ -43,10 +36,8 @@ COPY --from=tools /usr/local/bin/dbenv /bin
 COPY --from=build-backend /backend/portal /bin/portal 
 COPY --from=build-backend /backend/schema /schema
 
-ENV ENVIRONMENT=dev
-
 COPY ./scripts/* /bin/
 ADD ./config /config
 
-ENTRYPOINT [ "/bin/docker-entrypoint.sh" ]
+ENTRYPOINT [ "/bin/docker-entrypoint.backend.sh" ]
 CMD [ "-w", "-m" ]

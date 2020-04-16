@@ -1,5 +1,7 @@
 #!/bin/sh
 
+set -eu
+
 if [[ -z "${DATABASE_URL}" ]]; then
   if [[ -n "${JAWSDB_URL}" ]]; then
     export DATABASE_URL="${JAWSDB_URL}"
@@ -26,6 +28,11 @@ usage() {
     echo "-w: Wait for database to start" 1>&2
     exit 1
 }
+
+WAIT=0
+QUIT=0
+MIGRATION=0
+ENVIRONMENT=dev
 
 while getopts :mqwh OPT
 do
@@ -57,12 +64,8 @@ if [ "$QUIT" = "1" ]; then
     exit 0
 fi
 
-npm install
-
-if [ "$ENVIRONMENT" = "prod" ]; then
-    npm run start &
-elif [ "$ENVIRONMENT" = "dev" ]; then
-    npm run docker &
+if [ "$ENVIRONMENT" = "dev" ]; then
+    cd /backend && GO111MODULE=on go build -o /bin/portal
 fi
 
 export DATABASE_URL="$DATABASE_USER:$DATABASE_PASSWORD@tcp($DATABASE_HOST:$DATABASE_PORT)/$DATABASE_DB?parseTime=true&loc=Asia%2FTokyo"

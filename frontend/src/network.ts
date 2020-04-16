@@ -1,4 +1,4 @@
-import { User, UserForSignUp as UserProfile } from "./user";
+import { UserProfile, UserInfoJSON, toUserProfile, toUserInfoJSON } from "./user";
 
 const getHostAPI = () => `${location.protocol}//${location.host}/api`;
 
@@ -17,7 +17,7 @@ export const login = async () => {
   location.href = body.redirect_url;
 };
 
-export const getProfile = async (): Promise<User> => {
+export const getProfile = async (): Promise<UserProfile> => {
   const res = await fetch(`${getHostAPI()}/private/profile`, {
     headers: {
       Accept: "application/json, */*",
@@ -29,13 +29,13 @@ export const getProfile = async (): Promise<User> => {
     console.log(res);
     return Promise.reject("Error: status-code >= 400");
   }
-  const body = (await res.json()) as User;
+  const body = (await res.json()) as UserInfoJSON;
   console.log(body);
-  return body;
+  return toUserProfile(body);
 };
 
-export const updateProfile = async (user: UserProfile): Promise<User> => {
-  const body = JSON.stringify(user);
+export const updateProfile = async (user: UserProfile): Promise<UserProfile> => {
+  const body = JSON.stringify(toUserInfoJSON(user));
   console.log(body);
 
   const res = await fetch(`${getHostAPI()}/private/profile`, {
@@ -49,8 +49,9 @@ export const updateProfile = async (user: UserProfile): Promise<User> => {
     console.log(res);
     return Promise.reject("Error: status-code >= 400");
   }
-  const resUser = (res.json() as unknown) as User;
-  return resUser;
+  const resUser = ((await res.json()) as unknown) as UserInfoJSON;
+  console.log(resUser);
+  return toUserProfile(resUser);
 };
 
 export const checkLoggingIn = async (): Promise<boolean> => {
@@ -63,18 +64,13 @@ export const checkLoggingIn = async (): Promise<boolean> => {
   });
   const body = await res.json();
   console.log(body);
-  switch (body.status) {
-    case "OK":
-      return true;
-    case "Unauthorized":
-      return false;
-    default:
-      return Promise.reject(`Fail to catch response ${res}`);
-  }
+
+  // TODO: ガバガバ
+  return res.status < 400;
 };
 
 export const signUp = async (user: UserProfile) => {
-  const body = JSON.stringify(user);
+  const body = JSON.stringify(toUserInfoJSON(user));
   console.log(body);
 
   const res = await fetch(`${getHostAPI()}/public/signup`, {
