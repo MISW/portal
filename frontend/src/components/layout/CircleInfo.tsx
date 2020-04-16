@@ -133,10 +133,25 @@ export const OtherCircleForm: React.FC<FormContentProps<string>> = ({ value, onC
   </Grid>
 );
 
+export const DiscordIdForm: React.FC<FormContentProps<string>> = ({ value, onChange }) => (
+  <Grid item xs={12}>
+    <TextField
+      id="other_id"
+      name="discord_id`"
+      label="Discord ID"
+      required
+      fullWidth
+      defaultValue={value}
+      helperText="アカウント名#0000"
+      onChange={(e) => onChange(e.target.value)}
+    />
+  </Grid>
+);
+
 const CircleInfo: React.FC<{
   userHooks: UserProfileHooks;
   genFirstYear: number;
-}> = ({ userHooks: { generation, handle, workshops, otherCircles, squads }, genFirstYear }) => {
+}> = ({ userHooks: { generation, handle, workshops, otherCircles, squads, discordId }, genFirstYear }) => {
   return (
     <React.Fragment>
       <Grid container spacing={3}>
@@ -145,6 +160,7 @@ const CircleInfo: React.FC<{
         <WorkshopsForm {...workshops} />
         <SquadsForm {...squads} />
         <OtherCircleForm {...otherCircles} />
+        <DiscordIdForm {...discordId} />
       </Grid>
     </React.Fragment>
   );

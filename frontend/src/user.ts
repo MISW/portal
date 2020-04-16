@@ -31,6 +31,7 @@ export interface UserAllInfoJSON {
   workshops: string[];
   squads: string[];
   role: RoleType;
+  discord_id: string;
 
   slack_id: string;
 
@@ -44,7 +45,7 @@ export type UserInfoJSON = Omit<UserAllInfoJSON, "slack_id" | "role" | "created_
 
 export type UserProfile = Omit<
   UserInfoJSON,
-  "other_circles" | "emergency_phone_number" | "student_id" | "university"
+  "other_circles" | "emergency_phone_number" | "student_id" | "university" | "discord_id"
 > & {
   id?: number;
   otherCircles: UserAllInfoJSON["other_circles"];
@@ -53,6 +54,7 @@ export type UserProfile = Omit<
   univName: University["name"];
   department: University["department"];
   subject: University["subject"];
+  discordId: UserAllInfoJSON["discord_id"];
 };
 
 export const toUserProfile = (json: UserInfoJSON): UserProfile => {
@@ -72,6 +74,7 @@ export const toUserProfile = (json: UserInfoJSON): UserProfile => {
     otherCircles: json.other_circles,
     workshops: json.workshops,
     squads: json.squads,
+    discordId: json.discord_id,
   };
 };
 
@@ -94,5 +97,6 @@ export const toUserInfoJSON = (p: UserProfile): UserInfoJSON => {
     other_circles: p.otherCircles,
     workshops: p.workshops,
     squads: p.squads,
+    discord_id: p.discordId,
   };
 };

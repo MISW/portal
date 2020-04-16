@@ -42,11 +42,12 @@ const RegisterForm: React.FC<{
     otherCircles,
     workshops,
     squads,
+    discordId,
   } = userHooks;
 
   const fundamentalInfo = { name, kana, email, sex, emergencyPhoneNumber };
   const universityInfo = { univName, department, subject, studentId };
-  const circleInfo = { generation, handle, otherCircles, workshops, squads };
+  const circleInfo = { generation, handle, otherCircles, workshops, squads, discordId };
 
   const contentHooks = [fundamentalInfo, universityInfo, circleInfo];
 

@@ -38,8 +38,9 @@ export interface FormContentProps<T> {
   error: boolean;
 }
 
+export type UserProfileHooks = { [P in keyof UserProfile]: UserHook<UserProfile[P]> };
 // user情報を操作するためのフックを返す.
-const useUserHooks = (genFirstYear: number, user?: Partial<UserProfile>) => {
+const useUserHooks = (genFirstYear: number, user?: Partial<UserProfile>): UserProfileHooks => {
   return {
     email: useStateWithValidate(user?.email ?? "", (value) => /^\S+@\S+$/.test(value)),
     generation: useStateWithValidate(user?.generation ?? genFirstYear),
@@ -57,10 +58,10 @@ const useUserHooks = (genFirstYear: number, user?: Partial<UserProfile>) => {
     otherCircles: useStateWithValidate(user?.otherCircles ?? ""),
     workshops: useStateWithValidate(user?.workshops ?? [], (value) => value.length !== 0),
     squads: useStateWithValidate(user?.squads ?? []),
+    discordId: useStateWithValidate(user?.discordId ?? "", (value) => /^\S+#[0-9]{4}$/.test(value)),
   };
 };
 
-export type UserProfileHooks = { [P in keyof UserProfile]: UserHook<UserProfile[P]> };
 export type UserValidation = { [P in keyof UserProfile]: boolean };
 
 export const useUser = (
@@ -72,8 +73,14 @@ export const useUser = (
   userHooks: UserProfileHooks;
 } => {
   const userHooks = useUserHooks(genFirstYear, user);
-  const retUser = Object.entries(userHooks).reduce((prev, [k, v]) => ({ [k]: v.value, ...prev }), {}) as UserProfile;
-  const valid = Object.entries(userHooks).reduce((prev, [k, v]) => ({ [k]: v.valid, ...prev }), {}) as UserValidation;
+  const retUser = Object.entries(userHooks).reduce(
+    (prev, [k, v]) => ({ [k]: v?.value ?? true, ...prev }),
+    {}
+  ) as UserProfile;
+  const valid = Object.entries(userHooks).reduce(
+    (prev, [k, v]) => ({ [k]: v?.valid ?? true, ...prev }),
+    {}
+  ) as UserValidation;
   return {
     user: {
       id: user?.id,
