@@ -4,7 +4,7 @@ import { DefaultLayout } from "../../src/components/layout/DefaultLayout";
 
 const Page: NextPage = () => {
   return (
-    <DefaultLayout>
+    <>
       <h1>MISW便利リンクまとめ</h1>
       <ul>
         <li>
@@ -23,7 +23,7 @@ const Page: NextPage = () => {
           </a>
         </li>
       </ul>
-    </DefaultLayout>
+    </>
   );
 };
 

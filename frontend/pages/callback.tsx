@@ -35,9 +35,9 @@ const Page: NextPage = () => {
     });
   });
   return (
-    <DefaultLayout>
+    <>
       <Typography>Loading...</Typography>
-    </DefaultLayout>
+    </>
   );
 };
 

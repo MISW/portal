@@ -35,11 +35,11 @@ const Page: NextPage = () => {
     });
   });
   return (
-    <DefaultLayout>
+    <>
       <Typography>verify email</Typography>
 
       <Typography>Loading...</Typography>
-    </DefaultLayout>
+    </>
   );
 };
 
