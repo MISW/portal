@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"encoding/csv"
 	"fmt"
+	"io"
 	"os"
 	"strconv"
 	"strings"
@@ -93,6 +94,10 @@ func main() {
 	reader := csv.NewReader(fp)
 	for {
 		columns, err := reader.Read()
+
+		if err == io.EOF {
+			break
+		}
 
 		if err != nil {
 			panic(err)
