@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { NextPage } from "next";
-import { DefaultLayout } from "../src/components/layout/DefaultLayout";
 import RegisterForm from "../src/components/layout/RegisterForm";
 import { UserProfile } from "../src/user";
 import { getProfile, updateProfile } from "../src/network";
@@ -19,11 +18,7 @@ const Page: NextPage = () => {
       })
       .catch((err) => console.error(err));
   };
-  return (
-    <DefaultLayout>
-      {user ? <RegisterForm formName="会員情報設定" user={user} onSubmit={onSubmit} /> : "Loading..."}
-    </DefaultLayout>
-  );
+  return <>{user ? <RegisterForm formName="会員情報設定" user={user} onSubmit={onSubmit} /> : "Loading..."}</>;
 };
 
 export default Page;

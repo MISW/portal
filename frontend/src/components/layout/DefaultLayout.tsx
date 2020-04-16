@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext, useCallback } from "react";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
@@ -8,6 +8,8 @@ import MenuIcon from "@material-ui/icons/Menu";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import MUILink from "@material-ui/core/Link";
 import NextLink from "next/link";
+import { loginContext } from "../../../pages/_app";
+import { useRouter } from "next/router";
 
 const useStyles = makeStyles((theme: Theme) => ({
   appBar: {
@@ -49,14 +51,21 @@ export const DefaultLayout: React.FC = ({ children }) => {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
+  const isLogin = useContext(loginContext);
+  const router = useRouter();
 
-  const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
+  const handleMenu = useCallback((event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
-  };
+  }, []);
 
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     setAnchorEl(null);
-  };
+  }, []);
+
+  const handleClickTitle = useCallback(() => router.push("/"), [router]);
+  const handleClickProfile = useCallback(() => router.push("/"), [router]);
+  const handleClickLogout = useCallback(() => console.log("TODO:"), []);
+
   return (
     <>
       <div className="container">
@@ -65,12 +74,14 @@ export const DefaultLayout: React.FC = ({ children }) => {
             <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
               <MenuIcon />
             </IconButton>
-            <Typography variant="h6" color="inherit" className={classes.title}>
-              MISW Portal
-            </Typography>
+            <NextLink href="/">
+              <Typography variant="h6" color="inherit" className={classes.title}>
+                MISW Portal
+              </Typography>
+            </NextLink>
             <div>
               <IconButton
-                aria-label="account of curren user"
+                aria-label="account of current user"
                 aria-controls="menu-appbar"
                 aria-haspopup="true"
                 onClick={handleMenu}
@@ -94,14 +105,12 @@ export const DefaultLayout: React.FC = ({ children }) => {
                 onClose={handleClose}
               >
                 {/* // TODO: うまくクリックに反応しなかった気がする */}
-                <MenuItem>
-                  <NextLink href="/profile">
-                    <span>Profile</span>
-                  </NextLink>
-                </MenuItem>
-                <MenuItem>
-                  <a>Log out(TODO:)</a>
-                </MenuItem>
+                <MenuItem onClick={handleClickProfile}>Profile</MenuItem>
+                {isLogin && (
+                  <MenuItem>
+                    <a>Log out(TODO:)</a>
+                  </MenuItem>
+                )}
               </Menu>
             </div>
           </Toolbar>
