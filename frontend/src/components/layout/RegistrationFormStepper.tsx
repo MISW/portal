@@ -4,7 +4,6 @@ import { makeStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import { Stepper, Step, StepLabel } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
-import { SubmitResult } from "./RegisterForm";
 import { useRouter } from "next/router";
 
 export const useStyles = makeStyles((theme) => ({
