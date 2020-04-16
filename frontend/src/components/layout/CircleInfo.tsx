@@ -133,16 +133,16 @@ export const OtherCircleForm: React.FC<FormContentProps<string>> = ({ value, onC
   </Grid>
 );
 
-export const DiscordIdForm: React.FC<FormContentProps<string>> = ({ value, onChange }) => (
+export const DiscordIdForm: React.FC<FormContentProps<string>> = ({ value, onChange, error }) => (
   <Grid item xs={12}>
     <TextField
       id="other_id"
       name="discord_id`"
       label="Discord ID"
-      required
+      error={error}
       fullWidth
       defaultValue={value}
-      helperText="アカウント名#0000"
+      helperText={error ? "[アカウント名]#[数字4ケタ] で入力" : null}
       onChange={(e) => onChange(e.target.value)}
     />
   </Grid>

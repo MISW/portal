@@ -58,7 +58,7 @@ const useUserHooks = (genFirstYear: number, user?: Partial<UserProfile>): UserPr
     otherCircles: useStateWithValidate(user?.otherCircles ?? ""),
     workshops: useStateWithValidate(user?.workshops ?? [], (value) => value.length !== 0),
     squads: useStateWithValidate(user?.squads ?? []),
-    discordId: useStateWithValidate(user?.discordId ?? "", (value) => /^\S+#[0-9]{4}$/.test(value)),
+    discordId: useStateWithValidate(user?.discordId ?? "", (value) => /(^$)|(^\S+#[0-9]{4}$)/.test(value)),
   };
 };
 
