@@ -27,6 +27,7 @@ const Page: NextPage = () => {
         console.error(res);
         throw new Error(`Status >= 400 message = ${body.message}`);
       }
+      console.log(body);
       await router.push("/");
     };
     sendEmailToken().catch((err) => {
