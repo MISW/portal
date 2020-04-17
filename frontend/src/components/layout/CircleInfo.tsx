@@ -17,11 +17,9 @@ import {
 } from "@material-ui/core";
 import { UserProfileHooks, FormContentProps } from "../../hooks/formHooks";
 
-export const GenerationSelector: React.FC<FormContentProps<number> & { genFirstYear: number }> = ({
-  value,
-  onChange,
-  genFirstYear,
-}) => {
+export const GenerationSelector: React.FC<
+  FormContentProps<number> & { genFirstYear: number }
+> = ({ value, onChange, genFirstYear }) => {
   return (
     <Grid item xs={12}>
       <FormControl component="fieldset" required>
@@ -35,15 +33,17 @@ export const GenerationSelector: React.FC<FormContentProps<number> & { genFirstY
           }}
         >
           <Grid container>
-            {[genFirstYear, genFirstYear - 1, genFirstYear - 2].map((y: number, i: number) => (
-              <FormControlLabel
-                value={y}
-                key={y}
-                control={<Radio color="primary" />}
-                label={`${y}代 (学部${i + 1}年)`}
-                labelPlacement="end"
-              />
-            ))}
+            {[genFirstYear, genFirstYear - 1, genFirstYear - 2].map(
+              (y: number, i: number) => (
+                <FormControlLabel
+                  value={y}
+                  key={y}
+                  control={<Radio color="primary" />}
+                  label={`${y}代 (学部${i + 1}年)`}
+                  labelPlacement="end"
+                />
+              )
+            )}
           </Grid>
         </RadioGroup>
       </FormControl>
@@ -51,7 +51,11 @@ export const GenerationSelector: React.FC<FormContentProps<number> & { genFirstY
   );
 };
 
-export const HandleNameForm: React.FC<FormContentProps<string>> = ({ value, error, onChange }) => {
+export const HandleNameForm: React.FC<FormContentProps<string>> = ({
+  value,
+  error,
+  onChange,
+}) => {
   return (
     <Grid item xs={12} sm={6}>
       <TextField
@@ -70,9 +74,15 @@ export const HandleNameForm: React.FC<FormContentProps<string>> = ({ value, erro
     </Grid>
   );
 };
-export const WorkshopsForm: React.FC<FormContentProps<Array<string>>> = ({ value, error, onChange }) => {
+export const WorkshopsForm: React.FC<FormContentProps<Array<string>>> = ({
+  value,
+  error,
+  onChange,
+}) => {
   const allWorkshops = ["プログラミング", "CG", "MIDI"];
-  const workshops = new Set(value.filter((s: string) => allWorkshops.includes(s)));
+  const workshops = new Set(
+    value.filter((s: string) => allWorkshops.includes(s))
+  );
 
   return (
     <Grid item xs={12}>
@@ -100,13 +110,20 @@ export const WorkshopsForm: React.FC<FormContentProps<Array<string>>> = ({ value
             </MenuItem>
           ))}
         </Select>
-        {error && <FormHelperText>少なくとも１つの研究会を選択してください</FormHelperText>}
+        {error && (
+          <FormHelperText>
+            少なくとも１つの研究会を選択してください
+          </FormHelperText>
+        )}
       </FormControl>
     </Grid>
   );
 };
 
-export const SquadsForm: React.FC<FormContentProps<Array<string>>> = ({ value, onChange }) => (
+export const SquadsForm: React.FC<FormContentProps<Array<string>>> = ({
+  value,
+  onChange,
+}) => (
   <Grid item xs={12}>
     <TextField
       id="squads"
@@ -120,7 +137,10 @@ export const SquadsForm: React.FC<FormContentProps<Array<string>>> = ({ value, o
   </Grid>
 );
 
-export const OtherCircleForm: React.FC<FormContentProps<string>> = ({ value, onChange }) => (
+export const OtherCircleForm: React.FC<FormContentProps<string>> = ({
+  value,
+  onChange,
+}) => (
   <Grid item xs={12}>
     <TextField
       id="otherCircle"
@@ -133,7 +153,11 @@ export const OtherCircleForm: React.FC<FormContentProps<string>> = ({ value, onC
   </Grid>
 );
 
-export const DiscordIdForm: React.FC<FormContentProps<string>> = ({ value, onChange, error }) => (
+export const DiscordIdForm: React.FC<FormContentProps<string>> = ({
+  value,
+  onChange,
+  error,
+}) => (
   <Grid item xs={12}>
     <TextField
       id="other_id"
@@ -151,7 +175,10 @@ export const DiscordIdForm: React.FC<FormContentProps<string>> = ({ value, onCha
 const CircleInfo: React.FC<{
   userHooks: UserProfileHooks;
   genFirstYear: number;
-}> = ({ userHooks: { generation, handle, workshops, otherCircles, squads, discordId }, genFirstYear }) => {
+}> = ({
+  userHooks: { generation, handle, workshops, otherCircles, squads, discordId },
+  genFirstYear,
+}) => {
   return (
     <React.Fragment>
       <Grid container spacing={3}>

@@ -39,7 +39,10 @@ export interface UserAllInfoJSON {
   updated_at: number;
 }
 
-export type UserInfoJSON = Omit<UserAllInfoJSON, "slack_id" | "role" | "created_at" | "updated_at" | "id"> & {
+export type UserInfoJSON = Omit<
+  UserAllInfoJSON,
+  "slack_id" | "role" | "created_at" | "updated_at" | "id"
+> & {
   id?: number;
 };
 
