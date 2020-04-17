@@ -78,10 +78,12 @@ type Email struct {
 
 // Config - 各種設定用
 type Config struct {
-	Database   string `config:"database-url" json:"database" yaml:"database"`
-	BaseURL    string `config:"base-url" json:"base_url" yaml:"base_url"`
-	JWTKey     string `config:"jwt-key" json:"jwt_key" yaml:"jwt_key"`
-	SlackToken string `config:"slack_token" json:"slack_token" yaml:"slack_token"`
+	Database           string `config:"database-url" json:"database" yaml:"database"`
+	BaseURL            string `config:"base-url" json:"base_url" yaml:"base_url"`
+	JWTKey             string `config:"jwt-key" json:"jwt_key" yaml:"jwt_key"`
+	SlackToken         string `config:"slack_token" json:"slack_token" yaml:"slack_token"`
+	SlackSigningSecret string `config:"slack_signing_secret" json:"slack_signing_secret" yaml:"slack_signing_secret"`
+	SlackTeamID        string `config:"slack_team_id" json:"slack_team_id" yaml:"slack_team_id"`
 
 	OpenIDConnect OpenIDConnect `json:"oidc" yaml:"oidc"`
 	Email         Email         `json:"email" yaml:"email"`

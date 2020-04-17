@@ -1,0 +1,436 @@
+   0.0 TEL | Telepresence 0.104 launched at Sat Apr 18 03:35:56 2020
+   0.0 TEL |   /usr/local/bin/telepresence --swap-deployment portal-backend-deployment --docker-run -v /Users/tsuzu/go/src/github.com/MISW/Portal/backend:/backend -e ENVIRONMENT=dev --rm -ti portal_backend
+   0.0 TEL | uname: uname_result(system='Darwin', node='tsuzu-macpro.local', release='19.4.0', version='Darwin Kernel Version 19.4.0: Wed Mar  4 22:28:40 PST 2020; root:xnu-6153.101.6~15/RELEASE_X86_64', machine='x86_64', processor='i386')
+   0.0 TEL | Platform: darwin
+   0.0 TEL | WSL: False
+   0.0 TEL | Python 3.7.7 (default, Mar 10 2020, 15:43:33)
+   0.0 TEL | [Clang 11.0.0 (clang-1100.0.33.17)]
+   0.1 TEL | BEGIN SPAN main.py:40(main)
+   0.1 TEL | BEGIN SPAN startup.py:83(set_kube_command)
+   0.1 TEL | Found kubectl -> /usr/local/bin/kubectl
+   0.1 TEL | [1] Capturing: kubectl config current-context
+   0.1 TEL | [1] captured in 0.05 secs.
+   0.1 TEL | [2] Capturing: kubectl --context misw-kubernetes version --short
+   0.2 TEL | [2] captured in 0.13 secs.
+   0.2 TEL | [3] Capturing: kubectl --context misw-kubernetes config view -o json
+   0.3 TEL | [3] captured in 0.05 secs.
+   0.3 TEL | [4] Capturing: kubectl --context misw-kubernetes get ns portal
+   0.5 TEL | [4] captured in 0.17 secs.
+   0.5 TEL | [5] Capturing: kubectl --context misw-kubernetes api-versions
+   0.6 TEL | [5] captured in 0.13 secs.
+   0.6 TEL | Command: kubectl 1.15.5
+   0.6 TEL | Context: misw-kubernetes, namespace: portal, version: 1.16.7
+   0.6 TEL | END SPAN startup.py:83(set_kube_command)    0.5s
+   0.6 TEL | Found ssh -> /usr/bin/ssh
+   0.6 TEL | [6] Capturing: ssh -V
+   0.6 TEL | [6] captured in 0.01 secs.
+   0.6 TEL | Found docker -> /usr/local/bin/docker
+   0.6 TEL | [7] Capturing: docker run --rm -v /tmp/tel-zzjahszu:/tel alpine:3.6 cat /tel/session_id.txt
+   1.1   7 | e94fecd51c97432ea10c4b8473fbf8bb
+   1.2 TEL | [7] captured in 0.56 secs.
+   1.2 TEL | Found sudo -> /usr/bin/sudo
+   1.2 TEL | [8] Running: sudo -n echo -n
+   1.2 TEL | [8] ran in 0.03 secs.
+   1.2 TEL | Found sshfs -> /usr/local/bin/sshfs
+   1.2 TEL | Found umount -> /sbin/umount
+   1.2 >>> | Volumes are rooted at $TELEPRESENCE_ROOT. See https://telepresence.io/howto/volumes.html for details.
+   1.2 TEL | [9] Running: kubectl --context misw-kubernetes --namespace portal get pods telepresence-connectivity-check --ignore-not-found
+   1.4 TEL | [9] ran in 0.16 secs.
+   2.3 TEL | Scout info: {'latest_version': '0.104', 'application': 'telepresence', 'notices': []}
+   2.3 TEL | BEGIN SPAN deployment.py:193(supplant_deployment)
+   2.3 >>> | Starting network proxy to cluster by swapping out Deployment portal-backend-deployment with a proxy
+   2.3 TEL | BEGIN SPAN remote.py:75(get_deployment_json)
+   2.3 TEL | [10] Capturing: kubectl --context misw-kubernetes --namespace portal get deployment -o json portal-backend-deployment
+   2.5 TEL | [10] captured in 0.15 secs.
+   2.5 TEL | END SPAN remote.py:75(get_deployment_json)    0.2s
+   2.5 TEL | [11] Running: kubectl --context misw-kubernetes --namespace portal delete deployment portal-backend-de-e94fecd51c97432ea10c4b8473fbf8bb --ignore-not-found
+   2.6 TEL | [11] ran in 0.16 secs.
+   2.6 TEL | [12] Running: kubectl --context misw-kubernetes --namespace portal apply -f -
+   2.9  12 | deployment.apps/portal-backend-de-e94fecd51c97432ea10c4b8473fbf8bb created
+   2.9 TEL | [12] ran in 0.25 secs.
+   2.9 TEL | [13] Running: kubectl --context misw-kubernetes --namespace portal scale deployment portal-backend-deployment --replicas=0
+   3.1  13 | deployment.apps/portal-backend-deployment scaled
+   3.1 TEL | [13] ran in 0.21 secs.
+   3.1 TEL | END SPAN deployment.py:193(supplant_deployment)    0.8s
+   3.1 TEL | BEGIN SPAN remote.py:142(get_remote_info)
+   3.1 TEL | BEGIN SPAN remote.py:75(get_deployment_json)
+   3.1 TEL | [14] Capturing: kubectl --context misw-kubernetes --namespace portal get deployment -o json --selector=telepresence=e94fecd51c97432ea10c4b8473fbf8bb
+   3.2 TEL | [14] captured in 0.15 secs.
+   3.2 TEL | END SPAN remote.py:75(get_deployment_json)    0.1s
+   3.2 TEL | Searching for Telepresence pod:
+   3.2 TEL |   with name portal-backend-de-e94fecd51c97432ea10c4b8473fbf8bb-*
+   3.2 TEL |   with labels {'app': 'portal-backend', 'telepresence': 'e94fecd51c97432ea10c4b8473fbf8bb'}
+   3.2 TEL | [15] Capturing: kubectl --context misw-kubernetes --namespace portal get pod -o json --selector=telepresence=e94fecd51c97432ea10c4b8473fbf8bb
+   3.4 TEL | [15] captured in 0.15 secs.
+   3.4 TEL | Checking portal-backend-de-e94fecd51c97432ea10c4b8473fbf8bb-587c5d8nd5zt
+   3.4 TEL | Looks like we've found our pod!
+   3.4 TEL | BEGIN SPAN remote.py:104(wait_for_pod)
+   3.4 TEL | [16] Capturing: kubectl --context misw-kubernetes --namespace portal get pod portal-backend-de-e94fecd51c97432ea10c4b8473fbf8bb-587c5d8nd5zt -o json
+   3.6 TEL | [16] captured in 0.16 secs.
+   3.8 TEL | [17] Capturing: kubectl --context misw-kubernetes --namespace portal get pod portal-backend-de-e94fecd51c97432ea10c4b8473fbf8bb-587c5d8nd5zt -o json
+   4.0 TEL | [17] captured in 0.16 secs.
+   4.2 TEL | [18] Capturing: kubectl --context misw-kubernetes --namespace portal get pod portal-backend-de-e94fecd51c97432ea10c4b8473fbf8bb-587c5d8nd5zt -o json
+   4.4 TEL | [18] captured in 0.16 secs.
+   4.6 TEL | [19] Capturing: kubectl --context misw-kubernetes --namespace portal get pod portal-backend-de-e94fecd51c97432ea10c4b8473fbf8bb-587c5d8nd5zt -o json
+   4.8 TEL | [19] captured in 0.15 secs.
+   4.8 TEL | END SPAN remote.py:104(wait_for_pod)    1.4s
+   4.8 TEL | END SPAN remote.py:142(get_remote_info)    1.7s
+   4.8 TEL | BEGIN SPAN connect.py:37(connect)
+   4.8 TEL | [20] Launching kubectl logs: kubectl --context misw-kubernetes --namespace portal logs -f portal-backend-de-e94fecd51c97432ea10c4b8473fbf8bb-587c5d8nd5zt --container portal-backend --tail=10
+   4.8 TEL | [21] Launching kubectl port-forward: kubectl --context misw-kubernetes --namespace portal port-forward portal-backend-de-e94fecd51c97432ea10c4b8473fbf8bb-587c5d8nd5zt 62207:8022
+   4.8 TEL | [22] Running: ssh -F /dev/null -oStrictHostKeyChecking=no -oUserKnownHostsFile=/dev/null -q -p 62207 telepresence@127.0.0.1 /bin/true
+   4.8 TEL | [22] exit 255 in 0.01 secs.
+   5.0  20 | 2020-04-17T18:36:00+0000 [-] Loading ./forwarder.py...
+   5.0  20 | 2020-04-17T18:36:00+0000 [-] /etc/resolv.conf changed, reparsing
+   5.0  20 | 2020-04-17T18:36:00+0000 [-] Resolver added ('169.254.25.10', 53) to server list
+   5.0  20 | 2020-04-17T18:36:00+0000 [-] SOCKSv5Factory starting on 9050
+   5.0  20 | 2020-04-17T18:36:00+0000 [socks.SOCKSv5Factory#info] Starting factory <socks.SOCKSv5Factory object at 0x7f9efc302da0>
+   5.0  20 | 2020-04-17T18:36:00+0000 [-] DNSDatagramProtocol starting on 9053
+   5.0  20 | 2020-04-17T18:36:00+0000 [-] Starting protocol <twisted.names.dns.DNSDatagramProtocol object at 0x7f9efc30d160>
+   5.0  20 | 2020-04-17T18:36:00+0000 [-] Loaded.
+   5.0  20 | 2020-04-17T18:36:00+0000 [twisted.scripts._twistd_unix.UnixAppLogger#info] twistd 19.10.0 (/usr/bin/python3.6 3.6.8) starting up.
+   5.0  20 | 2020-04-17T18:36:00+0000 [twisted.scripts._twistd_unix.UnixAppLogger#info] reactor class: twisted.internet.epollreactor.EPollReactor.
+   5.1 TEL | [23] Running: ssh -F /dev/null -oStrictHostKeyChecking=no -oUserKnownHostsFile=/dev/null -q -p 62207 telepresence@127.0.0.1 /bin/true
+   5.1 TEL | [23] exit 255 in 0.01 secs.
+   5.1  21 | Forwarding from 127.0.0.1:62207 -> 8022
+   5.1  21 | Forwarding from [::1]:62207 -> 8022
+   5.3 TEL | [24] Running: ssh -F /dev/null -oStrictHostKeyChecking=no -oUserKnownHostsFile=/dev/null -q -p 62207 telepresence@127.0.0.1 /bin/true
+   5.3  21 | Handling connection for 62207
+   5.5 TEL | [24] ran in 0.18 secs.
+   5.5 >>> | Forwarding remote port 80 to local port 80.
+   5.5 >>> | 
+   5.5 TEL | Launching Web server for proxy poll
+   5.5 TEL | [25] Launching SSH port forward (socks and proxy poll): ssh -N -oServerAliveInterval=1 -oServerAliveCountMax=10 -F /dev/null -oStrictHostKeyChecking=no -oUserKnownHostsFile=/dev/null -q -p 62207 telepresence@127.0.0.1 -L127.0.0.1:62218:127.0.0.1:9050 -R9055:127.0.0.1:62219
+   5.5 TEL | END SPAN connect.py:37(connect)    0.7s
+   5.5 TEL | BEGIN SPAN remote_env.py:29(get_remote_env)
+   5.5 TEL | [26] Capturing: kubectl --context misw-kubernetes --namespace portal exec portal-backend-de-e94fecd51c97432ea10c4b8473fbf8bb-587c5d8nd5zt --container portal-backend -- python3 podinfo.py
+   5.5  21 | Handling connection for 62207
+   6.0 TEL | [26] captured in 0.45 secs.
+   6.0 TEL | END SPAN remote_env.py:29(get_remote_env)    0.4s
+   6.0 TEL | BEGIN SPAN mount.py:30(mount_remote_volumes)
+   6.0 TEL | [27] Running: sudo sshfs -p 62207 -F /dev/null -oStrictHostKeyChecking=no -oUserKnownHostsFile=/dev/null -o allow_other telepresence@127.0.0.1:/ /tmp/tel-zzjahszu/fs
+   6.0  21 | Handling connection for 62207
+   6.2 TEL | [27] ran in 0.28 secs.
+   6.2 TEL | END SPAN mount.py:30(mount_remote_volumes)    0.3s
+   6.2 TEL | BEGIN SPAN container.py:127(run_docker_command)
+   6.2 TEL | [28] Launching Network container: docker run --publish=127.0.0.1:62227:38022/tcp --hostname=portal-backend-de-e94fecd51c97432ea10c4b8473fbf8bb-587c5d8nd5zt --dns=169.254.25.10 --dns-search=portal.svc.cluster.local --dns-search=svc.cluster.local --dns-search=cluster.local --dns-opt=ndots:5 --rm --privileged --name=telepresence-1587148563-123206-73164 datawire/telepresence-local:0.104 proxy '{"cidrs": ["0/0"], "expose_ports": [[80, 80]], "to_pod": [], "from_pod": []}'
+   6.2 TEL | [29] Running: ssh -F /dev/null -oStrictHostKeyChecking=no -oUserKnownHostsFile=/dev/null -q -p 62227 root@127.0.0.1 /bin/true
+   6.3 TEL | [29] exit 255 in 0.02 secs.
+   6.5 TEL | [30] Running: ssh -F /dev/null -oStrictHostKeyChecking=no -oUserKnownHostsFile=/dev/null -q -p 62227 root@127.0.0.1 /bin/true
+   6.5 TEL | [30] exit 255 in 0.01 secs.
+   6.6  28 | [INFO  tini (1)] Spawned child process 'python3' with pid '7'
+   6.8  28 |    0.0 TEL | Telepresence 0+unknown launched at Fri Apr 17 18:36:03 2020
+   6.8  28 |    0.0 TEL |   /usr/bin/entrypoint.py proxy '{"cidrs": ["0/0"], "expose_ports": [[80, 80]], "to_pod": [], "from_pod": []}'
+   6.8  28 |    0.0 TEL | uname: uname_result(system='Linux', node='portal-backend-de-e94fecd51c97432ea10c4b8473fbf8bb-587c5d8nd5zt', release='4.19.76-linuxkit', version='#1 SMP Thu Oct 17 19:31:58 UTC 2019', machine='x86_64', processor='')
+   6.8  28 |    0.0 TEL | Platform: linux
+   6.8  28 |    0.0 TEL | WSL: False
+   6.8  28 |    0.0 TEL | Python 3.6.8 (default, Apr 22 2019, 10:28:12)
+   6.8  28 |    0.0 TEL | [GCC 6.3.0]
+   6.8  28 |    0.0 TEL | [1] Running: /usr/sbin/sshd -e
+   6.8  28 |    0.0 TEL | [1] ran in 0.00 secs.
+   6.8  28 |    0.0 TEL | [2] Running: ssh -F /dev/null -oStrictHostKeyChecking=no -oUserKnownHostsFile=/dev/null -q -p 38023 telepresence@127.0.0.1 /bin/true
+   6.8  28 |    0.0 TEL | [2] exit 255 in 0.01 secs.
+   6.8 TEL | [31] Running: ssh -F /dev/null -oStrictHostKeyChecking=no -oUserKnownHostsFile=/dev/null -q -p 62227 root@127.0.0.1 /bin/true
+   6.9 TEL | [31] ran in 0.12 secs.
+   6.9 TEL | [32] Launching Local SSH port forward: ssh -N -oServerAliveInterval=1 -oServerAliveCountMax=10 -F /dev/null -oStrictHostKeyChecking=no -oUserKnownHostsFile=/dev/null -q -p 62227 root@127.0.0.1 -R 38023:127.0.0.1:62207
+   6.9 TEL | [33] Running: docker run --network=container:telepresence-1587148563-123206-73164 --rm datawire/telepresence-local:0.104 wait
+   7.0  28 |    0.3 TEL | [3] Running: ssh -F /dev/null -oStrictHostKeyChecking=no -oUserKnownHostsFile=/dev/null -q -p 38023 telepresence@127.0.0.1 /bin/true
+   7.0  21 | Handling connection for 62207
+   7.1  33 | [INFO  tini (1)] Spawned child process 'python3' with pid '8'
+   7.2  28 |    0.5 TEL | [3] ran in 0.22 secs.
+   7.2  28 |    0.5 TEL | [4] Capturing: netstat -n
+   7.2  28 |    0.5 TEL | [4] captured in 0.00 secs.
+   7.2  28 |    0.5 TEL | [5] Launching SSH port forward (exposed ports): ssh -N -oServerAliveInterval=1 -oServerAliveCountMax=10 -F /dev/null -oStrictHostKeyChecking=no -oUserKnownHostsFile=/dev/null -q -p 38023 telepresence@127.0.0.1 -R '*:80:127.0.0.1:80'
+   7.3  28 |    0.5 TEL | Everything launched. Waiting to exit...
+   7.3  28 |    0.5 TEL | BEGIN SPAN runner.py:725(wait_for_exit)
+   7.3  21 | Handling connection for 62207
+   7.5  28 | Starting sshuttle proxy.
+   7.7  28 | firewall manager: Starting firewall with Python version 3.6.8
+   7.7  28 | firewall manager: ready method name nat.
+   7.7  28 | IPv6 enabled: False
+   7.7  28 | UDP enabled: False
+   7.7  28 | DNS enabled: True
+   7.7  28 | TCP redirector listening on ('127.0.0.1', 12300).
+   7.7  28 | DNS listening on ('127.0.0.1', 12300).
+   7.7  28 | Starting client with Python version 3.6.8
+   7.7  28 | c : connecting to server...
+   7.7  21 | Handling connection for 62207
+   7.8  28 | Warning: Permanently added '[127.0.0.1]:38023' (ECDSA) to the list of known hosts.
+   8.0  28 | Starting server with Python version 3.6.8
+   8.0  28 |  s: latency control setting = True
+   8.0  28 |  s: available routes:
+   8.0  28 | c : Connected.
+   8.0  28 | firewall manager: setting up.
+   8.0  28 | >> iptables -t nat -N sshuttle-12300
+   8.0  28 | >> iptables -t nat -F sshuttle-12300
+   8.0  28 | >> iptables -t nat -I OUTPUT 1 -j sshuttle-12300
+   8.0  28 | >> iptables -t nat -I PREROUTING 1 -j sshuttle-12300
+   8.0  28 | >> iptables -t nat -A sshuttle-12300 -j RETURN --dest 172.17.0.2/32 -p tcp
+   8.0  28 | >> iptables -t nat -A sshuttle-12300 -j RETURN --dest 172.17.0.1/32 -p tcp
+   8.0  28 | >> iptables -t nat -A sshuttle-12300 -j RETURN --dest 127.0.0.1/32 -p tcp
+   8.0  28 | >> iptables -t nat -A sshuttle-12300 -j REDIRECT --dest 0.0.0.0/0 -p tcp --to-ports 12300 -m ttl ! --ttl 42
+   8.0  28 | >> iptables -t nat -A sshuttle-12300 -j REDIRECT --dest 169.254.25.10/32 -p udp --dport 53 --to-ports 12300 -m ttl ! --ttl 42
+   8.0  28 | >> iptables -t nat -A sshuttle-12300 -j REDIRECT --dest 224.0.0.252/32 -p udp --dport 5355 --to-ports 12300 -m ttl ! --ttl 42
+   8.0  28 | conntrack v1.4.4 (conntrack-tools): 0 flow entries have been deleted.
+   9.8  28 | c : DNS request from ('172.17.0.2', 44076) to None: 61 bytes
+   9.8  28 | c : DNS request from ('172.17.0.2', 33533) to None: 54 bytes
+  10.9  33 | [INFO  tini (1)] Main child exited normally (with status '100')
+  11.0 TEL | [33] exit 100 in 4.07 secs.
+  11.0 TEL | [34] Capturing: docker run --help
+  11.1 TEL | [34] captured in 0.09 secs.
+  11.1 TEL | END SPAN container.py:127(run_docker_command)    4.8s
+  11.1 >>> | Setup complete. Launching your container.
+  11.1 TEL | Everything launched. Waiting to exit...
+  11.1 TEL | BEGIN SPAN runner.py:725(wait_for_exit)
+  11.3  28 | c : DNS request from ('172.17.0.2', 59287) to None: 56 bytes
+  11.3  28 | c : DNS request from ('172.17.0.2', 35566) to None: 56 bytes
+  11.4  28 | c : Accept TCP: 172.17.0.2:34784 -> 10.233.38.16:3306.
+  11.4  28 | c : DNS request from ('172.17.0.2', 57461) to None: 56 bytes
+  11.4  28 | c : DNS request from ('172.17.0.2', 44317) to None: 56 bytes
+  11.4  28 | c : Accept TCP: 172.17.0.2:34786 -> 10.233.38.16:3306.
+  11.5  28 | c : SW'unknown':Mux#5: deleting (3 remain)
+  11.5  28 | c : SW#-1:172.17.0.2:34784: deleting (2 remain)
+  11.5  28 | c : SW#-1:172.17.0.2:34784: error was: nowrite: [Errno 107] Socket not connected
+  11.6  28 | c : DNS request from ('172.17.0.2', 58719) to None: 59 bytes
+  11.6  28 | c : DNS request from ('172.17.0.2', 60389) to None: 59 bytes
+  11.6  28 | c : DNS request from ('172.17.0.2', 46314) to None: 52 bytes
+  11.6  28 | c : DNS request from ('172.17.0.2', 36045) to None: 52 bytes
+  11.6  28 | c : DNS request from ('172.17.0.2', 41284) to None: 48 bytes
+  11.6  28 | c : DNS request from ('172.17.0.2', 33324) to None: 48 bytes
+  11.6  28 | c : DNS request from ('172.17.0.2', 43584) to None: 34 bytes
+  11.7  28 | c : DNS request from ('172.17.0.2', 40963) to None: 34 bytes
+  11.8  28 | c : Accept TCP: 172.17.0.2:39764 -> 172.217.25.241:443.
+  11.8  28 | c : Accept TCP: 172.17.0.2:39766 -> 172.217.25.241:443.
+  11.8  28 | c : Accept TCP: 172.17.0.2:39768 -> 172.217.25.241:443.
+  11.8  28 | c : Accept TCP: 172.17.0.2:39770 -> 172.217.25.241:443.
+  11.8  28 | c : Accept TCP: 172.17.0.2:39772 -> 172.217.25.241:443.
+  11.8  28 | c : Accept TCP: 172.17.0.2:39774 -> 172.217.25.241:443.
+  11.8  28 | c : Accept TCP: 172.17.0.2:39776 -> 172.217.25.241:443.
+  11.8  28 | c : Accept TCP: 172.17.0.2:39778 -> 172.217.25.241:443.
+  11.8  28 | c : Accept TCP: 172.17.0.2:39780 -> 172.217.25.241:443.
+  11.8  28 | c : Accept TCP: 172.17.0.2:39782 -> 172.217.25.241:443.
+  11.8  28 | c : SW'unknown':Mux#8: deleting (21 remain)
+  11.8  28 | c : SW#10:172.17.0.2:34786: deleting (20 remain)
+  11.8  28 |  s: SW#-1:10.233.38.16:3306: deleting (4 remain)
+  11.8  28 |  s: SW'unknown':Mux#5: deleting (3 remain)
+  11.8  28 |  s: SW#-1:10.233.38.16:3306: deleting (2 remain)
+  11.8  28 |  s: SW'unknown':Mux#8: deleting (1 remain)
+  11.9  28 |  s: SW'unknown':Mux#23: deleting (19 remain)
+  11.9  28 |  s: SW#13:172.217.25.241:443: deleting (18 remain)
+  11.9  28 |  s: SW'unknown':Mux#22: deleting (17 remain)
+  11.9  28 |  s: SW#12:172.217.25.241:443: deleting (16 remain)
+  11.9  28 |  s: SW'unknown':Mux#21: deleting (15 remain)
+  11.9  28 |  s: SW#9:172.217.25.241:443: deleting (14 remain)
+  11.9  28 |  s: SW'unknown':Mux#18: deleting (13 remain)
+  11.9  28 |  s: SW#6:172.217.25.241:443: deleting (12 remain)
+  11.9  28 |  s: SW'unknown':Mux#24: deleting (11 remain)
+  11.9  28 |  s: SW#14:172.217.25.241:443: deleting (10 remain)
+  11.9  28 |  s: SW'unknown':Mux#20: deleting (9 remain)
+  11.9  28 |  s: SW#8:172.217.25.241:443: deleting (8 remain)
+  12.0  28 | c : SW#16:172.17.0.2:39776: deleting (19 remain)
+  12.0  28 | c : SW#16:172.17.0.2:39776: error was: nowrite: [Errno 107] Socket not connected
+  12.0  28 | c : SW'unknown':Mux#23: deleting (18 remain)
+  12.0  28 | c : SW#15:172.17.0.2:39774: deleting (17 remain)
+  12.0  28 | c : SW#15:172.17.0.2:39774: error was: nowrite: [Errno 107] Socket not connected
+  12.0  28 | c : SW'unknown':Mux#22: deleting (16 remain)
+  12.0  28 | c : SW#11:172.17.0.2:39766: deleting (15 remain)
+  12.0  28 | c : SW#11:172.17.0.2:39766: error was: nowrite: [Errno 107] Socket not connected
+  12.0  28 | c : SW'unknown':Mux#18: deleting (14 remain)
+  12.0  28 | c : SW#13:172.17.0.2:39770: deleting (13 remain)
+  12.0  28 | c : SW#13:172.17.0.2:39770: error was: nowrite: [Errno 107] Socket not connected
+  12.0  28 | c : SW'unknown':Mux#20: deleting (12 remain)
+  12.0  28 | c : SW#17:172.17.0.2:39778: deleting (11 remain)
+  12.0  28 | c : SW#17:172.17.0.2:39778: error was: nowrite: [Errno 107] Socket not connected
+  12.0  28 | c : SW'unknown':Mux#24: deleting (10 remain)
+  12.2  28 | c : SW#12:172.17.0.2:39768: deleting (9 remain)
+  12.2  28 | c : SW#12:172.17.0.2:39768: error was: nowrite: [Errno 107] Socket not connected
+  12.2  28 | c : SW'unknown':Mux#19: deleting (8 remain)
+  12.2  28 | c : SW'unknown':Mux#21: deleting (7 remain)
+  12.2  28 | c : SW#14:172.17.0.2:39772: deleting (6 remain)
+  12.2  28 | c : SW#14:172.17.0.2:39772: error was: nowrite: [Errno 107] Socket not connected
+  12.2  28 | c : SW'unknown':Mux#25: deleting (5 remain)
+  12.2  28 | c : SW#18:172.17.0.2:39780: deleting (4 remain)
+  12.2  28 | c : SW#18:172.17.0.2:39780: error was: nowrite: [Errno 107] Socket not connected
+  12.2  28 | c : SW'unknown':Mux#26: deleting (3 remain)
+  12.2  28 | c : SW#19:172.17.0.2:39782: deleting (2 remain)
+  12.2  28 | c : SW#19:172.17.0.2:39782: error was: nowrite: [Errno 107] Socket not connected
+  12.3  28 |  s: SW'unknown':Mux#26: deleting (7 remain)
+  12.3  28 |  s: SW#16:172.217.25.241:443: deleting (6 remain)
+  12.3  28 |  s: SW'unknown':Mux#19: deleting (5 remain)
+  12.3  28 |  s: SW#7:172.217.25.241:443: deleting (4 remain)
+  12.3  28 |  s: SW'unknown':Mux#25: deleting (3 remain)
+  12.3  28 |  s: SW#15:172.217.25.241:443: deleting (2 remain)
+  31.3 TEL | [35] Running: sudo -n echo -n
+  31.3 TEL | [35] ran in 0.03 secs.
+  34.1 TEL | (proxy checking local liveness)
+  34.1  20 | 2020-04-17T18:36:30+0000 [Poll#info] Checkpoint
+  41.2  28 | c : DNS request from ('172.17.0.2', 40232) to None: 56 bytes
+  41.2  28 | c : DNS request from ('172.17.0.2', 42982) to None: 56 bytes
+  41.2  28 | c : Accept TCP: 172.17.0.2:34810 -> 10.233.38.16:3306.
+  41.3  28 | c : DNS request from ('172.17.0.2', 59497) to None: 57 bytes
+  41.3  28 | c : DNS request from ('172.17.0.2', 38700) to None: 57 bytes
+  41.3  28 | c : DNS request from ('172.17.0.2', 58713) to None: 50 bytes
+  41.3  28 | c : DNS request from ('172.17.0.2', 40936) to None: 50 bytes
+  41.3  28 | c : DNS request from ('172.17.0.2', 34704) to None: 46 bytes
+  41.3  28 | c : DNS request from ('172.17.0.2', 45418) to None: 46 bytes
+  41.3  28 | c : DNS request from ('172.17.0.2', 57237) to None: 32 bytes
+  41.3  28 | c : DNS request from ('172.17.0.2', 56874) to None: 32 bytes
+  41.4  28 | c : Accept TCP: 172.17.0.2:59056 -> 54.187.48.79:443.
+  50.2  28 | c : DNS request from ('172.17.0.2', 39208) to None: 52 bytes
+  50.2  28 | c : DNS request from ('172.17.0.2', 56452) to None: 52 bytes
+  50.2  28 | c : DNS request from ('172.17.0.2', 41636) to None: 45 bytes
+  50.2  28 | c : DNS request from ('172.17.0.2', 51861) to None: 45 bytes
+  50.3  28 | c : DNS request from ('172.17.0.2', 58503) to None: 41 bytes
+  50.3  28 | c : DNS request from ('172.17.0.2', 44671) to None: 41 bytes
+  50.3  28 | c : DNS request from ('172.17.0.2', 48466) to None: 27 bytes
+  50.3  28 | c : DNS request from ('172.17.0.2', 37044) to None: 27 bytes
+  50.3  28 | c : Accept TCP: 172.17.0.2:39918 -> 52.198.217.116:443.
+  61.4 TEL | [36] Running: sudo -n echo -n
+  61.4 TEL | [36] ran in 0.03 secs.
+  64.1 TEL | (proxy checking local liveness)
+  64.1  20 | 2020-04-17T18:37:00+0000 [Poll#info] Checkpoint
+  91.5 TEL | [37] Running: sudo -n echo -n
+  91.5 TEL | [37] ran in 0.03 secs.
+  94.1 TEL | (proxy checking local liveness)
+  94.1  20 | 2020-04-17T18:37:30+0000 [Poll#info] Checkpoint
+ 121.6 TEL | [38] Running: sudo -n echo -n
+ 121.6 TEL | [38] ran in 0.03 secs.
+ 124.1 TEL | (proxy checking local liveness)
+ 124.1  20 | 2020-04-17T18:38:00+0000 [Poll#info] Checkpoint
+ 151.7 TEL | [39] Running: sudo -n echo -n
+ 151.8 TEL | [39] ran in 0.03 secs.
+ 154.1 TEL | (proxy checking local liveness)
+ 154.1  20 | 2020-04-17T18:38:30+0000 [Poll#info] Checkpoint
+ 175.9 TEL | Main process (docker run --name=telepresence-1587148567-860794-73164 --network=container:telepresence-1587148563-123206-73164 -e=TELEPRESENCE_POD -e=TELEPRESENCE_CONTAINER -e=TELEPRESENCE_MOUNTS -e=OIDC_PROVIDER_URL -e=OIDC_CLIENT_SECRET -e=SMTP_PASSWORD -e=ENVIRONMENT -e=OIDC_CLIENT_ID -e=SLACK_SIGNING_SECRET -e=SLACK_TOKEN -e=DATABASE_URL -e=OIDC_REDIRECT_URL -e=SMTP_USERNAME -e=BASE_URL -e=SLACK_TEAM_ID -e=SMTP_FROM -e=SMTP_SERVER -e=TELEPRESENCE_CONTAINER_NAMESPACE -e=PORTAL_BACKEND_SVC_SERVICE_PORT -e=PORTAL_FRONTEND_SVC_PORT_80_TCP_PROTO -e=PORTAL_FRONTEND_SVC_PORT_80_TCP_PORT -e=PORTAL_DB_SVC_PORT_3306_TCP_ADDR -e=KUBERNETES_PORT -e=PORTAL_FRONTEND_SVC_SERVICE_HOST -e=PORTAL_FRONTEND_SVC_SERVICE_PORT -e=PORTAL_DB_SVC_SERVICE_PORT -e=KUBERNETES_SERVICE_PORT_HTTPS -e=KUBERNETES_PORT_443_TCP_PORT -e=PORTAL_BACKEND_SVC_PORT_80_TCP -e=PORTAL_FRONTEND_SVC_PORT_80_TCP_ADDR -e=PORTAL_DB_SVC_PORT_3306_TCP_PROTO -e=PORTAL_BACKEND_SVC_SERVICE_PORT_HTTP -e=PORTAL_BACKEND_SVC_PORT_80_TCP_ADDR -e=PORTAL_FRONTEND_SVC_SERVICE_PORT_HTTP -e=PORTAL_FRONTEND_SVC_PORT -e=PORTAL_DB_SVC_SERVICE_HOST -e=PORTAL_DB_SVC_PORT_3306_TCP_PORT -e=PORTAL_BACKEND_SVC_SERVICE_HOST -e=PORTAL_BACKEND_SVC_PORT -e=PORTAL_FRONTEND_SVC_PORT_80_TCP -e=KUBERNETES_PORT_443_TCP -e=KUBERNETES_PORT_443_TCP_PROTO -e=PORTAL_DB_SVC_PORT_3306_TCP -e=KUBERNETES_SERVICE_PORT -e=PORTAL_BACKEND_SVC_PORT_80_TCP_PROTO -e=PORTAL_BACKEND_SVC_PORT_80_TCP_PORT -e=PORTAL_DB_SVC_PORT -e=KUBERNETES_SERVICE_HOST -e=KUBERNETES_PORT_443_TCP_ADDR -e=TELEPRESENCE_ROOT -e=TELEPRESENCE_METHOD --volume=/tmp/tel-zzjahszu/fs:/tmp/tel-zzjahszu/fs --init -v /Users/tsuzu/go/src/github.com/MISW/Portal/backend:/backend -e ENVIRONMENT=dev --rm -ti portal_backend)
+ 175.9 TEL |  exited with code 130.
+ 176.0 TEL | END SPAN runner.py:725(wait_for_exit)  164.9s
+ 176.0 >>> | Your process exited with return code 130.
+ 176.0 TEL | EXITING successful session.
+ 176.0 >>> | Exit cleanup in progress
+ 176.0 TEL | (Cleanup) Terminate local container
+ 176.0 TEL | Shutting down containers...
+ 176.0 TEL | (Cleanup) Kill BG process [32] Local SSH port forward
+ 176.0 TEL | [32] Local SSH port forward: exit 0
+ 176.0 TEL | (Cleanup) Kill BG process [28] Network container
+ 176.0 TEL | [40] Running: docker stop --time=1 telepresence-1587148563-123206-73164
+ 176.0  28 | Connection to 127.0.0.1 closed by remote host.
+ 176.0  28 |  169.2   5 | Connection to 127.0.0.1 closed by remote host.
+ 176.0  28 |  169.2 TEL | [5] SSH port forward (exposed ports): exit 255
+ 176.0  28 | >> iptables -t nat -D OUTPUT -j sshuttle-12300
+ 176.0  28 | >> iptables -t nat -D PREROUTING -j sshuttle-12300
+ 176.0  28 | >> iptables -t nat -F sshuttle-12300
+ 176.0  28 | >> iptables -t nat -X sshuttle-12300
+ 176.0  28 | firewall manager: Error trying to undo /etc/hosts changes.
+ 176.0  28 | firewall manager: ---> Traceback (most recent call last):
+ 176.0  28 | firewall manager: --->   File "/usr/lib/python3.6/site-packages/sshuttle/firewall.py", line 274, in main
+ 176.0  28 | firewall manager: --->     restore_etc_hosts(port_v6 or port_v4)
+ 176.0  28 | firewall manager: --->   File "/usr/lib/python3.6/site-packages/sshuttle/firewall.py", line 50, in restore_etc_hosts
+ 176.0  28 | firewall manager: --->     rewrite_etc_hosts({}, port)
+ 176.0  28 | firewall manager: --->   File "/usr/lib/python3.6/site-packages/sshuttle/firewall.py", line 29, in rewrite_etc_hosts
+ 176.0  28 | firewall manager: --->     os.link(HOSTSFILE, BAKFILE)
+ 176.0  28 | firewall manager: ---> OSError: [Errno 18] Cross-device link: '/etc/hosts' -> '/etc/hosts.sbak'
+ 176.0  28 | c : fatal: server died with error code 255
+ 176.0  28 | c : SW'unknown':Mux#17: deleting (7 remain)
+ 176.0  28 | c : SW#8:172.17.0.2:39764: deleting (6 remain)
+ 176.0  28 | c : SW'unknown':Mux#29: deleting (5 remain)
+ 176.0  28 | c : SW#10:172.17.0.2:34810: deleting (4 remain)
+ 176.0  28 | c : SW'unknown':Mux#38: deleting (3 remain)
+ 176.0  28 | c : SW#11:172.17.0.2:59056: deleting (2 remain)
+ 176.0  28 | c : SW'unknown':Mux#47: deleting (1 remain)
+ 176.0  28 | c : SW#12:172.17.0.2:39918: deleting (0 remain)
+ 176.0  28 |  169.3 TEL | Main process (sshuttle-telepresence -v --dns --method nat -e 'ssh -F /dev/null -oStrictHostKeyChecking=no -oUserKnownHostsFile=/dev/null' -r telepresence@127.0.0.1:38023 -x 172.17.0.2 -x 172.17.0.1 0/0)
+ 176.0  28 |  169.3 TEL |  exited with code 99.
+ 176.0  28 | [INFO  tini (1)] Main child exited with signal (with signal 'Terminated')
+ 176.2  40 | telepresence-1587148563-123206-73164
+ 176.2 TEL | [40] ran in 0.25 secs.
+ 176.2 TEL | (Cleanup) Unmount remote filesystem
+ 176.2 TEL | [41] Running: sudo umount -f /tmp/tel-zzjahszu/fs
+ 176.2 TEL | [28] Network container: exit 143
+ 176.3 TEL | [41] ran in 0.05 secs.
+ 176.3 TEL | (Cleanup) Kill BG process [25] SSH port forward (socks and proxy poll)
+ 176.3 TEL | [25] SSH port forward (socks and proxy poll): exit 0
+ 176.3 TEL | (Cleanup) Kill Web server for proxy poll
+ 176.7 TEL | (Cleanup) Kill BG process [21] kubectl port-forward
+ 176.7 TEL | [21] kubectl port-forward: exit -15
+ 176.7 TEL | (Cleanup) Kill BG process [20] kubectl logs
+ 176.7 TEL | [20] kubectl logs: exit -15
+ 176.7 TEL | Background process (kubectl logs) exited with return code -15. Command was:
+ 176.7 TEL |   kubectl --context misw-kubernetes --namespace portal logs -f portal-backend-de-e94fecd51c97432ea10c4b8473fbf8bb-587c5d8nd5zt --container portal-backend --tail=10
+ 176.7 TEL | 
+ 176.7 TEL | Recent output was:
+ 176.7 TEL |   2020-04-17T18:36:00+0000 [-] DNSDatagramProtocol starting on 9053
+ 176.7 TEL |   2020-04-17T18:36:00+0000 [-] Starting protocol <twisted.names.dns.DNSDatagramProtocol object at 0x7f9efc30d160>
+ 176.7 TEL |   2020-04-17T18:36:00+0000 [-] Loaded.
+ 176.7 TEL |   2020-04-17T18:36:00+0000 [twisted.scripts._twistd_unix.UnixAppLogger#info] twistd 19.10.0 (/usr/bin/python3.6 3.6.8) starting up.
+ 176.7 TEL |   2020-04-17T18:36:00+0000 [twisted.scripts._twistd_unix.UnixAppLogger#info] reactor class: twisted.internet.epollreactor.EPollReactor.
+ 176.7 TEL |   2020-04-17T18:36:30+0000 [Poll#info] Checkpoint
+ 176.7 TEL |   2020-04-17T18:37:00+0000 [Poll#info] Checkpoint
+ 176.7 TEL |   2020-04-17T18:37:30+0000 [Poll#info] Checkpoint
+ 176.7 TEL |   2020-04-17T18:38:00+0000 [Poll#info] Checkpoint
+ 176.7 TEL |   2020-04-17T18:38:30+0000 [Poll#info] Checkpoint
+ 176.7 TEL | (Cleanup) Re-scale original deployment
+ 176.7 TEL | [42] Running: kubectl --context misw-kubernetes --namespace portal scale deployment portal-backend-deployment --replicas=1
+ 176.9  42 | deployment.apps/portal-backend-deployment scaled
+ 176.9 TEL | [42] ran in 0.23 secs.
+ 176.9 TEL | (Cleanup) Delete new deployment
+ 176.9 >>> | Swapping Deployment portal-backend-deployment back to its original state
+ 176.9 TEL | [43] Running: kubectl --context misw-kubernetes --namespace portal delete deployment portal-backend-de-e94fecd51c97432ea10c4b8473fbf8bb
+ 177.1  43 | deployment.apps "portal-backend-de-e94fecd51c97432ea10c4b8473fbf8bb" deleted
+ 177.1 TEL | [43] ran in 0.16 secs.
+ 177.1 TEL | (Cleanup) Kill sudo privileges holder
+ 177.1 TEL | (Cleanup) Stop time tracking
+ 177.1 TEL | END SPAN main.py:40(main)  177.0s
+ 177.1 TEL | SPAN SUMMARY:
+ 177.1 TEL |  177.0s main.py:40(main)
+ 177.1 TEL |    0.5s   startup.py:83(set_kube_command)
+ 177.1 TEL |    0.1s     1 kubectl config current-context
+ 177.1 TEL |    0.1s     2 kubectl --context misw-kubernetes version --short
+ 177.1 TEL |    0.1s     3 kubectl --context misw-kubernetes config view -o json
+ 177.1 TEL |    0.2s     4 kubectl --context misw-kubernetes get ns portal
+ 177.1 TEL |    0.1s     5 kubectl --context misw-kubernetes api-versions
+ 177.1 TEL |    0.0s   6 ssh -V
+ 177.1 TEL |    0.6s   7 docker run --rm -v /tmp/tel-zzjahszu:/tel alpine:3.6 cat /tel/session_id.txt
+ 177.1 TEL |    0.0s   8 sudo -n echo -n
+ 177.1 TEL |    0.2s   9 kubectl --context misw-kubernetes --namespace portal get pods telepresence-con
+ 177.1 TEL |    0.8s   deployment.py:193(supplant_deployment)
+ 177.1 TEL |    0.2s     remote.py:75(get_deployment_json)
+ 177.1 TEL |    0.2s       10 kubectl --context misw-kubernetes --namespace portal get deployment -o json p
+ 177.1 TEL |    0.2s     11 kubectl --context misw-kubernetes --namespace portal delete deployment portal
+ 177.1 TEL |    0.3s     12 kubectl --context misw-kubernetes --namespace portal apply -f -
+ 177.1 TEL |    0.2s     13 kubectl --context misw-kubernetes --namespace portal scale deployment portal-
+ 177.1 TEL |    1.7s   remote.py:142(get_remote_info)
+ 177.1 TEL |    0.1s     remote.py:75(get_deployment_json)
+ 177.1 TEL |    0.1s       14 kubectl --context misw-kubernetes --namespace portal get deployment -o json -
+ 177.1 TEL |    0.2s     15 kubectl --context misw-kubernetes --namespace portal get pod -o json --select
+ 177.1 TEL |    1.4s     remote.py:104(wait_for_pod)
+ 177.1 TEL |    0.2s       16 kubectl --context misw-kubernetes --namespace portal get pod portal-backend-d
+ 177.1 TEL |    0.2s       17 kubectl --context misw-kubernetes --namespace portal get pod portal-backend-d
+ 177.1 TEL |    0.2s       18 kubectl --context misw-kubernetes --namespace portal get pod portal-backend-d
+ 177.1 TEL |    0.1s       19 kubectl --context misw-kubernetes --namespace portal get pod portal-backend-d
+ 177.1 TEL |    0.7s   connect.py:37(connect)
+ 177.1 TEL |    0.0s     22 ssh -F /dev/null -oStrictHostKeyChecking=no -oUserKnownHostsFile=/dev/null -q
+ 177.1 TEL |    0.0s     23 ssh -F /dev/null -oStrictHostKeyChecking=no -oUserKnownHostsFile=/dev/null -q
+ 177.1 TEL |    0.2s     24 ssh -F /dev/null -oStrictHostKeyChecking=no -oUserKnownHostsFile=/dev/null -q
+ 177.1 TEL |    0.4s   remote_env.py:29(get_remote_env)
+ 177.1 TEL |    0.4s     26 kubectl --context misw-kubernetes --namespace portal exec portal-backend-de-e
+ 177.1 TEL |    0.3s   mount.py:30(mount_remote_volumes)
+ 177.1 TEL |    0.3s     27 sudo sshfs -p 62207 -F /dev/null -oStrictHostKeyChecking=no -oUserKnownHostsF
+ 177.1 TEL |    4.8s   container.py:127(run_docker_command)
+ 177.1 TEL |    0.0s     29 ssh -F /dev/null -oStrictHostKeyChecking=no -oUserKnownHostsFile=/dev/null -q
+ 177.1 TEL |    0.0s     30 ssh -F /dev/null -oStrictHostKeyChecking=no -oUserKnownHostsFile=/dev/null -q
+ 177.1 TEL |    0.1s     31 ssh -F /dev/null -oStrictHostKeyChecking=no -oUserKnownHostsFile=/dev/null -q
+ 177.1 TEL |    4.1s     33 docker run --network=container:telepresence-1587148563-123206-73164 --rm data
+ 177.1 TEL |    0.1s     34 docker run --help
+ 177.1 TEL |  164.9s   runner.py:725(wait_for_exit)
+ 177.1 TEL |    0.0s     35 sudo -n echo -n
+ 177.1 TEL |    0.0s     36 sudo -n echo -n
+ 177.1 TEL |    0.0s     37 sudo -n echo -n
+ 177.1 TEL |    0.0s     38 sudo -n echo -n
+ 177.1 TEL |    0.0s     39 sudo -n echo -n
+ 177.1 TEL |    0.3s   40 docker stop --time=1 telepresence-1587148563-123206-73164
+ 177.1 TEL |    0.0s   41 sudo umount -f /tmp/tel-zzjahszu/fs
+ 177.1 TEL |    0.2s   42 kubectl --context misw-kubernetes --namespace portal scale deployment portal-
+ 177.1 TEL |    0.2s   43 kubectl --context misw-kubernetes --namespace portal delete deployment portal
+ 177.1 TEL | (Cleanup) Remove temporary directory
+ 177.1 TEL | (Cleanup) Save caches
+ 177.8 TEL | (sudo privileges holder thread exiting)
