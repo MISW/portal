@@ -48,7 +48,11 @@ export type UserInfoJSON = Omit<
 
 export type UserProfile = Omit<
   UserInfoJSON,
-  "other_circles" | "emergency_phone_number" | "student_id" | "university" | "discord_id"
+  | "other_circles"
+  | "emergency_phone_number"
+  | "student_id"
+  | "university"
+  | "discord_id"
 > & {
   id?: number;
   otherCircles: UserAllInfoJSON["other_circles"];
