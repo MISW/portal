@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
 import { NextPage } from "next";
-import { DefaultLayout } from "../src/components/layout/DefaultLayout";
 import { useRouter } from "next/router";
 import { Typography } from "@material-ui/core";
 
@@ -14,15 +13,18 @@ const Page: NextPage = () => {
       if (code === null || state === null) {
         throw new Error("There is no status and code in query parameter");
       }
-      const res = await fetch(`${location.protocol}//${location.host}/api/public/callback`, {
-        headers: {
-          Accept: "application/json, */*",
-          "Content-type": "application/json",
-        },
-        credentials: "include",
-        method: "POST",
-        body: JSON.stringify({ code, state }),
-      });
+      const res = await fetch(
+        `${location.protocol}//${location.host}/api/public/callback`,
+        {
+          headers: {
+            Accept: "application/json, */*",
+            "Content-type": "application/json",
+          },
+          credentials: "include",
+          method: "POST",
+          body: JSON.stringify({ code, state }),
+        }
+      );
       const body = await res.json();
       if (res.status >= 400) {
         console.error(res);
@@ -35,9 +37,9 @@ const Page: NextPage = () => {
     });
   });
   return (
-    <DefaultLayout>
+    <>
       <Typography>Loading...</Typography>
-    </DefaultLayout>
+    </>
   );
 };
 
