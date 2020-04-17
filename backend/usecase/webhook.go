@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"context"
+	"log"
 
 	"github.com/MISW/Portal/backend/domain/repository"
 	"github.com/MISW/Portal/backend/internal/slack"
@@ -41,6 +42,12 @@ func (wu *webhookUsecase) NewUser(ctx context.Context, email, slackID string) er
 
 	if err != nil {
 		return xerrors.Errorf("unknown email address: %w", err)
+	}
+
+	if len(user.SlackID) != 0 {
+		log.Printf("WARNING: the user(%d, %s) has been already registered for slack: %s", user.ID, user.Email, user.SlackID)
+
+		return nil
 	}
 
 	if err := wu.userRepository.UpdateSlackID(ctx, user.ID, slackID); err != nil {
