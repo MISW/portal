@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext, useCallback } from "react";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
@@ -7,7 +7,8 @@ import { IconButton, MenuItem, Menu } from "@material-ui/core";
 import MenuIcon from "@material-ui/icons/Menu";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import MUILink from "@material-ui/core/Link";
-import NextLink from "next/link";
+import { loginContext } from "../../../pages/_app";
+import { useRouter } from "next/router";
 
 const useStyles = makeStyles((theme: Theme) => ({
   appBar: {
@@ -45,65 +46,81 @@ const Copyright: React.FC = () => {
   );
 };
 
-export const DefaultLayout: React.FC = ({ children }) => {
+export const DefaultLayout: React.FC<{ onLogout: () => void }> = ({
+  children,
+  onLogout,
+}) => {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
+  const isLogin = useContext(loginContext);
+  const router = useRouter();
 
-  const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
+  const handleMenu = useCallback((event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
-  };
+  }, []);
 
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     setAnchorEl(null);
-  };
+  }, []);
+
+  const handleClickTitle = useCallback(() => router.push("/"), [router]);
+  const handleClickProfile = useCallback(() => router.push("/profile"), [
+    router,
+  ]);
+
   return (
     <>
       <div className="container">
         <AppBar position="static" color="default" className={classes.appBar}>
           <Toolbar>
-            <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
+            <IconButton
+              edge="start"
+              className={classes.menuButton}
+              color="inherit"
+              aria-label="menu"
+            >
               <MenuIcon />
             </IconButton>
-            <Typography variant="h6" color="inherit" className={classes.title}>
+            <Typography
+              variant="h6"
+              color="inherit"
+              className={classes.title}
+              onClick={handleClickTitle}
+            >
               MISW Portal
             </Typography>
-            <div>
-              <IconButton
-                aria-label="account of curren user"
-                aria-controls="menu-appbar"
-                aria-haspopup="true"
-                onClick={handleMenu}
-                color="inherit"
-              >
-                <AccountCircle />
-              </IconButton>
-              <Menu
-                id="menu-appbar"
-                anchorEl={anchorEl}
-                anchorOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-                open={open}
-                onClose={handleClose}
-              >
-                {/* // TODO: うまくクリックに反応しなかった気がする */}
-                <MenuItem>
-                  <NextLink href="/profile">
-                    <span>Profile</span>
-                  </NextLink>
-                </MenuItem>
-                <MenuItem>
-                  <a>Log out(TODO:)</a>
-                </MenuItem>
-              </Menu>
-            </div>
+            {isLogin && (
+              <div>
+                <IconButton
+                  aria-label="account of current user"
+                  aria-controls="menu-appbar"
+                  aria-haspopup="true"
+                  onClick={handleMenu}
+                  color="inherit"
+                >
+                  <AccountCircle />
+                </IconButton>
+                <Menu
+                  id="menu-appbar"
+                  anchorEl={anchorEl}
+                  anchorOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
+                  }}
+                  keepMounted
+                  transformOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
+                  }}
+                  open={open}
+                  onClose={handleClose}
+                >
+                  <MenuItem onClick={handleClickProfile}>Profile</MenuItem>
+                  <MenuItem onClick={onLogout}>Log out</MenuItem>
+                </Menu>
+              </div>
+            )}
           </Toolbar>
         </AppBar>
       </div>

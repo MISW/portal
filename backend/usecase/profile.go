@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"context"
+	"math/rand"
 	"time"
 
 	"github.com/MISW/Portal/backend/internal/tokenutil"
@@ -58,6 +59,7 @@ func (pu *profileUsecase) Update(ctx context.Context, registeredUser, user *doma
 	user.SlackID = registeredUser.SlackID
 	user.Role = registeredUser.Role
 	user.Generation = registeredUser.Generation
+	user.ID = registeredUser.ID
 
 	if err := user.Validate(); err != nil {
 		return nil, err
@@ -67,13 +69,13 @@ func (pu *profileUsecase) Update(ctx context.Context, registeredUser, user *doma
 		return nil, xerrors.Errorf("failed to update user(%d): %w", user.ID, err)
 	}
 
-	user, err := pu.userRepository.GetByID(ctx, user.ID)
+	updatedUser, err := pu.userRepository.GetByID(ctx, user.ID)
 
 	if err != nil {
 		return nil, xerrors.Errorf("failed to get user(%d): %w", user.ID, err)
 	}
 
-	return user, nil
+	return updatedUser, nil
 }
 
 // GetPaymentStatuses - 自分自身の支払い状況を取得する
@@ -89,6 +91,12 @@ func (pu *profileUsecase) GetPaymentStatuses(ctx context.Context, userID int) ([
 
 // GetPaymentStatuses - 支払いを行うためのトークンを取得する
 func (pu *profileUsecase) GetPaymentTransaction(ctx context.Context, userID int) (*domain.PaymentTransaction, error) {
+	go func() {
+		if rand.Intn(20) == 0 {
+			pu.revokeExpiredPaymentTransaction()
+		}
+	}()
+
 	token, err := tokenutil.GenerateRandomToken()
 
 	if err != nil {
@@ -108,4 +116,11 @@ func (pu *profileUsecase) GetPaymentTransaction(ctx context.Context, userID int)
 	}
 
 	return pt, nil
+}
+
+func (pu *profileUsecase) revokeExpiredPaymentTransaction() {
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+
+	pu.transactionRepository.RevokeExpired(ctx) // TODO: add logging if error occurred
 }

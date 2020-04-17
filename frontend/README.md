@@ -29,3 +29,8 @@ npm run dev
     }
 }
 ```
+
+## コマンドラインからsrcとpages以下のファイルをフォーマット
+```
+npm run format
+```

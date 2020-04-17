@@ -1,4 +1,4 @@
-export type SexType = "men" | "women" | "other";
+export type SexType = "male" | "female" | "other";
 
 export type RoleType =
   // 管理者(会員資格あり)
@@ -16,7 +16,7 @@ export interface University {
   subject: string;
 }
 
-export interface User {
+export interface UserAllInfoJSON {
   id: number;
   email: string;
   generation: number;
@@ -31,6 +31,7 @@ export interface User {
   workshops: string[];
   squads: string[];
   role: RoleType;
+  discord_id: string;
 
   slack_id: string;
 
@@ -38,4 +39,67 @@ export interface User {
   updated_at: number;
 }
 
-export type UserForSignUp = Omit<User, "id" | "slack_id" | "role" | "created_at" | "updated_at">;
+export type UserInfoJSON = Omit<
+  UserAllInfoJSON,
+  "slack_id" | "role" | "created_at" | "updated_at" | "id"
+> & {
+  id?: number;
+};
+
+export type UserProfile = Omit<
+  UserInfoJSON,
+  "other_circles" | "emergency_phone_number" | "student_id" | "university" | "discord_id"
+> & {
+  id?: number;
+  otherCircles: UserAllInfoJSON["other_circles"];
+  emergencyPhoneNumber: UserAllInfoJSON["emergency_phone_number"];
+  studentId: UserAllInfoJSON["student_id"];
+  univName: University["name"];
+  department: University["department"];
+  subject: University["subject"];
+  discordId: UserAllInfoJSON["discord_id"];
+};
+
+export const toUserProfile = (json: UserInfoJSON): UserProfile => {
+  return {
+    id: json.id,
+    email: json.email,
+    generation: json.generation,
+    name: json.name,
+    kana: json.kana,
+    handle: json.handle,
+    sex: json.sex,
+    univName: json.university.name,
+    department: json.university.department,
+    subject: json.university.subject,
+    studentId: json.student_id,
+    emergencyPhoneNumber: json.emergency_phone_number,
+    otherCircles: json.other_circles,
+    workshops: json.workshops,
+    squads: json.squads,
+    discordId: json.discord_id,
+  };
+};
+
+export const toUserInfoJSON = (p: UserProfile): UserInfoJSON => {
+  return {
+    id: p.id,
+    email: p.email,
+    generation: p.generation,
+    name: p.name,
+    kana: p.kana,
+    handle: p.handle,
+    sex: p.sex,
+    university: {
+      name: p.univName,
+      department: p.department,
+      subject: p.subject,
+    },
+    student_id: p.studentId,
+    emergency_phone_number: p.emergencyPhoneNumber,
+    other_circles: p.otherCircles,
+    workshops: p.workshops,
+    squads: p.squads,
+    discord_id: p.discordId,
+  };
+};

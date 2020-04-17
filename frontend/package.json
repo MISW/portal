@@ -7,13 +7,13 @@
     "dev": "next",
     "docker": "next --hostname 0.0.0.0",
     "build": "next build",
-    "start": "next start"
+    "start": "next start --hostname 0.0.0.0",
+    "format": "eslint --fix 'src/**/*.{ts,tsx}' 'pages/**/*.{ts,tsx}'"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@types/material-ui": "^0.21.7",
     "@types/node": "^13.7.0",
     "@types/react": "^16.9.19",
     "@types/react-dom": "^16.9.5",
@@ -29,8 +29,9 @@
     "typescript": "^3.7.5"
   },
   "dependencies": {
-    "@material-ui/core": "^4.9.2",
+    "@material-ui/core": "^4.9.10",
     "@material-ui/icons": "^4.9.1",
+    "@material-ui/lab": "^4.0.0-alpha.49",
     "next": "^9.3.3",
     "react": "^16.12.0",
     "react-dom": "^16.12.0"
