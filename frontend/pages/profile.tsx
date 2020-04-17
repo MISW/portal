@@ -1,28 +1,43 @@
 import React, { useEffect, useState } from "react";
 import { NextPage } from "next";
-import { DefaultLayout } from "../src/components/layout/DefaultLayout";
-import RegisterForm from "../src/components/layout/RegisterForm";
+import RegisterForm, {
+  SubmitResult,
+} from "../src/components/layout/RegisterForm";
 import { UserProfile } from "../src/user";
 import { getProfile, updateProfile } from "../src/network";
+import { Alert } from "@material-ui/lab";
 
 const Page: NextPage = () => {
   const [user, setUser] = useState<UserProfile>();
-  const [settingComplete, setSettingComplete] = useState(false);
   useEffect(() => {
     getProfile().then((u) => setUser(u));
   }, []);
-  const onSubmit = (user: UserProfile) => {
-    updateProfile(user)
+  const onSubmit = (user: UserProfile): Promise<SubmitResult> => {
+    return updateProfile(user)
       .then((u) => {
         console.log(u);
-        setSettingComplete(true);
+        return { status: "success" as const };
       })
-      .catch((err) => console.error(err));
+      .catch((err) => {
+        console.error(err);
+        return { status: "error", message: "エラーが発生しました" };
+      });
   };
   return (
-    <DefaultLayout>
-      {user ? <RegisterForm formName="会員情報設定" user={user} onSubmit={onSubmit} /> : "Loading..."}
-    </DefaultLayout>
+    <>
+      {!user ? (
+        "Loading..."
+      ) : (
+        <RegisterForm
+          formName="会員情報設定"
+          user={user}
+          onSubmit={onSubmit}
+          successMessage={
+            <Alert severity="success">プロフィールが変更されました!</Alert>
+          }
+        />
+      )}
+    </>
   );
 };
 

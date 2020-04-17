@@ -1,4 +1,9 @@
-import { UserProfile, UserInfoJSON, toUserProfile, toUserInfoJSON } from "./user";
+import {
+  UserProfile,
+  UserInfoJSON,
+  toUserProfile,
+  toUserInfoJSON,
+} from "./user";
 
 const getHostAPI = () => `${location.protocol}//${location.host}/api`;
 
@@ -34,7 +39,9 @@ export const getProfile = async (): Promise<UserProfile> => {
   return toUserProfile(body);
 };
 
-export const updateProfile = async (user: UserProfile): Promise<UserProfile> => {
+export const updateProfile = async (
+  user: UserProfile
+): Promise<UserProfile> => {
   const body = JSON.stringify(toUserInfoJSON(user));
   console.log(body);
 
@@ -82,6 +89,19 @@ export const signUp = async (user: UserProfile) => {
   });
   if (res.status >= 400) {
     console.log(res);
+    return Promise.reject("Error: status-code >= 400");
+  }
+};
+
+export const logout = async () => {
+  const res = await fetch(`${getHostAPI()}/private/logout`, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+    method: "POST",
+  });
+  if (res.status >= 400) {
+    console.error(res);
     return Promise.reject("Error: status-code >= 400");
   }
 };

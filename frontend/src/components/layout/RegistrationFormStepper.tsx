@@ -1,9 +1,10 @@
-import React, { ReactNode } from "react";
+import React, { ReactNode, useCallback } from "react";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import { Stepper, Step, StepLabel } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
+import { useRouter } from "next/router";
 
 export const useStyles = makeStyles((theme) => ({
   paper: {
@@ -33,12 +34,17 @@ const RegisterFormStepper: React.FC<{
   formName: string;
   children: ReactNode;
   activeStep: number;
+  success: boolean;
   steps: string[];
   handleNext: () => void;
   handleBack: () => void;
   nextDisabled?: boolean;
 }> = (props) => {
   const classes = useStyles();
+  const router = useRouter();
+  const handleHome = useCallback(() => {
+    router.push("/");
+  }, [router]);
   return (
     <Paper className={classes.paper}>
       <Typography component="h1" variant="h4" align="center">
@@ -53,8 +59,12 @@ const RegisterFormStepper: React.FC<{
       </Stepper>
       {props.children}
       <div className={classes.buttons}>
-        {props.activeStep !== 0 && (
-          <Button variant="contained" onClick={props.handleBack} className={classes.button}>
+        {props.activeStep !== 0 && !props.success && (
+          <Button
+            variant="contained"
+            onClick={props.handleBack}
+            className={classes.button}
+          >
             Back
           </Button>
         )}
@@ -67,6 +77,15 @@ const RegisterFormStepper: React.FC<{
             disabled={props.nextDisabled ?? false}
           >
             Next
+          </Button>
+        )}
+        {props.success && (
+          <Button
+            variant="contained"
+            onClick={handleHome}
+            className={classes.button}
+          >
+            Back to Home
           </Button>
         )}
       </div>
