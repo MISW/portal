@@ -97,9 +97,6 @@ func (user *User) Validate() error {
 	if !emailValidator.MatchString(user.Email) {
 		return rest.NewBadRequest("メールアドレスの形式が不正です")
 	}
-	if len(user.DiscordID) == 0 {
-		return rest.NewBadRequest("Discord IDを入力してください")
-	}
 
 	return nil
 }
