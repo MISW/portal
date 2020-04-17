@@ -28,3 +28,14 @@ func (c *Client) InviteToTeam(ctx context.Context, firstName, lastName, emailAdd
 
 	return nil
 }
+
+// GetUserProfileByID - UserProfileをIDから取得する
+func (c *Client) GetUserProfileByID(ctx context.Context, id string) (string, error) {
+	user, err := c.client.GetUserInfoContext(ctx, id)
+
+	if err != nil {
+		return "", xerrors.Errorf("failed to get user profile: %w", err)
+	}
+
+	return user.Profile.Email, nil
+}
