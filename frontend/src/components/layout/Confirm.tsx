@@ -1,29 +1,46 @@
-import React from "react";
+import React, { ReactNode } from "react";
 import { Button, FormHelperText } from "@material-ui/core";
 import { UserProfile } from "../../user";
 import { UserValidation } from "../../hooks/formHooks";
+import { SubmitResult } from "./RegisterForm";
+import { Alert } from "@material-ui/lab";
 
 const Confirm: React.FC<{
   user: UserProfile;
   valid: UserValidation;
-  onSubmit: () => void;
-}> = ({ valid, onSubmit }) => {
-  const filledCorrectly = Object.values(valid).reduce((prev, cur) => prev && cur, true);
+  submitResult: SubmitResult;
+  successMessage: ReactNode;
+  onSubmit: () => Promise<void>;
+}> = ({ valid, onSubmit, successMessage, submitResult: submitResult }) => {
+  const filledCorrectly = Object.values(valid).reduce(
+    (prev, cur) => prev && cur,
+    true
+  );
   return (
     <>
-      <Button
-        className="button"
-        variant="contained"
-        color="primary"
-        onClick={(e) => {
-          e.preventDefault();
-          onSubmit();
-        }}
-        disabled={!filledCorrectly}
-      >
-        提出
-      </Button>
-      {!filledCorrectly && <FormHelperText error>フォームが正しく記入されていません</FormHelperText>}
+      {(!submitResult || submitResult.status !== "success") && (
+        <Button
+          className="button"
+          variant="contained"
+          color="primary"
+          onClick={async (e) => {
+            e.preventDefault();
+            onSubmit();
+          }}
+          disabled={!filledCorrectly}
+        >
+          提出
+        </Button>
+      )}
+      {!filledCorrectly && (
+        <FormHelperText error>
+          フォームが正しく記入されていません
+        </FormHelperText>
+      )}
+      {submitResult?.status === "success" && successMessage}
+      {submitResult?.status === "error" && (
+        <Alert severity="error">{submitResult.message}</Alert>
+      )}
     </>
   );
 };

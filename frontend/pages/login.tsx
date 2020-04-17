@@ -9,7 +9,7 @@ const Page: NextPage = () => {
       throw err;
     });
   });
-  return <DefaultLayout>Trying Login...</DefaultLayout>;
+  return <>Trying Login...</>;
 };
 
 export default Page;

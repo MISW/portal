@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, ReactNode } from "react";
 import RegisterFormStepper from "./RegistrationFormStepper";
 import UniversityInfo from "./UniversityInfo";
 import CircleInfo from "./CircleInfo";
@@ -14,11 +14,17 @@ const validateFormContents = (obj: Partial<UserProfileHooks>): boolean => {
   return valid;
 };
 
+export type SubmitResult =
+  | { status: "success" }
+  | { status: "error"; message: string }
+  | null;
+
 const RegisterForm: React.FC<{
   formName: string;
   user?: Partial<UserProfile>;
-  onSubmit: (user: UserProfile) => void;
-}> = ({ formName, user, onSubmit }) => {
+  onSubmit: (user: UserProfile) => Promise<SubmitResult>;
+  successMessage: ReactNode;
+}> = ({ formName, user, onSubmit, successMessage }) => {
   const now = new Date();
   const businessYear = now.getFullYear() - (now.getMonth() + 1 >= 4 ? 0 : 1);
   const genFirstYear = businessYear - 1969 + 4;
@@ -47,11 +53,24 @@ const RegisterForm: React.FC<{
 
   const fundamentalInfo = { name, kana, email, sex, emergencyPhoneNumber };
   const universityInfo = { univName, department, subject, studentId };
-  const circleInfo = { generation, handle, otherCircles, workshops, squads, discordId };
+  const circleInfo = {
+    generation,
+    handle,
+    otherCircles,
+    workshops,
+    squads,
+    discordId,
+  };
 
   const contentHooks = [fundamentalInfo, universityInfo, circleInfo];
 
-  const handleSubmit = useCallback(() => onSubmit(userData), [userData, onSubmit]);
+  const [submitResult, setSubmitResult] = useState<SubmitResult>(null);
+
+  const handleSubmit = useCallback(async () => {
+    const res = await onSubmit(userData);
+    setSubmitResult(res);
+  }, [userData, onSubmit]);
+
   const handleNext = useCallback(() => {
     const hook = contentHooks[activeStep];
     const valid = validateFormContents(hook);
@@ -61,11 +80,15 @@ const RegisterForm: React.FC<{
     }
     setActiveStep(activeStep + 1);
   }, [activeStep, contentHooks]);
-  const handleBack = useCallback(() => setActiveStep(activeStep - 1), [activeStep]);
+  const handleBack = useCallback(() => setActiveStep(activeStep - 1), [
+    activeStep,
+  ]);
 
   if (nextDisabled) {
     const hook = contentHooks[activeStep];
-    const valid = Object.values(hook as Partial<UserProfileHooks>).every((v) => (v ? v.valid : true));
+    const valid = Object.values(hook as Partial<UserProfileHooks>).every((v) =>
+      v ? v.valid : true
+    );
     if (valid) setNextDisabled(false);
   }
 
@@ -77,6 +100,7 @@ const RegisterForm: React.FC<{
       handleBack={handleBack}
       activeStep={activeStep}
       nextDisabled={nextDisabled}
+      success={submitResult?.status === "success"}
     >
       {((step: number) => {
         switch (step) {
@@ -85,9 +109,19 @@ const RegisterForm: React.FC<{
           case 1:
             return <UniversityInfo userHooks={userHooks} />;
           case 2:
-            return <CircleInfo userHooks={userHooks} genFirstYear={genFirstYear} />;
+            return (
+              <CircleInfo userHooks={userHooks} genFirstYear={genFirstYear} />
+            );
           case 3:
-            return <Confirm user={userData} valid={valid} onSubmit={handleSubmit} />;
+            return (
+              <Confirm
+                user={userData}
+                valid={valid}
+                onSubmit={handleSubmit}
+                successMessage={successMessage}
+                submitResult={submitResult}
+              />
+            );
           default:
             throw new Error("Unknown Step");
         }

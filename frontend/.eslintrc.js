@@ -55,6 +55,6 @@ module.exports = {
         "@typescript-eslint/no-explicit-any": 0,
         "react-hooks/rules-of-hooks": "error",
         "react-hooks/exhaustive-deps": "warn",
-        "prettier/prettier": ["error", { printWidth: 120 }]
+        "prettier/prettier": ["error", { printWidth: 80 }]
     }
 };
