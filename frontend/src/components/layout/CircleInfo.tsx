@@ -153,11 +153,30 @@ export const OtherCircleForm: React.FC<FormContentProps<string>> = ({
   </Grid>
 );
 
+export const DiscordIdForm: React.FC<FormContentProps<string>> = ({
+  value,
+  onChange,
+  error,
+}) => (
+  <Grid item xs={12}>
+    <TextField
+      id="other_id"
+      name="discord_id`"
+      label="Discord ID"
+      error={error}
+      fullWidth
+      defaultValue={value}
+      helperText={error ? "[アカウント名]#[数字4ケタ] で入力" : null}
+      onChange={(e) => onChange(e.target.value)}
+    />
+  </Grid>
+);
+
 const CircleInfo: React.FC<{
   userHooks: UserProfileHooks;
   genFirstYear: number;
 }> = ({
-  userHooks: { generation, handle, workshops, otherCircles, squads },
+  userHooks: { generation, handle, workshops, otherCircles, squads, discordId },
   genFirstYear,
 }) => {
   return (
@@ -168,6 +187,7 @@ const CircleInfo: React.FC<{
         <WorkshopsForm {...workshops} />
         <SquadsForm {...squads} />
         <OtherCircleForm {...otherCircles} />
+        <DiscordIdForm {...discordId} />
       </Grid>
     </React.Fragment>
   );
