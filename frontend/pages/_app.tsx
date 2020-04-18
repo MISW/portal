@@ -18,6 +18,8 @@ const App = (props: AppProps) => {
     switch (router.pathname) {
       case "/signup":
         return;
+      case "/signup/form":
+        return;
       case "/login":
         return;
       case "/callback":
@@ -54,7 +56,7 @@ const App = (props: AppProps) => {
   const handleLogout = useCallback(async () => {
     await logout();
     setIsLogin(false);
-    router.push("/");
+    router.reload();
   }, [router]);
 
   const { Component, pageProps } = props;

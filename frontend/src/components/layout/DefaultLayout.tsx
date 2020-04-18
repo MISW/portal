@@ -68,6 +68,10 @@ export const DefaultLayout: React.FC<{ onLogout: () => void }> = ({
   const handleClickProfile = useCallback(() => router.push("/profile"), [
     router,
   ]);
+  const handleLogout = useCallback(() => {
+    handleClose();
+    onLogout();
+  }, [handleClose, onLogout]);
 
   return (
     <>
@@ -117,7 +121,7 @@ export const DefaultLayout: React.FC<{ onLogout: () => void }> = ({
                   onClose={handleClose}
                 >
                   <MenuItem onClick={handleClickProfile}>Profile</MenuItem>
-                  <MenuItem onClick={onLogout}>Log out</MenuItem>
+                  <MenuItem onClick={handleLogout}>Log out</MenuItem>
                 </Menu>
               </div>
             )}
