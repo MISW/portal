@@ -35,7 +35,15 @@ type managementHandler struct {
 
 // ListUsers - ユーザ一覧を返す
 func (mh *managementHandler) ListUsers(e echo.Context) error {
-	users, err := mh.mu.ListUsers(e.Request().Context())
+	var query struct {
+		Period int `query:"period"`
+	}
+
+	if err := e.Bind(&query); err != nil {
+		return rest.RespondMessage(e, rest.NewBadRequest("invalid period"))
+	}
+
+	users, err := mh.mu.ListUsers(e.Request().Context(), query.Period)
 
 	var frerr rest.ErrorResponse
 	if xerrors.As(err, &frerr) {

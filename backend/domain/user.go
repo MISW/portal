@@ -76,6 +76,12 @@ type User struct {
 	UpdatedAt time.Time `json:"updated_at" yaml:"updated_at"`
 }
 
+// UserPaymentStatus - サークル員情報と支払い情報一期分の情報
+type UserPaymentStatus struct {
+	User
+	PaymentStatus *PaymentStatus `json:"payment_status" yaml:"payment_status"`
+}
+
 var (
 	emailValidator = regexp.MustCompile(`^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$`)
 
