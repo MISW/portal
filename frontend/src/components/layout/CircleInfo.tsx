@@ -69,7 +69,7 @@ export const HandleNameForm: React.FC<FormContentProps<string>> = ({
         onBlur={(e) => {
           onChange(e.target.value);
         }}
-        helperText={error ? "入力されていません" : null}
+        helperText={error ? "入力されていません" : "twitterアカウント名など"}
       />
     </Grid>
   );
@@ -162,11 +162,11 @@ export const DiscordIdForm: React.FC<FormContentProps<string>> = ({
     <TextField
       id="other_id"
       name="discord_id`"
-      label="Discord ID"
+      label="Discord ID: [アカウント名]#[数字4ケタ]"
       error={error}
       fullWidth
       defaultValue={value}
-      helperText={error ? "[アカウント名]#[数字4ケタ] で入力" : null}
+      helperText="公式Discordのアカウント整理に使用します"
       onChange={(e) => onChange(e.target.value)}
     />
   </Grid>
