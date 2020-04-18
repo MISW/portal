@@ -24,7 +24,8 @@ const RegisterForm: React.FC<{
   user?: Partial<UserProfile>;
   onSubmit: (user: UserProfile) => Promise<SubmitResult>;
   successMessage: ReactNode;
-}> = ({ formName, user, onSubmit, successMessage }) => {
+  formType: "setting" | "new";
+}> = ({ formName, user, onSubmit, successMessage, formType }) => {
   const now = new Date();
   const businessYear = now.getFullYear() - (now.getMonth() + 1 >= 4 ? 0 : 1);
   const genFirstYear = businessYear - 1969 + 4;
@@ -110,7 +111,11 @@ const RegisterForm: React.FC<{
             return <UniversityInfo userHooks={userHooks} />;
           case 2:
             return (
-              <CircleInfo userHooks={userHooks} genFirstYear={genFirstYear} />
+              <CircleInfo
+                userHooks={userHooks}
+                genFirstYear={genFirstYear}
+                formType={formType}
+              />
             );
           case 3:
             return (
