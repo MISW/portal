@@ -15,6 +15,7 @@ const App = (props: AppProps) => {
   const router = useRouter();
   const [isLogin, setIsLogin] = useState(false);
   useEffect(() => {
+    // TODO: ここのpathによる分岐をなんとかしたい.
     switch (router.pathname) {
       case "/signup":
         return;

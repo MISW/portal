@@ -76,7 +76,7 @@ export const DefaultLayout: React.FC<{ onLogout: () => void }> = ({
   return (
     <>
       <div className="container">
-        <AppBar position="static" color="default" className={classes.appBar}>
+        <AppBar position="static" color="primary" className={classes.appBar}>
           <Toolbar>
             <IconButton
               edge="start"
