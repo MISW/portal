@@ -44,6 +44,7 @@ export type UserInfoJSON = Omit<
   "slack_id" | "role" | "created_at" | "updated_at" | "id"
 > & {
   id?: number;
+  role?: RoleType;
 };
 
 export type UserProfile = Omit<
@@ -54,7 +55,6 @@ export type UserProfile = Omit<
   | "university"
   | "discord_id"
 > & {
-  id?: number;
   otherCircles: UserAllInfoJSON["other_circles"];
   emergencyPhoneNumber: UserAllInfoJSON["emergency_phone_number"];
   studentId: UserAllInfoJSON["student_id"];
@@ -82,6 +82,7 @@ export const toUserProfile = (json: UserInfoJSON): UserProfile => {
     workshops: json.workshops,
     squads: json.squads,
     discordId: json.discord_id,
+    role: json.role,
   };
 };
 
@@ -105,5 +106,6 @@ export const toUserInfoJSON = (p: UserProfile): UserInfoJSON => {
     workshops: p.workshops,
     squads: p.squads,
     discord_id: p.discordId,
+    role: p.role,
   };
 };
