@@ -134,7 +134,8 @@ func (up *userPersistence) Insert(ctx context.Context, user *domain.User) (int, 
 		workshops,
 		squads,
 		role,
-		slack_id
+		slack_id,
+		discord_id
 	) VALUES (
 		:email,
 		:generation,
@@ -151,7 +152,8 @@ func (up *userPersistence) Insert(ctx context.Context, user *domain.User) (int, 
 		:workshops,
 		:squads,
 		:role,
-		:slack_id
+		:slack_id,
+		:discord_id
 	)
 	`, u)
 
@@ -303,7 +305,8 @@ func (up *userPersistence) Update(ctx context.Context, user *domain.User) error 
 		workshops=:workshops,
 		squads=:squads,
 		role=:role,
-		slack_id=:slack_id
+		slack_id=:slack_id,
+		discord_id=:discord_id
 	WHERE id=:id
 	`, u)
 
