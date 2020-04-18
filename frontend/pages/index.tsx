@@ -20,7 +20,7 @@ const Page: NextPage = () => {
       {
         title: "Discord",
         description: "ボイスチャット 2020春はここで",
-        link: "TODO:",
+        link: "https://discord.gg/7e3qqqj",
       },
       {
         title: "Kibela",
@@ -54,16 +54,16 @@ const Page: NextPage = () => {
       </Typography>
       <p>Welcome to MISW!</p>
 
-      <p>MISWでまず何をすべきかを書きたい</p>
+      <p>MISWでまず何をすべきかを書きたい(Kibelaリンクなどを載せて)</p>
       <ol>
         <li>slackの情報を登録</li>
         <li>kibelaの自己紹介記事を書く</li>
-        <li>ディスコードにてサークル員と交流する</li>
+        <li>活動/ディスコードにてサークル員と交流する</li>
         <li>新歓講座に参加する</li>
         <li>発表会に参加する</li>
         <li>企画に参加する/企画を立ち上げる</li>
         <li>その他イベントに参加する/イベントを企画する</li>
-        <li>活動を通してインスピレーションを得て未来の創作につなげる</li>
+        <li>上記活動を通してインスピレーションを得て未来の創作につなげる</li>
       </ol>
       <Typography variant="h6">Useful Links</Typography>
       <Grid container spacing={4}>
