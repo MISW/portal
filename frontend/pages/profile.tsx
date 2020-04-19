@@ -30,6 +30,7 @@ const Page: NextPage = () => {
       ) : (
         <RegisterForm
           formName="会員情報設定"
+          formType="setting"
           user={user}
           onSubmit={onSubmit}
           successMessage={
