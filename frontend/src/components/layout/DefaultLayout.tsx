@@ -3,7 +3,7 @@ import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles, Theme } from "@material-ui/core/styles";
-import { IconButton, MenuItem, Menu } from "@material-ui/core";
+import { IconButton, MenuItem, Menu, Container } from "@material-ui/core";
 import MenuIcon from "@material-ui/icons/Menu";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import MUILink from "@material-ui/core/Link";
@@ -12,7 +12,7 @@ import { useRouter } from "next/router";
 
 const useStyles = makeStyles((theme: Theme) => ({
   appBar: {
-    postion: "relative",
+    position: "relative",
     flexGrow: 1,
   },
   menuButton: {
@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginLeft: theme.spacing(2),
     marginRight: theme.spacing(2),
     [theme.breakpoints.up(600 + theme.spacing(2) * 2)]: {
-      width: 600,
+      // width: 600,
       marginLeft: "auto",
       marginRight: "auto",
     },
@@ -35,14 +35,16 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const Copyright: React.FC = () => {
   return (
-    <Typography variant="body2" color="textSecondary" align="center">
-      {"Copyright © "}
-      <MUILink color="inherit" href="https://misw.jp">
-        MISW
-      </MUILink>{" "}
-      2020
-      {"."}
-    </Typography>
+    <footer>
+      <Typography variant="body2" color="textSecondary" align="center">
+        {"Copyright © "}
+        <MUILink color="inherit" href="https://misw.jp">
+          MISW
+        </MUILink>{" "}
+        2020
+        {"."}
+      </Typography>
+    </footer>
   );
 };
 
@@ -128,7 +130,9 @@ export const DefaultLayout: React.FC<{ onLogout: () => void }> = ({
           </Toolbar>
         </AppBar>
       </div>
-      <main className={classes.layout}>{children}</main>
+      <main className={classes.layout}>
+        <Container maxWidth="lg">{children}</Container>
+      </main>
       <Copyright />
     </>
   );
