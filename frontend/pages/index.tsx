@@ -42,6 +42,11 @@ const Page: NextPage = () => {
         description: "サークル員による外部公開ブログ",
         link: "https://blog.misw.jp",
       },
+      {
+        title: "misw.github.io",
+        description: "主にプロ研の入門記事置き場",
+        link: "https://misw.github.io",
+      },
     ],
     []
   );
