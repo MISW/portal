@@ -1,6 +1,5 @@
 import React from "react";
 import { NextPage } from "next";
-import { DefaultLayout } from "../../src/components/layout/DefaultLayout";
 
 const Page: NextPage = () => {
   return (
