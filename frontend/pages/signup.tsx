@@ -24,6 +24,7 @@ const Page: NextPage<{}> = () => {
   return (
     <RegisterForm
       formName="会員登録"
+      formType="new"
       onSubmit={onSubmit}
       successMessage={
         <>

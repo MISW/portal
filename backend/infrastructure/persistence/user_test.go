@@ -34,6 +34,7 @@ var (
 		Squads:               []string{"Web", "Webデザイン"},
 		Role:                 domain.Admin,
 		SlackID:              "UAJXXXXXX",
+		DiscordID:            "mischan#0123",
 	}
 
 	userTemplate2 = &domain.User{
@@ -55,6 +56,7 @@ var (
 		Squads:               []string{"Web", "Webデザイン"},
 		Role:                 domain.Admin,
 		SlackID:              "UAJXXXXXX",
+		DiscordID:            "mischan#0123",
 	}
 )
 
