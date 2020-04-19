@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
 import { NextPage } from "next";
-import { Typography, Grid } from "@material-ui/core";
+import { Typography, Grid, Container } from "@material-ui/core";
 import LinkContentCard from "../src/components/design/LinkContentCard";
 
 const Page: NextPage = () => {
@@ -47,14 +47,12 @@ const Page: NextPage = () => {
   );
   return (
     <>
-      <Grid container></Grid>
       <Typography variant="h2">
-        Create MISW
-        <br /> with your own hand.
+        Create MISW <br /> with your own hand.
       </Typography>
       <p>Welcome to MISW!</p>
 
-      <p>MISWでまず何をすべきかを書きたい(Kibelaリンクなどを載せて)</p>
+      <Typography variant="h6">Getting Started</Typography>
       <ol>
         <li>slackの情報を登録</li>
         <li>kibelaの自己紹介記事を書く</li>

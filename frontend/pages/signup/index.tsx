@@ -6,7 +6,7 @@ import { Button } from "@material-ui/core";
 const Page: NextPage<{}> = () => {
   return (
     <>
-      <p>ここに会員登録の仕方を書く</p>
+      <p>会員登録方法</p>
       <ol>
         <li>フォームを埋める</li>
         <li>送信される確認メールをチェック</li>
