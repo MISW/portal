@@ -33,7 +33,7 @@ FROM node:12.14.1-alpine
 ADD ./frontend /frontend
 WORKDIR /frontend
 
-RUN npm install && npm run build
+RUN npm install && npm run build && apk add --update --no-cache tzdata
 
 COPY --from=tools /usr/local/bin/dockerize /bin
 COPY --from=tools /usr/local/bin/mysqldef /bin
