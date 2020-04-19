@@ -41,10 +41,10 @@ COPY --from=tools /usr/local/bin/dbenv /bin
 COPY --from=build-backend /backend/portal /bin/portal 
 COPY --from=build-backend /backend/schema /schema
 
-ENV ENVIRONMENT=prod
+ENV ENVIRONMENT=dev
 
 COPY ./scripts/* /bin/
 ADD ./config /config
 
-ENTRYPOINT [ "/bin/docker-entrypoint.sh" ]
+ENTRYPOINT [ "/bin/docker-entrypoint.single.sh" ]
 CMD [ "-w", "-m" ]
