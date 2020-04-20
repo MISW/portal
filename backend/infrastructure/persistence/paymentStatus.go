@@ -56,7 +56,7 @@ type paymentStatusPersistence struct {
 
 var _ repository.PaymentStatusRepository = &paymentStatusPersistence{}
 
-// Insert - 新しい支払情報の追加
+// Add - 新しい支払情報の追加
 func (psp *paymentStatusPersistence) Add(ctx context.Context, userID, period, authorizer int) error {
 	_, err := psp.db.Exec(
 		`INSERT INTO payment_statuses (
@@ -73,6 +73,21 @@ func (psp *paymentStatusPersistence) Add(ctx context.Context, userID, period, au
 		}
 
 		return xerrors.Errorf("failed to add new payment status: %w", err)
+	}
+
+	return nil
+}
+
+// Delete - 支払情報の削除
+func (psp *paymentStatusPersistence) Delete(ctx context.Context, userID, period int) error {
+	_, err := psp.db.Exec(
+		`DELETE FROM payment_statuses WHERE user_id=? AND period=?`,
+		userID,
+		period,
+	)
+
+	if err != nil {
+		return xerrors.Errorf("failed to delete payment status: %w", err)
 	}
 
 	return nil
