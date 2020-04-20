@@ -12,6 +12,9 @@ type PaymentStatusRepository interface {
 	// Add - 新しい支払情報の追加
 	Add(ctx context.Context, userID, period int, authorizer int) error
 
+	// Delete - 支払情報を削除
+	Delete(ctx context.Context, userID, period int) error
+
 	// GetLatestByUser - 最新の支払情報の取得
 	GetLatestByUser(ctx context.Context, userID int) (*domain.PaymentStatus, error)
 
