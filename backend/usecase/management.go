@@ -20,6 +20,15 @@ type ManagementUsecase interface {
 
 	// AuthorizeTransaction - 支払い済登録申請を許可する
 	AuthorizeTransaction(ctx context.Context, token string, authorizer int) error
+
+	// AddPaymentStatus - 支払い情報を追加(QRコード経由せず)
+	AddPaymentStatus(ctx context.Context, ps *domain.PaymentStatus) error
+
+	// DeletePaymentStatus - 支払い情報を追加(QRコード経由せず)
+	DeletePaymentStatus(ctx context.Context, userID, period int) error
+
+	// GetPaymentStatusesForUser - あるユーザの支払い情報一覧を取得する
+	GetPaymentStatusesForUser(ctx context.Context, userID int) error
 }
 
 type managementUsecase struct {
@@ -92,4 +101,16 @@ func (mu *managementUsecase) AuthorizeTransaction(ctx context.Context, token str
 	}
 
 	return nil
+}
+
+func (mu *managementUsecase) AddPaymentStatus(ctx context.Context, ps *domain.PaymentStatus) error {
+	panic("not implemented")
+}
+
+func (mu *managementUsecase) DeletePaymentStatus(ctx context.Context, userID, period int) error {
+	panic("not implemented")
+}
+
+func (mu *managementUsecase) GetPaymentStatusesForUser(ctx context.Context, userID int) error {
+	panic("not implemented")
 }
