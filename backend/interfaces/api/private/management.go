@@ -1,6 +1,7 @@
 package private
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/MISW/Portal/backend/domain"
@@ -18,6 +19,15 @@ type ManagementHandler interface {
 
 	// AuthorizeTransaction - 支払い申請を許可する
 	AuthorizeTransaction(e echo.Context) error
+
+	// AddPaymentStatus - 支払い情報を追加(QRコード経由せず)
+	AddPaymentStatus(e echo.Context) error
+
+	// DeletePaymentStatus - 支払い情報を追加(QRコード経由せず)
+	DeletePaymentStatus(e echo.Context) error
+
+	// GetPaymentStatusesForUser - あるユーザの支払い情報一覧を取得する
+	GetPaymentStatusesForUser(e echo.Context) error
 }
 
 // NewManagementHandler - ManagementHandlerを初期化
@@ -58,7 +68,7 @@ func (mh *managementHandler) AuthorizeTransaction(e echo.Context) error {
 	}
 
 	if err := e.Bind(&param); err != nil {
-		return rest.RespondMessage(e, rest.NewBadRequest("token is missing"))
+		return rest.RespondMessage(e, rest.NewBadRequest(fmt.Sprintf("token is missing: %v", err)))
 	}
 
 	err := mh.mu.AuthorizeTransaction(e.Request().Context(), param.Token, user.ID)
@@ -73,4 +83,41 @@ func (mh *managementHandler) AuthorizeTransaction(e echo.Context) error {
 	}
 
 	return rest.RespondOK(e, nil)
+}
+
+// AddPaymentStatus - 支払い情報を追加(QRコード経由せず)
+func (mh *managementHandler) AddPaymentStatus(e echo.Context) error {
+	user := e.Get(middleware.UserKey).(*domain.User)
+
+	var param struct {
+		UserID int `json:"user_id" query:"user_id"`
+		Period int `json:"period" query:"period"`
+	}
+
+	if err := e.Bind(&param); err != nil {
+		return rest.RespondMessage(e, rest.NewBadRequest(fmt.Sprintf("invalid request values: %v", err)))
+	}
+
+	err := mh.mu.AddPaymentStatus(e.Request().Context(), param.UserID, param.Period, user.ID)
+
+	var frerr rest.ErrorResponse
+	if xerrors.As(err, &frerr) {
+		return rest.RespondMessage(e, frerr)
+	}
+
+	if err != nil {
+		return xerrors.Errorf("failed to add payment status: %w", err)
+	}
+
+	return nil
+}
+
+// DeletePaymentStatus - 支払い情報を追加(QRコード経由せず)
+func (mh *managementHandler) DeletePaymentStatus(e echo.Context) error {
+	panic("not implemented")
+}
+
+// GetPaymentStatusesForUser - あるユーザの支払い情報一覧を取得する
+func (mh *managementHandler) GetPaymentStatusesForUser(e echo.Context) error {
+	panic("not implemented")
 }

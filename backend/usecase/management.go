@@ -104,6 +104,15 @@ func (mu *managementUsecase) AuthorizeTransaction(ctx context.Context, token str
 }
 
 func (mu *managementUsecase) AddPaymentStatus(ctx context.Context, userID, period, authorizer int) error {
+	if period == 0 {
+		var err error
+		period, err = mu.appConfigRepository.GetPaymentPeriod()
+
+		if err != nil {
+			return xerrors.Errorf("failed to get current payment period from app config: %w", err)
+		}
+	}
+
 	if err := mu.paymentStatusRepository.Add(ctx, userID, period, authorizer); err != nil {
 		if xerrors.Is(err, domain.ErrAlreadyPaid) {
 			return rest.NewConflict("すでに支払い済みです")
