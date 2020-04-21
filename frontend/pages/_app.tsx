@@ -15,8 +15,11 @@ const App = (props: AppProps) => {
   const router = useRouter();
   const [isLogin, setIsLogin] = useState(false);
   useEffect(() => {
+    // TODO: ここのpathによる分岐をなんとかしたい.
     switch (router.pathname) {
       case "/signup":
+        return;
+      case "/signup/form":
         return;
       case "/login":
         return;
@@ -54,7 +57,7 @@ const App = (props: AppProps) => {
   const handleLogout = useCallback(async () => {
     await logout();
     setIsLogin(false);
-    router.push("/");
+    router.reload();
   }, [router]);
 
   const { Component, pageProps } = props;
