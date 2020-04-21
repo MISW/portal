@@ -3,6 +3,7 @@ import {
   UserInfoJSON,
   toUserProfile,
   toUserInfoJSON,
+  UserWithPaymentJSON,
 } from "./user";
 
 const getHostAPI = () => `${location.protocol}//${location.host}/api`;
@@ -104,4 +105,21 @@ export const logout = async () => {
     console.error(res);
     return Promise.reject("Error: status-code >= 400");
   }
+};
+
+export const listUsers = async (): Promise<Array<UserWithPaymentJSON>> => {
+  const res = await fetch(`${getHostAPI()}/private/management/list_users`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "include",
+  });
+  if (res.status >= 400) {
+    console.error(res);
+    return Promise.reject("Error: status-code >= 400");
+  }
+  const userList = (await res.json()) as Array<UserWithPaymentJSON>;
+  console.log(userList);
+  return userList;
 };

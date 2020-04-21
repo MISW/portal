@@ -1,3 +1,5 @@
+import { isString, isObject } from "util";
+
 export type SexType = "male" | "female" | "other";
 
 export type RoleType =
@@ -14,6 +16,14 @@ export interface University {
   name: string;
   department: string;
   subject: string;
+}
+
+export interface PaymentStatus {
+  user_id: number;
+  authorizer: number;
+  period: number;
+  created_at: string;
+  updated_at: string;
 }
 
 export interface UserAllInfoJSON {
@@ -39,6 +49,10 @@ export interface UserAllInfoJSON {
   updated_at: number;
 }
 
+export type UserWithPaymentJSON = UserAllInfoJSON & {
+  payment_status: PaymentStatus;
+};
+
 export type UserInfoJSON = Omit<
   UserAllInfoJSON,
   "slack_id" | "role" | "created_at" | "updated_at" | "id"
@@ -47,24 +61,7 @@ export type UserInfoJSON = Omit<
   role?: RoleType;
 };
 
-export type UserProfile = Omit<
-  UserInfoJSON,
-  | "other_circles"
-  | "emergency_phone_number"
-  | "student_id"
-  | "university"
-  | "discord_id"
-> & {
-  otherCircles: UserAllInfoJSON["other_circles"];
-  emergencyPhoneNumber: UserAllInfoJSON["emergency_phone_number"];
-  studentId: UserAllInfoJSON["student_id"];
-  univName: University["name"];
-  department: University["department"];
-  subject: University["subject"];
-  discordId: UserAllInfoJSON["discord_id"];
-};
-
-export const toUserProfile = (json: UserInfoJSON): UserProfile => {
+export const toUserProfile = (json: UserInfoJSON) => {
   return {
     id: json.id,
     email: json.email,
@@ -85,6 +82,8 @@ export const toUserProfile = (json: UserInfoJSON): UserProfile => {
     role: json.role,
   };
 };
+
+export type UserProfile = ReturnType<typeof toUserProfile>;
 
 export const toUserInfoJSON = (p: UserProfile): UserInfoJSON => {
   return {
