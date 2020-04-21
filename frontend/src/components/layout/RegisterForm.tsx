@@ -6,6 +6,7 @@ import FundamentalInfo from "./FundamentalInfo";
 import { UserProfile } from "../../user";
 import Confirm from "./Confirm";
 import { useUser, UserProfileHooks } from "../../hooks/formHooks";
+import { Container } from "@material-ui/core";
 
 const steps = ["基本情報", "学籍情報", "サークル内情報", "確認"];
 
@@ -24,7 +25,8 @@ const RegisterForm: React.FC<{
   user?: Partial<UserProfile>;
   onSubmit: (user: UserProfile) => Promise<SubmitResult>;
   successMessage: ReactNode;
-}> = ({ formName, user, onSubmit, successMessage }) => {
+  formType: "setting" | "new";
+}> = ({ formName, user, onSubmit, successMessage, formType }) => {
   const now = new Date();
   const businessYear = now.getFullYear() - (now.getMonth() + 1 >= 4 ? 0 : 1);
   const genFirstYear = businessYear - 1969 + 4;
@@ -93,40 +95,46 @@ const RegisterForm: React.FC<{
   }
 
   return (
-    <RegisterFormStepper
-      formName={formName}
-      steps={steps}
-      handleNext={handleNext}
-      handleBack={handleBack}
-      activeStep={activeStep}
-      nextDisabled={nextDisabled}
-      success={submitResult?.status === "success"}
-    >
-      {((step: number) => {
-        switch (step) {
-          case 0:
-            return <FundamentalInfo userHooks={userHooks} />;
-          case 1:
-            return <UniversityInfo userHooks={userHooks} />;
-          case 2:
-            return (
-              <CircleInfo userHooks={userHooks} genFirstYear={genFirstYear} />
-            );
-          case 3:
-            return (
-              <Confirm
-                user={userData}
-                valid={valid}
-                onSubmit={handleSubmit}
-                successMessage={successMessage}
-                submitResult={submitResult}
-              />
-            );
-          default:
-            throw new Error("Unknown Step");
-        }
-      })(activeStep)}
-    </RegisterFormStepper>
+    <Container maxWidth="sm">
+      <RegisterFormStepper
+        formName={formName}
+        steps={steps}
+        handleNext={handleNext}
+        handleBack={handleBack}
+        activeStep={activeStep}
+        nextDisabled={nextDisabled}
+        success={submitResult?.status === "success"}
+      >
+        {((step: number) => {
+          switch (step) {
+            case 0:
+              return <FundamentalInfo userHooks={userHooks} />;
+            case 1:
+              return <UniversityInfo userHooks={userHooks} />;
+            case 2:
+              return (
+                <CircleInfo
+                  userHooks={userHooks}
+                  genFirstYear={genFirstYear}
+                  formType={formType}
+                />
+              );
+            case 3:
+              return (
+                <Confirm
+                  user={userData}
+                  valid={valid}
+                  onSubmit={handleSubmit}
+                  successMessage={successMessage}
+                  submitResult={submitResult}
+                />
+              );
+            default:
+              throw new Error("Unknown Step");
+          }
+        })(activeStep)}
+      </RegisterFormStepper>
+    </Container>
   );
 };
 

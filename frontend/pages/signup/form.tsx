@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import { NextPage } from "next";
 import RegisterForm, {
   SubmitResult,
-} from "../src/components/layout/RegisterForm";
-import { signUp } from "../src/network";
-import { UserProfile } from "../src/user";
+} from "../../src/components/layout/RegisterForm";
+import { signUp } from "../../src/network";
+import { UserProfile } from "../../src/user";
 import { Alert } from "@material-ui/lab";
 
 const Page: NextPage<{}> = () => {
@@ -24,6 +24,7 @@ const Page: NextPage<{}> = () => {
   return (
     <RegisterForm
       formName="会員登録"
+      formType="new"
       onSubmit={onSubmit}
       successMessage={
         <>
