@@ -24,6 +24,9 @@ type ManagementUsecase interface {
 	// AddPaymentStatus - 支払い情報を追加(QRコード経由せず)
 	AddPaymentStatus(ctx context.Context, userID, period, authorizer int) error
 
+	// GetPaymentStatus - 特定の支払い情報を取得する
+	GetPaymentStatus(ctx context.Context, userID, period int) (*domain.PaymentStatus, error)
+
 	// DeletePaymentStatus - 支払い情報を追加(QRコード経由せず)
 	DeletePaymentStatus(ctx context.Context, userID, period int) error
 
@@ -130,6 +133,20 @@ func (mu *managementUsecase) DeletePaymentStatus(ctx context.Context, userID, pe
 	}
 
 	return nil
+}
+
+func (mu *managementUsecase) GetPaymentStatus(ctx context.Context, userID, period int) (*domain.PaymentStatus, error) {
+	ps, err := mu.paymentStatusRepository.Get(ctx, userID, period)
+
+	if xerrors.Is(err, domain.ErrNoPaymentStatus) {
+		return nil, rest.NewNotFound("存在しない支払い情報です")
+	}
+
+	if err != nil {
+		return nil, xerrors.Errorf("failed to get payment status(userid: %d, period: %d): %w", userID, period, err)
+	}
+
+	return ps, nil
 }
 
 func (mu *managementUsecase) GetPaymentStatusesForUser(ctx context.Context, userID int) ([]*domain.PaymentStatus, error) {
