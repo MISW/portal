@@ -18,11 +18,18 @@ import {
 import { UserProfileHooks, FormContentProps } from "../../hooks/formHooks";
 
 export const GenerationSelector: React.FC<
-  FormContentProps<number> & { genFirstYear: number }
-> = ({ value, onChange, genFirstYear }) => {
+  FormContentProps<number> & {
+    genFirstYear: number;
+    formType: "setting" | "new";
+  }
+> = ({ value, onChange, genFirstYear, formType }) => {
   return (
     <Grid item xs={12}>
-      <FormControl component="fieldset" required>
+      <FormControl
+        component="fieldset"
+        required
+        disabled={formType === "setting"}
+      >
         <FormLabel component="legend">代</FormLabel>
         <RadioGroup
           aria-label="gender"
@@ -96,6 +103,7 @@ export const WorkshopsForm: React.FC<FormContentProps<Array<string>>> = ({
           multiple
           value={Array.from(workshops)}
           onChange={(e) => {
+            e.preventDefault();
             onChange([...(e.target.value as string[])]);
             console.log(e.target.value);
           }}
@@ -175,14 +183,20 @@ export const DiscordIdForm: React.FC<FormContentProps<string>> = ({
 const CircleInfo: React.FC<{
   userHooks: UserProfileHooks;
   genFirstYear: number;
+  formType: "setting" | "new";
 }> = ({
   userHooks: { generation, handle, workshops, otherCircles, squads, discordId },
   genFirstYear,
+  formType,
 }) => {
   return (
     <React.Fragment>
       <Grid container spacing={3}>
-        <GenerationSelector genFirstYear={genFirstYear} {...generation} />
+        <GenerationSelector
+          genFirstYear={genFirstYear}
+          {...generation}
+          formType={formType}
+        />
         <HandleNameForm {...handle} />
         <WorkshopsForm {...workshops} />
         <SquadsForm {...squads} />
