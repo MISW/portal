@@ -217,7 +217,7 @@ const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
           id="tableTitle"
           component="div"
         >
-          ユーザー一覧
+          [管理者] ユーザー一覧
         </Typography>
       )}
       TODO: 人を選択してこのボタンで会費を払ったことを設定できるようにする.

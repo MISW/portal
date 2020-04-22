@@ -59,7 +59,24 @@ export type UserInfoJSON = Omit<
   role?: RoleType;
 };
 
-export const toUserProfile = (json: UserInfoJSON) => {
+export type UserProfile = Omit<
+  UserInfoJSON,
+  | "other_circles"
+  | "emergency_phone_number"
+  | "student_id"
+  | "university"
+  | "discord_id"
+> & {
+  otherCircles: UserAllInfoJSON["other_circles"];
+  emergencyPhoneNumber: UserAllInfoJSON["emergency_phone_number"];
+  studentId: UserAllInfoJSON["student_id"];
+  univName: University["name"];
+  department: University["department"];
+  subject: University["subject"];
+  discordId: UserAllInfoJSON["discord_id"];
+};
+
+export const toUserProfile = (json: UserInfoJSON): UserProfile => {
   return {
     id: json.id,
     email: json.email,
@@ -80,8 +97,6 @@ export const toUserProfile = (json: UserInfoJSON) => {
     role: json.role,
   };
 };
-
-export type UserProfile = ReturnType<typeof toUserProfile>;
 
 export const toUserInfoJSON = (p: UserProfile): UserInfoJSON => {
   return {
