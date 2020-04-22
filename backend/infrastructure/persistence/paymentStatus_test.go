@@ -106,6 +106,21 @@ func TestPaymentStatusGet(t *testing.T) {
 		comparePaymentStatus(t, paymentStatusTemplate, ps)
 	})
 
+	t.Run("get", func(t *testing.T) {
+		conn := testutil.NewSQLConn(t)
+
+		psp := persistence.NewPaymentStatusPersistence(conn)
+
+		insertTestPaymentStatusData(t, psp)
+
+		ps, err := psp.Get(context.Background(), paymentStatusTemplate.UserID, paymentStatusTemplate.Period)
+
+		if err != nil {
+			t.Fatalf("failed to get latest payment status by id: %+v", err)
+		}
+
+		comparePaymentStatus(t, paymentStatusTemplate, ps)
+	})
 }
 
 func TestPaymentStatusList(t *testing.T) {

@@ -226,11 +226,16 @@ func initHandler(cfg *config.Config, addr string) *echo.Echo {
 		}
 
 		if err := digc.Invoke(func(mh private.ManagementHandler) {
-			prof := g.Group("/management")
-			prof.Use(middleware.NewRoleValidationMiddleware(domain.Admin).Authenticate)
+			g := g.Group("/management")
+			g.Use(middleware.NewRoleValidationMiddleware(domain.Admin).Authenticate)
 
-			prof.GET("/list_users", mh.ListUsers)
-			prof.POST("/authorize_transaction", mh.AuthorizeTransaction)
+			g.GET("/list_users", mh.ListUsers)
+			g.POST("/authorize_transaction", mh.AuthorizeTransaction)
+
+			g.GET("/payment_status", mh.GetPaymentStatus)
+			g.DELETE("/payment_status", mh.DeletePaymentStatus)
+			g.PUT("/payment_status", mh.AddPaymentStatus)
+			g.GET("/payment_statuses", mh.GetPaymentStatuses)
 		}); err != nil {
 			return err
 		}
