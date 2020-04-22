@@ -2,7 +2,6 @@ package private
 
 import (
 	"fmt"
-	"net/http"
 
 	"github.com/MISW/Portal/backend/domain"
 	"github.com/MISW/Portal/backend/internal/middleware"
@@ -48,7 +47,15 @@ type managementHandler struct {
 
 // ListUsers - ユーザ一覧を返す
 func (mh *managementHandler) ListUsers(e echo.Context) error {
-	users, err := mh.mu.ListUsers(e.Request().Context())
+	var query struct {
+		Period int `query:"period"`
+	}
+
+	if err := e.Bind(&query); err != nil {
+		return rest.RespondMessage(e, rest.NewBadRequest("invalid period"))
+	}
+
+	users, err := mh.mu.ListUsers(e.Request().Context(), query.Period)
 
 	var frerr rest.ErrorResponse
 	if xerrors.As(err, &frerr) {
@@ -59,7 +66,12 @@ func (mh *managementHandler) ListUsers(e echo.Context) error {
 		return xerrors.Errorf("failed to list users: %w", err)
 	}
 
-	return e.JSON(http.StatusOK, users)
+	return rest.RespondOK(
+		e,
+		map[string]interface{}{
+			"users": users,
+		},
+	)
 }
 
 // AuthorizeTransaction - 支払い申請を許可する

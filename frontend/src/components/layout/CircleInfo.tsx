@@ -103,6 +103,7 @@ export const WorkshopsForm: React.FC<FormContentProps<Array<string>>> = ({
           multiple
           value={Array.from(workshops)}
           onChange={(e) => {
+            e.preventDefault();
             onChange([...(e.target.value as string[])]);
             console.log(e.target.value);
           }}
