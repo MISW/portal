@@ -80,7 +80,7 @@ func (psp *paymentStatusPersistence) Add(ctx context.Context, userID, period, au
 
 // Get - 特定の支払い情報の取得
 func (psp *paymentStatusPersistence) Get(ctx context.Context, userID, period int) (*domain.PaymentStatus, error) {
-	ps := &domain.PaymentStatus{}
+	ps := &paymentStatus{}
 
 	err := sqlx.GetContext(
 		ctx, psp.db, ps,
@@ -96,7 +96,7 @@ func (psp *paymentStatusPersistence) Get(ctx context.Context, userID, period int
 		return nil, xerrors.Errorf("failed to get payment status for (userid: %d, period: %d): %w", userID, period, err)
 	}
 
-	return ps, nil
+	return parsePaymentStatus(ps), nil
 }
 
 // Delete - 支払情報の削除
