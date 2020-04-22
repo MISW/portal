@@ -1,5 +1,5 @@
 import { useState, useCallback, useMemo } from "react";
-import { UserProfile } from "../user";
+import { ConfigurableProfile } from "../user";
 
 type UserHook<T> = {
   value: T;
@@ -45,12 +45,12 @@ export interface FormContentProps<T> {
 }
 
 export type UserProfileHooks = {
-  [P in keyof UserProfile]: UserHook<UserProfile[P]>;
+  [P in keyof ConfigurableProfile]: UserHook<ConfigurableProfile[P]>;
 };
 // user情報を操作するためのフックを返す.
 const useUserHooks = (
   genFirstYear: number,
-  user?: Partial<UserProfile>
+  user?: Partial<ConfigurableProfile>
 ): UserProfileHooks => {
   return {
     email: useStateWithValidate(user?.email ?? "", (value) =>
@@ -93,13 +93,13 @@ const useUserHooks = (
   };
 };
 
-export type UserValidation = { [P in keyof UserProfile]: boolean };
+export type UserValidation = { [P in keyof ConfigurableProfile]: boolean };
 
 export const useUser = (
   genFirstYear: number,
-  user?: Partial<UserProfile>
+  user?: Partial<ConfigurableProfile>
 ): {
-  user: UserProfile;
+  user: ConfigurableProfile;
   valid: UserValidation;
   userHooks: UserProfileHooks;
 } => {
@@ -107,7 +107,7 @@ export const useUser = (
   const retUser = Object.entries(userHooks).reduce(
     (prev, [k, v]) => ({ [k]: v?.value ?? true, ...prev }),
     {}
-  ) as UserProfile;
+  ) as ConfigurableProfile;
   const valid = Object.entries(userHooks).reduce(
     (prev, [k, v]) => ({ [k]: v?.valid ?? true, ...prev }),
     {}
