@@ -231,7 +231,6 @@ func initHandler(cfg *config.Config, addr string) *echo.Echo {
 
 			g.GET("/list_users", mh.ListUsers)
 			g.POST("/authorize_transaction", mh.AuthorizeTransaction)
-			g.GET("/list_users", mh.ListUsers)
 
 			g.GET("/payment_status", mh.GetPaymentStatus)
 			g.DELETE("/payment_status", mh.DeletePaymentStatus)
