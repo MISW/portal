@@ -16,7 +16,7 @@ import (
 // ManagementUsecase - 管理者が利用する処理の一覧
 type ManagementUsecase interface {
 	// ListUsers - 全てのユーザを一覧表示する
-	ListUsers(ctx context.Context) ([]*domain.User, error)
+	ListUsers(ctx context.Context, period int) ([]*domain.UserPaymentStatus, error)
 
 	// AuthorizeTransaction - 支払い済登録申請を許可する
 	AuthorizeTransaction(ctx context.Context, token string, authorizer int) error
@@ -58,14 +58,44 @@ func NewManagementUsecase(
 
 var _ ManagementUsecase = &managementUsecase{}
 
-func (mu *managementUsecase) ListUsers(ctx context.Context) ([]*domain.User, error) {
+func (mu *managementUsecase) ListUsers(ctx context.Context, period int) ([]*domain.UserPaymentStatus, error) {
 	users, err := mu.userRepository.List(ctx)
 
 	if err != nil {
 		return nil, xerrors.Errorf("failed to list users: %w", err)
 	}
 
-	return users, nil
+	if period == 0 {
+		period, err = mu.appConfigRepository.GetPaymentPeriod()
+
+		if err != nil {
+			return nil, xerrors.Errorf("failed to get current period from app config: %w", err)
+		}
+	}
+
+	pss, err := mu.paymentStatusRepository.ListUsersForPeriod(ctx, period)
+
+	if err != nil {
+		return nil, xerrors.Errorf("failed to list users for period(%d): %w", period, err)
+	}
+
+	psmap := map[int]*domain.PaymentStatus{}
+	for i := range pss {
+		psmap[pss[i].UserID] = pss[i]
+	}
+
+	uts := make([]*domain.UserPaymentStatus, len(users))
+
+	for i := range uts {
+		ps, _ := psmap[users[i].ID]
+
+		uts[i] = &domain.UserPaymentStatus{
+			User:          *users[i],
+			PaymentStatus: ps,
+		}
+	}
+
+	return uts, nil
 }
 
 func (mu *managementUsecase) AuthorizeTransaction(ctx context.Context, token string, authorizer int) error {

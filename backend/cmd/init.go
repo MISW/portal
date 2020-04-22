@@ -16,10 +16,12 @@ import (
 	"github.com/MISW/Portal/backend/internal/jwt"
 	"github.com/MISW/Portal/backend/internal/middleware"
 	"github.com/MISW/Portal/backend/internal/oidc"
+	"github.com/MISW/Portal/backend/internal/slack"
 	"github.com/MISW/Portal/backend/usecase"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jmoiron/sqlx"
 	echo "github.com/labstack/echo/v4"
+	echomiddleware "github.com/labstack/echo/v4/middleware"
 	"github.com/labstack/gommon/log"
 	"go.uber.org/dig"
 	"golang.org/x/xerrors"
@@ -48,6 +50,14 @@ func initDig(cfg *config.Config, addr string) *dig.Container {
 		}
 
 		return auth, nil
+	})
+
+	if err != nil {
+		panic(err)
+	}
+
+	err = c.Provide(func() *slack.Client {
+		return slack.NewClient(cfg.SlackToken, cfg.SlackTeamID)
 	})
 
 	if err != nil {
@@ -138,6 +148,10 @@ func initDig(cfg *config.Config, addr string) *dig.Container {
 	if err != nil {
 		panic(err)
 	}
+	err = c.Provide(usecase.NewWebhookUsecase)
+	if err != nil {
+		panic(err)
+	}
 
 	err = c.Provide(private.NewSessionHandler)
 	if err != nil {
@@ -153,6 +167,12 @@ func initDig(cfg *config.Config, addr string) *dig.Container {
 	}
 
 	err = c.Provide(public.NewSessionHandler)
+	if err != nil {
+		panic(err)
+	}
+	err = c.Provide(func(wu usecase.WebhookUsecase) public.WebhookHandler {
+		return public.NewWebhookHandler(cfg.SlackSigningSecret, wu)
+	})
 	if err != nil {
 		panic(err)
 	}
@@ -181,6 +201,8 @@ func initDig(cfg *config.Config, addr string) *dig.Container {
 
 func initHandler(cfg *config.Config, addr string) *echo.Echo {
 	e := echo.New()
+	e.Use(echomiddleware.Logger())
+	e.Use(echomiddleware.Recover())
 
 	c, _ := yaml.Marshal(e.Routes())
 	e.Logger.Infof("addr: %s,\nconfig: %s", addr, c)
@@ -226,13 +248,23 @@ func initHandler(cfg *config.Config, addr string) *echo.Echo {
 		panic(err)
 	}
 
-	err = digc.Invoke(func(sh public.SessionHandler) {
+	err = digc.Invoke(func(sh public.SessionHandler) error {
 		g := e.Group("/api/public")
 
 		g.POST("/login", sh.Login)
 		g.POST("/callback", sh.Callback)
 		g.POST("/signup", sh.Signup)
 		g.POST("/verify_email", sh.VerifyEmail)
+
+		if err := digc.Invoke(func(wu public.WebhookHandler) {
+			g := g.Group("/webhook")
+
+			g.POST("/slack", wu.Slack)
+		}); err != nil {
+			return err
+		}
+
+		return nil
 	})
 
 	if err != nil {
