@@ -27,7 +27,7 @@ import FilterListIcon from "@material-ui/icons/FilterList";
 import { PaymentTableData } from "../../user";
 
 export type Data = PaymentTableData extends Record<string, string | number> & {
-  name: string;
+  id: number;
 }
   ? PaymentTableData
   : never;
@@ -81,7 +81,7 @@ const useStyles = makeStyles((theme: Theme) =>
       marginBottom: theme.spacing(2),
     },
     table: {
-      minWidth: 750,
+      minWidth: 3000,
     },
     visuallyHidden: {
       border: 0,
@@ -217,9 +217,10 @@ const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
           id="tableTitle"
           component="div"
         >
-          Nutrition
+          ユーザー一覧
         </Typography>
       )}
+      TODO: 人を選択してこのボタンで会費を払ったことを設定できるようにする.
       {numSelected > 0 ? (
         <Tooltip title="Delete">
           <IconButton aria-label="delete">
@@ -245,10 +246,10 @@ export const EnhancedTable: React.FC<{
   const classes = useStyles();
   const [order, setOrder] = React.useState<Order>("asc");
   const [orderBy, setOrderBy] = React.useState<keyof Data>(defaultSortedBy);
-  const [selected, setSelected] = React.useState<string[]>([]);
+  const [selected, setSelected] = React.useState<number[]>([]);
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [rowsPerPage, setRowsPerPage] = React.useState(25);
 
   const handleRequestSort = (
     event: React.MouseEvent<unknown>,
@@ -261,19 +262,19 @@ export const EnhancedTable: React.FC<{
 
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
-      const newSelecteds = rows.map((n) => n.name);
+      const newSelecteds = rows.map((n) => n.id);
       setSelected(newSelecteds);
       return;
     }
     setSelected([]);
   };
 
-  const handleClick = (event: React.MouseEvent<unknown>, name: string) => {
-    const selectedIndex = selected.indexOf(name);
-    let newSelected: string[] = [];
+  const handleClick = (event: React.MouseEvent<unknown>, id: number) => {
+    const selectedIndex = selected.indexOf(id);
+    let newSelected: number[] = [];
 
     if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
+      newSelected = newSelected.concat(selected, id);
     } else if (selectedIndex === 0) {
       newSelected = newSelected.concat(selected.slice(1));
     } else if (selectedIndex === selected.length - 1) {
@@ -303,7 +304,7 @@ export const EnhancedTable: React.FC<{
     setDense(event.target.checked);
   };
 
-  const isSelected = (name: string) => selected.indexOf(name) !== -1;
+  const isSelected = (id: number) => selected.indexOf(id) !== -1;
 
   const emptyRows =
     rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
@@ -333,13 +334,13 @@ export const EnhancedTable: React.FC<{
               {stableSort(rows, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
-                  const isItemSelected = isSelected(row.name);
+                  const isItemSelected = isSelected(row.id);
                   const labelId = `enhanced-table-checkbox-${index}`;
 
                   return (
                     <TableRow
                       hover
-                      onClick={(event) => handleClick(event, row.name)}
+                      onClick={(event) => handleClick(event, row.id)}
                       role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}
@@ -358,13 +359,15 @@ export const EnhancedTable: React.FC<{
                         scope="row"
                         padding="none"
                       >
-                        {row.name}
+                        {row.id}
                       </TableCell>
-                      {Object.values(row).map((v, i) => (
-                        <TableCell align="right" key={`map${i}`}>
-                          {v}
-                        </TableCell>
-                      ))}
+                      {headCells
+                        .filter(({ id }) => id !== "id")
+                        .map(({ id: propertyName }) => (
+                          <TableCell align="left" key={propertyName}>
+                            {row[propertyName]}
+                          </TableCell>
+                        ))}
                     </TableRow>
                   );
                 })}
