@@ -56,7 +56,7 @@ type paymentStatusPersistence struct {
 
 var _ repository.PaymentStatusRepository = &paymentStatusPersistence{}
 
-// Insert - 新しい支払情報の追加
+// Add - 新しい支払情報の追加
 func (psp *paymentStatusPersistence) Add(ctx context.Context, userID, period, authorizer int) error {
 	_, err := psp.db.Exec(
 		`INSERT INTO payment_statuses (
@@ -73,6 +73,42 @@ func (psp *paymentStatusPersistence) Add(ctx context.Context, userID, period, au
 		}
 
 		return xerrors.Errorf("failed to add new payment status: %w", err)
+	}
+
+	return nil
+}
+
+// Get - 特定の支払い情報の取得
+func (psp *paymentStatusPersistence) Get(ctx context.Context, userID, period int) (*domain.PaymentStatus, error) {
+	ps := &paymentStatus{}
+
+	err := sqlx.GetContext(
+		ctx, psp.db, ps,
+		"SELECT * FROM payment_statuses WHERE user_id=? AND period=?",
+		userID, period,
+	)
+
+	if err == sql.ErrNoRows {
+		return nil, domain.ErrNoPaymentStatus
+	}
+
+	if err != nil {
+		return nil, xerrors.Errorf("failed to get payment status for (userid: %d, period: %d): %w", userID, period, err)
+	}
+
+	return parsePaymentStatus(ps), nil
+}
+
+// Delete - 支払情報の削除
+func (psp *paymentStatusPersistence) Delete(ctx context.Context, userID, period int) error {
+	_, err := psp.db.Exec(
+		`DELETE FROM payment_statuses WHERE user_id=? AND period=?`,
+		userID,
+		period,
+	)
+
+	if err != nil {
+		return xerrors.Errorf("failed to delete payment status: %w", err)
 	}
 
 	return nil

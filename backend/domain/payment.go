@@ -30,7 +30,7 @@ var (
 	// ErrAlreadyPaid - 既に支払が完了している
 	ErrAlreadyPaid = xerrors.New("the user already paid")
 
-	// ErrNoPaymentStatus - 一件も支払履歴がない
+	// ErrNoPaymentStatus - 支払情報が見つからない
 	ErrNoPaymentStatus = xerrors.New("no payment status")
 
 	// ErrNoPaymentTransaction - 支払い処理トランザクションが存在しない

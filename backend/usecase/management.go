@@ -20,6 +20,18 @@ type ManagementUsecase interface {
 
 	// AuthorizeTransaction - 支払い済登録申請を許可する
 	AuthorizeTransaction(ctx context.Context, token string, authorizer int) error
+
+	// AddPaymentStatus - 支払い情報を追加(QRコード経由せず)
+	AddPaymentStatus(ctx context.Context, userID, period, authorizer int) error
+
+	// GetPaymentStatus - 特定の支払い情報を取得する
+	GetPaymentStatus(ctx context.Context, userID, period int) (*domain.PaymentStatus, error)
+
+	// DeletePaymentStatus - 支払い情報を追加(QRコード経由せず)
+	DeletePaymentStatus(ctx context.Context, userID, period int) error
+
+	// GetPaymentStatusesForUser - あるユーザの支払い情報一覧を取得する
+	GetPaymentStatusesForUser(ctx context.Context, userID int) ([]*domain.PaymentStatus, error)
 }
 
 type managementUsecase struct {
@@ -122,4 +134,57 @@ func (mu *managementUsecase) AuthorizeTransaction(ctx context.Context, token str
 	}
 
 	return nil
+}
+
+func (mu *managementUsecase) AddPaymentStatus(ctx context.Context, userID, period, authorizer int) error {
+	if period == 0 {
+		var err error
+		period, err = mu.appConfigRepository.GetPaymentPeriod()
+
+		if err != nil {
+			return xerrors.Errorf("failed to get current payment period from app config: %w", err)
+		}
+	}
+
+	if err := mu.paymentStatusRepository.Add(ctx, userID, period, authorizer); err != nil {
+		if xerrors.Is(err, domain.ErrAlreadyPaid) {
+			return rest.NewConflict("すでに支払い済みです")
+		}
+
+		return xerrors.Errorf("failed to ad payment status for (userid: %d, period: %d, authorizer: %d)", userID, period, authorizer)
+	}
+
+	return nil
+}
+
+func (mu *managementUsecase) DeletePaymentStatus(ctx context.Context, userID, period int) error {
+	if err := mu.paymentStatusRepository.Delete(ctx, userID, period); err != nil {
+		return xerrors.Errorf("failed to delete payment status: %w", err)
+	}
+
+	return nil
+}
+
+func (mu *managementUsecase) GetPaymentStatus(ctx context.Context, userID, period int) (*domain.PaymentStatus, error) {
+	ps, err := mu.paymentStatusRepository.Get(ctx, userID, period)
+
+	if xerrors.Is(err, domain.ErrNoPaymentStatus) {
+		return nil, rest.NewNotFound("存在しない支払い情報です")
+	}
+
+	if err != nil {
+		return nil, xerrors.Errorf("failed to get payment status(userid: %d, period: %d): %w", userID, period, err)
+	}
+
+	return ps, nil
+}
+
+func (mu *managementUsecase) GetPaymentStatusesForUser(ctx context.Context, userID int) ([]*domain.PaymentStatus, error) {
+	res, err := mu.paymentStatusRepository.ListPeriodsForUser(ctx, userID)
+
+	if err != nil {
+		return nil, xerrors.Errorf("failed to list payment statuses for user: %w", err)
+	}
+
+	return res, nil
 }
