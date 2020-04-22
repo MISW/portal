@@ -1,8 +1,6 @@
 package private
 
 import (
-	"net/http"
-
 	"github.com/MISW/Portal/backend/domain"
 	"github.com/MISW/Portal/backend/internal/middleware"
 	"github.com/MISW/Portal/backend/internal/rest"
@@ -54,7 +52,12 @@ func (mh *managementHandler) ListUsers(e echo.Context) error {
 		return xerrors.Errorf("failed to list users: %w", err)
 	}
 
-	return e.JSON(http.StatusOK, users)
+	return rest.RespondOK(
+		e,
+		map[string]interface{}{
+			"users": users,
+		},
+	)
 }
 
 // AuthorizeTransaction - 支払い申請を許可する
