@@ -4,12 +4,12 @@ import RegisterForm, {
   SubmitResult,
 } from "../../src/components/layout/RegisterForm";
 import { signUp } from "../../src/network";
-import { UserProfile } from "../../src/user";
+import { ConfigurableProfile } from "../../src/user";
 import { Alert } from "@material-ui/lab";
 
 const Page: NextPage<{}> = () => {
   const [email, setEmail] = useState<string>();
-  const onSubmit = (user: UserProfile): Promise<SubmitResult> => {
+  const onSubmit = (user: ConfigurableProfile): Promise<SubmitResult> => {
     return signUp(user)
       .then(() => {
         setEmail(user.email);

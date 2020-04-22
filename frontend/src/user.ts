@@ -59,7 +59,7 @@ export type UserInfoJSON = Omit<
   role?: RoleType;
 };
 
-export type UserProfile = Omit<
+export type ConfigurableProfile = Omit<
   UserInfoJSON,
   | "other_circles"
   | "emergency_phone_number"
@@ -76,7 +76,7 @@ export type UserProfile = Omit<
   discordId: UserAllInfoJSON["discord_id"];
 };
 
-export const toUserProfile = (json: UserInfoJSON): UserProfile => {
+export const toUserProfile = (json: UserInfoJSON): ConfigurableProfile => {
   return {
     id: json.id,
     email: json.email,
@@ -98,7 +98,7 @@ export const toUserProfile = (json: UserInfoJSON): UserProfile => {
   };
 };
 
-export const toUserInfoJSON = (p: UserProfile): UserInfoJSON => {
+export const toUserInfoJSON = (p: ConfigurableProfile): UserInfoJSON => {
   return {
     id: p.id,
     email: p.email,

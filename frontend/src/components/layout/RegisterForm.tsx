@@ -3,7 +3,7 @@ import RegisterFormStepper from "./RegistrationFormStepper";
 import UniversityInfo from "./UniversityInfo";
 import CircleInfo from "./CircleInfo";
 import FundamentalInfo from "./FundamentalInfo";
-import { UserProfile } from "../../user";
+import { ConfigurableProfile } from "../../user";
 import Confirm from "./Confirm";
 import { useUser, UserProfileHooks } from "../../hooks/formHooks";
 import { Container } from "@material-ui/core";
@@ -22,8 +22,8 @@ export type SubmitResult =
 
 const RegisterForm: React.FC<{
   formName: string;
-  user?: Partial<UserProfile>;
-  onSubmit: (user: UserProfile) => Promise<SubmitResult>;
+  user?: Partial<ConfigurableProfile>;
+  onSubmit: (user: ConfigurableProfile) => Promise<SubmitResult>;
   successMessage: ReactNode;
   formType: "setting" | "new";
 }> = ({ formName, user, onSubmit, successMessage, formType }) => {
