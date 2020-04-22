@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { NextPage } from "next";
-import { Typography } from "@material-ui/core";
 import AdminUsersTable, {
   HeadCell,
 } from "../../src/components/layout/AdminUsersTable";
