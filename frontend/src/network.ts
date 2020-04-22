@@ -4,6 +4,8 @@ import {
   toUserProfile,
   toUserInfoJSON,
   UserWithPaymentJSON,
+  PaymentTableData,
+  toPaymentTableData,
 } from "./user";
 
 const getHostAPI = () => `${location.protocol}//${location.host}/api`;
@@ -107,7 +109,7 @@ export const logout = async () => {
   }
 };
 
-export const listUsers = async (): Promise<Array<UserWithPaymentJSON>> => {
+export const listUsers = async (): Promise<Array<PaymentTableData>> => {
   const res = await fetch(`${getHostAPI()}/private/management/list_users`, {
     method: "GET",
     headers: {
@@ -119,7 +121,11 @@ export const listUsers = async (): Promise<Array<UserWithPaymentJSON>> => {
     console.error(res);
     return Promise.reject("Error: status-code >= 400");
   }
-  const userList = (await res.json()) as Array<UserWithPaymentJSON>;
+  const userList = (await res.json()).users as Array<UserWithPaymentJSON>;
+  if (!Array.isArray(userList)) {
+    console.error(userList);
+    throw new Error("not array");
+  }
   console.log(userList);
-  return userList;
+  return userList.map((u) => toPaymentTableData(u));
 };

@@ -1,5 +1,3 @@
-import { isString, isObject } from "util";
-
 export type SexType = "male" | "female" | "other";
 
 export type RoleType =
@@ -50,7 +48,7 @@ export interface UserAllInfoJSON {
 }
 
 export type UserWithPaymentJSON = UserAllInfoJSON & {
-  payment_status: PaymentStatus;
+  payment_status?: PaymentStatus;
 };
 
 export type UserInfoJSON = Omit<
@@ -108,3 +106,27 @@ export const toUserInfoJSON = (p: UserProfile): UserInfoJSON => {
     role: p.role,
   };
 };
+
+export const toPaymentTableData = (j: UserWithPaymentJSON) => ({
+  id: j.id,
+  email: j.email,
+  generation: j.generation,
+  name: j.name,
+  kana: j.kana,
+  handle: j.handle,
+  sex: j.sex,
+  univName: j.university.name,
+  department: j.university.department,
+  subject: j.university.subject,
+  studentId: j.student_id,
+  emergencyPhoneNumber: j.emergency_phone_number,
+  otherCircles: j.other_circles,
+  workshops: j.workshops.join(","),
+  squads: j.squads.join(","),
+  discordId: j.discord_id,
+  role: j.role,
+  authorizer: j.payment_status?.authorizer ?? "",
+  period: j.payment_status?.period ?? "",
+});
+
+export type PaymentTableData = ReturnType<typeof toPaymentTableData>;

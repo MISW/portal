@@ -24,8 +24,13 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
 import DeleteIcon from "@material-ui/icons/Delete";
 import FilterListIcon from "@material-ui/icons/FilterList";
+import { PaymentTableData } from "../../user";
 
-type Data = Record<string, string | number> & { name: string };
+export type Data = PaymentTableData extends Record<string, string | number> & {
+  name: string;
+}
+  ? PaymentTableData
+  : never;
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) {
@@ -61,11 +66,9 @@ function stableSort<T>(array: T[], comparator: (a: T, b: T) => number) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-interface HeadCell {
-  disablePadding: boolean;
+export interface HeadCell {
   id: keyof Data;
   label: string;
-  numeric: boolean;
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -139,8 +142,8 @@ function EnhancedTableHead(props: EnhancedTableProps) {
         {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}
-            align={headCell.numeric ? "right" : "left"}
-            padding={headCell.disablePadding ? "none" : "default"}
+            align={"left"}
+            padding={"none"}
             sortDirection={orderBy === headCell.id ? order : false}
           >
             <TableSortLabel
@@ -340,7 +343,7 @@ export const EnhancedTable: React.FC<{
                       role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}
-                      key={row.name}
+                      key={row.id}
                       selected={isItemSelected}
                     >
                       <TableCell padding="checkbox">
@@ -357,10 +360,11 @@ export const EnhancedTable: React.FC<{
                       >
                         {row.name}
                       </TableCell>
-                      <TableCell align="right">{row.calories}</TableCell>
-                      <TableCell align="right">{row.fat}</TableCell>
-                      <TableCell align="right">{row.carbs}</TableCell>
-                      <TableCell align="right">{row.protein}</TableCell>
+                      {Object.values(row).map((v, i) => (
+                        <TableCell align="right" key={`map${i}`}>
+                          {v}
+                        </TableCell>
+                      ))}
                     </TableRow>
                   );
                 })}
@@ -389,3 +393,5 @@ export const EnhancedTable: React.FC<{
     </div>
   );
 };
+
+export default EnhancedTable;
