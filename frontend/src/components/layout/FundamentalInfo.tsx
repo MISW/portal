@@ -5,6 +5,7 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import { RadioGroup, Radio, FormControl, FormLabel } from "@material-ui/core";
 import { SexType } from "../../user";
 import { UserProfileHooks, FormContentProps } from "../../hooks/formHooks";
+import { Alert } from "@material-ui/lab";
 
 const NameField: React.FC<FormContentProps<string>> = ({
   value,
@@ -193,13 +194,22 @@ const FundamentalInfo: React.FC<{
   userHooks: UserProfileHooks;
 }> = ({ userHooks: { name, kana, sex, emergencyPhoneNumber, email } }) => {
   return (
-    <Grid container spacing={3}>
-      <NameField {...name} />
-      <KanaNameField {...kana} />
-      <GenderField {...sex} />
-      <PhoneNumberField {...emergencyPhoneNumber} />
-      <EmailField {...email} />
-    </Grid>
+    <>
+      <Grid container spacing={3}>
+        <Grid container item spacing={3}>
+          <NameField {...name} />
+          <KanaNameField {...kana} />
+          <GenderField {...sex} />
+          <PhoneNumberField {...emergencyPhoneNumber} />
+          <EmailField {...email} />
+        </Grid>
+        <Alert severity="info" style={{ width: "100%" }}>
+          大学に提出する資料と必要な情報です.
+          <br />
+          それ以外の目的で了承なく情報を使うことはありません
+        </Alert>
+      </Grid>
+    </>
   );
 };
 
