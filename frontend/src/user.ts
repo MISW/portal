@@ -138,6 +138,7 @@ export const toPaymentTableData = (j: UserWithPaymentJSON) => ({
   otherCircles: j.other_circles,
   workshops: j.workshops.join(","),
   squads: j.squads.join(","),
+  slackId: j.slack_id,
   discordId: j.discord_id,
   role: j.role,
   authorizer: j.payment_status?.authorizer ?? "",

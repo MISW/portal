@@ -25,6 +25,7 @@ const headCells: HeadCell[] = [
   { id: "workshops", label: "研究会" },
   { id: "squads", label: "班" },
   { id: "otherCircles", label: "他サークル" },
+  { id: "slackId", label: "slack id" },
   { id: "discordId", label: "discord id" },
 ];
 
