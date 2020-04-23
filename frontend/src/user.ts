@@ -16,6 +16,14 @@ export interface University {
   subject: string;
 }
 
+export interface PaymentStatus {
+  user_id: number;
+  authorizer: number;
+  period: number;
+  created_at: string;
+  updated_at: string;
+}
+
 export interface UserAllInfoJSON {
   id: number;
   email: string;
@@ -39,14 +47,19 @@ export interface UserAllInfoJSON {
   updated_at: number;
 }
 
+export type UserWithPaymentJSON = UserAllInfoJSON & {
+  payment_status?: PaymentStatus;
+};
+
 export type UserInfoJSON = Omit<
   UserAllInfoJSON,
   "slack_id" | "role" | "created_at" | "updated_at" | "id"
 > & {
   id?: number;
+  role?: RoleType;
 };
 
-export type UserProfile = Omit<
+export type ConfigurableProfile = Omit<
   UserInfoJSON,
   | "other_circles"
   | "emergency_phone_number"
@@ -54,7 +67,6 @@ export type UserProfile = Omit<
   | "university"
   | "discord_id"
 > & {
-  id?: number;
   otherCircles: UserAllInfoJSON["other_circles"];
   emergencyPhoneNumber: UserAllInfoJSON["emergency_phone_number"];
   studentId: UserAllInfoJSON["student_id"];
@@ -64,7 +76,7 @@ export type UserProfile = Omit<
   discordId: UserAllInfoJSON["discord_id"];
 };
 
-export const toUserProfile = (json: UserInfoJSON): UserProfile => {
+export const toUserProfile = (json: UserInfoJSON): ConfigurableProfile => {
   return {
     id: json.id,
     email: json.email,
@@ -82,10 +94,11 @@ export const toUserProfile = (json: UserInfoJSON): UserProfile => {
     workshops: json.workshops,
     squads: json.squads,
     discordId: json.discord_id,
+    role: json.role,
   };
 };
 
-export const toUserInfoJSON = (p: UserProfile): UserInfoJSON => {
+export const toUserInfoJSON = (p: ConfigurableProfile): UserInfoJSON => {
   return {
     id: p.id,
     email: p.email,
@@ -105,5 +118,31 @@ export const toUserInfoJSON = (p: UserProfile): UserInfoJSON => {
     workshops: p.workshops,
     squads: p.squads,
     discord_id: p.discordId,
+    role: p.role,
   };
 };
+
+export const toPaymentTableData = (j: UserWithPaymentJSON) => ({
+  id: j.id,
+  email: j.email,
+  generation: j.generation,
+  name: j.name,
+  kana: j.kana,
+  handle: j.handle,
+  sex: j.sex,
+  univName: j.university.name,
+  department: j.university.department,
+  subject: j.university.subject,
+  studentId: j.student_id,
+  emergencyPhoneNumber: j.emergency_phone_number,
+  otherCircles: j.other_circles,
+  workshops: j.workshops.join(","),
+  squads: j.squads.join(","),
+  slackId: j.slack_id,
+  discordId: j.discord_id,
+  role: j.role,
+  authorizer: j.payment_status?.authorizer ?? "",
+  period: j.payment_status?.period ?? "never",
+});
+
+export type PaymentTableData = ReturnType<typeof toPaymentTableData>;

@@ -1,8 +1,11 @@
 import {
-  UserProfile,
+  ConfigurableProfile,
   UserInfoJSON,
   toUserProfile,
   toUserInfoJSON,
+  UserWithPaymentJSON,
+  PaymentTableData,
+  toPaymentTableData,
 } from "./user";
 
 const getHostAPI = () => `${location.protocol}//${location.host}/api`;
@@ -22,7 +25,7 @@ export const login = async () => {
   location.href = body.redirect_url;
 };
 
-export const getProfile = async (): Promise<UserProfile> => {
+export const getProfile = async (): Promise<ConfigurableProfile> => {
   const res = await fetch(`${getHostAPI()}/private/profile`, {
     headers: {
       Accept: "application/json, */*",
@@ -40,8 +43,8 @@ export const getProfile = async (): Promise<UserProfile> => {
 };
 
 export const updateProfile = async (
-  user: UserProfile
-): Promise<UserProfile> => {
+  user: ConfigurableProfile
+): Promise<ConfigurableProfile> => {
   const body = JSON.stringify(toUserInfoJSON(user));
   console.log(body);
 
@@ -76,7 +79,7 @@ export const checkLoggingIn = async (): Promise<boolean> => {
   return res.status < 400;
 };
 
-export const signUp = async (user: UserProfile) => {
+export const signUp = async (user: ConfigurableProfile) => {
   const body = JSON.stringify(toUserInfoJSON(user));
   console.log(body);
 
@@ -104,4 +107,25 @@ export const logout = async () => {
     console.error(res);
     return Promise.reject("Error: status-code >= 400");
   }
+};
+
+export const listUsers = async (): Promise<Array<PaymentTableData>> => {
+  const res = await fetch(`${getHostAPI()}/private/management/list_users`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "include",
+  });
+  if (res.status >= 400) {
+    console.error(res);
+    return Promise.reject("Error: status-code >= 400");
+  }
+  const userList = (await res.json()).users as Array<UserWithPaymentJSON>;
+  if (!Array.isArray(userList)) {
+    console.error(userList);
+    throw new Error("not array");
+  }
+  console.log(userList);
+  return userList.map((u) => toPaymentTableData(u));
 };

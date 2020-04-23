@@ -1,12 +1,12 @@
 import React, { ReactNode } from "react";
 import { Button, FormHelperText } from "@material-ui/core";
-import { UserProfile } from "../../user";
+import { ConfigurableProfile } from "../../user";
 import { UserValidation } from "../../hooks/formHooks";
 import { SubmitResult } from "./RegisterForm";
 import { Alert } from "@material-ui/lab";
 
 const Confirm: React.FC<{
-  user: UserProfile;
+  user: ConfigurableProfile;
   valid: UserValidation;
   submitResult: SubmitResult;
   successMessage: ReactNode;
