@@ -229,7 +229,12 @@ func initHandler(cfg *config.Config, addr string) *echo.Echo {
 			g := g.Group("/management")
 			g.Use(middleware.NewRoleValidationMiddleware(domain.Admin).Authenticate)
 
-			g.GET("/list_users", mh.ListUsers)
+			g.GET("/users", mh.ListUsers)
+
+			g.GET("/user", mh.GetUser)
+			e.POST("/user", mh.UpdateUser)
+			e.PATCH("/user", mh.UpdateRole)
+
 			g.POST("/authorize_transaction", mh.AuthorizeTransaction)
 
 			g.GET("/payment_status", mh.GetPaymentStatus)

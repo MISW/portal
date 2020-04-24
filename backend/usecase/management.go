@@ -32,6 +32,15 @@ type ManagementUsecase interface {
 
 	// GetPaymentStatusesForUser - あるユーザの支払い情報一覧を取得する
 	GetPaymentStatusesForUser(ctx context.Context, userID int) ([]*domain.PaymentStatus, error)
+
+	// GetUser - ユーザ情報を取得
+	GetUser(ctx context.Context, userID int) (*domain.User, error)
+
+	// UpdateUser - ユーザ情報を更新(制限なし)
+	UpdateUser(ctx context.Context, user *domain.User) error
+
+	// UpdateRole - ユーザのroleを変更
+	UpdateRole(ctx context.Context, userID int, role domain.RoleType) error
 }
 
 type managementUsecase struct {
@@ -187,4 +196,46 @@ func (mu *managementUsecase) GetPaymentStatusesForUser(ctx context.Context, user
 	}
 
 	return res, nil
+}
+
+func (mu *managementUsecase) GetUser(ctx context.Context, userID int) (*domain.User, error) {
+	user, err := mu.userRepository.GetByID(ctx, userID)
+
+	if err == domain.ErrNoUser {
+		return nil, rest.NewNotFound("user not found")
+	}
+
+	if err != nil {
+		return nil, xerrors.Errorf("failed to find user by id(%d): %w", userID, err)
+	}
+
+	return user, nil
+}
+
+func (mu *managementUsecase) UpdateUser(ctx context.Context, user *domain.User) error {
+	if err := user.Validate(); err != nil {
+		return err
+	}
+
+	err := mu.userRepository.Update(ctx, user)
+
+	if err != nil {
+		return xerrors.Errorf("failed to find user by id(%d): %w", user.ID, err)
+	}
+
+	return nil
+}
+
+func (mu *managementUsecase) UpdateRole(ctx context.Context, userID int, role domain.RoleType) error {
+	if !role.Validate() {
+		return rest.NewBadRequest("存在しないロールが指定されています")
+	}
+
+	err := mu.userRepository.UpdateRole(ctx, userID, role)
+
+	if err != nil {
+		return xerrors.Errorf("failed to find user by id(%d): %w", userID, err)
+	}
+
+	return nil
 }
