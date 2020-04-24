@@ -87,7 +87,7 @@ func parseUser(u *user) *domain.User {
 		Kana:       u.Kana,
 		Handle:     u.Handle,
 		Sex:        domain.SexType(u.Sex),
-		University: &domain.University{
+		University: domain.University{
 			Name:       u.University,
 			Department: u.UniversityDepartment,
 			Subject:    u.UniversitySubject,

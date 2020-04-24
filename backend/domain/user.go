@@ -44,6 +44,27 @@ const (
 	EmailUnverified RoleType = "email_unverified"
 )
 
+func (r RoleType) Validate() bool {
+	for i := range roles {
+		if roles[i] == r {
+			return true
+		}
+	}
+
+	return false
+}
+
+var (
+	roles = []RoleType{
+		Admin,
+		Member,
+		Retired,
+		NotMember,
+		NewMember,
+		EmailUnverified,
+	}
+)
+
 // University - 所属大学
 type University struct {
 	Name       string `json:"name" yaml:"name"`
@@ -53,20 +74,20 @@ type University struct {
 
 // User - サークル員の情報
 type User struct {
-	ID                   int         `json:"id" yaml:"id"`
-	Email                string      `json:"email" yaml:"email"`
-	Generation           int         `json:"generation" yaml:"generation"`
-	Name                 string      `json:"name" yaml:"name"`
-	Kana                 string      `json:"kana" yaml:"kana"`
-	Handle               string      `json:"handle" yaml:"handle"`
-	Sex                  SexType     `json:"sex" yaml:"sex"`
-	University           *University `json:"university" yaml:"university"`
-	StudentID            string      `json:"student_id" yaml:"student_id"`
-	EmergencyPhoneNumber string      `json:"emergency_phone_number" yaml:"emergency_phone_number"`
-	OtherCircles         string      `json:"other_circles" yaml:"other_circles"`
-	Workshops            []string    `json:"workshops" yaml:"workshops"`
-	Squads               []string    `json:"squads" yaml:"squads"`
-	Role                 RoleType    `json:"role" yaml:"role"`
+	ID                   int        `json:"id" yaml:"id"`
+	Email                string     `json:"email" yaml:"email"`
+	Generation           int        `json:"generation" yaml:"generation"`
+	Name                 string     `json:"name" yaml:"name"`
+	Kana                 string     `json:"kana" yaml:"kana"`
+	Handle               string     `json:"handle" yaml:"handle"`
+	Sex                  SexType    `json:"sex" yaml:"sex"`
+	University           University `json:"university" yaml:"university"`
+	StudentID            string     `json:"student_id" yaml:"student_id"`
+	EmergencyPhoneNumber string     `json:"emergency_phone_number" yaml:"emergency_phone_number"`
+	OtherCircles         string     `json:"other_circles" yaml:"other_circles"`
+	Workshops            []string   `json:"workshops" yaml:"workshops"`
+	Squads               []string   `json:"squads" yaml:"squads"`
+	Role                 RoleType   `json:"role" yaml:"role"`
 
 	// 外部サービス
 	SlackID   string `json:"slack_id" yaml:"slack_id"`
@@ -85,9 +106,12 @@ type UserPaymentStatus struct {
 var (
 	emailValidator = regexp.MustCompile(`^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$`)
 
+	discordValidator = regexp.MustCompile(`(.*)#(\d{4})`)
+
 	invalidWordsForSquads = []string{"\n", "\r"}
 )
 
+// Validate - userを検証
 func (user *User) Validate() error {
 	for i := range user.Squads {
 		for j := range invalidWordsForSquads {
@@ -102,6 +126,17 @@ func (user *User) Validate() error {
 	}
 	if !emailValidator.MatchString(user.Email) {
 		return rest.NewBadRequest("メールアドレスの形式が不正です")
+	}
+	if !discordValidator.MatchString(user.DiscordID) {
+		return rest.NewBadRequest("DiscordIDの形式が不正です")
+	}
+	if !user.Role.Validate() {
+		return rest.NewBadRequest("存在しないロールが指定されています")
+	}
+
+	// TODO: 100代までもし使う場合は修正
+	if user.Generation < 49 || user.Generation > 100 {
+		return rest.NewBadRequest("不正な代が入力されています")
 	}
 
 	return nil
