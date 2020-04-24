@@ -20,6 +20,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   layout: {
     width: "auto",
+    marginTop: theme.spacing(6),
+    marginBottom: theme.spacing(6),
     marginLeft: theme.spacing(2),
     marginRight: theme.spacing(2),
     [theme.breakpoints.up(600 + theme.spacing(2) * 2)]: {
@@ -35,16 +37,14 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const Copyright: React.FC = () => {
   return (
-    <footer>
-      <Typography variant="body2" color="textSecondary" align="center">
-        {"Copyright © "}
-        <MUILink color="inherit" href="https://misw.jp">
-          MISW
-        </MUILink>{" "}
-        2020
-        {"."}
-      </Typography>
-    </footer>
+    <Typography variant="body2" color="textSecondary" align="center">
+      {"Copyright © "}
+      <MUILink color="inherit" href="https://misw.jp">
+        MISW
+      </MUILink>{" "}
+      2020
+      {"."}
+    </Typography>
   );
 };
 
@@ -67,9 +67,12 @@ export const DefaultLayout: React.FC<{ onLogout: () => void }> = ({
   }, []);
 
   const handleClickTitle = useCallback(() => router.push("/"), [router]);
-  const handleClickProfile = useCallback(() => router.push("/profile"), [
-    router,
-  ]);
+
+  const handleClickProfile = useCallback(() => {
+    handleClose();
+    router.push("/profile");
+  }, [handleClose, router]);
+
   const handleLogout = useCallback(() => {
     handleClose();
     onLogout();
@@ -78,7 +81,7 @@ export const DefaultLayout: React.FC<{ onLogout: () => void }> = ({
   return (
     <>
       <div className="container">
-        <AppBar position="static" color="primary" className={classes.appBar}>
+        <AppBar position="fixed" color="primary" className={classes.appBar}>
           <Toolbar>
             <IconButton
               edge="start"
@@ -129,11 +132,13 @@ export const DefaultLayout: React.FC<{ onLogout: () => void }> = ({
             )}
           </Toolbar>
         </AppBar>
+        <main className={classes.layout}>
+          <Container maxWidth="lg">{children}</Container>
+        </main>
+        <footer>
+          <Copyright />
+        </footer>
       </div>
-      <main className={classes.layout}>
-        <Container maxWidth="lg">{children}</Container>
-      </main>
-      <Copyright />
     </>
   );
 };
