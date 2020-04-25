@@ -122,20 +122,15 @@ func (mu *managementUsecase) AuthorizeTransaction(ctx context.Context, token str
 		return rest.NewBadRequest("無効なトークンです")
 	}
 
-	pp, err := mu.appConfigRepository.GetPaymentPeriod()
+	err = mu.AddPaymentStatus(ctx, transaction.UserID, 0, authorizer)
 
-	if err != nil {
-		return xerrors.Errorf("failed to get active payment period from global settings: %w", err)
-	}
-
-	err = mu.paymentStatusRepository.Add(ctx, transaction.UserID, pp, authorizer)
-
-	if xerrors.Is(err, domain.ErrAlreadyPaid) {
-		return rest.NewConflict("既に支払い済みです")
+	var frerr rest.ErrorResponse
+	if xerrors.As(err, &frerr) {
+		return frerr
 	}
 
 	if err != nil {
-		return xerrors.Errorf("failed to add  user(%d)'s payment status  %d for %d: %w", transaction.UserID, pp, err)
+		return xerrors.Errorf("failed to add payment status for user(%d): %w", transaction.UserID, err)
 	}
 
 	if err := mu.paymentTransactionRepository.Delete(ctx, token); err != nil {
