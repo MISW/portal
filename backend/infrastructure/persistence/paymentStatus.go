@@ -100,18 +100,24 @@ func (psp *paymentStatusPersistence) Get(ctx context.Context, userID, period int
 }
 
 // Delete - 支払情報の削除
-func (psp *paymentStatusPersistence) Delete(ctx context.Context, userID, period int) error {
-	_, err := psp.db.Exec(
+func (psp *paymentStatusPersistence) Delete(ctx context.Context, userID, period int) (bool, error) {
+	res, err := psp.db.Exec(
 		`DELETE FROM payment_statuses WHERE user_id=? AND period=?`,
 		userID,
 		period,
 	)
 
 	if err != nil {
-		return xerrors.Errorf("failed to delete payment status: %w", err)
+		return false, xerrors.Errorf("failed to delete payment status: %w", err)
 	}
 
-	return nil
+	affected, err := res.RowsAffected()
+
+	if err != nil {
+		return false, xerrors.Errorf("failed to get rows affected: %w", err)
+	}
+
+	return affected != 0, nil
 }
 
 // GetLatestByUser - 最新の支払情報の取得
