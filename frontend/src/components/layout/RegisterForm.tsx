@@ -33,7 +33,7 @@ const RegisterForm: React.FC<{
 
   const { user: userData, valid, userHooks } = useUser(genFirstYear, user);
   const [activeStep, setActiveStep] = useState(0);
-  const [nextDisabled, setNextDisabled] = useState(false);
+  const [nextButtonDisabled, setNextButtonDisabled] = useState(false);
 
   const {
     email,
@@ -77,21 +77,22 @@ const RegisterForm: React.FC<{
     const hook = contentHooks[activeStep];
     const valid = validateFormContents(hook);
     if (!valid) {
-      setNextDisabled(true);
+      setNextButtonDisabled(true);
       return;
     }
     setActiveStep(activeStep + 1);
   }, [activeStep, contentHooks]);
+
   const handleBack = useCallback(() => setActiveStep(activeStep - 1), [
     activeStep,
   ]);
 
-  if (nextDisabled) {
+  if (nextButtonDisabled) {
     const hook = contentHooks[activeStep];
     const valid = Object.values(hook as Partial<UserProfileHooks>).every((v) =>
       v ? v.valid : true
     );
-    if (valid) setNextDisabled(false);
+    if (valid) setNextButtonDisabled(false);
   }
 
   return (
@@ -102,7 +103,7 @@ const RegisterForm: React.FC<{
         handleNext={handleNext}
         handleBack={handleBack}
         activeStep={activeStep}
-        nextDisabled={nextDisabled}
+        nextDisabled={nextButtonDisabled}
         success={submitResult?.status === "success"}
       >
         {((step: number) => {
