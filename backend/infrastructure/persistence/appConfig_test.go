@@ -40,7 +40,7 @@ func TestAppConfig_CurrentPeriod(t *testing.T) {
 
 	if period, err := acp.GetCurrentPeriod(); err != nil {
 		t.Fatalf("failed to get default value: %+v", err)
-	} else if period != 202004 {
+	} else if period != 201910 {
 		t.Fatalf("default value is different from 202004: %+v", period)
 	}
 
