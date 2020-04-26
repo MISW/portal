@@ -203,30 +203,60 @@ func TestPaymentStatusList(t *testing.T) {
 	})
 }
 
-func TestPaymentIsLatest(t *testing.T) {
-	conn := testutil.NewSQLConn(t)
+func TestPaymentIsXXX(t *testing.T) {
+	t.Run("latest", func(t *testing.T) {
+		conn := testutil.NewSQLConn(t)
 
-	psp := persistence.NewPaymentStatusPersistence(conn)
+		psp := persistence.NewPaymentStatusPersistence(conn)
 
-	insertTestPaymentStatusData(t, psp)
+		insertTestPaymentStatusData(t, psp)
 
-	res, err := psp.IsLatest(context.Background(), paymentStatusTemplate.UserID, paymentStatusTemplate.Period)
+		res, err := psp.IsLatest(context.Background(), paymentStatusTemplate.UserID, paymentStatusTemplate.Period)
 
-	if err != nil {
-		t.Fatalf("failed to call IsLatest: %+v", err)
-	}
+		if err != nil {
+			t.Fatalf("failed to call IsLatest: %+v", err)
+		}
 
-	if !res {
-		t.Fatalf("202010 should be latest, but false is returned")
-	}
+		if !res {
+			t.Fatalf("202010 is the latest, but false is returned")
+		}
 
-	res, err = psp.IsLatest(context.Background(), paymentStatusTemplate2.UserID, paymentStatusTemplate2.Period)
+		res, err = psp.IsLatest(context.Background(), paymentStatusTemplate2.UserID, paymentStatusTemplate2.Period)
 
-	if err != nil {
-		t.Fatalf("failed to call IsLatest: %+v", err)
-	}
+		if err != nil {
+			t.Fatalf("failed to call IsLatest: %+v", err)
+		}
 
-	if res {
-		t.Fatalf("202004 should not be latest, but true is returned")
-	}
+		if res {
+			t.Fatalf("202004 is not the latest, but true is returned")
+		}
+	})
+
+	t.Run("first", func(t *testing.T) {
+		conn := testutil.NewSQLConn(t)
+
+		psp := persistence.NewPaymentStatusPersistence(conn)
+
+		insertTestPaymentStatusData(t, psp)
+
+		res, err := psp.IsFirst(context.Background(), paymentStatusTemplate.UserID, paymentStatusTemplate.Period)
+
+		if err != nil {
+			t.Fatalf("failed to call IsLatest: %+v", err)
+		}
+
+		if res {
+			t.Fatalf("202010 is not the first, but true is returned")
+		}
+
+		res, err = psp.IsFirst(context.Background(), paymentStatusTemplate2.UserID, paymentStatusTemplate2.Period)
+
+		if err != nil {
+			t.Fatalf("failed to call IsLatest: %+v", err)
+		}
+
+		if !res {
+			t.Fatalf("202004 is the first, but false is returned")
+		}
+	})
 }

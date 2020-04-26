@@ -30,6 +30,10 @@ type PaymentStatusRepository interface {
 	// IsLatest reports the specified payment status is the latest or not.
 	// CAUTION: This method doesn't check the specified status exists
 	IsLatest(ctx context.Context, userID, period int) (bool, error)
+
+	// IsFirst reports the specified payment status is the first or not.
+	// CAUTION: This method doesn't check the specified status exists
+	IsFirst(ctx context.Context, userID, period int) (bool, error)
 }
 
 // PaymentTransactionRepository - サークル費支払い時のトークン管理
