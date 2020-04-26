@@ -7,6 +7,8 @@ import (
 	"github.com/MISW/Portal/backend/domain"
 )
 
+//go:generate mockgen -source=$GOFILE -destination=mock_$GOFILE -package=$GOPACKAGE
+
 // PaymentStatusRepository - サークル費支払関連のDB操作
 type PaymentStatusRepository interface {
 	// Add - 新しい支払情報の追加
