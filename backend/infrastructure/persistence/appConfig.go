@@ -26,6 +26,9 @@ var _ repository.AppConfigRepository = &appConfigPersistence{}
 const (
 	paymentPeriod        = "payment-period-v1"
 	defaultPaymentPeriod = 202004
+
+	currentPeriod        = "current-period-v1"
+	defaultCurrentPeriod = 201910
 )
 
 func (acp *appConfigPersistence) GetPaymentPeriod() (int, error) {
@@ -51,6 +54,34 @@ func (acp *appConfigPersistence) GetPaymentPeriod() (int, error) {
 func (acp *appConfigPersistence) SetPaymentPeriod(period int) error {
 	if err := acp.setValue(paymentPeriod, strconv.Itoa(period)); err != nil {
 		return xerrors.Errorf("failed to set payment period: %w", err)
+	}
+
+	return nil
+}
+
+func (acp *appConfigPersistence) GetCurrentPeriod() (int, error) {
+	period, err := acp.getValue(currentPeriod)
+
+	if xerrors.Is(err, sql.ErrNoRows) {
+		return defaultCurrentPeriod, nil
+	}
+
+	if err != nil {
+		return 0, xerrors.Errorf("failed to get current period: %w", err)
+	}
+
+	p, err := strconv.Atoi(period)
+
+	if err != nil {
+		return defaultCurrentPeriod, nil
+	}
+
+	return p, nil
+}
+
+func (acp *appConfigPersistence) SetCurrentPeriod(period int) error {
+	if err := acp.setValue(currentPeriod, strconv.Itoa(period)); err != nil {
+		return xerrors.Errorf("failed to set current period: %w", err)
 	}
 
 	return nil
