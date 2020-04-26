@@ -16,7 +16,7 @@ type PaymentStatusRepository interface {
 	Get(ctx context.Context, userID, period int) (*domain.PaymentStatus, error)
 
 	// Delete - 支払情報を削除
-	Delete(ctx context.Context, userID, period int) error
+	Delete(ctx context.Context, userID, period int) (bool, error)
 
 	// GetLatestByUser - 最新の支払情報の取得
 	GetLatestByUser(ctx context.Context, userID int) (*domain.PaymentStatus, error)

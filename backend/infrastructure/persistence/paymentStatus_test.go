@@ -123,6 +123,42 @@ func TestPaymentStatusGet(t *testing.T) {
 	})
 }
 
+func TestPaymentStatusDelete(t *testing.T) {
+	t.Run("get_latest", func(t *testing.T) {
+		conn := testutil.NewSQLConn(t)
+
+		psp := persistence.NewPaymentStatusPersistence(conn)
+
+		insertTestPaymentStatusData(t, psp)
+
+		deleted, err := psp.Delete(context.Background(), paymentStatusTemplate.UserID, paymentStatusTemplate.Period)
+
+		if err != nil {
+			t.Fatalf("failed to delete payment status: %+v", err)
+		}
+
+		if !deleted {
+			t.Fatalf("delete should return true")
+		}
+
+		_, err = psp.Get(context.Background(), paymentStatusTemplate.UserID, paymentStatusTemplate.Period)
+
+		if err != domain.ErrNoPaymentStatus {
+			t.Fatalf("error on deleted item should be ErrNoPaymentStatus, but got: %+v", err)
+		}
+
+		deleted, err = psp.Delete(context.Background(), paymentStatusTemplate.UserID, paymentStatusTemplate.Period)
+
+		if err != nil {
+			t.Fatalf("deletion on deleted item should return no error: %+v", err)
+		}
+
+		if deleted {
+			t.Fatalf("deletion on deleted item should return false")
+		}
+	})
+}
+
 func TestPaymentStatusList(t *testing.T) {
 	t.Run("for_period", func(t *testing.T) {
 		conn := testutil.NewSQLConn(t)
