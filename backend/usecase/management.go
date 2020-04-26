@@ -207,7 +207,13 @@ func (mu *managementUsecase) AddPaymentStatus(ctx context.Context, userID, perio
 	paymentPeriod, err := mu.appConfigRepository.GetPaymentPeriod()
 
 	if err != nil {
-		return xerrors.Errorf("failed to get current payment period from app config: %w", err)
+		return xerrors.Errorf("failed to get payment period from app config: %w", err)
+	}
+
+	currentPeriod, err := mu.appConfigRepository.GetCurrentPeriod()
+
+	if err != nil {
+		return xerrors.Errorf("failed to get current period from app config: %w", err)
 	}
 
 	if period == 0 {
@@ -222,11 +228,15 @@ func (mu *managementUsecase) AddPaymentStatus(ctx context.Context, userID, perio
 		return xerrors.Errorf("failed to ad payment status for (userid: %d, period: %d, authorizer: %d)", userID, period, authorizer)
 	}
 
+	if period != currentPeriod && period != paymentPeriod {
+		return nil
+	}
+
 	err = mu.updateRole(
 		ctx,
 		userID,
 		"",
-		0,
+		currentPeriod,
 		paymentPeriod,
 	)
 
@@ -241,7 +251,7 @@ func (mu *managementUsecase) DeletePaymentStatus(ctx context.Context, userID, pe
 	paymentPeriod, err := mu.appConfigRepository.GetPaymentPeriod()
 
 	if err != nil {
-		return xerrors.Errorf("failed to get current payment period from app config: %w", err)
+		return xerrors.Errorf("failed to get payment period from app config: %w", err)
 	}
 
 	if period == 0 {

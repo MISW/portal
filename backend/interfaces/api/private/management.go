@@ -202,7 +202,8 @@ func (mh *managementHandler) GetPaymentStatuses(e echo.Context) error {
 	case param.UserID != nil && param.Period != nil:
 		ps, err := mh.mu.GetPaymentStatus(ctx, *param.UserID, *param.Period)
 
-		if err != nil && !xerrors.As(err, &rest.NotFound{}) {
+		var nf *rest.NotFound
+		if err != nil && !xerrors.As(err, &nf) {
 			return xerrors.Errorf("failed to get payment status(user_id: %d, period: %d)", *param.UserID, *param.Period, err)
 		}
 
