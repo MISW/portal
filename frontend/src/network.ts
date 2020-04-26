@@ -110,7 +110,7 @@ export const logout = async () => {
 };
 
 export const listUsers = async (): Promise<Array<PaymentTableData>> => {
-  const res = await fetch(`${getHostAPI()}/private/management/list_users`, {
+  const res = await fetch(`${getHostAPI()}/private/management/users`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
