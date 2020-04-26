@@ -141,7 +141,7 @@ func (mu *managementUsecase) AuthorizeTransaction(ctx context.Context, token str
 }
 
 // updateRole - roleを再計算して設定する
-// currentRole、currentPeriod、paymentPeriodは既に取得済みの場合キャッシュとして利用する目的のため、取得済みでない場合は0を渡す
+// currentRole、currentPeriod、paymentPeriodは既に取得済みの場合キャッシュとして利用する目的のため、取得済みでない場合は""または0を渡す
 func (mu *managementUsecase) updateRole(
 	ctx context.Context,
 	userID int,
