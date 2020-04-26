@@ -22,7 +22,7 @@ var (
 		Kana:       "ミス チャン",
 		Handle:     "mischan",
 		Sex:        domain.Male,
-		University: &domain.University{
+		University: domain.University{
 			Name:       "早稲田大学",
 			Department: "基幹理工学部",
 			Subject:    "情報理工学科",
@@ -44,7 +44,7 @@ var (
 		Kana:       "ミス チャンニゴウ",
 		Handle:     "mischan2",
 		Sex:        domain.Female,
-		University: &domain.University{
+		University: domain.University{
 			Name:       "早稲田大学",
 			Department: "基幹理工学部",
 			Subject:    "情報通信学科",
