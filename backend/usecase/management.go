@@ -185,11 +185,13 @@ func (mu *managementUsecase) updateRole(
 
 	if !matched {
 		// currentPeriod <= paymentPeriodであるから、currentPeriodより前に支払いがあるかどうかで以前加入していたか判定できる
-		prevPaid, err = mu.paymentStatusRepository.IsFirst(ctx, userID, currentPeriod)
+		isFirst, err := mu.paymentStatusRepository.IsFirst(ctx, userID, currentPeriod)
 
 		if err != nil {
 			return xerrors.Errorf("failed to check payment status before current period: %w", err)
 		}
+
+		prevPaid = !isFirst
 	}
 
 	newRole := currentRole.GetNewRole(matched, prevPaid)
@@ -254,6 +256,12 @@ func (mu *managementUsecase) DeletePaymentStatus(ctx context.Context, userID, pe
 		return xerrors.Errorf("failed to get payment period from app config: %w", err)
 	}
 
+	currentPeriod, err := mu.appConfigRepository.GetCurrentPeriod()
+
+	if err != nil {
+		return xerrors.Errorf("failed to get current period from app config: %w", err)
+	}
+
 	if period == 0 {
 		period = paymentPeriod
 	}
@@ -268,11 +276,16 @@ func (mu *managementUsecase) DeletePaymentStatus(ctx context.Context, userID, pe
 		return nil
 	}
 
+	if period != currentPeriod &&
+		period != paymentPeriod {
+		return nil
+	}
+
 	err = mu.updateRole(
 		ctx,
 		userID,
 		"",
-		0,
+		currentPeriod,
 		paymentPeriod,
 	)
 
