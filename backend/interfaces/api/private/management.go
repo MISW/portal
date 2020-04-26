@@ -30,6 +30,15 @@ type ManagementHandler interface {
 
 	// GetPaymentStatuses - 支払い情報一覧を取得する
 	GetPaymentStatuses(e echo.Context) error
+
+	// GetUser - ユーザ情報を取得
+	GetUser(e echo.Context) error
+
+	// UpdateUser - ユーザ情報を更新(制限なし)
+	UpdateUser(e echo.Context) error
+
+	// UpdateRole - ユーザのroleを変更
+	UpdateRole(e echo.Context) error
 }
 
 // NewManagementHandler - ManagementHandlerを初期化
@@ -217,4 +226,76 @@ func (mh *managementHandler) GetPaymentStatuses(e echo.Context) error {
 	return rest.RespondOK(e, map[string]interface{}{
 		"payment_statuses": res,
 	})
+}
+
+// GetUser - ユーザ情報を取得
+func (mh *managementHandler) GetUser(e echo.Context) error {
+	var param struct {
+		UserID int `json:"user_id" query:"user_id"`
+	}
+
+	if err := e.Bind(&param); err != nil {
+		return rest.RespondMessage(e, rest.NewBadRequest(fmt.Sprintf("invalid request values: %v", err)))
+	}
+
+	user, err := mh.mu.GetUser(e.Request().Context(), param.UserID)
+
+	var frerr rest.ErrorResponse
+	if xerrors.As(err, &frerr) {
+		return rest.RespondMessage(e, err)
+	}
+
+	if err != nil {
+		return xerrors.Errorf("failed to get user(%d): %w", param.UserID, err)
+	}
+
+	return rest.RespondOK(e, map[string]interface{}{
+		"user": user,
+	})
+}
+
+// UpdateUser - ユーザ情報を更新(制限なし)
+func (mh *managementHandler) UpdateUser(e echo.Context) error {
+	var param struct {
+		User *domain.User `json:"user"`
+	}
+
+	if err := e.Bind(&param); err != nil {
+		return rest.RespondMessage(e, rest.NewBadRequest(fmt.Sprintf("invalid request values: %v", err)))
+	}
+
+	if param.User == nil {
+		return rest.RespondMessage(e, rest.NewBadRequest("invalid request values"))
+	}
+
+	err := mh.mu.UpdateUser(e.Request().Context(), param.User)
+
+	var frerr rest.ErrorResponse
+	if xerrors.As(err, &frerr) {
+		return rest.RespondMessage(e, err)
+	}
+
+	if err != nil {
+		return xerrors.Errorf("failed to get user(%d): %w", param.User.ID, err)
+	}
+
+	return rest.RespondOK(e, nil)
+}
+
+// UpdateRole - ユーザのroleを変更
+func (mh *managementHandler) UpdateRole(e echo.Context) error {
+	var param struct {
+		UserID int `json:"user_id"`
+		Role   domain.RoleType
+	}
+
+	if err := e.Bind(&param); err != nil {
+		return rest.RespondMessage(e, rest.NewBadRequest(fmt.Sprintf("invalid request values: %v", err)))
+	}
+
+	if err := mh.mu.UpdateRole(e.Request().Context(), param.UserID, param.Role); err != nil {
+		return xerrors.Errorf("failed to update role(%d): %w", param.UserID, err)
+	}
+
+	return nil
 }
