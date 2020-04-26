@@ -164,6 +164,7 @@ func TestAddPaymentStatus(t *testing.T) {
 		}
 	})
 
+	// payment statusに関係ない期間でroleの再計算は行わない
 	t.Run("member_to_member_not_paid", func(t *testing.T) {
 		mock, finish := initManagementMock(t)
 		defer finish()
@@ -249,4 +250,281 @@ func TestAddPaymentStatus(t *testing.T) {
 		}
 	})
 
+}
+
+func TestDeletePaymentStatus(t *testing.T) {
+	t.Run("member_to_member_deleted_paid", func(t *testing.T) {
+		mock, finish := initManagementMock(t)
+		defer finish()
+
+		userID := 10
+		paymentPeriod := 202004
+		currentPeriod := 201910
+		targetPeriod := 202004
+
+		mock.appConfigRepository.
+			EXPECT().
+			GetPaymentPeriod().
+			Return(paymentPeriod, nil)
+
+		mock.appConfigRepository.
+			EXPECT().
+			GetCurrentPeriod().
+			Return(currentPeriod, nil)
+
+		mock.paymentStatusRepository.
+			EXPECT().
+			Delete(
+				gomock.Any(),
+				userID,
+				targetPeriod,
+			).
+			Return(true, nil)
+
+		mock.userRepository.EXPECT().GetByID(gomock.Any(), gomock.Eq(userID)).Return(&domain.User{
+			ID:   userID,
+			Role: domain.Member,
+		}, nil)
+
+		mock.paymentStatusRepository.
+			EXPECT().
+			HasMatchingPeriod(
+				gomock.Any(),
+				userID,
+				gomock.Eq([]int{currentPeriod, paymentPeriod}),
+			).
+			Return(true, nil)
+
+		err := mock.managementUsecase.DeletePaymentStatus(
+			context.Background(),
+			userID,
+			0,
+		)
+
+		if err != nil {
+			t.Fatalf("AddPaymentStatus failed: %+v", err)
+		}
+	})
+
+	t.Run("member_to_member_deleted_not_paid", func(t *testing.T) {
+		// 関係ない期間のためroleは更新されない
+
+		mock, finish := initManagementMock(t)
+		defer finish()
+
+		userID := 10
+		paymentPeriod := 202004
+		currentPeriod := 201910
+		targetPeriod := 201804
+
+		mock.appConfigRepository.
+			EXPECT().
+			GetPaymentPeriod().
+			Return(paymentPeriod, nil)
+
+		mock.appConfigRepository.
+			EXPECT().
+			GetCurrentPeriod().
+			Return(currentPeriod, nil)
+
+		mock.paymentStatusRepository.
+			EXPECT().
+			Delete(
+				gomock.Any(),
+				userID,
+				targetPeriod,
+			).
+			Return(true, nil)
+
+		err := mock.managementUsecase.DeletePaymentStatus(
+			context.Background(),
+			userID,
+			targetPeriod,
+		)
+
+		if err != nil {
+			t.Fatalf("AddPaymentStatus failed: %+v", err)
+		}
+	})
+
+	t.Run("member_to_member_not_deleted", func(t *testing.T) {
+		mock, finish := initManagementMock(t)
+		defer finish()
+
+		userID := 10
+		paymentPeriod := 202004
+		currentPeriod := 201910
+		targetPeriod := 202004
+
+		mock.appConfigRepository.
+			EXPECT().
+			GetPaymentPeriod().
+			Return(paymentPeriod, nil)
+
+		mock.appConfigRepository.
+			EXPECT().
+			GetCurrentPeriod().
+			Return(currentPeriod, nil)
+
+		mock.paymentStatusRepository.
+			EXPECT().
+			Delete(
+				gomock.Any(),
+				userID,
+				targetPeriod,
+			).
+			Return(false, nil)
+
+		err := mock.managementUsecase.DeletePaymentStatus(
+			context.Background(),
+			userID,
+			targetPeriod,
+		)
+
+		if err != nil {
+			t.Fatalf("AddPaymentStatus failed: %+v", err)
+		}
+	})
+
+	t.Run("member_to_not_member", func(t *testing.T) {
+		mock, finish := initManagementMock(t)
+		defer finish()
+
+		userID := 10
+		paymentPeriod := 202004
+		currentPeriod := 201910
+		targetPeriod := 202004
+
+		mock.appConfigRepository.
+			EXPECT().
+			GetPaymentPeriod().
+			Return(paymentPeriod, nil)
+
+		mock.appConfigRepository.
+			EXPECT().
+			GetCurrentPeriod().
+			Return(currentPeriod, nil)
+
+		mock.paymentStatusRepository.
+			EXPECT().
+			Delete(
+				gomock.Any(),
+				userID,
+				targetPeriod,
+			).
+			Return(true, nil)
+
+		mock.userRepository.EXPECT().GetByID(gomock.Any(), gomock.Eq(userID)).Return(&domain.User{
+			ID:   userID,
+			Role: domain.Member,
+		}, nil)
+
+		mock.paymentStatusRepository.
+			EXPECT().
+			HasMatchingPeriod(
+				gomock.Any(),
+				userID,
+				gomock.Eq([]int{currentPeriod, paymentPeriod}),
+			).
+			Return(false, nil)
+
+		mock.paymentStatusRepository.
+			EXPECT().
+			IsFirst(
+				gomock.Any(),
+				userID,
+				currentPeriod,
+			).
+			Return(false, nil)
+
+		mock.userRepository.
+			EXPECT().
+			UpdateRole(
+				gomock.Any(),
+				userID,
+				domain.NotMember,
+			).
+			Return(nil)
+
+		err := mock.managementUsecase.DeletePaymentStatus(
+			context.Background(),
+			userID,
+			targetPeriod,
+		)
+
+		if err != nil {
+			t.Fatalf("AddPaymentStatus failed: %+v", err)
+		}
+	})
+
+	t.Run("member_to_new_member", func(t *testing.T) {
+		mock, finish := initManagementMock(t)
+		defer finish()
+
+		userID := 10
+		paymentPeriod := 202004
+		currentPeriod := 201910
+		targetPeriod := 202004
+
+		mock.appConfigRepository.
+			EXPECT().
+			GetPaymentPeriod().
+			Return(paymentPeriod, nil)
+
+		mock.appConfigRepository.
+			EXPECT().
+			GetCurrentPeriod().
+			Return(currentPeriod, nil)
+
+		mock.paymentStatusRepository.
+			EXPECT().
+			Delete(
+				gomock.Any(),
+				userID,
+				targetPeriod,
+			).
+			Return(true, nil)
+
+		mock.userRepository.EXPECT().GetByID(gomock.Any(), gomock.Eq(userID)).Return(&domain.User{
+			ID:   userID,
+			Role: domain.Member,
+		}, nil)
+
+		mock.paymentStatusRepository.
+			EXPECT().
+			HasMatchingPeriod(
+				gomock.Any(),
+				userID,
+				gomock.Eq([]int{currentPeriod, paymentPeriod}),
+			).
+			Return(false, nil)
+
+		mock.paymentStatusRepository.
+			EXPECT().
+			IsFirst(
+				gomock.Any(),
+				userID,
+				currentPeriod,
+			).
+			Return(true, nil)
+
+		mock.userRepository.
+			EXPECT().
+			UpdateRole(
+				gomock.Any(),
+				userID,
+				domain.NewMember,
+			).
+			Return(nil)
+
+		err := mock.managementUsecase.DeletePaymentStatus(
+			context.Background(),
+			userID,
+			targetPeriod,
+		)
+
+		if err != nil {
+			t.Fatalf("AddPaymentStatus failed: %+v", err)
+		}
+	})
 }
