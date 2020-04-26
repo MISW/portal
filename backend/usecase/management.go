@@ -141,13 +141,25 @@ func (mu *managementUsecase) AuthorizeTransaction(ctx context.Context, token str
 }
 
 func (mu *managementUsecase) AddPaymentStatus(ctx context.Context, userID, period, authorizer int) error {
+	currentPeriod, err := mu.appConfigRepository.GetPaymentPeriod()
+
+	if err != nil {
+		return xerrors.Errorf("failed to get current payment period from app config: %w", err)
+	}
+
 	if period == 0 {
-		var err error
-		period, err = mu.appConfigRepository.GetPaymentPeriod()
+		period = currentPeriod
+	}
+
+	var currentRole domain.RoleType
+	if currentPeriod == period {
+		user, err := mu.GetUser(ctx, userID)
 
 		if err != nil {
-			return xerrors.Errorf("failed to get current payment period from app config: %w", err)
+			return xerrors.Errorf("failed to retrieve user info: %w", err)
 		}
+
+		currentRole = user.Role
 	}
 
 	if err := mu.paymentStatusRepository.Add(ctx, userID, period, authorizer); err != nil {
@@ -156,6 +168,17 @@ func (mu *managementUsecase) AddPaymentStatus(ctx context.Context, userID, perio
 		}
 
 		return xerrors.Errorf("failed to ad payment status for (userid: %d, period: %d, authorizer: %d)", userID, period, authorizer)
+	}
+
+	if currentPeriod == period {
+		switch currentRole {
+		case domain.NotMember, domain.NewMember:
+			err := mu.userRepository.UpdateRole(ctx, userID, domain.Member)
+
+			if err != nil {
+				return xerrors.Errorf("failed to update role for %d: %w", userID, err)
+			}
+		}
 	}
 
 	return nil
