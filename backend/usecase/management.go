@@ -140,19 +140,17 @@ func (mu *managementUsecase) AuthorizeTransaction(ctx context.Context, token str
 	return nil
 }
 
-func (mu *managementUsecase) AddPaymentStatus(ctx context.Context, userID, period, authorizer int) error {
-	currentPeriod, err := mu.appConfigRepository.GetPaymentPeriod()
+// updateRole - roleを再計算して設定する
+// currentRole、currentPeriod、paymentPeriodは既に取得済みの場合キャッシュとして利用する目的のため、取得済みでない場合は0を渡す
+func (mu *managementUsecase) updateRole(
+	ctx context.Context,
+	userID int,
+	currentRole domain.RoleType,
+	currentPeriod, paymentPeriod int,
+) error {
+	var err error
 
-	if err != nil {
-		return xerrors.Errorf("failed to get current payment period from app config: %w", err)
-	}
-
-	if period == 0 {
-		period = currentPeriod
-	}
-
-	var currentRole domain.RoleType
-	if currentPeriod == period {
+	if len(currentRole) == 0 {
 		user, err := mu.GetUser(ctx, userID)
 
 		if err != nil {
@@ -160,6 +158,60 @@ func (mu *managementUsecase) AddPaymentStatus(ctx context.Context, userID, perio
 		}
 
 		currentRole = user.Role
+	}
+
+	if currentPeriod == 0 {
+		currentPeriod, err = mu.appConfigRepository.GetCurrentPeriod()
+
+		if err != nil {
+			return xerrors.Errorf("failed to get current period: %w", err)
+		}
+	}
+
+	if paymentPeriod == 0 {
+		paymentPeriod, err = mu.appConfigRepository.GetPaymentPeriod()
+
+		if err != nil {
+			return xerrors.Errorf("failed to get payment period: %w", err)
+		}
+	}
+
+	matched, err := mu.paymentStatusRepository.HasMatchingPeriod(ctx, userID, []int{
+		currentPeriod,
+		paymentPeriod,
+	})
+
+	prevPaid := matched
+
+	if !matched {
+		// currentPeriod <= paymentPeriodであるから、currentPeriodより前に支払いがあるかどうかで以前加入していたか判定できる
+		prevPaid, err = mu.paymentStatusRepository.IsFirst(ctx, userID, currentPeriod)
+
+		if err != nil {
+			return xerrors.Errorf("failed to check payment status before current period: %w", err)
+		}
+	}
+
+	newRole := currentRole.GetNewRole(matched, prevPaid)
+
+	if newRole != currentRole {
+		if err := mu.userRepository.UpdateRole(ctx, userID, newRole); err != nil {
+			return xerrors.Errorf("failed to update role: %w", err)
+		}
+	}
+
+	return nil
+}
+
+func (mu *managementUsecase) AddPaymentStatus(ctx context.Context, userID, period, authorizer int) error {
+	paymentPeriod, err := mu.appConfigRepository.GetPaymentPeriod()
+
+	if err != nil {
+		return xerrors.Errorf("failed to get current payment period from app config: %w", err)
+	}
+
+	if period == 0 {
+		period = paymentPeriod
 	}
 
 	if err := mu.paymentStatusRepository.Add(ctx, userID, period, authorizer); err != nil {
@@ -170,48 +222,30 @@ func (mu *managementUsecase) AddPaymentStatus(ctx context.Context, userID, perio
 		return xerrors.Errorf("failed to ad payment status for (userid: %d, period: %d, authorizer: %d)", userID, period, authorizer)
 	}
 
-	if currentPeriod == period {
-		switch currentRole {
-		case domain.NotMember, domain.NewMember:
-			err := mu.userRepository.UpdateRole(ctx, userID, domain.Member)
+	err = mu.updateRole(
+		ctx,
+		userID,
+		"",
+		0,
+		paymentPeriod,
+	)
 
-			if err != nil {
-				return xerrors.Errorf("failed to update role for %d: %w", userID, err)
-			}
-		}
+	if err != nil {
+		return xerrors.Errorf("failed to update role: %w", err)
 	}
 
 	return nil
 }
 
 func (mu *managementUsecase) DeletePaymentStatus(ctx context.Context, userID, period int) error {
-	currentPeriod, err := mu.appConfigRepository.GetPaymentPeriod()
+	paymentPeriod, err := mu.appConfigRepository.GetPaymentPeriod()
 
 	if err != nil {
 		return xerrors.Errorf("failed to get current payment period from app config: %w", err)
 	}
 
 	if period == 0 {
-		period = currentPeriod
-	}
-
-	var currentRole domain.RoleType
-	var isLatest bool
-
-	if currentPeriod == period {
-		user, err := mu.GetUser(ctx, userID)
-
-		if err != nil {
-			return xerrors.Errorf("failed to retrieve user info: %w", err)
-		}
-
-		currentRole = user.Role
-
-		isLatest, err = mu.paymentStatusRepository.IsLatest(ctx, userID, period)
-
-		if err != nil {
-			return xerrors.Errorf("failed to check the specified period is the latest: %w", err)
-		}
+		period = paymentPeriod
 	}
 
 	deleted, err := mu.paymentStatusRepository.Delete(ctx, userID, period)
@@ -220,13 +254,20 @@ func (mu *managementUsecase) DeletePaymentStatus(ctx context.Context, userID, pe
 		return xerrors.Errorf("failed to delete payment status: %w", err)
 	}
 
-	if deleted && currentPeriod == period && isLatest {
-		switch currentRole {
-		case domain.Member:
-			if err := mu.userRepository.UpdateRole(ctx, userID, domain.NotMember); err != nil {
-				return xerrors.Errorf("failed to update role due to the deleted payment status: %w", err)
-			}
-		}
+	if !deleted {
+		return nil
+	}
+
+	err = mu.updateRole(
+		ctx,
+		userID,
+		"",
+		0,
+		paymentPeriod,
+	)
+
+	if err != nil {
+		return xerrors.Errorf("failed to update role: %w", err)
 	}
 
 	return nil
