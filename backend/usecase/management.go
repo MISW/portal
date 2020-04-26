@@ -34,7 +34,7 @@ type ManagementUsecase interface {
 	GetPaymentStatusesForUser(ctx context.Context, userID int) ([]*domain.PaymentStatus, error)
 
 	// GetUser - ユーザ情報を取得
-	GetUser(ctx context.Context, userID int) (*domain.User, error)
+	GetUser(ctx context.Context, userID int) (*domain.UserPaymentStatus, error)
 
 	// UpdateUser - ユーザ情報を更新(制限なし)
 	UpdateUser(ctx context.Context, user *domain.User) error
@@ -198,7 +198,7 @@ func (mu *managementUsecase) GetPaymentStatusesForUser(ctx context.Context, user
 	return res, nil
 }
 
-func (mu *managementUsecase) GetUser(ctx context.Context, userID int) (*domain.User, error) {
+func (mu *managementUsecase) GetUser(ctx context.Context, userID int) (*domain.UserPaymentStatus, error) {
 	user, err := mu.userRepository.GetByID(ctx, userID)
 
 	if err == domain.ErrNoUser {
@@ -209,7 +209,16 @@ func (mu *managementUsecase) GetUser(ctx context.Context, userID int) (*domain.U
 		return nil, xerrors.Errorf("failed to find user by id(%d): %w", userID, err)
 	}
 
-	return user, nil
+	ps, err := mu.GetPaymentStatus(ctx, userID, 0)
+
+	if err != nil {
+		return nil, xerrors.Errorf("failed to get payment status for user(%d): %w", userID, err)
+	}
+
+	return &domain.UserPaymentStatus{
+		User:          *user,
+		PaymentStatus: ps,
+	}, nil
 }
 
 func (mu *managementUsecase) UpdateUser(ctx context.Context, user *domain.User) error {
