@@ -260,3 +260,56 @@ func TestPaymentIsXXX(t *testing.T) {
 		}
 	})
 }
+
+func TestPaymentStatusHasMatchingPeriod(t *testing.T) {
+	conn := testutil.NewSQLConn(t)
+
+	psp := persistence.NewPaymentStatusPersistence(conn)
+
+	insertTestPaymentStatusData(t, psp)
+
+	// no parameter
+	matched, err := psp.HasMatchingPeriod(
+		context.Background(),
+		paymentStatusTemplate.UserID,
+		[]int{},
+	)
+
+	if err != nil {
+		t.Fatalf("HasMatchingPeriod failed: %+v", err)
+	}
+
+	if matched {
+		t.Fatal("should be false, but got true")
+	}
+
+	// has a matching parameter
+	matched, err = psp.HasMatchingPeriod(
+		context.Background(),
+		paymentStatusTemplate.UserID,
+		[]int{paymentStatusTemplate.Period, 100},
+	)
+
+	if err != nil {
+		t.Fatalf("HasMatchingPeriod failed: %+v", err)
+	}
+
+	if !matched {
+		t.Fatal("should be true, but got false")
+	}
+
+	// no matching parameter
+	matched, err = psp.HasMatchingPeriod(
+		context.Background(),
+		paymentStatusTemplate.UserID,
+		[]int{100},
+	)
+
+	if err != nil {
+		t.Fatalf("HasMatchingPeriod failed: %+v", err)
+	}
+
+	if matched {
+		t.Fatal("should be false, but got true")
+	}
+}

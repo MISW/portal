@@ -193,7 +193,7 @@ func (psp *paymentStatusPersistence) IsLatest(ctx context.Context, userID, perio
 	return counter == 0, nil
 }
 
-// IsLatest reports the specified payment status is the first or not.
+// IsFirst reports the specified payment status is the first or not.
 // CAUTION: This method doesn't check the specified status exists
 func (psp *paymentStatusPersistence) IsFirst(ctx context.Context, userID, period int) (bool, error) {
 	var counter int
@@ -207,4 +207,22 @@ func (psp *paymentStatusPersistence) IsFirst(ctx context.Context, userID, period
 	}
 
 	return counter == 0, nil
+}
+
+// HasMatchingPeriod returns whether there is a payment status matching parameters
+func (psp *paymentStatusPersistence) HasMatchingPeriod(ctx context.Context, userID int, periods []int) (bool, error) {
+	query, args, err := sqlx.In(`SELECT COUNT(*) FROM payment_statuses WHERE user_id=? AND period IN (?)`, userID, periods)
+
+	if err != nil {
+		return false, xerrors.Errorf("failed to compose a query: %w", err)
+	}
+
+	var counter int
+	err = psp.db.QueryRowxContext(ctx, query, args...).Scan(&counter)
+
+	if err != nil {
+		return false, xerrors.Errorf("failed to count matching payment statuses: %w", err)
+	}
+
+	return counter != 0, nil
 }

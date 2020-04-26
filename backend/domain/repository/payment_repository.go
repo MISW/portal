@@ -34,6 +34,9 @@ type PaymentStatusRepository interface {
 	// IsFirst reports the specified payment status is the first or not.
 	// CAUTION: This method doesn't check the specified status exists
 	IsFirst(ctx context.Context, userID, period int) (bool, error)
+
+	// HasMatchingPeriod returns whether there is a payment status matching parameters
+	HasMatchingPeriod(ctx context.Context, userID int, periods []int) (bool, error)
 }
 
 // PaymentTransactionRepository - サークル費支払い時のトークン管理
