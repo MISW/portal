@@ -211,6 +211,10 @@ func (psp *paymentStatusPersistence) IsFirst(ctx context.Context, userID, period
 
 // HasMatchingPeriod returns whether there is a payment status matching parameters
 func (psp *paymentStatusPersistence) HasMatchingPeriod(ctx context.Context, userID int, periods []int) (bool, error) {
+	if len(periods) == 0 {
+		return false, nil
+	}
+
 	query, args, err := sqlx.In(`SELECT COUNT(*) FROM payment_statuses WHERE user_id=? AND period IN (?)`, userID, periods)
 
 	if err != nil {
