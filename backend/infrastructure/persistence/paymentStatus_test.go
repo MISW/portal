@@ -166,3 +166,31 @@ func TestPaymentStatusList(t *testing.T) {
 		comparePaymentStatus(t, paymentStatusTemplate2, pss[1])
 	})
 }
+
+func TestPaymentIsLatest(t *testing.T) {
+	conn := testutil.NewSQLConn(t)
+
+	psp := persistence.NewPaymentStatusPersistence(conn)
+
+	insertTestPaymentStatusData(t, psp)
+
+	res, err := psp.IsLatest(context.Background(), paymentStatusTemplate.UserID, paymentStatusTemplate.Period)
+
+	if err != nil {
+		t.Fatalf("failed to call IsLatest: %+v", err)
+	}
+
+	if !res {
+		t.Fatalf("202010 should be latest, but false is returned")
+	}
+
+	res, err = psp.IsLatest(context.Background(), paymentStatusTemplate2.UserID, paymentStatusTemplate2.Period)
+
+	if err != nil {
+		t.Fatalf("failed to call IsLatest: %+v", err)
+	}
+
+	if res {
+		t.Fatalf("202004 should not be latest, but true is returned")
+	}
+}

@@ -170,3 +170,19 @@ func (psp *paymentStatusPersistence) ListPeriodsForUser(ctx context.Context, use
 
 	return res, nil
 }
+
+// IsLatest reports the specified payment status is the latest or not.
+// CAUTION: This method doesn't check the specified status exists
+func (psp *paymentStatusPersistence) IsLatest(ctx context.Context, userID, period int) (bool, error) {
+	var counter int
+
+	err := psp.db.QueryRowx(
+		`SELECT COUNT(*) FROM payment_statuses WHERE user_id=? AND period > ?`, userID, period,
+	).Scan(&counter)
+
+	if err != nil {
+		return false, xerrors.Errorf("failed to get payment statuses for the userID(%d): %w", userID, err)
+	}
+
+	return counter == 0, nil
+}

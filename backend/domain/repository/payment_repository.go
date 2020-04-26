@@ -26,6 +26,10 @@ type PaymentStatusRepository interface {
 
 	// ListForUser returns all periods the user paid in
 	ListPeriodsForUser(ctx context.Context, userID int) ([]*domain.PaymentStatus, error)
+
+	// IsLatest reports the specified payment status is the latest or not.
+	// CAUTION: This method doesn't check the specified status exists
+	IsLatest(ctx context.Context, userID, period int) (bool, error)
 }
 
 // PaymentTransactionRepository - サークル費支払い時のトークン管理
