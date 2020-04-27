@@ -242,7 +242,7 @@ func (mh *managementHandler) GetUser(e echo.Context) error {
 
 	var frerr rest.ErrorResponse
 	if xerrors.As(err, &frerr) {
-		return rest.RespondMessage(e, err)
+		return rest.RespondMessage(e, frerr)
 	}
 
 	if err != nil {
