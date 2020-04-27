@@ -151,7 +151,7 @@ func (mu *managementUsecase) updateRole(
 	var err error
 
 	if len(currentRole) == 0 {
-		user, err := mu.GetUser(ctx, userID)
+		user, err := mu.getUser(ctx, userID)
 
 		if err != nil {
 			return xerrors.Errorf("failed to retrieve user info: %w", err)
@@ -331,16 +331,11 @@ func (mu *managementUsecase) GetPaymentStatusesForUser(ctx context.Context, user
 }
 
 func (mu *managementUsecase) GetUser(ctx context.Context, userID int) (*domain.UserPaymentStatus, error) {
-	user, err := mu.userRepository.GetByID(ctx, userID)
-
-	if err == domain.ErrNoUser {
-		return nil, rest.NewNotFound("user not found")
-	}
+	user, err := mu.getUser(ctx, userID)
 
 	if err != nil {
-		return nil, xerrors.Errorf("failed to find user by id(%d): %w", userID, err)
+		return nil, xerrors.Errorf("failed to get user by id(%d): %w", userID, err)
 	}
-
 	ps, err := mu.GetPaymentStatus(ctx, userID, 0)
 
 	var notFound *rest.NotFound
@@ -354,6 +349,20 @@ func (mu *managementUsecase) GetUser(ctx context.Context, userID int) (*domain.U
 		User:          *user,
 		PaymentStatus: ps,
 	}, nil
+}
+
+func (mu *managementUsecase) getUser(ctx context.Context, userID int) (*domain.User, error) {
+	user, err := mu.userRepository.GetByID(ctx, userID)
+
+	if err == domain.ErrNoUser {
+		return nil, rest.NewNotFound("user not found")
+	}
+
+	if err != nil {
+		return nil, xerrors.Errorf("failed to find user by id(%d): %w", userID, err)
+	}
+
+	return user, nil
 }
 
 func (mu *managementUsecase) UpdateUser(ctx context.Context, user *domain.User) error {
