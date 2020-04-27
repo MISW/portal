@@ -211,9 +211,12 @@ func (mu *managementUsecase) GetUser(ctx context.Context, userID int) (*domain.U
 
 	ps, err := mu.GetPaymentStatus(ctx, userID, 0)
 
-	if err != nil {
+	var notFound *rest.NotFound
+	if !xerrors.As(err, &notFound) && err != nil {
 		return nil, xerrors.Errorf("failed to get payment status for user(%d): %w", userID, err)
 	}
+
+	ps = nil
 
 	return &domain.UserPaymentStatus{
 		User:          *user,
