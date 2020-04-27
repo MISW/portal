@@ -169,3 +169,20 @@ export const deletePaymentStatus = async (id: number) => {
     return Promise.reject("Error: status-code is " + res.statusText);
   }
 };
+
+export const getUserAsAdmin = async (id: number): Promise<UserWithPaymentJSON> => {
+  const res = await fetch(`${getHostAPI()}/private/management/user?user_id=${id}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "include",
+  });
+
+  if (res.status >= 400) {
+    console.error(res);
+    return Promise.reject("Error: status-code is " + res.statusText);
+  }
+
+  return (await res.json() as unknown) as UserWithPaymentJSON;
+};
