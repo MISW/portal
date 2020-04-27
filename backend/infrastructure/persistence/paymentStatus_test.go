@@ -123,6 +123,42 @@ func TestPaymentStatusGet(t *testing.T) {
 	})
 }
 
+func TestPaymentStatusDelete(t *testing.T) {
+	t.Run("get_latest", func(t *testing.T) {
+		conn := testutil.NewSQLConn(t)
+
+		psp := persistence.NewPaymentStatusPersistence(conn)
+
+		insertTestPaymentStatusData(t, psp)
+
+		deleted, err := psp.Delete(context.Background(), paymentStatusTemplate.UserID, paymentStatusTemplate.Period)
+
+		if err != nil {
+			t.Fatalf("failed to delete payment status: %+v", err)
+		}
+
+		if !deleted {
+			t.Fatalf("delete should return true")
+		}
+
+		_, err = psp.Get(context.Background(), paymentStatusTemplate.UserID, paymentStatusTemplate.Period)
+
+		if err != domain.ErrNoPaymentStatus {
+			t.Fatalf("error on deleted item should be ErrNoPaymentStatus, but got: %+v", err)
+		}
+
+		deleted, err = psp.Delete(context.Background(), paymentStatusTemplate.UserID, paymentStatusTemplate.Period)
+
+		if err != nil {
+			t.Fatalf("deletion on deleted item should return no error: %+v", err)
+		}
+
+		if deleted {
+			t.Fatalf("deletion on deleted item should return false")
+		}
+	})
+}
+
 func TestPaymentStatusList(t *testing.T) {
 	t.Run("for_period", func(t *testing.T) {
 		conn := testutil.NewSQLConn(t)
@@ -165,4 +201,115 @@ func TestPaymentStatusList(t *testing.T) {
 		comparePaymentStatus(t, paymentStatusTemplate, pss[0])
 		comparePaymentStatus(t, paymentStatusTemplate2, pss[1])
 	})
+}
+
+func TestPaymentIsXXX(t *testing.T) {
+	t.Run("latest", func(t *testing.T) {
+		conn := testutil.NewSQLConn(t)
+
+		psp := persistence.NewPaymentStatusPersistence(conn)
+
+		insertTestPaymentStatusData(t, psp)
+
+		res, err := psp.IsLatest(context.Background(), paymentStatusTemplate.UserID, paymentStatusTemplate.Period)
+
+		if err != nil {
+			t.Fatalf("failed to call IsLatest: %+v", err)
+		}
+
+		if !res {
+			t.Fatalf("202010 is the latest, but false is returned")
+		}
+
+		res, err = psp.IsLatest(context.Background(), paymentStatusTemplate2.UserID, paymentStatusTemplate2.Period)
+
+		if err != nil {
+			t.Fatalf("failed to call IsLatest: %+v", err)
+		}
+
+		if res {
+			t.Fatalf("202004 is not the latest, but true is returned")
+		}
+	})
+
+	t.Run("first", func(t *testing.T) {
+		conn := testutil.NewSQLConn(t)
+
+		psp := persistence.NewPaymentStatusPersistence(conn)
+
+		insertTestPaymentStatusData(t, psp)
+
+		res, err := psp.IsFirst(context.Background(), paymentStatusTemplate.UserID, paymentStatusTemplate.Period)
+
+		if err != nil {
+			t.Fatalf("failed to call IsLatest: %+v", err)
+		}
+
+		if res {
+			t.Fatalf("202010 is not the first, but true is returned")
+		}
+
+		res, err = psp.IsFirst(context.Background(), paymentStatusTemplate2.UserID, paymentStatusTemplate2.Period)
+
+		if err != nil {
+			t.Fatalf("failed to call IsLatest: %+v", err)
+		}
+
+		if !res {
+			t.Fatalf("202004 is the first, but false is returned")
+		}
+	})
+}
+
+func TestPaymentStatusHasMatchingPeriod(t *testing.T) {
+	conn := testutil.NewSQLConn(t)
+
+	psp := persistence.NewPaymentStatusPersistence(conn)
+
+	insertTestPaymentStatusData(t, psp)
+
+	// no parameter
+	matched, err := psp.HasMatchingPeriod(
+		context.Background(),
+		paymentStatusTemplate.UserID,
+		[]int{},
+	)
+
+	if err != nil {
+		t.Fatalf("HasMatchingPeriod failed: %+v", err)
+	}
+
+	if matched {
+		t.Fatal("should be false, but got true")
+	}
+
+	// has a matching parameter
+	matched, err = psp.HasMatchingPeriod(
+		context.Background(),
+		paymentStatusTemplate.UserID,
+		[]int{paymentStatusTemplate.Period, 100},
+	)
+
+	if err != nil {
+		t.Fatalf("HasMatchingPeriod failed: %+v", err)
+	}
+
+	if !matched {
+		t.Fatal("should be true, but got false")
+	}
+
+	// no matching parameter
+	matched, err = psp.HasMatchingPeriod(
+		context.Background(),
+		paymentStatusTemplate.UserID,
+		[]int{100},
+	)
+
+	if err != nil {
+		t.Fatalf("HasMatchingPeriod failed: %+v", err)
+	}
+
+	if matched {
+		t.Fatal("should be false, but got true")
+	}
 }

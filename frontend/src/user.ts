@@ -142,7 +142,7 @@ export const toPaymentTableData = (j: UserWithPaymentJSON) => ({
   discordId: j.discord_id,
   role: j.role,
   authorizer: j.payment_status?.authorizer ?? "",
-  period: j.payment_status?.period ?? "never",
+  paid: j.payment_status ? "YES" : "NO",
 });
 
 export type PaymentTableData = ReturnType<typeof toPaymentTableData>;

@@ -129,3 +129,65 @@ export const listUsers = async (): Promise<Array<PaymentTableData>> => {
   console.log(userList);
   return userList.map((u) => toPaymentTableData(u));
 };
+
+export const addPaymentStatus = async (id: number) => {
+  const res = await fetch(`${getHostAPI()}/private/management/payment_status`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "include",
+    body: JSON.stringify({
+      user_id: id,
+    }),
+  });
+
+  if (res.status == 409) {
+    return;
+  }
+
+  if (res.status >= 400) {
+    console.error(res);
+    return Promise.reject("Error: status-code is " + res.statusText);
+  }
+};
+
+export const deletePaymentStatus = async (id: number) => {
+  const res = await fetch(`${getHostAPI()}/private/management/payment_status`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "include",
+    body: JSON.stringify({
+      user_id: id,
+    }),
+  });
+
+  if (res.status >= 400) {
+    console.error(res);
+    return Promise.reject("Error: status-code is " + res.statusText);
+  }
+};
+
+export const getUserAsAdmin = async (
+  id: number
+): Promise<UserWithPaymentJSON> => {
+  const res = await fetch(
+    `${getHostAPI()}/private/management/user?user_id=${id}`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    }
+  );
+
+  if (res.status >= 400) {
+    console.error(res);
+    return Promise.reject("Error: status-code is " + res.statusText);
+  }
+
+  return (await res.json()).user as UserWithPaymentJSON;
+};

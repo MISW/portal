@@ -32,3 +32,27 @@ func TestAppConfig_PaymentPeriod(t *testing.T) {
 		t.Fatalf("updated value is different from %d: %+v", newValue, period)
 	}
 }
+
+func TestAppConfig_CurrentPeriod(t *testing.T) {
+	conn := testutil.NewSQLConn(t)
+
+	acp := persistence.NewAppConfigPersistence(conn)
+
+	if period, err := acp.GetCurrentPeriod(); err != nil {
+		t.Fatalf("failed to get default value: %+v", err)
+	} else if period != 201910 {
+		t.Fatalf("default value is different from 202004: %+v", period)
+	}
+
+	newValue := 201804
+
+	if err := acp.SetCurrentPeriod(newValue); err != nil {
+		t.Fatalf("failed to set value: %+v", err)
+	}
+
+	if period, err := acp.GetCurrentPeriod(); err != nil {
+		t.Fatalf("failed to get updated value: %+v", err)
+	} else if period != newValue {
+		t.Fatalf("updated value is different from %d: %+v", newValue, period)
+	}
+}

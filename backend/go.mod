@@ -7,6 +7,7 @@ require (
 	github.com/coreos/go-oidc v2.2.1+incompatible
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/go-sql-driver/mysql v1.5.0
+	github.com/golang/mock v1.4.3
 	github.com/google/go-cmp v0.4.0
 	github.com/heetch/confita v0.9.0
 	github.com/jmoiron/sqlx v1.2.0

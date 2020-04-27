@@ -2,15 +2,22 @@ import React, { useEffect, useState } from "react";
 import { NextPage } from "next";
 import AdminUsersTable, {
   HeadCell,
+  Data,
 } from "../../src/components/layout/AdminUsersTable";
-import { listUsers } from "../../src/network";
-import { PaymentTableData } from "../../src/user";
+import {
+  listUsers,
+  getUserAsAdmin,
+  addPaymentStatus,
+  deletePaymentStatus,
+} from "../../src/network";
+import { PaymentTableData, toPaymentTableData } from "../../src/user";
 
 const headCells: HeadCell[] = [
   { id: "id", label: "id" },
   { id: "generation", label: "代" },
   { id: "handle", label: "ハンネ" },
-  { id: "period", label: "period" },
+  { id: "paid", label: "支払済" },
+  { id: "authorizer", label: "納入確認者" },
   { id: "role", label: "role" },
   { id: "name", label: "氏名" },
   { id: "kana", label: "カナ" },
@@ -19,7 +26,6 @@ const headCells: HeadCell[] = [
   { id: "department", label: "学部" },
   { id: "subject", label: "学科" },
   { id: "studentId", label: "学籍番号" },
-  { id: "authorizer", label: "納入確認者" },
   { id: "email", label: "email" },
   { id: "emergencyPhoneNumber", label: "緊急連絡先" },
   { id: "workshops", label: "研究会" },
@@ -51,6 +57,15 @@ const Page: NextPage = () => {
           rows={users}
           headCells={headCells}
           defaultSortedBy={"id"}
+          handleEditPaymnetStatus={async (id, status): Promise<Data> => {
+            if (status) {
+              await addPaymentStatus(id);
+            } else {
+              await deletePaymentStatus(id);
+            }
+
+            return toPaymentTableData(await getUserAsAdmin(id));
+          }}
         />
       ) : (
         "Loading..."
