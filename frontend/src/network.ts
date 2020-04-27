@@ -139,7 +139,7 @@ export const addPaymentStatus = async (id: number) => {
     credentials: "include",
     body: JSON.stringify({
       user_id: id,
-    })
+    }),
   });
 
   if (res.status == 409) {
@@ -161,7 +161,7 @@ export const deletePaymentStatus = async (id: number) => {
     credentials: "include",
     body: JSON.stringify({
       user_id: id,
-    })
+    }),
   });
 
   if (res.status >= 400) {
@@ -170,14 +170,19 @@ export const deletePaymentStatus = async (id: number) => {
   }
 };
 
-export const getUserAsAdmin = async (id: number): Promise<UserWithPaymentJSON> => {
-  const res = await fetch(`${getHostAPI()}/private/management/user?user_id=${id}`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    credentials: "include",
-  });
+export const getUserAsAdmin = async (
+  id: number
+): Promise<UserWithPaymentJSON> => {
+  const res = await fetch(
+    `${getHostAPI()}/private/management/user?user_id=${id}`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    }
+  );
 
   if (res.status >= 400) {
     console.error(res);
