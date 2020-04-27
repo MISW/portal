@@ -4,7 +4,12 @@ import AdminUsersTable, {
   HeadCell,
   Data,
 } from "../../src/components/layout/AdminUsersTable";
-import { listUsers, getUserAsAdmin, addPaymentStatus, deletePaymentStatus } from "../../src/network";
+import {
+  listUsers,
+  getUserAsAdmin,
+  addPaymentStatus,
+  deletePaymentStatus,
+} from "../../src/network";
 import { PaymentTableData, toPaymentTableData } from "../../src/user";
 
 const headCells: HeadCell[] = [
@@ -59,13 +64,12 @@ const Page: NextPage = () => {
               await deletePaymentStatus(id);
             }
 
-
             return toPaymentTableData(await getUserAsAdmin(id));
           }}
         />
       ) : (
-          "Loading..."
-        )}
+        "Loading..."
+      )}
     </>
   );
 };

@@ -50,9 +50,9 @@ function getComparator<Key extends keyof any>(
   order: Order,
   orderBy: Key
 ): (
-    a: { [key in Key]: number | string },
-    b: { [key in Key]: number | string }
-  ) => number {
+  a: { [key in Key]: number | string },
+  b: { [key in Key]: number | string }
+) => number {
   return order === "desc"
     ? (a, b) => descendingComparator(a, b, orderBy)
     : (a, b) => -descendingComparator(a, b, orderBy);
@@ -183,13 +183,13 @@ const useToolbarStyles = makeStyles((theme: Theme) =>
     highlight:
       theme.palette.type === "light"
         ? {
-          color: theme.palette.secondary.main,
-          backgroundColor: lighten(theme.palette.secondary.light, 0.85),
-        }
+            color: theme.palette.secondary.main,
+            backgroundColor: lighten(theme.palette.secondary.light, 0.85),
+          }
         : {
-          color: theme.palette.text.primary,
-          backgroundColor: theme.palette.secondary.dark,
-        },
+            color: theme.palette.text.primary,
+            backgroundColor: theme.palette.secondary.dark,
+          },
     title: {
       flex: "1 1 100%",
     },
@@ -228,18 +228,21 @@ const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
           {numSelected} selected
         </Typography>
       ) : (
-          <Typography
-            className={classes.title}
-            variant="h6"
-            id="tableTitle"
-            component="div"
-          >
-            [管理者] ユーザー一覧
-          </Typography>
+        <Typography
+          className={classes.title}
+          variant="h6"
+          id="tableTitle"
+          component="div"
+        >
+          [管理者] ユーザー一覧
+        </Typography>
+      )}
 
-        )}
-
-      <NoWrapButton variant="contained" color={editMode ? "primary" : "default"} onClick={handleClickOnEditMode}>
+      <NoWrapButton
+        variant="contained"
+        color={editMode ? "primary" : "default"}
+        onClick={handleClickOnEditMode}
+      >
         {editMode ? "終了" : "支払い登録モード"}
       </NoWrapButton>
       {numSelected > 0 ? (
@@ -249,12 +252,12 @@ const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
           </IconButton>
         </Tooltip>
       ) : (
-          <Tooltip title="Filter list">
-            <IconButton aria-label="filter list">
-              <FilterListIcon />
-            </IconButton>
-          </Tooltip>
-        )}
+        <Tooltip title="Filter list">
+          <IconButton aria-label="filter list">
+            <FilterListIcon />
+          </IconButton>
+        </Tooltip>
+      )}
     </Toolbar>
   );
 };
@@ -271,7 +274,12 @@ export const EnhancedTable: React.FC<{
   defaultSortedBy: keyof Data;
   headCells: Array<HeadCell>;
   handleEditPaymnetStatus?: (id: number, status: boolean) => Promise<Data>;
-}> = ({ rows: rowsBase, defaultSortedBy, headCells, handleEditPaymnetStatus }) => {
+}> = ({
+  rows: rowsBase,
+  defaultSortedBy,
+  headCells,
+  handleEditPaymnetStatus,
+}) => {
   const [rows, setRows] = React.useState<Array<Data>>(rowsBase);
   const classes = useStyles();
   const [order, setOrder] = React.useState<Order>("asc");
@@ -280,7 +288,9 @@ export const EnhancedTable: React.FC<{
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(25);
-  const [editPaymentStatusMode, setEditPaymentStatusMode] = React.useState(false);
+  const [editPaymentStatusMode, setEditPaymentStatusMode] = React.useState(
+    false
+  );
 
   const handleRequestSort = (
     event: React.MouseEvent<unknown>,
@@ -344,15 +354,23 @@ export const EnhancedTable: React.FC<{
   };
 
   const handleClickOnEditPaymentStatus = (id: number) => {
-    const paid = rows.filter(x => x.id === id).map(x => x.paid)[0];
-    setRows(rows.map(x => x.id !== id ? x : { ...x, paid: x.paid === "YES" ? "NO(WIP)" : "YES(WIP)" }));
+    const paid = rows.filter((x) => x.id === id).map((x) => x.paid)[0];
+    setRows(
+      rows.map((x) =>
+        x.id !== id
+          ? x
+          : { ...x, paid: x.paid === "YES" ? "NO(WIP)" : "YES(WIP)" }
+      )
+    );
 
     if (handleEditPaymnetStatus) {
-      handleEditPaymnetStatus(id, paid !== "YES").then((data) => {
-        setRows(rows.map(x => x.id !== id ? x : data));
-      }).catch((err) => console.error(err));
+      handleEditPaymnetStatus(id, paid !== "YES")
+        .then((data) => {
+          setRows(rows.map((x) => (x.id !== id ? x : data)));
+        })
+        .catch((err) => console.error(err));
     }
-  }
+  };
 
   const isSelected = (id: number) => selected.indexOf(id) !== -1;
 
@@ -362,7 +380,13 @@ export const EnhancedTable: React.FC<{
   return (
     <div className={classes.root}>
       <Paper className={classes.paper}>
-        <EnhancedTableToolbar numSelected={selected.length} editMode={editPaymentStatusMode} handleClickOnEditMode={() => { setSelected([]), setEditPaymentStatusMode(!editPaymentStatusMode) }} />
+        <EnhancedTableToolbar
+          numSelected={selected.length}
+          editMode={editPaymentStatusMode}
+          handleClickOnEditMode={() => {
+            setSelected([]), setEditPaymentStatusMode(!editPaymentStatusMode);
+          }}
+        />
         <TableContainer className={classes.tableWrapper}>
           <Table
             stickyHeader
@@ -422,15 +446,17 @@ export const EnhancedTable: React.FC<{
                               <NoTopBottomPaddingCheckbox
                                 checked={row[propertyName].startsWith("YES")}
                                 disabled={row[propertyName].includes("(WIP)")}
-                                onClick={(_) => handleClickOnEditPaymentStatus(row.id)}
+                                onClick={(_) =>
+                                  handleClickOnEditPaymentStatus(row.id)
+                                }
                               />
                             </TableCell>
-                          ) :
-                            (
-                              <TableCell align="left" key={propertyName}>
-                                {row[propertyName]}
-                              </TableCell>
-                            ))}
+                          ) : (
+                            <TableCell align="left" key={propertyName}>
+                              {row[propertyName]}
+                            </TableCell>
+                          )
+                        )}
                     </TableRow>
                   );
                 })}
@@ -456,7 +482,7 @@ export const EnhancedTable: React.FC<{
         control={<Switch checked={dense} onChange={handleChangeDense} />}
         label="Dense padding"
       />
-    </div >
+    </div>
   );
 };
 
