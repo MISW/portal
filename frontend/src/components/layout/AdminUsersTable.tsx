@@ -270,7 +270,8 @@ export const EnhancedTable: React.FC<{
   rows: Array<Data>;
   defaultSortedBy: keyof Data;
   headCells: Array<HeadCell>;
-}> = ({ rows: rowsBase, defaultSortedBy, headCells }) => {
+  handleEditPaymnetStatus?: (id: number, status: boolean) => Promise<Data>;
+}> = ({ rows: rowsBase, defaultSortedBy, headCells, handleEditPaymnetStatus }) => {
   const [rows, setRows] = React.useState<Array<Data>>(rowsBase);
   const classes = useStyles();
   const [order, setOrder] = React.useState<Order>("asc");
@@ -343,7 +344,14 @@ export const EnhancedTable: React.FC<{
   };
 
   const handleClickOnEditPaymentStatus = (id: number) => {
-    setRows(rows.map(x => x.id !== id ? x : { ...x, paid: x.paid === "YES" ? "NO(WIP)" : "YES(WIP)" }))
+    const paid = rows.filter(x => x.id === id).map(x => x.paid)[0];
+    setRows(rows.map(x => x.id !== id ? x : { ...x, paid: x.paid === "YES" ? "NO(WIP)" : "YES(WIP)" }));
+
+    if (handleEditPaymnetStatus) {
+      handleEditPaymnetStatus(id, paid !== "YES").then((data) => {
+        setRows(rows.map(x => x.id !== id ? x : data));
+      }).catch((err) => console.error(err));
+    }
   }
 
   const isSelected = (id: number) => selected.indexOf(id) !== -1;

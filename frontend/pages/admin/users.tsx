@@ -2,9 +2,10 @@ import React, { useEffect, useState } from "react";
 import { NextPage } from "next";
 import AdminUsersTable, {
   HeadCell,
+  Data,
 } from "../../src/components/layout/AdminUsersTable";
-import { listUsers } from "../../src/network";
-import { PaymentTableData } from "../../src/user";
+import { listUsers, getUserAsAdmin, addPaymentStatus, deletePaymentStatus } from "../../src/network";
+import { PaymentTableData, toPaymentTableData } from "../../src/user";
 
 const headCells: HeadCell[] = [
   { id: "id", label: "id" },
@@ -51,6 +52,16 @@ const Page: NextPage = () => {
           rows={users}
           headCells={headCells}
           defaultSortedBy={"id"}
+          handleEditPaymnetStatus={async (id, status): Promise<Data> => {
+            if (status) {
+              await addPaymentStatus(id);
+            } else {
+              await deletePaymentStatus(id);
+            }
+
+
+            return toPaymentTableData(await getUserAsAdmin(id));
+          }}
         />
       ) : (
           "Loading..."
