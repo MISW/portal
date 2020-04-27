@@ -418,7 +418,7 @@ export const EnhancedTable: React.FC<{
                         .filter(({ id }) => id !== "id")
                         .map(({ id: propertyName }) =>
                           propertyName == "paid" && editPaymentStatusMode ? (
-                            <TableCell padding="none">
+                            <TableCell padding="none" key={propertyName}>
                               <NoTopBottomPaddingCheckbox
                                 checked={row[propertyName].startsWith("YES")}
                                 disabled={row[propertyName].includes("(WIP)")}
