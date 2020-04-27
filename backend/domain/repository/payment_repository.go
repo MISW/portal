@@ -7,6 +7,8 @@ import (
 	"github.com/MISW/Portal/backend/domain"
 )
 
+//go:generate mockgen -source=$GOFILE -destination=mock_$GOFILE -package=$GOPACKAGE
+
 // PaymentStatusRepository - サークル費支払関連のDB操作
 type PaymentStatusRepository interface {
 	// Add - 新しい支払情報の追加
@@ -16,7 +18,7 @@ type PaymentStatusRepository interface {
 	Get(ctx context.Context, userID, period int) (*domain.PaymentStatus, error)
 
 	// Delete - 支払情報を削除
-	Delete(ctx context.Context, userID, period int) error
+	Delete(ctx context.Context, userID, period int) (bool, error)
 
 	// GetLatestByUser - 最新の支払情報の取得
 	GetLatestByUser(ctx context.Context, userID int) (*domain.PaymentStatus, error)
@@ -26,6 +28,17 @@ type PaymentStatusRepository interface {
 
 	// ListForUser returns all periods the user paid in
 	ListPeriodsForUser(ctx context.Context, userID int) ([]*domain.PaymentStatus, error)
+
+	// IsLatest reports the specified payment status is the latest or not.
+	// CAUTION: This method doesn't check the specified status exists
+	IsLatest(ctx context.Context, userID, period int) (bool, error)
+
+	// IsFirst reports the specified payment status is the first or not.
+	// CAUTION: This method doesn't check the specified status exists
+	IsFirst(ctx context.Context, userID, period int) (bool, error)
+
+	// HasMatchingPeriod returns whether there is a payment status matching parameters
+	HasMatchingPeriod(ctx context.Context, userID int, periods []int) (bool, error)
 }
 
 // PaymentTransactionRepository - サークル費支払い時のトークン管理

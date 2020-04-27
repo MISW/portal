@@ -4,8 +4,10 @@ import {
   createStyles,
   lighten,
   makeStyles,
+  withStyles,
   Theme,
 } from "@material-ui/core/styles";
+import Button from "@material-ui/core/Button";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
@@ -113,6 +115,7 @@ interface EnhancedTableProps {
   orderBy: string;
   rowCount: number;
   headCells: Array<HeadCell>;
+  disabledCheckbox: boolean;
 }
 
 function EnhancedTableHead(props: EnhancedTableProps) {
@@ -125,6 +128,7 @@ function EnhancedTableHead(props: EnhancedTableProps) {
     rowCount,
     onRequestSort,
     headCells,
+    disabledCheckbox,
   } = props;
   const createSortHandler = (property: keyof Data) => (
     event: React.MouseEvent<unknown>
@@ -139,6 +143,7 @@ function EnhancedTableHead(props: EnhancedTableProps) {
           <Checkbox
             indeterminate={numSelected > 0 && numSelected < rowCount}
             checked={rowCount > 0 && numSelected === rowCount}
+            disabled={disabledCheckbox}
             onChange={onSelectAllClick}
             inputProps={{ "aria-label": "select all desserts" }}
           />
@@ -193,11 +198,19 @@ const useToolbarStyles = makeStyles((theme: Theme) =>
 
 interface EnhancedTableToolbarProps {
   numSelected: number;
+  editMode: boolean;
+  handleClickOnEditMode: () => void;
 }
+
+const NoWrapButton = withStyles({
+  label: {
+    whiteSpace: "nowrap",
+  },
+})(Button);
 
 const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
   const classes = useToolbarStyles();
-  const { numSelected } = props;
+  const { numSelected, editMode, handleClickOnEditMode } = props;
 
   return (
     <Toolbar
@@ -224,7 +237,14 @@ const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
           [管理者] ユーザー一覧
         </Typography>
       )}
-      TODO: 人を選択してこのボタンで会費を払ったことを設定できるようにする.
+
+      <NoWrapButton
+        variant="contained"
+        color={editMode ? "primary" : "default"}
+        onClick={handleClickOnEditMode}
+      >
+        {editMode ? "終了" : "支払い登録モード"}
+      </NoWrapButton>
       {numSelected > 0 ? (
         <Tooltip title="Delete">
           <IconButton aria-label="delete">
@@ -242,11 +262,25 @@ const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
   );
 };
 
+const NoTopBottomPaddingCheckbox = withStyles({
+  root: {
+    paddingTop: 0,
+    paddingBottom: 0,
+  },
+})(Checkbox);
+
 export const EnhancedTable: React.FC<{
   rows: Array<Data>;
   defaultSortedBy: keyof Data;
   headCells: Array<HeadCell>;
-}> = ({ rows, defaultSortedBy, headCells }) => {
+  handleEditPaymnetStatus?: (id: number, status: boolean) => Promise<Data>;
+}> = ({
+  rows: rowsBase,
+  defaultSortedBy,
+  headCells,
+  handleEditPaymnetStatus,
+}) => {
+  const [rows, setRows] = React.useState<Array<Data>>(rowsBase);
   const classes = useStyles();
   const [order, setOrder] = React.useState<Order>("asc");
   const [orderBy, setOrderBy] = React.useState<keyof Data>(defaultSortedBy);
@@ -254,6 +288,9 @@ export const EnhancedTable: React.FC<{
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(25);
+  const [editPaymentStatusMode, setEditPaymentStatusMode] = React.useState(
+    false
+  );
 
   const handleRequestSort = (
     event: React.MouseEvent<unknown>,
@@ -265,6 +302,10 @@ export const EnhancedTable: React.FC<{
   };
 
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (editPaymentStatusMode) {
+      return;
+    }
+
     if (event.target.checked) {
       const newSelecteds = rows.map((n) => n.id);
       setSelected(newSelecteds);
@@ -274,6 +315,10 @@ export const EnhancedTable: React.FC<{
   };
 
   const handleClick = (event: React.MouseEvent<unknown>, id: number) => {
+    if (editPaymentStatusMode) {
+      return;
+    }
+
     const selectedIndex = selected.indexOf(id);
     let newSelected: number[] = [];
 
@@ -308,6 +353,25 @@ export const EnhancedTable: React.FC<{
     setDense(event.target.checked);
   };
 
+  const handleClickOnEditPaymentStatus = (id: number) => {
+    const paid = rows.filter((x) => x.id === id).map((x) => x.paid)[0];
+    setRows(
+      rows.map((x) =>
+        x.id !== id
+          ? x
+          : { ...x, paid: x.paid === "YES" ? "NO(WIP)" : "YES(WIP)" }
+      )
+    );
+
+    if (handleEditPaymnetStatus) {
+      handleEditPaymnetStatus(id, paid !== "YES")
+        .then((data) => {
+          setRows(rows.map((x) => (x.id !== id ? x : data)));
+        })
+        .catch((err) => console.error(err));
+    }
+  };
+
   const isSelected = (id: number) => selected.indexOf(id) !== -1;
 
   const emptyRows =
@@ -316,7 +380,13 @@ export const EnhancedTable: React.FC<{
   return (
     <div className={classes.root}>
       <Paper className={classes.paper}>
-        <EnhancedTableToolbar numSelected={selected.length} />
+        <EnhancedTableToolbar
+          numSelected={selected.length}
+          editMode={editPaymentStatusMode}
+          handleClickOnEditMode={() => {
+            setSelected([]), setEditPaymentStatusMode(!editPaymentStatusMode);
+          }}
+        />
         <TableContainer className={classes.tableWrapper}>
           <Table
             stickyHeader
@@ -328,6 +398,7 @@ export const EnhancedTable: React.FC<{
             <EnhancedTableHead
               classes={classes}
               numSelected={selected.length}
+              disabledCheckbox={editPaymentStatusMode}
               order={order}
               orderBy={orderBy}
               headCells={headCells}
@@ -356,6 +427,7 @@ export const EnhancedTable: React.FC<{
                         <Checkbox
                           checked={isItemSelected}
                           inputProps={{ "aria-labelledby": labelId }}
+                          disabled={editPaymentStatusMode}
                         />
                       </TableCell>
                       <TableCell
@@ -368,11 +440,23 @@ export const EnhancedTable: React.FC<{
                       </TableCell>
                       {headCells
                         .filter(({ id }) => id !== "id")
-                        .map(({ id: propertyName }) => (
-                          <TableCell align="left" key={propertyName}>
-                            {row[propertyName]}
-                          </TableCell>
-                        ))}
+                        .map(({ id: propertyName }) =>
+                          propertyName == "paid" && editPaymentStatusMode ? (
+                            <TableCell padding="none" key={propertyName}>
+                              <NoTopBottomPaddingCheckbox
+                                checked={row[propertyName].startsWith("YES")}
+                                disabled={row[propertyName].includes("(WIP)")}
+                                onClick={(_) =>
+                                  handleClickOnEditPaymentStatus(row.id)
+                                }
+                              />
+                            </TableCell>
+                          ) : (
+                            <TableCell align="left" key={propertyName}>
+                              {row[propertyName]}
+                            </TableCell>
+                          )
+                        )}
                     </TableRow>
                   );
                 })}

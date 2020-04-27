@@ -100,18 +100,24 @@ func (psp *paymentStatusPersistence) Get(ctx context.Context, userID, period int
 }
 
 // Delete - 支払情報の削除
-func (psp *paymentStatusPersistence) Delete(ctx context.Context, userID, period int) error {
-	_, err := psp.db.Exec(
+func (psp *paymentStatusPersistence) Delete(ctx context.Context, userID, period int) (bool, error) {
+	res, err := psp.db.Exec(
 		`DELETE FROM payment_statuses WHERE user_id=? AND period=?`,
 		userID,
 		period,
 	)
 
 	if err != nil {
-		return xerrors.Errorf("failed to delete payment status: %w", err)
+		return false, xerrors.Errorf("failed to delete payment status: %w", err)
 	}
 
-	return nil
+	affected, err := res.RowsAffected()
+
+	if err != nil {
+		return false, xerrors.Errorf("failed to get rows affected: %w", err)
+	}
+
+	return affected != 0, nil
 }
 
 // GetLatestByUser - 最新の支払情報の取得
@@ -169,4 +175,58 @@ func (psp *paymentStatusPersistence) ListPeriodsForUser(ctx context.Context, use
 	}
 
 	return res, nil
+}
+
+// IsLatest reports the specified payment status is the latest or not.
+// CAUTION: This method doesn't check the specified status exists
+func (psp *paymentStatusPersistence) IsLatest(ctx context.Context, userID, period int) (bool, error) {
+	var counter int
+
+	err := psp.db.QueryRowx(
+		`SELECT COUNT(*) FROM payment_statuses WHERE user_id=? AND period > ?`, userID, period,
+	).Scan(&counter)
+
+	if err != nil {
+		return false, xerrors.Errorf("failed to get payment statuses for the userID(%d): %w", userID, err)
+	}
+
+	return counter == 0, nil
+}
+
+// IsFirst reports the specified payment status is the first or not.
+// CAUTION: This method doesn't check the specified status exists
+func (psp *paymentStatusPersistence) IsFirst(ctx context.Context, userID, period int) (bool, error) {
+	var counter int
+
+	err := psp.db.QueryRowx(
+		`SELECT COUNT(*) FROM payment_statuses WHERE user_id=? AND period < ?`, userID, period,
+	).Scan(&counter)
+
+	if err != nil {
+		return false, xerrors.Errorf("failed to get payment statuses for the userID(%d): %w", userID, err)
+	}
+
+	return counter == 0, nil
+}
+
+// HasMatchingPeriod returns whether there is a payment status matching parameters
+func (psp *paymentStatusPersistence) HasMatchingPeriod(ctx context.Context, userID int, periods []int) (bool, error) {
+	if len(periods) == 0 {
+		return false, nil
+	}
+
+	query, args, err := sqlx.In(`SELECT COUNT(*) FROM payment_statuses WHERE user_id=? AND period IN (?)`, userID, periods)
+
+	if err != nil {
+		return false, xerrors.Errorf("failed to compose a query: %w", err)
+	}
+
+	var counter int
+	err = psp.db.QueryRowxContext(ctx, query, args...).Scan(&counter)
+
+	if err != nil {
+		return false, xerrors.Errorf("failed to count matching payment statuses: %w", err)
+	}
+
+	return counter != 0, nil
 }
