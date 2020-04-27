@@ -184,5 +184,5 @@ export const getUserAsAdmin = async (id: number): Promise<UserWithPaymentJSON> =
     return Promise.reject("Error: status-code is " + res.statusText);
   }
 
-  return (await res.json() as unknown) as UserWithPaymentJSON;
+  return (await res.json()).user as UserWithPaymentJSON;
 };

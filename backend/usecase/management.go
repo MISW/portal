@@ -297,6 +297,16 @@ func (mu *managementUsecase) DeletePaymentStatus(ctx context.Context, userID, pe
 }
 
 func (mu *managementUsecase) GetPaymentStatus(ctx context.Context, userID, period int) (*domain.PaymentStatus, error) {
+	if period == 0 {
+		paymentPeriod, err := mu.appConfigRepository.GetPaymentPeriod()
+
+		if err != nil {
+			return nil, xerrors.Errorf("failed to get payment period from app config: %w", err)
+		}
+
+		period = paymentPeriod
+	}
+
 	ps, err := mu.paymentStatusRepository.Get(ctx, userID, period)
 
 	if xerrors.Is(err, domain.ErrNoPaymentStatus) {
@@ -334,11 +344,11 @@ func (mu *managementUsecase) GetUser(ctx context.Context, userID int) (*domain.U
 	ps, err := mu.GetPaymentStatus(ctx, userID, 0)
 
 	var notFound *rest.NotFound
-	if !xerrors.As(err, &notFound) && err != nil {
+	if xerrors.As(err, &notFound) {
+		ps = nil
+	} else if err != nil {
 		return nil, xerrors.Errorf("failed to get payment status for user(%d): %w", userID, err)
 	}
-
-	ps = nil
 
 	return &domain.UserPaymentStatus{
 		User:          *user,
