@@ -44,9 +44,10 @@ const (
 	EmailUnverified RoleType = "email_unverified"
 )
 
+// Validate - 存在しているroleかどうかチェックし、すればtrue、しなければfalseを返す
 func (r RoleType) Validate() bool {
-	for i := range roles {
-		if roles[i] == r {
+	for i := range Roles {
+		if Roles[i] == r {
 			return true
 		}
 	}
@@ -54,8 +55,43 @@ func (r RoleType) Validate() bool {
 	return false
 }
 
+// GetNewRole - paidの状態によって次のroleの状態遷移を定義する
+func (r RoleType) GetNewRole(paid, previouslyPaid bool) RoleType {
+	switch r {
+	case Admin, Retired, EmailUnverified:
+		return r
+
+	case Member:
+		if paid {
+			return Member
+		}
+
+		if previouslyPaid {
+			return NotMember
+		}
+
+		return NewMember
+	case NotMember:
+		if paid {
+			return Member
+		}
+
+		return NotMember
+	case NewMember:
+		if paid {
+			return Member
+		}
+
+		return NewMember
+
+	default:
+		panic("unknown role type: " + string(r))
+	}
+}
+
 var (
-	roles = []RoleType{
+	// Roles are all roles
+	Roles = []RoleType{
 		Admin,
 		Member,
 		Retired,

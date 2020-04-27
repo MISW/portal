@@ -7,6 +7,8 @@ import (
 	"github.com/MISW/Portal/backend/domain"
 )
 
+//go:generate mockgen -source=$GOFILE -destination=mock_$GOFILE -package=$GOPACKAGE
+
 // TokenRepository - 認証用トークンのDB操作
 type TokenRepository interface {
 	// Add - 新しいトークンの追加
