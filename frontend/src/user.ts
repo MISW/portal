@@ -136,8 +136,8 @@ export const toPaymentTableData = (j: UserWithPaymentJSON) => ({
   studentId: j.student_id,
   emergencyPhoneNumber: j.emergency_phone_number,
   otherCircles: j.other_circles,
-  workshops: j.workshops.join(","),
-  squads: j.squads.join(","),
+  workshops: j.workshops.join(", "),
+  squads: j.squads.join(", "),
   slackId: j.slack_id,
   discordId: j.discord_id,
   role: j.role,
@@ -146,3 +146,26 @@ export const toPaymentTableData = (j: UserWithPaymentJSON) => ({
 });
 
 export type PaymentTableData = ReturnType<typeof toPaymentTableData>;
+
+export const labelsInJapanese = {
+  id: "ID",
+  generation: "代",
+  handle: "ハンドル",
+  paid: "支払済",
+  authorizer: "納入確認者",
+  role: "権限",
+  name: "氏名",
+  kana: "カナ",
+  sex: "性別",
+  univName: "大学名",
+  department: "学部",
+  subject: "学科",
+  studentId: "学籍番号",
+  email: "Email",
+  emergencyPhoneNumber: "緊急連絡先",
+  workshops: "研究会",
+  squads: "班",
+  otherCircles: "他サークル",
+  slackId: "Slack ID",
+  discordId: "Discord ID",
+};
