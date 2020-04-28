@@ -5,6 +5,7 @@ import {
   toUserInfoJSON,
   UserWithPaymentJSON,
   PaymentTableData,
+  PaymentStatus,
   toPaymentTableData,
 } from "./user";
 
@@ -62,6 +63,20 @@ export const updateProfile = async (
   const resUser = ((await res.json()) as unknown) as UserInfoJSON;
   console.log(resUser);
   return toUserProfile(resUser);
+};
+
+export const getPaymentStatuses = async () => {
+  const res = await fetch(`${getHostAPI()}/private/profile/payment_statuses`, {
+    method: "GET",
+    credentials: "include",
+  });
+
+  if (res.status >= 400) {
+    console.error(res);
+    return Promise.reject("Error: status-code is " + res.statusText);
+  }
+
+  return (await res.json()).payment_statuses as Array<PaymentStatus>;
 };
 
 export const checkLoggingIn = async (): Promise<boolean> => {
@@ -191,3 +206,4 @@ export const getUserAsAdmin = async (
 
   return (await res.json()).user as UserWithPaymentJSON;
 };
+
