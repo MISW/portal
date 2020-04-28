@@ -59,10 +59,8 @@ const Profile: React.FC<{
             <TableRow key={key}>
               <TableCell component="th" scope="row" align="center">
                 <Box fontWeight="fontWeightBold">{`${
-                  key in labelsInJapanese
-                    ? labelsInJapanese[key as keyof typeof labelsInJapanese]
-                    : ""
-                }`}</Box>
+                  labelsInJapanese[key as keyof typeof labelsInJapanese]
+                  }`}</Box>
               </TableCell>
               <TableCell align="center">{`${value ? value : ""}`}</TableCell>
             </TableRow>
