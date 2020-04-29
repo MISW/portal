@@ -1,9 +1,10 @@
 import React from "react";
 
-import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
-import { Container, Typography, Box } from "@material-ui/core";
+import { createStyles, makeStyles } from "@material-ui/core/styles";
+import { Typography, Box } from "@material-ui/core";
 import Toolbar from "@material-ui/core/Toolbar";
 import Table from "@material-ui/core/Table";
+import TableContainer from "@material-ui/core/TableContainer";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableHead from "@material-ui/core/TableHead";
@@ -28,7 +29,7 @@ const Profile: React.FC<{
   const toolbarClasses = useToolbarStyle();
 
   return (
-    <Container maxWidth="md">
+    <TableContainer>
       <Toolbar className={toolbarClasses.root}>
         <Typography className={toolbarClasses.title} variant="h3">
           ユーザ情報
@@ -60,14 +61,14 @@ const Profile: React.FC<{
               <TableCell component="th" scope="row" align="center">
                 <Box fontWeight="fontWeightBold">{`${
                   labelsInJapanese[key as keyof typeof labelsInJapanese]
-                  }`}</Box>
+                }`}</Box>
               </TableCell>
               <TableCell align="center">{`${value ? value : ""}`}</TableCell>
             </TableRow>
           ))}
         </TableBody>
       </Table>
-    </Container>
+    </TableContainer>
   );
 };
 

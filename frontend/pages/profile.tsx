@@ -5,7 +5,7 @@ import Profile from "../src/components/layout/Profile";
 import { ConfigurableProfile, PaymentStatus } from "../src/user";
 import { getProfile, getPaymentStatuses } from "../src/network";
 import PaymentStatuses from "../src/components/layout/PaymentStatuses";
-import { makeStyles, createStyles, Box } from "@material-ui/core";
+import { Box } from "@material-ui/core";
 
 const Page: NextPage = () => {
   const [user, setUser] = useState<ConfigurableProfile>();
@@ -19,21 +19,21 @@ const Page: NextPage = () => {
       {!user ? (
         "Loading..."
       ) : (
-          <Profile
-            user={user}
-            editButton={true}
-            handleEditButton={() => Router.push("/profile/update")}
-          />
-        )}
+        <Profile
+          user={user}
+          editButton={true}
+          handleEditButton={() => Router.push("/profile/update")}
+        />
+      )}
       <Box mt={6}>
         {!paymentStatuses ? (
           ""
         ) : (
-            <PaymentStatuses
-              paymentStatuses={paymentStatuses}
-              editButton={false}
-            />
-          )}
+          <PaymentStatuses
+            paymentStatuses={paymentStatuses}
+            editButton={false}
+          />
+        )}
       </Box>
     </>
   );
