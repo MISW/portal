@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
 import { NextPage } from "next";
-import { Typography, Grid, Container } from "@material-ui/core";
+import { Typography, Grid } from "@material-ui/core";
 import LinkContentCard from "../src/components/design/LinkContentCard";
 
 const Page: NextPage = () => {
