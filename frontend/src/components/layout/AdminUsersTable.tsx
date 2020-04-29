@@ -7,7 +7,6 @@ import {
   withStyles,
   Theme,
 } from "@material-ui/core/styles";
-import Button from "@material-ui/core/Button";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
@@ -27,6 +26,7 @@ import Switch from "@material-ui/core/Switch";
 import DeleteIcon from "@material-ui/icons/Delete";
 import FilterListIcon from "@material-ui/icons/FilterList";
 import { PaymentTableData } from "../../user";
+import NoWrapButton from "./NoWrapButton";
 
 export type Data = PaymentTableData extends Record<string, string | number> & {
   id: number;
@@ -201,12 +201,6 @@ interface EnhancedTableToolbarProps {
   editMode: boolean;
   handleClickOnEditMode: () => void;
 }
-
-const NoWrapButton = withStyles({
-  label: {
-    whiteSpace: "nowrap",
-  },
-})(Button);
 
 const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
   const classes = useToolbarStyles();
@@ -446,7 +440,7 @@ export const EnhancedTable: React.FC<{
                               <NoTopBottomPaddingCheckbox
                                 checked={row[propertyName].startsWith("YES")}
                                 disabled={row[propertyName].includes("(WIP)")}
-                                onClick={(_) =>
+                                onClick={() =>
                                   handleClickOnEditPaymentStatus(row.id)
                                 }
                               />

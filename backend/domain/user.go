@@ -163,7 +163,7 @@ func (user *User) Validate() error {
 	if !emailValidator.MatchString(user.Email) {
 		return rest.NewBadRequest("メールアドレスの形式が不正です")
 	}
-	if !discordValidator.MatchString(user.DiscordID) {
+	if user.DiscordID != "" && !discordValidator.MatchString(user.DiscordID) {
 		return rest.NewBadRequest("DiscordIDの形式が不正です")
 	}
 	if !user.Role.Validate() {
