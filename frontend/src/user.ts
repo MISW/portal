@@ -28,7 +28,7 @@ export interface PaymentStatus {
 export function periodsInJapanese(period: number): string {
   const seasons = ["冬", "春", "夏", "秋"];
 
-  return `${Math.floor(period / 100)}年${seasons[(period % 100 - 1) / 3]}`
+  return `${Math.floor(period / 100)}年${seasons[((period % 100) - 1) / 3]}`;
 }
 
 export interface UserAllInfoJSON {

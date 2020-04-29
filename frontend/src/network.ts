@@ -206,4 +206,3 @@ export const getUserAsAdmin = async (
 
   return (await res.json()).user as UserWithPaymentJSON;
 };
-
