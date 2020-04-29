@@ -1,43 +1,40 @@
 import React, { useEffect, useState } from "react";
 import { NextPage } from "next";
-import RegisterForm, {
-  SubmitResult,
-} from "../src/components/layout/RegisterForm";
-import { ConfigurableProfile } from "../src/user";
-import { getProfile, updateProfile } from "../src/network";
-import { Alert } from "@material-ui/lab";
+import Router from "next/router";
+import Profile from "../src/components/layout/Profile";
+import { ConfigurableProfile, PaymentStatus } from "../src/user";
+import { getProfile, getPaymentStatuses } from "../src/network";
+import PaymentStatuses from "../src/components/layout/PaymentStatuses";
+import { makeStyles, createStyles, Box } from "@material-ui/core";
 
 const Page: NextPage = () => {
   const [user, setUser] = useState<ConfigurableProfile>();
+  const [paymentStatuses, setPaymentStatuses] = useState<PaymentStatus[]>();
   useEffect(() => {
     getProfile().then((u) => setUser(u));
+    getPaymentStatuses().then((ps) => setPaymentStatuses(ps));
   }, []);
-  const onSubmit = (user: ConfigurableProfile): Promise<SubmitResult> => {
-    return updateProfile(user)
-      .then((u) => {
-        console.log(u);
-        return { status: "success" as const };
-      })
-      .catch((err) => {
-        console.error(err);
-        return { status: "error", message: "エラーが発生しました" };
-      });
-  };
   return (
     <>
       {!user ? (
         "Loading..."
       ) : (
-        <RegisterForm
-          formName="会員情報設定"
-          formType="setting"
-          user={user}
-          onSubmit={onSubmit}
-          successMessage={
-            <Alert severity="success">プロフィールが変更されました!</Alert>
-          }
-        />
-      )}
+          <Profile
+            user={user}
+            editButton={true}
+            handleEditButton={() => Router.push("/profile/update")}
+          />
+        )}
+      <Box mt={6}>
+        {!paymentStatuses ? (
+          ""
+        ) : (
+            <PaymentStatuses
+              paymentStatuses={paymentStatuses}
+              editButton={false}
+            />
+          )}
+      </Box>
     </>
   );
 };
