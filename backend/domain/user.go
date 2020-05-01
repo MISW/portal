@@ -108,6 +108,38 @@ type University struct {
 	Subject    string `json:"subject" yaml:"subject"`
 }
 
+// SlackInvitationStatus - Slack招待のステータス
+type SlackInvitationStatus string
+
+const (
+	// Never - not invited
+	Never SlackInvitationStatus = "never"
+	// Pending - requested to invite
+	Pending SlackInvitationStatus = "pending"
+	// Invited - already invited
+	Invited SlackInvitationStatus = "invited"
+)
+
+var (
+	// SlackInvitationStatuses contains all statuses
+	SlackInvitationStatuses = []SlackInvitationStatus{
+		Never,
+		Pending,
+		Invited,
+	}
+)
+
+// Validate - 存在しているroleかどうかチェックし、すればtrue、しなければfalseを返す
+func (r SlackInvitationStatus) Validate() bool {
+	for i := range SlackInvitationStatuses {
+		if SlackInvitationStatuses[i] == r {
+			return true
+		}
+	}
+
+	return false
+}
+
 // User - サークル員の情報
 type User struct {
 	ID                   int        `json:"id" yaml:"id"`
@@ -124,6 +156,8 @@ type User struct {
 	Workshops            []string   `json:"workshops" yaml:"workshops"`
 	Squads               []string   `json:"squads" yaml:"squads"`
 	Role                 RoleType   `json:"role" yaml:"role"`
+
+	SlackInvitationStatus SlackInvitationStatus `json:"slack_invitation_status" yaml:"slack_invitation_status"`
 
 	// 外部サービス
 	SlackID   string `json:"slack_id" yaml:"slack_id"`
@@ -168,6 +202,15 @@ func (user *User) Validate() error {
 	}
 	if !user.Role.Validate() {
 		return rest.NewBadRequest("存在しないロールが指定されています")
+	}
+	if !user.SlackInvitationStatus.Validate() {
+		return rest.NewBadRequest("存在しないSlack招待ステータスが指定されています")
+	}
+
+	if len(user.SlackID) != 0 &&
+		(user.SlackInvitationStatus == Pending ||
+			user.SlackInvitationStatus == Never) {
+		return rest.NewBadRequest("既にSlackに参加済みです")
 	}
 
 	// TODO: 100代までもし使う場合は修正
