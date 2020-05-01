@@ -18,6 +18,8 @@ CREATE TABLE users (
     squads VARCHAR(512) NOT NULL,
     role VARCHAR(128) NOT NULL,
 
+    slack_invitation_status ENUM ("never", "pending", "invited") NOT NULL DEFAULT "invited",
+
     slack_id VARCHAR(128) UNIQUE,
     discord_id VARCHAR(128),
 
@@ -28,3 +30,4 @@ CREATE TABLE users (
 ALTER TABLE users ADD INDEX handle_index(handle);
 ALTER TABLE users ADD INDEX generation_index(generation);
 ALTER TABLE users ADD INDEX role_index(role);
+ALTER TABLE users ADD INDEX slack_invitation_status_index(slack_invitation_status);

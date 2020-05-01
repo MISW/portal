@@ -27,14 +27,15 @@ var (
 			Department: "基幹理工学部",
 			Subject:    "情報理工学科",
 		},
-		StudentID:            "1W180000-0",
-		EmergencyPhoneNumber: "0120117117",
-		OtherCircles:         "WCE",
-		Workshops:            []string{"Programming", "CG", "MIDI"},
-		Squads:               []string{"Web", "Webデザイン"},
-		Role:                 domain.Admin,
-		SlackID:              "UAJXXXXXX",
-		DiscordID:            "mischan#0123",
+		StudentID:             "1W180000-0",
+		EmergencyPhoneNumber:  "0120117117",
+		OtherCircles:          "WCE",
+		Workshops:             []string{"Programming", "CG", "MIDI"},
+		Squads:                []string{"Web", "Webデザイン"},
+		Role:                  domain.Admin,
+		SlackInvitationStatus: domain.Invited,
+		SlackID:               "UAJXXXXXX",
+		DiscordID:             "mischan#0123",
 	}
 
 	userTemplate2 = &domain.User{
