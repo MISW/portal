@@ -109,6 +109,11 @@ func initDig(cfg *config.Config, addr string) *dig.Container {
 		panic(err)
 	}
 
+	err = c.Provide(persistence.NewSlackPersistence)
+	if err != nil {
+		panic(err)
+	}
+
 	err = c.Provide(persistence.NewPaymentTransactionPersistence)
 	if err != nil {
 		panic(err)

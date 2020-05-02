@@ -9,5 +9,5 @@ type SlackRepository interface {
 	UpdateSlackID(ctx context.Context, id int, slackID string) error
 
 	// MarkUninvitedMembersAsPending - メンバーかつユーザをSlackに招待するとmarkする
-	MarkUninvitedMembersAsPending(ctx context.Context) error
+	MarkUninvitedAsPending(ctx context.Context) error
 }
