@@ -276,28 +276,4 @@ func TestUpdate(t *testing.T) {
 		}
 	})
 
-	t.Run("slack id", func(t *testing.T) {
-		conn := testutil.NewSQLConn(t)
-
-		up := persistence.NewUserPersistence(conn)
-
-		id := insertTestUserData(t, up)
-
-		updatedSlackID := "SLACKID"
-		err := up.UpdateSlackID(context.Background(), id, updatedSlackID)
-
-		if err != nil {
-			t.Fatalf("failed to update slack id: %+v", err)
-		}
-
-		user, err := up.GetByID(context.Background(), id)
-
-		if err != nil {
-			t.Fatalf("failed to get user: %+v", err)
-		}
-
-		if user.SlackID != updatedSlackID {
-			t.Fatalf("slack id is not updated: %s(expected: %s)", user.SlackID, updatedSlackID)
-		}
-	})
 }
