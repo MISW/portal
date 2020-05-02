@@ -79,6 +79,7 @@ var _ SessionUsecase = &sessionUsecase{}
 func (us *sessionUsecase) Signup(ctx context.Context, user *domain.User) error {
 	user.SlackID = ""
 	user.Role = domain.EmailUnverified
+	user.SlackInvitationStatus = domain.Never
 
 	if err := user.Validate(); err != nil {
 		return err

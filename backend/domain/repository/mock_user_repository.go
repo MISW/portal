@@ -138,20 +138,6 @@ func (mr *MockUserRepositoryMockRecorder) Update(ctx, user interface{}) *gomock.
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Update", reflect.TypeOf((*MockUserRepository)(nil).Update), ctx, user)
 }
 
-// UpdateSlackID mocks base method
-func (m *MockUserRepository) UpdateSlackID(ctx context.Context, id int, slackID string) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "UpdateSlackID", ctx, id, slackID)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// UpdateSlackID indicates an expected call of UpdateSlackID
-func (mr *MockUserRepositoryMockRecorder) UpdateSlackID(ctx, id, slackID interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateSlackID", reflect.TypeOf((*MockUserRepository)(nil).UpdateSlackID), ctx, id, slackID)
-}
-
 // UpdateRole mocks base method
 func (m *MockUserRepository) UpdateRole(ctx context.Context, id int, role domain.RoleType) error {
 	m.ctrl.T.Helper()

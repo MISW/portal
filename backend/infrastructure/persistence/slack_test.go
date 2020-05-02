@@ -1,0 +1,153 @@
+// +build use_external_db
+
+package persistence_test
+
+import (
+	"context"
+	"testing"
+
+	"github.com/MISW/Portal/backend/domain"
+	"github.com/MISW/Portal/backend/domain/repository"
+	"github.com/MISW/Portal/backend/infrastructure/persistence"
+	"github.com/MISW/Portal/backend/internal/testutil"
+)
+
+var (
+	usersToBeInvited = []*domain.User{
+		{
+			Email:                 "mischan@example.com",
+			Generation:            54,
+			Sex:                   domain.Female,
+			Role:                  domain.Member,
+			SlackInvitationStatus: domain.Never,
+		},
+		{
+			Email:                 "mischan2@example.com",
+			Generation:            54,
+			Sex:                   domain.Female,
+			Role:                  domain.Admin,
+			SlackInvitationStatus: domain.Never,
+		},
+	}
+
+	usersToBeNotInvited = []*domain.User{
+		{
+			Email:                 "mischan3@example.com",
+			Generation:            54,
+			Sex:                   domain.Female,
+			Role:                  domain.NotMember,
+			SlackInvitationStatus: domain.Never,
+		},
+		{
+			Email:                 "mischan4@example.com",
+			Generation:            54,
+			Sex:                   domain.Female,
+			Role:                  domain.EmailUnverified,
+			SlackInvitationStatus: domain.Never,
+		},
+		{
+			Email:                 "mischan5@example.com",
+			Generation:            54,
+			Sex:                   domain.Female,
+			Role:                  domain.Member,
+			SlackInvitationStatus: domain.Invited,
+		},
+		{
+			Email:                 "mischan6@example.com",
+			Generation:            54,
+			Sex:                   domain.Female,
+			Role:                  domain.Member,
+			SlackInvitationStatus: domain.Never,
+			SlackID:               "slack id",
+		},
+	}
+)
+
+func insertTestSlackData(t *testing.T, up repository.UserRepository) (invited map[int]struct{}, uninvited map[int]domain.SlackInvitationStatus) {
+	t.Helper()
+
+	invited, uninvited = map[int]struct{}{}, map[int]struct{}{}
+
+	for i := range usersToBeInvited {
+		id, err := up.Insert(context.Background(), usersToBeInvited[i])
+
+		if err != nil {
+			t.Fatalf("inserting a new user to db failed: %+v", err)
+		}
+
+		invited[id] = struct{}{}
+	}
+
+	for i := range usersToBeNotInvited {
+		id, err := up.Insert(context.Background(), usersToBeNotInvited[i])
+
+		if err != nil {
+			t.Fatalf("inserting a new user to db failed: %+v", err)
+		}
+
+		uninvited[id] = usersToBeNotInvited[i].SlackInvitationStatus
+	}
+
+	return
+}
+
+func TestUpdateSlackID(t *testing.T) {
+	conn := testutil.NewSQLConn(t)
+
+	sp := persistence.NewSlackPersistence(conn)
+	up := persistence.NewUserPersistence(conn)
+
+	id := insertTestUserData(t, up)
+
+	updatedSlackID := "SLACKID"
+	err := sp.UpdateSlackID(context.Background(), id, updatedSlackID)
+
+	if err != nil {
+		t.Fatalf("failed to update slack id: %+v", err)
+	}
+
+	user, err := up.GetByID(context.Background(), id)
+
+	if err != nil {
+		t.Fatalf("failed to get user: %+v", err)
+	}
+
+	if user.SlackID != updatedSlackID {
+		t.Fatalf("slack id is not updated: %s(expected: %s)", user.SlackID, updatedSlackID)
+	}
+}
+
+func TestMarkUninvitedAsPending(t *testing.T) {
+	conn := testutil.NewSQLConn(t)
+
+	sp := persistence.NewSlackPersistence(conn)
+	up := persistence.NewUserPersistence(conn)
+
+	invited, uninvited := insertTestSlackData(t, up)
+
+	ctx := context.Background()
+
+	if err := sp.MarkUninvitedMembersAsPending(ctx); err != nil {
+		t.Fatalf("failed to mark members: %+v", err)
+	}
+
+	t.Run("invited", func(t *testing.T) {
+		users, err := up.List(ctx)
+
+		if err != nil {
+			t.Fatalf("failed to list all users: %+v", err)
+		}
+
+		for i := range users {
+			if _, ok := invited[users[i].ID]; ok {
+				if users[i].SlackInvitationStatus != domain.Pending {
+					t.Errorf("members to be invited should have pending status, but have %s", users[i].SlackInvitationStatus)
+				}
+			} else {
+				if users[i].SlackInvitationStatus != uninvited[users[i].ID] {
+					t.Errorf("members to be invited should have the same invitation status(expected: %s, actual: %s)", uninvited[users[i].ID], users[i].SlackInvitationStatus)
+				}
+			}
+		}
+	})
+}
