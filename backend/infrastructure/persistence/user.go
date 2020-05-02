@@ -330,31 +330,6 @@ func (up *userPersistence) Update(ctx context.Context, user *domain.User) error 
 	return nil
 }
 
-// UpdateSlackID - ユーザのSlack IDを更新する
-func (up *userPersistence) UpdateSlackID(ctx context.Context, id int, slackID string) error {
-	var sid *string
-
-	if len(slackID) != 0 {
-		sid = &slackID
-	}
-
-	_, err := up.db.Exec(`
-	UPDATE users SET
-		slack_id=?
-	WHERE id=?
-	`, sid, id)
-
-	if err != nil {
-		if mysqlErr, ok := err.(*mysql.MySQLError); ok && mysqlErr.Number == 1062 {
-			return domain.ErrSlackIDConflicts
-		}
-
-		return xerrors.Errorf("failed to update user(%d): %w", id, err)
-	}
-
-	return nil
-}
-
 // UpdateRole - ユーザのroleを更新する
 func (up *userPersistence) UpdateRole(ctx context.Context, id int, role domain.RoleType) error {
 	_, err := up.db.Exec(`
