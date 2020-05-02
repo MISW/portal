@@ -66,7 +66,7 @@ var (
 func insertTestSlackData(t *testing.T, up repository.UserRepository) (invited map[int]struct{}, uninvited map[int]domain.SlackInvitationStatus) {
 	t.Helper()
 
-	invited, uninvited = map[int]struct{}{}, map[int]struct{}{}
+	invited, uninvited = map[int]struct{}{}, map[int]domain.SlackInvitationStatus{}
 
 	for i := range usersToBeInvited {
 		id, err := up.Insert(context.Background(), usersToBeInvited[i])
@@ -127,7 +127,7 @@ func TestMarkUninvitedAsPending(t *testing.T) {
 
 	ctx := context.Background()
 
-	if err := sp.MarkUninvitedMembersAsPending(ctx); err != nil {
+	if err := sp.MarkUninvitedAsPending(ctx); err != nil {
 		t.Fatalf("failed to mark members: %+v", err)
 	}
 
