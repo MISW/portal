@@ -63,9 +63,9 @@ func (sp *slackPersistence) MarkUninvitedAsPending(ctx context.Context) error {
 
 // GetPending - Pendingのユーザを一つ取得
 func (sp *slackPersistence) GetPending(ctx context.Context) (*domain.User, error) {
-	var u *user
+	u := &user{}
 
-	err := sqlx.GetContext(ctx, sp.db, &u,
+	err := sqlx.GetContext(ctx, sp.db, u,
 		`SELECT * FROM users WHERE slack_invitation_status=? LIMIT 1`,
 		domain.Pending,
 	)
