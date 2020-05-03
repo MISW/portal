@@ -37,6 +37,8 @@ type user struct {
 	Squads               string `db:"squads"`
 	Role                 string `db:"role"`
 
+	SlackInvitationStatus string `db:"slack_invitation_status"`
+
 	// 外部サービス
 	SlackID   sql.NullString `db:"slack_id"`
 	DiscordID sql.NullString `db:"discord_id"`
@@ -63,6 +65,8 @@ func newUser(u *domain.User) *user {
 		Workshops:            strings.Join(u.Workshops, "\n"),
 		Squads:               strings.Join(u.Squads, "\n"),
 		Role:                 string(u.Role),
+
+		SlackInvitationStatus: string(u.SlackInvitationStatus),
 
 		SlackID: sql.NullString{
 			String: u.SlackID,
@@ -99,6 +103,8 @@ func parseUser(u *user) *domain.User {
 		Squads:               strings.Split(u.Squads, "\n"),
 		Role:                 domain.RoleType(u.Role),
 
+		SlackInvitationStatus: domain.SlackInvitationStatus(u.SlackInvitationStatus),
+
 		SlackID:   u.SlackID.String,
 		DiscordID: u.DiscordID.String,
 
@@ -134,6 +140,7 @@ func (up *userPersistence) Insert(ctx context.Context, user *domain.User) (int, 
 		workshops,
 		squads,
 		role,
+		slack_invitation_status,
 		slack_id,
 		discord_id
 	) VALUES (
@@ -152,6 +159,7 @@ func (up *userPersistence) Insert(ctx context.Context, user *domain.User) (int, 
 		:workshops,
 		:squads,
 		:role,
+		:slack_invitation_status,
 		:slack_id,
 		:discord_id
 	)
@@ -305,6 +313,7 @@ func (up *userPersistence) Update(ctx context.Context, user *domain.User) error 
 		workshops=:workshops,
 		squads=:squads,
 		role=:role,
+		slack_invitation_status=:slack_invitation_status,
 		slack_id=:slack_id,
 		discord_id=:discord_id
 	WHERE id=:id
@@ -316,31 +325,6 @@ func (up *userPersistence) Update(ctx context.Context, user *domain.User) error 
 		}
 
 		return xerrors.Errorf("failed to update user(%d): %w", user.ID, err)
-	}
-
-	return nil
-}
-
-// UpdateSlackID - ユーザのSlack IDを更新する
-func (up *userPersistence) UpdateSlackID(ctx context.Context, id int, slackID string) error {
-	var sid *string
-
-	if len(slackID) != 0 {
-		sid = &slackID
-	}
-
-	_, err := up.db.Exec(`
-	UPDATE users SET
-		slack_id=?
-	WHERE id=?
-	`, sid, id)
-
-	if err != nil {
-		if mysqlErr, ok := err.(*mysql.MySQLError); ok && mysqlErr.Number == 1062 {
-			return domain.ErrSlackIDConflicts
-		}
-
-		return xerrors.Errorf("failed to update user(%d): %w", id, err)
 	}
 
 	return nil

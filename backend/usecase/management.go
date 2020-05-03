@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/MISW/Portal/backend/internal/rest"
+	"github.com/MISW/Portal/backend/internal/workers"
 
 	"golang.org/x/xerrors"
 
@@ -41,48 +42,49 @@ type ManagementUsecase interface {
 
 	// UpdateRole - ユーザのroleを変更
 	UpdateRole(ctx context.Context, userID int, role domain.RoleType) error
+
+	// InviteToSlack - Slackに招待されていないメンバーをSlackに招待する(非同期)
+	InviteToSlack(ctx context.Context) error
+}
+
+type ManagementUsecaseParams struct {
+	UserRepository               repository.UserRepository
+	PaymentStatusRepository      repository.PaymentStatusRepository
+	PaymentTransactionRepository repository.PaymentTransactionRepository
+	AppConfigRepository          repository.AppConfigRepository
+	SlackRepository              repository.SlackRepository
+	SlackInviter                 workers.Worker `name:"slack"`
 }
 
 type managementUsecase struct {
-	userRepository               repository.UserRepository
-	paymentStatusRepository      repository.PaymentStatusRepository
-	paymentTransactionRepository repository.PaymentTransactionRepository
-	appConfigRepository          repository.AppConfigRepository
+	*ManagementUsecaseParams
 }
 
 // NewManagementUsecase - management usecaseの初期化
-func NewManagementUsecase(
-	userRepository repository.UserRepository,
-	paymentStatusRepository repository.PaymentStatusRepository,
-	paymentTransactionRepository repository.PaymentTransactionRepository,
-	appConfigRepository repository.AppConfigRepository,
-) ManagementUsecase {
+func NewManagementUsecase(param *ManagementUsecaseParams) ManagementUsecase {
 	return &managementUsecase{
-		userRepository:               userRepository,
-		paymentStatusRepository:      paymentStatusRepository,
-		paymentTransactionRepository: paymentTransactionRepository,
-		appConfigRepository:          appConfigRepository,
+		ManagementUsecaseParams: param,
 	}
 }
 
 var _ ManagementUsecase = &managementUsecase{}
 
 func (mu *managementUsecase) ListUsers(ctx context.Context, period int) ([]*domain.UserPaymentStatus, error) {
-	users, err := mu.userRepository.List(ctx)
+	users, err := mu.UserRepository.List(ctx)
 
 	if err != nil {
 		return nil, xerrors.Errorf("failed to list users: %w", err)
 	}
 
 	if period == 0 {
-		period, err = mu.appConfigRepository.GetPaymentPeriod()
+		period, err = mu.AppConfigRepository.GetPaymentPeriod()
 
 		if err != nil {
 			return nil, xerrors.Errorf("failed to get current period from app config: %w", err)
 		}
 	}
 
-	pss, err := mu.paymentStatusRepository.ListUsersForPeriod(ctx, period)
+	pss, err := mu.PaymentStatusRepository.ListUsersForPeriod(ctx, period)
 
 	if err != nil {
 		return nil, xerrors.Errorf("failed to list users for period(%d): %w", period, err)
@@ -108,7 +110,7 @@ func (mu *managementUsecase) ListUsers(ctx context.Context, period int) ([]*doma
 }
 
 func (mu *managementUsecase) AuthorizeTransaction(ctx context.Context, token string, authorizer int) error {
-	transaction, err := mu.paymentTransactionRepository.Get(ctx, token)
+	transaction, err := mu.PaymentTransactionRepository.Get(ctx, token)
 
 	if err != nil {
 		if xerrors.Is(err, domain.ErrNoPaymentTransaction) {
@@ -133,7 +135,7 @@ func (mu *managementUsecase) AuthorizeTransaction(ctx context.Context, token str
 		return xerrors.Errorf("failed to add payment status for user(%d): %w", transaction.UserID, err)
 	}
 
-	if err := mu.paymentTransactionRepository.Delete(ctx, token); err != nil {
+	if err := mu.PaymentTransactionRepository.Delete(ctx, token); err != nil {
 		return xerrors.Errorf("failed to delete payment transaction token: %w", err)
 	}
 
@@ -161,7 +163,7 @@ func (mu *managementUsecase) updateRole(
 	}
 
 	if currentPeriod == 0 {
-		currentPeriod, err = mu.appConfigRepository.GetCurrentPeriod()
+		currentPeriod, err = mu.AppConfigRepository.GetCurrentPeriod()
 
 		if err != nil {
 			return xerrors.Errorf("failed to get current period: %w", err)
@@ -169,14 +171,14 @@ func (mu *managementUsecase) updateRole(
 	}
 
 	if paymentPeriod == 0 {
-		paymentPeriod, err = mu.appConfigRepository.GetPaymentPeriod()
+		paymentPeriod, err = mu.AppConfigRepository.GetPaymentPeriod()
 
 		if err != nil {
 			return xerrors.Errorf("failed to get payment period: %w", err)
 		}
 	}
 
-	matched, err := mu.paymentStatusRepository.HasMatchingPeriod(ctx, userID, []int{
+	matched, err := mu.PaymentStatusRepository.HasMatchingPeriod(ctx, userID, []int{
 		currentPeriod,
 		paymentPeriod,
 	})
@@ -185,7 +187,7 @@ func (mu *managementUsecase) updateRole(
 
 	if !matched {
 		// currentPeriod <= paymentPeriodであるから、currentPeriodより前に支払いがあるかどうかで以前加入していたか判定できる
-		isFirst, err := mu.paymentStatusRepository.IsFirst(ctx, userID, currentPeriod)
+		isFirst, err := mu.PaymentStatusRepository.IsFirst(ctx, userID, currentPeriod)
 
 		if err != nil {
 			return xerrors.Errorf("failed to check payment status before current period: %w", err)
@@ -197,7 +199,7 @@ func (mu *managementUsecase) updateRole(
 	newRole := currentRole.GetNewRole(matched, prevPaid)
 
 	if newRole != currentRole {
-		if err := mu.userRepository.UpdateRole(ctx, userID, newRole); err != nil {
+		if err := mu.UserRepository.UpdateRole(ctx, userID, newRole); err != nil {
 			return xerrors.Errorf("failed to update role: %w", err)
 		}
 	}
@@ -206,13 +208,13 @@ func (mu *managementUsecase) updateRole(
 }
 
 func (mu *managementUsecase) AddPaymentStatus(ctx context.Context, userID, period, authorizer int) error {
-	paymentPeriod, err := mu.appConfigRepository.GetPaymentPeriod()
+	paymentPeriod, err := mu.AppConfigRepository.GetPaymentPeriod()
 
 	if err != nil {
 		return xerrors.Errorf("failed to get payment period from app config: %w", err)
 	}
 
-	currentPeriod, err := mu.appConfigRepository.GetCurrentPeriod()
+	currentPeriod, err := mu.AppConfigRepository.GetCurrentPeriod()
 
 	if err != nil {
 		return xerrors.Errorf("failed to get current period from app config: %w", err)
@@ -222,7 +224,7 @@ func (mu *managementUsecase) AddPaymentStatus(ctx context.Context, userID, perio
 		period = paymentPeriod
 	}
 
-	if err := mu.paymentStatusRepository.Add(ctx, userID, period, authorizer); err != nil {
+	if err := mu.PaymentStatusRepository.Add(ctx, userID, period, authorizer); err != nil {
 		if xerrors.Is(err, domain.ErrAlreadyPaid) {
 			return rest.NewConflict("すでに支払い済みです")
 		}
@@ -250,13 +252,13 @@ func (mu *managementUsecase) AddPaymentStatus(ctx context.Context, userID, perio
 }
 
 func (mu *managementUsecase) DeletePaymentStatus(ctx context.Context, userID, period int) error {
-	paymentPeriod, err := mu.appConfigRepository.GetPaymentPeriod()
+	paymentPeriod, err := mu.AppConfigRepository.GetPaymentPeriod()
 
 	if err != nil {
 		return xerrors.Errorf("failed to get payment period from app config: %w", err)
 	}
 
-	currentPeriod, err := mu.appConfigRepository.GetCurrentPeriod()
+	currentPeriod, err := mu.AppConfigRepository.GetCurrentPeriod()
 
 	if err != nil {
 		return xerrors.Errorf("failed to get current period from app config: %w", err)
@@ -266,7 +268,7 @@ func (mu *managementUsecase) DeletePaymentStatus(ctx context.Context, userID, pe
 		period = paymentPeriod
 	}
 
-	deleted, err := mu.paymentStatusRepository.Delete(ctx, userID, period)
+	deleted, err := mu.PaymentStatusRepository.Delete(ctx, userID, period)
 
 	if err != nil {
 		return xerrors.Errorf("failed to delete payment status: %w", err)
@@ -298,7 +300,7 @@ func (mu *managementUsecase) DeletePaymentStatus(ctx context.Context, userID, pe
 
 func (mu *managementUsecase) GetPaymentStatus(ctx context.Context, userID, period int) (*domain.PaymentStatus, error) {
 	if period == 0 {
-		paymentPeriod, err := mu.appConfigRepository.GetPaymentPeriod()
+		paymentPeriod, err := mu.AppConfigRepository.GetPaymentPeriod()
 
 		if err != nil {
 			return nil, xerrors.Errorf("failed to get payment period from app config: %w", err)
@@ -307,7 +309,7 @@ func (mu *managementUsecase) GetPaymentStatus(ctx context.Context, userID, perio
 		period = paymentPeriod
 	}
 
-	ps, err := mu.paymentStatusRepository.Get(ctx, userID, period)
+	ps, err := mu.PaymentStatusRepository.Get(ctx, userID, period)
 
 	if xerrors.Is(err, domain.ErrNoPaymentStatus) {
 		return nil, rest.NewNotFound("存在しない支払い情報です")
@@ -321,7 +323,7 @@ func (mu *managementUsecase) GetPaymentStatus(ctx context.Context, userID, perio
 }
 
 func (mu *managementUsecase) GetPaymentStatusesForUser(ctx context.Context, userID int) ([]*domain.PaymentStatus, error) {
-	res, err := mu.paymentStatusRepository.ListPeriodsForUser(ctx, userID)
+	res, err := mu.PaymentStatusRepository.ListPeriodsForUser(ctx, userID)
 
 	if err != nil {
 		return nil, xerrors.Errorf("failed to list payment statuses for user: %w", err)
@@ -352,7 +354,7 @@ func (mu *managementUsecase) GetUser(ctx context.Context, userID int) (*domain.U
 }
 
 func (mu *managementUsecase) getUser(ctx context.Context, userID int) (*domain.User, error) {
-	user, err := mu.userRepository.GetByID(ctx, userID)
+	user, err := mu.UserRepository.GetByID(ctx, userID)
 
 	if err == domain.ErrNoUser {
 		return nil, rest.NewNotFound("user not found")
@@ -370,7 +372,7 @@ func (mu *managementUsecase) UpdateUser(ctx context.Context, user *domain.User) 
 		return err
 	}
 
-	err := mu.userRepository.Update(ctx, user)
+	err := mu.UserRepository.Update(ctx, user)
 
 	if err != nil {
 		return xerrors.Errorf("failed to find user by id(%d): %w", user.ID, err)
@@ -384,11 +386,21 @@ func (mu *managementUsecase) UpdateRole(ctx context.Context, userID int, role do
 		return rest.NewBadRequest("存在しないロールが指定されています")
 	}
 
-	err := mu.userRepository.UpdateRole(ctx, userID, role)
+	err := mu.UserRepository.UpdateRole(ctx, userID, role)
 
 	if err != nil {
 		return xerrors.Errorf("failed to find user by id(%d): %w", userID, err)
 	}
+
+	return nil
+}
+
+func (mu *managementUsecase) InviteToSlack(ctx context.Context) error {
+	if err := mu.SlackRepository.MarkUninvitedAsPending(ctx); err != nil {
+		return xerrors.Errorf("failed to mark uninvited members as pending: %w", err)
+	}
+
+	mu.SlackInviter.Trigger()
 
 	return nil
 }
