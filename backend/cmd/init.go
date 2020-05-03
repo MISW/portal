@@ -218,6 +218,7 @@ func initWorkers(digc *dig.Container) func() {
 	ctx, cancel := context.WithCancel(context.Background())
 
 	digc.Invoke(func(param struct {
+		dig.In
 		SlackInviter workers.Worker `name:"slack"`
 	}) {
 		go param.SlackInviter.Start(ctx)
