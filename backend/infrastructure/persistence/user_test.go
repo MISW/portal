@@ -27,14 +27,15 @@ var (
 			Department: "基幹理工学部",
 			Subject:    "情報理工学科",
 		},
-		StudentID:            "1W180000-0",
-		EmergencyPhoneNumber: "0120117117",
-		OtherCircles:         "WCE",
-		Workshops:            []string{"Programming", "CG", "MIDI"},
-		Squads:               []string{"Web", "Webデザイン"},
-		Role:                 domain.Admin,
-		SlackID:              "UAJXXXXXX",
-		DiscordID:            "mischan#0123",
+		StudentID:             "1W180000-0",
+		EmergencyPhoneNumber:  "0120117117",
+		OtherCircles:          "WCE",
+		Workshops:             []string{"Programming", "CG", "MIDI"},
+		Squads:                []string{"Web", "Webデザイン"},
+		Role:                  domain.Admin,
+		SlackInvitationStatus: domain.Invited,
+		SlackID:               "UAJXXXXXX",
+		DiscordID:             "mischan#0123",
 	}
 
 	userTemplate2 = &domain.User{
@@ -49,14 +50,15 @@ var (
 			Department: "基幹理工学部",
 			Subject:    "情報通信学科",
 		},
-		StudentID:            "1W180000-1",
-		EmergencyPhoneNumber: "0120117117",
-		OtherCircles:         "WCE",
-		Workshops:            []string{"Programming", "CG", "MIDI"},
-		Squads:               []string{"Web", "Webデザイン"},
-		Role:                 domain.Admin,
-		SlackID:              "UAJXXXXXX",
-		DiscordID:            "mischan#0123",
+		StudentID:             "1W180000-1",
+		EmergencyPhoneNumber:  "0120117117",
+		OtherCircles:          "WCE",
+		Workshops:             []string{"Programming", "CG", "MIDI"},
+		Squads:                []string{"Web", "Webデザイン"},
+		Role:                  domain.Admin,
+		SlackInvitationStatus: domain.Invited,
+		SlackID:               "UAJXXXXXX",
+		DiscordID:             "mischan#0123",
 	}
 )
 
@@ -274,28 +276,4 @@ func TestUpdate(t *testing.T) {
 		}
 	})
 
-	t.Run("slack id", func(t *testing.T) {
-		conn := testutil.NewSQLConn(t)
-
-		up := persistence.NewUserPersistence(conn)
-
-		id := insertTestUserData(t, up)
-
-		updatedSlackID := "SLACKID"
-		err := up.UpdateSlackID(context.Background(), id, updatedSlackID)
-
-		if err != nil {
-			t.Fatalf("failed to update slack id: %+v", err)
-		}
-
-		user, err := up.GetByID(context.Background(), id)
-
-		if err != nil {
-			t.Fatalf("failed to get user: %+v", err)
-		}
-
-		if user.SlackID != updatedSlackID {
-			t.Fatalf("slack id is not updated: %s(expected: %s)", user.SlackID, updatedSlackID)
-		}
-	})
 }

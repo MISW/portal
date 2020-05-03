@@ -14,17 +14,19 @@ type WebhookUsecase interface {
 }
 
 type webhookUsecase struct {
-	userRepository repository.UserRepository
-	slackClient    *slack.Client
+	slackRepository repository.SlackRepository
+	userRepository  repository.UserRepository
+	slackClient     *slack.Client
 }
 
 var _ WebhookUsecase = &webhookUsecase{}
 
 // NewWebhookUsecase - Webhookの処理を行うやつを初期化
-func NewWebhookUsecase(slackClient *slack.Client, userRepository repository.UserRepository) WebhookUsecase {
+func NewWebhookUsecase(slackClient *slack.Client, userRepository repository.UserRepository, slackRepository repository.SlackRepository) WebhookUsecase {
 	return &webhookUsecase{
-		userRepository: userRepository,
-		slackClient:    slackClient,
+		slackRepository: slackRepository,
+		userRepository:  userRepository,
+		slackClient:     slackClient,
 	}
 }
 
@@ -50,7 +52,7 @@ func (wu *webhookUsecase) NewUser(ctx context.Context, email, slackID string) er
 		return nil
 	}
 
-	if err := wu.userRepository.UpdateSlackID(ctx, user.ID, slackID); err != nil {
+	if err := wu.slackRepository.UpdateSlackID(ctx, user.ID, slackID); err != nil {
 		return xerrors.Errorf("failed to update slack id for user(%d) as slack id(%s): %w", user.ID, slackID, err)
 	}
 

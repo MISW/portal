@@ -17,6 +17,7 @@ import (
 	"github.com/MISW/Portal/backend/internal/middleware"
 	"github.com/MISW/Portal/backend/internal/oidc"
 	"github.com/MISW/Portal/backend/internal/slack"
+	"github.com/MISW/Portal/backend/internal/workers"
 	"github.com/MISW/Portal/backend/usecase"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jmoiron/sqlx"
@@ -109,6 +110,11 @@ func initDig(cfg *config.Config, addr string) *dig.Container {
 		panic(err)
 	}
 
+	err = c.Provide(persistence.NewSlackPersistence)
+	if err != nil {
+		panic(err)
+	}
+
 	err = c.Provide(persistence.NewPaymentTransactionPersistence)
 	if err != nil {
 		panic(err)
@@ -196,18 +202,37 @@ func initDig(cfg *config.Config, addr string) *dig.Container {
 		panic(err)
 	}
 
+	err = c.Provide(workers.NewSlackInviter, dig.Name("slack"), dig.Group("workers"))
+	if err != nil {
+		panic(err)
+	}
+
 	return c
 }
 
-func initHandler(cfg *config.Config, addr string) *echo.Echo {
+func initDigContainer(cfg *config.Config, addr string) *dig.Container {
+	return initDig(cfg, addr)
+}
+
+func initWorkers(digc *dig.Container) func() {
+	ctx, cancel := context.WithCancel(context.Background())
+
+	digc.Invoke(func(param struct {
+		SlackInviter workers.Worker `name:"slack"`
+	}) {
+		go param.SlackInviter.Start(ctx)
+	})
+
+	return cancel
+}
+
+func initHandler(cfg *config.Config, addr string, digc *dig.Container) *echo.Echo {
 	e := echo.New()
 	e.Use(echomiddleware.Logger())
 	e.Use(echomiddleware.Recover())
 
 	c, _ := yaml.Marshal(e.Routes())
 	e.Logger.Infof("addr: %s,\nconfig: %s", addr, c)
-
-	digc := initDig(cfg, addr)
 
 	err := digc.Invoke(func(auth middleware.AuthMiddleware, sh private.SessionHandler) error {
 		g := e.Group("/api/private", auth.Authenticate)
@@ -241,6 +266,10 @@ func initHandler(cfg *config.Config, addr string) *echo.Echo {
 			g.DELETE("/payment_status", mh.DeletePaymentStatus)
 			g.PUT("/payment_status", mh.AddPaymentStatus)
 			g.GET("/payment_statuses", mh.GetPaymentStatuses)
+
+			slack := g.Group("/slack")
+
+			slack.POST("/invite", mh.InviteToSlack)
 		}); err != nil {
 			return err
 		}

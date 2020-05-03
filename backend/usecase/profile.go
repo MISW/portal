@@ -60,6 +60,7 @@ func (pu *profileUsecase) Update(ctx context.Context, registeredUser, user *doma
 	user.Role = registeredUser.Role
 	user.Generation = registeredUser.Generation
 	user.ID = registeredUser.ID
+	user.SlackInvitationStatus = registeredUser.SlackInvitationStatus
 
 	if err := user.Validate(); err != nil {
 		return nil, err
