@@ -47,7 +47,7 @@ type ManagementUsecase interface {
 	InviteToSlack(ctx context.Context) error
 }
 
-type managementUsecaseParams struct {
+type ManagementUsecaseParams struct {
 	UserRepository               repository.UserRepository
 	PaymentStatusRepository      repository.PaymentStatusRepository
 	PaymentTransactionRepository repository.PaymentTransactionRepository
@@ -57,13 +57,13 @@ type managementUsecaseParams struct {
 }
 
 type managementUsecase struct {
-	*managementUsecaseParams
+	*ManagementUsecaseParams
 }
 
 // NewManagementUsecase - management usecaseの初期化
-func NewManagementUsecase(param *managementUsecaseParams) ManagementUsecase {
+func NewManagementUsecase(param *ManagementUsecaseParams) ManagementUsecase {
 	return &managementUsecase{
-		managementUsecaseParams: param,
+		ManagementUsecaseParams: param,
 	}
 }
 
