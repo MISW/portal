@@ -1,6 +1,10 @@
 package repository
 
-import context "context"
+import (
+	context "context"
+
+	domain "github.com/MISW/Portal/backend/domain"
+)
 
 //go:generate mockgen -source=$GOFILE -destination=mock_$GOFILE -package=$GOPACKAGE
 
@@ -10,4 +14,10 @@ type SlackRepository interface {
 
 	// MarkUninvitedMembersAsPending - メンバーかつユーザをSlackに招待するとmarkする
 	MarkUninvitedAsPending(ctx context.Context) error
+
+	// GetPending - Pendingのユーザを一つ取得
+	GetPending(ctx context.Context) (*domain.User, error)
+
+	// MarkAsInvited - PendingのユーザをInvitedにする
+	MarkAsInvited(ctx context.Context, id int) error
 }
