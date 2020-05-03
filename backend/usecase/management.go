@@ -64,9 +64,9 @@ type managementUsecase struct {
 }
 
 // NewManagementUsecase - management usecaseの初期化
-func NewManagementUsecase(param *ManagementUsecaseParams) ManagementUsecase {
+func NewManagementUsecase(param ManagementUsecaseParams) ManagementUsecase {
 	return &managementUsecase{
-		ManagementUsecaseParams: param,
+		ManagementUsecaseParams: &param,
 	}
 }
 
