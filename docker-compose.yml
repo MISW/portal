@@ -24,7 +24,7 @@ services:
     expose:
       - "80"
     environment:
-      TZ: "Azia/Tokyo"
+      TZ: "Asia/Tokyo"
       ENVIRONMENT: dev
 
   frontend:
