@@ -30,12 +30,12 @@ func initManagementMock(t *testing.T) (*managementMock, func()) {
 	paymentTransactionRepository := repository.NewMockPaymentTransactionRepository(ctrl)
 	userRepository := repository.NewMockUserRepository(ctrl)
 
-	uc := usecase.NewManagementUsecase(
-		userRepository,
-		paymentStatusRepository,
-		paymentTransactionRepository,
-		appConfigRepository,
-	)
+	uc := usecase.NewManagementUsecase(&usecase.ManagementUsecaseParams{
+		UserRepository:               userRepository,
+		PaymentStatusRepository:      paymentStatusRepository,
+		PaymentTransactionRepository: paymentTransactionRepository,
+		AppConfigRepository:          appConfigRepository,
+	})
 
 	return &managementMock{
 		appConfigRepository:          appConfigRepository,
