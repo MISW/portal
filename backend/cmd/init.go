@@ -217,12 +217,14 @@ func initDigContainer(cfg *config.Config, addr string) *dig.Container {
 func initWorkers(digc *dig.Container) func() {
 	ctx, cancel := context.WithCancel(context.Background())
 
-	digc.Invoke(func(param struct {
+	if err := digc.Invoke(func(param struct {
 		dig.In
 		SlackInviter workers.Worker `name:"slack"`
 	}) {
 		go param.SlackInviter.Start(ctx)
-	})
+	}); err != nil {
+		panic(err)
+	}
 
 	return cancel
 }

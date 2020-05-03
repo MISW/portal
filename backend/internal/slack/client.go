@@ -10,7 +10,8 @@ import (
 // NewClient - Slack クライアントを初期化する
 func NewClient(token, teamName string) *Client {
 	return &Client{
-		client: slack.New(token),
+		client:   slack.New(token),
+		teamName: teamName,
 	}
 }
 
