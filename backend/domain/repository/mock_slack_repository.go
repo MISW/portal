@@ -6,6 +6,7 @@ package repository
 
 import (
 	context "context"
+	domain "github.com/MISW/Portal/backend/domain"
 	gomock "github.com/golang/mock/gomock"
 	reflect "reflect"
 )
@@ -47,16 +48,45 @@ func (mr *MockSlackRepositoryMockRecorder) UpdateSlackID(ctx, id, slackID interf
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateSlackID", reflect.TypeOf((*MockSlackRepository)(nil).UpdateSlackID), ctx, id, slackID)
 }
 
-// MarkUninvitedMembersAsPending mocks base method
-func (m *MockSlackRepository) MarkUninvitedMembersAsPending(ctx context.Context) error {
+// MarkUninvitedAsPending mocks base method
+func (m *MockSlackRepository) MarkUninvitedAsPending(ctx context.Context) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "MarkUninvitedMembersAsPending", ctx)
+	ret := m.ctrl.Call(m, "MarkUninvitedAsPending", ctx)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
-// MarkUninvitedMembersAsPending indicates an expected call of MarkUninvitedMembersAsPending
-func (mr *MockSlackRepositoryMockRecorder) MarkUninvitedMembersAsPending(ctx interface{}) *gomock.Call {
+// MarkUninvitedAsPending indicates an expected call of MarkUninvitedAsPending
+func (mr *MockSlackRepositoryMockRecorder) MarkUninvitedAsPending(ctx interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MarkUninvitedMembersAsPending", reflect.TypeOf((*MockSlackRepository)(nil).MarkUninvitedMembersAsPending), ctx)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MarkUninvitedAsPending", reflect.TypeOf((*MockSlackRepository)(nil).MarkUninvitedAsPending), ctx)
+}
+
+// GetPending mocks base method
+func (m *MockSlackRepository) GetPending(ctx context.Context) (*domain.User, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetPending", ctx)
+	ret0, _ := ret[0].(*domain.User)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetPending indicates an expected call of GetPending
+func (mr *MockSlackRepositoryMockRecorder) GetPending(ctx interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetPending", reflect.TypeOf((*MockSlackRepository)(nil).GetPending), ctx)
+}
+
+// MarkAsInvited mocks base method
+func (m *MockSlackRepository) MarkAsInvited(ctx context.Context, id int) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "MarkAsInvited", ctx, id)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// MarkAsInvited indicates an expected call of MarkAsInvited
+func (mr *MockSlackRepositoryMockRecorder) MarkAsInvited(ctx, id interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MarkAsInvited", reflect.TypeOf((*MockSlackRepository)(nil).MarkAsInvited), ctx, id)
 }

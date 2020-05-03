@@ -2,11 +2,13 @@ package persistence
 
 import (
 	"context"
+	"database/sql"
 
 	"github.com/MISW/Portal/backend/domain"
 	"github.com/MISW/Portal/backend/domain/repository"
 	"github.com/MISW/Portal/backend/internal/db"
 	"github.com/go-sql-driver/mysql"
+	"github.com/jmoiron/sqlx"
 	"golang.org/x/xerrors"
 )
 
@@ -54,6 +56,40 @@ func (sp *slackPersistence) MarkUninvitedAsPending(ctx context.Context) error {
 
 	if err != nil {
 		return xerrors.Errorf("failed to update user: %w", err)
+	}
+
+	return nil
+}
+
+// GetPending - Pendingのユーザを一つ取得
+func (sp *slackPersistence) GetPending(ctx context.Context) (*domain.User, error) {
+	var u *user
+
+	err := sqlx.GetContext(ctx, sp.db, &u,
+		`SELECT * FROM users WHERE slack_invitation_status=? LIMIT 1`,
+		domain.Pending,
+	)
+
+	if err == sql.ErrNoRows {
+		return nil, domain.ErrNoUser
+	}
+
+	if err != nil {
+		return nil, xerrors.Errorf("failed to find user for %s: %w", domain.Pending, err)
+	}
+
+	return parseUser(u), nil
+}
+
+// MarkAsInvited - PendingのユーザをInvitedにする
+func (sp *slackPersistence) MarkAsInvited(ctx context.Context, id int) error {
+	_, err := sp.db.ExecContext(
+		ctx,
+		`UPDATE users SET slack_invitation_status=? WHERE id=?`, domain.Invited, id,
+	)
+
+	if err != nil {
+		return xerrors.Errorf("failed to update invitation status for %d: %w", id, err)
 	}
 
 	return nil

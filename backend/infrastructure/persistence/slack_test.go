@@ -151,3 +151,71 @@ func TestMarkUninvitedAsPending(t *testing.T) {
 		}
 	})
 }
+
+func TestGetPending(t *testing.T) {
+	conn := testutil.NewSQLConn(t)
+
+	sp := persistence.NewSlackPersistence(conn)
+	up := persistence.NewUserPersistence(conn)
+
+	invited, _ := insertTestSlackData(t, up)
+
+	ctx := context.Background()
+
+	if err := sp.MarkUninvitedAsPending(ctx); err != nil {
+		t.Fatalf("failed to mark uninvited as pending: %+v", err)
+	}
+
+	user, err := sp.GetPending(ctx)
+
+	if err != nil {
+		t.Fatalf("get pending failed: %+v", err)
+	}
+
+	for id := range invited {
+		if user.ID == id {
+			// OK
+
+			return
+		}
+	}
+
+	t.Errorf("invalid one is selected: %v", user)
+}
+
+func TestMarkAsInvited(t *testing.T) {
+	conn := testutil.NewSQLConn(t)
+
+	sp := persistence.NewSlackPersistence(conn)
+	up := persistence.NewUserPersistence(conn)
+
+	insertTestSlackData(t, up)
+
+	ctx := context.Background()
+
+	if err := sp.MarkUninvitedAsPending(ctx); err != nil {
+		t.Fatalf("failed to mark uninvited as pending: %+v", err)
+	}
+
+	user, err := sp.GetPending(ctx)
+
+	if err != nil {
+		t.Fatalf("get pending failed: %+v", err)
+	}
+
+	err = sp.MarkAsInvited(ctx, user.ID)
+
+	if err != nil {
+		t.Fatalf("failed to mark as invited: %+v", err)
+	}
+
+	user, err = up.GetByID(ctx, user.ID)
+
+	if err != nil {
+		t.Fatalf("failed to find user: %+v", err)
+	}
+
+	if user.SlackInvitationStatus != domain.Invited {
+		t.Errorf("invitation status is not upted: %s", user.SlackInvitationStatus)
+	}
+}
