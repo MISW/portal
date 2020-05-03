@@ -3,6 +3,7 @@ package workers
 import (
 	"context"
 	"log"
+	"strings"
 	"time"
 
 	"github.com/MISW/Portal/backend/domain"
@@ -33,7 +34,23 @@ func (si *slackInviter) inviteToSlack(handle, email string) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 
-	if err := si.client.InviteToTeam(ctx, handle, "", email); err != nil {
+	err := si.client.InviteToTeam(ctx, handle, "", email)
+
+	if strings.Contains(err.Error(), "user_disabled") ||
+		strings.Contains(err.Error(), "already_in_team") ||
+		strings.Contains(err.Error(), "already_in_team_invited_user") {
+		log.Printf("email(%s) is already used", email)
+
+		return nil
+	}
+
+	if strings.Contains(err.Error(), "invalid_email") {
+		log.Printf("email(%s) is invalid", email)
+
+		return nil
+	}
+
+	if err != nil {
 		return xerrors.Errorf("failed to invite to slack: %w", err)
 	}
 
@@ -59,6 +76,8 @@ func (si *slackInviter) findPending(ctx context.Context) bool {
 	}
 
 	if err := si.inviteToSlack(user.Handle, user.Email); err != nil {
+		log.Printf("failed to invite to slack(%d, %s): %+v", user.ID, user.Email, err)
+
 		return true
 	}
 
@@ -72,13 +91,15 @@ func (si *slackInviter) findPending(ctx context.Context) bool {
 }
 
 func (si *slackInviter) Start(ctx context.Context) {
+	log.Println("slack inviter started")
+	defer log.Println("slack inviter stopped: ", ctx.Err())
+
 	ticker := time.NewTicker(1 * time.Minute)
 	defer ticker.Stop()
 
 	for {
 		select {
 		case <-ctx.Done():
-			log.Println("slack inviter stopped: ", ctx.Err())
 
 			return
 		case <-ticker.C:
