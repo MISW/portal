@@ -266,6 +266,10 @@ func initHandler(cfg *config.Config, addr string, digc *dig.Container) *echo.Ech
 			g.DELETE("/payment_status", mh.DeletePaymentStatus)
 			g.PUT("/payment_status", mh.AddPaymentStatus)
 			g.GET("/payment_statuses", mh.GetPaymentStatuses)
+
+			slack := g.Group("/slack")
+
+			slack.POST("/invite", mh.InviteToSlack)
 		}); err != nil {
 			return err
 		}
