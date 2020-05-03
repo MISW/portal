@@ -42,6 +42,9 @@ type ManagementUsecase interface {
 
 	// UpdateRole - ユーザのroleを変更
 	UpdateRole(ctx context.Context, userID int, role domain.RoleType) error
+
+	// InviteToSlack - Slackに招待されていないメンバーをSlackに招待する(非同期)
+	InviteToSlack(ctx context.Context) error
 }
 
 type managementUsecaseParams struct {
