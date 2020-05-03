@@ -202,7 +202,7 @@ func initDig(cfg *config.Config, addr string) *dig.Container {
 		panic(err)
 	}
 
-	err = c.Provide(workers.NewSlackInviter, dig.Name("slack"), dig.Group("workers"))
+	err = c.Provide(workers.NewSlackInviter, dig.Name("slack"))
 	if err != nil {
 		panic(err)
 	}
