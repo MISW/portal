@@ -6,6 +6,7 @@ import (
 
 	"github.com/MISW/Portal/backend/internal/rest"
 	"github.com/MISW/Portal/backend/internal/workers"
+	"go.uber.org/dig"
 
 	"golang.org/x/xerrors"
 
@@ -48,6 +49,8 @@ type ManagementUsecase interface {
 }
 
 type ManagementUsecaseParams struct {
+	dig.In
+
 	UserRepository               repository.UserRepository
 	PaymentStatusRepository      repository.PaymentStatusRepository
 	PaymentTransactionRepository repository.PaymentTransactionRepository
