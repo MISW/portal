@@ -6,9 +6,11 @@ export function usersCSV(users: UserTableData[]): string {
     "\n" +
     users
       .map((user) =>
-        Object.keys(labelsInJapanese).map(
-          (key) => JSON.stringify(`${user[key as keyof UserTableData] ?? ""}`)
-        ).join(",")
+        Object.keys(labelsInJapanese)
+          .map((key) =>
+            JSON.stringify(`${user[key as keyof UserTableData] ?? ""}`)
+          )
+          .join(",")
       )
       .join("\n")
   );
