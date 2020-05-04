@@ -61,7 +61,12 @@ export type UserWithPaymentJSON = UserAllInfoJSON & {
 
 export type UserInfoJSON = Omit<
   UserAllInfoJSON,
-  "slack_id" | "role" | "slack_invitation_status" | "created_at" | "updated_at" | "id"
+  | "slack_id"
+  | "role"
+  | "slack_invitation_status"
+  | "created_at"
+  | "updated_at"
+  | "id"
 > & {
   id?: number;
   role?: RoleType;

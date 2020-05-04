@@ -207,7 +207,6 @@ export const getUserAsAdmin = async (
   return (await res.json()).user as UserWithPaymentJSON;
 };
 
-
 export const inviteToSlack = async () => {
   const res = await fetch(`${getHostAPI()}/private/management/slack/invite`, {
     method: "POST",

@@ -27,7 +27,9 @@ const headCells: HeadCell[] = Object.entries(labelsInJapanese).map(
 
 const Page: NextPage = () => {
   const [users, setUsers] = useState<Array<UserTableData> | null>(null);
-  const [slackInvitationDialog, setSlackInvitationDialog] = useState<boolean>(false);
+  const [slackInvitationDialog, setSlackInvitationDialog] = useState<boolean>(
+    false
+  );
 
   const handleClickMenu = (param: handleClickMenuParam) => {
     switch (param.kind) {
@@ -39,10 +41,10 @@ const Page: NextPage = () => {
 
   const handleSlackInvitationClose = (value: "OK" | "Cancel") => {
     if (value === "OK") {
-      inviteToSlack().then()
+      inviteToSlack().then();
     }
     setSlackInvitationDialog(false);
-  }
+  };
 
   useEffect(() => {
     let unmounted = false;
@@ -58,18 +60,22 @@ const Page: NextPage = () => {
     };
   }, []);
 
-  const invitedUsers = users?.filter(
-    user => ["admin", "member"].includes(user.role) && user.slackId.length === 0 && user.slackInvitationStatus === "never"
-  ).map(
-    user => `${user.generation}代 ${user.handle}(${user.name}): ${user.email}`
-  ) ?? [];
+  const invitedUsers =
+    users
+      ?.filter(
+        (user) =>
+          ["admin", "member"].includes(user.role) &&
+          user.slackId.length === 0 &&
+          user.slackInvitationStatus === "never"
+      )
+      .map(
+        (user) => ({ id: user.id, description: `${user.generation}代 ${user.handle}(${user.name}): ${user.email}` })
+      ) ?? [];
 
   return (
     <>
       <Toolbar>
-        <Typography variant="h3">
-          ユーザ一覧
-        </Typography>
+        <Typography variant="h3">ユーザ一覧</Typography>
       </Toolbar>
       {users ? (
         <AdminUsersTable
