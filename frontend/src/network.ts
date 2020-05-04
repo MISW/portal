@@ -4,9 +4,9 @@ import {
   toUserProfile,
   toUserInfoJSON,
   UserWithPaymentJSON,
-  PaymentTableData,
+  UserTableData,
   PaymentStatus,
-  toPaymentTableData,
+  toUserTableData,
 } from "./user";
 
 const getHostAPI = () => `${location.protocol}//${location.host}/api`;
@@ -124,7 +124,7 @@ export const logout = async () => {
   }
 };
 
-export const listUsers = async (): Promise<Array<PaymentTableData>> => {
+export const listUsers = async (): Promise<Array<UserTableData>> => {
   const res = await fetch(`${getHostAPI()}/private/management/users`, {
     method: "GET",
     headers: {
@@ -142,7 +142,7 @@ export const listUsers = async (): Promise<Array<PaymentTableData>> => {
     throw new Error("not array");
   }
   console.log(userList);
-  return userList.map((u) => toPaymentTableData(u));
+  return userList.map((u) => toUserTableData(u));
 };
 
 export const addPaymentStatus = async (id: number) => {
@@ -205,4 +205,17 @@ export const getUserAsAdmin = async (
   }
 
   return (await res.json()).user as UserWithPaymentJSON;
+};
+
+
+export const inviteToSlack = async () => {
+  const res = await fetch(`${getHostAPI()}/private/management/slack/invite`, {
+    method: "POST",
+    credentials: "include",
+  });
+
+  if (res.status >= 400) {
+    console.error(res);
+    return Promise.reject("Error: status-code is " + res.statusText);
+  }
 };
