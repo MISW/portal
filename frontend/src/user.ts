@@ -46,9 +46,10 @@ export interface UserAllInfoJSON {
   workshops: string[];
   squads: string[];
   role: RoleType;
-  discord_id: string;
 
   slack_id: string;
+  discord_id: string;
+  slack_invitation_status: string;
 
   created_at: number;
   updated_at: number;
@@ -60,7 +61,7 @@ export type UserWithPaymentJSON = UserAllInfoJSON & {
 
 export type UserInfoJSON = Omit<
   UserAllInfoJSON,
-  "slack_id" | "role" | "created_at" | "updated_at" | "id"
+  "slack_id" | "role" | "slack_invitation_status" | "created_at" | "updated_at" | "id"
 > & {
   id?: number;
   role?: RoleType;
@@ -73,6 +74,7 @@ export type ConfigurableProfile = Omit<
   | "student_id"
   | "university"
   | "discord_id"
+  | "slack_invitation_status"
 > & {
   otherCircles: UserAllInfoJSON["other_circles"];
   emergencyPhoneNumber: UserAllInfoJSON["emergency_phone_number"];
@@ -129,7 +131,7 @@ export const toUserInfoJSON = (p: ConfigurableProfile): UserInfoJSON => {
   };
 };
 
-export const toPaymentTableData = (j: UserWithPaymentJSON) => ({
+export const toUserTableData = (j: UserWithPaymentJSON) => ({
   id: j.id,
   email: j.email,
   generation: j.generation,
@@ -150,9 +152,10 @@ export const toPaymentTableData = (j: UserWithPaymentJSON) => ({
   role: j.role,
   authorizer: j.payment_status?.authorizer ?? "",
   paid: j.payment_status ? "YES" : "NO",
+  slackInvitationStatus: j.slack_invitation_status,
 });
 
-export type PaymentTableData = ReturnType<typeof toPaymentTableData>;
+export type UserTableData = ReturnType<typeof toUserTableData>;
 
 export const labelsInJapanese = {
   id: "ID",
