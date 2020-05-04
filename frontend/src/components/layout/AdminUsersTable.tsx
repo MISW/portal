@@ -32,7 +32,7 @@ import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import { UserTableData } from "../../user";
 
-export type handleClickMenuParam = { kind: "slack" };
+export type handleClickMenuParam = { kind: "slack" } | { kind: "export" };
 
 export type handleClickMenuType = (param: handleClickMenuParam) => void;
 
@@ -225,12 +225,15 @@ const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
     setAnchorEl(event.currentTarget);
   };
 
-  const handleClose = (name: "slack" | null) => () => {
+  const handleClose = (name: "slack" | "export" | null) => () => {
     setAnchorEl(null);
 
     switch (name) {
       case "slack":
         handleClickMenu({ kind: "slack" });
+        break;
+      case "export":
+        handleClickMenu({ kind: "export" });
         break;
     }
   };
@@ -301,6 +304,9 @@ const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
               }}
             >
               <MenuItem onClick={handleClose("slack")}>Slackに招待</MenuItem>
+              <MenuItem onClick={handleClose("export")}>
+                CSVエクスポート
+              </MenuItem>
             </Menu>
           </Box>
         </>
