@@ -181,6 +181,7 @@ export const labelsInJapanese = {
   workshops: "研究会",
   squads: "班",
   otherCircles: "他サークル",
+  slackInvitationStatus: "Slack招待",
   slackId: "Slack ID",
   discordId: "Discord ID",
 };
