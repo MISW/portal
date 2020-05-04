@@ -22,8 +22,8 @@ import { Typography } from "@material-ui/core";
 import Toolbar from "@material-ui/core/Toolbar";
 import SlackInvitationDialog from "../../src/components/layout/SlackInvitationDialog";
 
-const headCells: HeadCell[] = Object.entries(labelsInJapanese).map(
-  ([id, label]) => ({ id, label } as HeadCell)
+const headCells: HeadCell[] = labelsInJapanese.map(
+  ({ id, label }) => ({ id, label } as HeadCell)
 );
 
 const Page: NextPage = () => {
@@ -99,8 +99,8 @@ const Page: NextPage = () => {
           handleClickMenu={handleClickMenu}
         />
       ) : (
-        "Loading..."
-      )}
+          "Loading..."
+        )}
 
       <SlackInvitationDialog
         open={slackInvitationDialog}
