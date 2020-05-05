@@ -3,25 +3,49 @@ import { NextPage } from "next";
 import AdminUsersTable, {
   HeadCell,
   Data,
+  handleClickMenuParam,
 } from "../../src/components/layout/AdminUsersTable";
 import {
   listUsers,
   getUserAsAdmin,
   addPaymentStatus,
   deletePaymentStatus,
+  inviteToSlack,
 } from "../../src/network";
 import {
-  PaymentTableData,
-  toPaymentTableData,
+  UserTableData,
+  toUserTableData,
   labelsInJapanese,
 } from "../../src/user";
+import { Typography } from "@material-ui/core";
+import Toolbar from "@material-ui/core/Toolbar";
+import SlackInvitationDialog from "../../src/components/layout/SlackInvitationDialog";
 
 const headCells: HeadCell[] = Object.entries(labelsInJapanese).map(
   ([id, label]) => ({ id, label } as HeadCell)
 );
 
 const Page: NextPage = () => {
-  const [users, setUsers] = useState<Array<PaymentTableData> | null>(null);
+  const [users, setUsers] = useState<Array<UserTableData> | null>(null);
+  const [slackInvitationDialog, setSlackInvitationDialog] = useState<boolean>(
+    false
+  );
+
+  const handleClickMenu = (param: handleClickMenuParam) => {
+    switch (param.kind) {
+      case "slack":
+        setSlackInvitationDialog(true);
+        break;
+    }
+  };
+
+  const handleSlackInvitationClose = (value: "OK" | "Cancel") => {
+    if (value === "OK") {
+      inviteToSlack().then();
+    }
+    setSlackInvitationDialog(false);
+  };
+
   useEffect(() => {
     let unmounted = false;
     const getListUsers = async () => {
@@ -35,8 +59,24 @@ const Page: NextPage = () => {
       unmounted = true;
     };
   }, []);
+
+  const invitedUsers =
+    users
+      ?.filter(
+        (user) =>
+          ["admin", "member"].includes(user.role) &&
+          user.slackId.length === 0 &&
+          user.slackInvitationStatus === "never"
+      )
+      .map(
+        (user) => ({ id: user.id, description: `${user.generation}代 ${user.handle}(${user.name}): ${user.email}` })
+      ) ?? [];
+
   return (
     <>
+      <Toolbar>
+        <Typography variant="h3">ユーザ一覧</Typography>
+      </Toolbar>
       {users ? (
         <AdminUsersTable
           rows={users}
@@ -49,12 +89,19 @@ const Page: NextPage = () => {
               await deletePaymentStatus(id);
             }
 
-            return toPaymentTableData(await getUserAsAdmin(id));
+            return toUserTableData(await getUserAsAdmin(id));
           }}
+          handleClickMenu={handleClickMenu}
         />
       ) : (
-        "Loading..."
-      )}
+          "Loading..."
+        )}
+
+      <SlackInvitationDialog
+        open={slackInvitationDialog}
+        onClose={handleSlackInvitationClose}
+        invitedUsers={invitedUsers}
+      />
     </>
   );
 };

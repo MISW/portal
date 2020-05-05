@@ -7,6 +7,7 @@ import {
   withStyles,
   Theme,
 } from "@material-ui/core/styles";
+import { Box } from "@material-ui/core";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
@@ -25,13 +26,20 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
 import DeleteIcon from "@material-ui/icons/Delete";
 import FilterListIcon from "@material-ui/icons/FilterList";
-import { PaymentTableData } from "../../user";
+import MoreVertIcon from "@material-ui/icons/MoreVert";
 import NoWrapButton from "./NoWrapButton";
+import Menu from "@material-ui/core/Menu";
+import MenuItem from "@material-ui/core/MenuItem";
+import { UserTableData } from "../../user";
 
-export type Data = PaymentTableData extends Record<string, string | number> & {
+export type handleClickMenuParam = { kind: "slack" };
+
+export type handleClickMenuType = (param: handleClickMenuParam) => void;
+
+export type Data = UserTableData extends Record<string, string | number> & {
   id: number;
 }
-  ? PaymentTableData
+  ? UserTableData
   : never;
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
@@ -200,11 +208,32 @@ interface EnhancedTableToolbarProps {
   numSelected: number;
   editMode: boolean;
   handleClickOnEditMode: () => void;
+  handleClickMenu: handleClickMenuType;
 }
 
 const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
   const classes = useToolbarStyles();
-  const { numSelected, editMode, handleClickOnEditMode } = props;
+  const {
+    numSelected,
+    editMode,
+    handleClickOnEditMode,
+    handleClickMenu,
+  } = props;
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = (name: "slack" | null) => () => {
+    setAnchorEl(null);
+
+    switch (name) {
+      case "slack":
+        handleClickMenu({ kind: "slack" });
+        break;
+    }
+  };
 
   return (
     <Toolbar
@@ -213,44 +242,68 @@ const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
       })}
     >
       {numSelected > 0 ? (
-        <Typography
-          className={classes.title}
-          color="inherit"
-          variant="subtitle1"
-          component="div"
-        >
-          {numSelected} selected
-        </Typography>
-      ) : (
-        <Typography
-          className={classes.title}
-          variant="h6"
-          id="tableTitle"
-          component="div"
-        >
-          [管理者] ユーザー一覧
-        </Typography>
-      )}
+        <>
+          <Typography
+            className={classes.title}
+            color="inherit"
+            variant="subtitle1"
+            component="div"
+          >
+            {numSelected} selected
+          </Typography>
 
-      <NoWrapButton
-        variant="contained"
-        color={editMode ? "primary" : "default"}
-        onClick={handleClickOnEditMode}
-      >
-        {editMode ? "終了" : "支払い登録モード"}
-      </NoWrapButton>
-      {numSelected > 0 ? (
-        <Tooltip title="Delete">
-          <IconButton aria-label="delete">
-            <DeleteIcon />
-          </IconButton>
-        </Tooltip>
+          <Tooltip title="Delete">
+            <IconButton aria-label="delete">
+              <DeleteIcon />
+            </IconButton>
+          </Tooltip>
+        </>
       ) : (
-        <Tooltip title="Filter list">
-          <IconButton aria-label="filter list">
-            <FilterListIcon />
-          </IconButton>
-        </Tooltip>
+        <>
+          <Tooltip title="Filter list">
+            <IconButton aria-label="filter list">
+              <FilterListIcon />
+            </IconButton>
+          </Tooltip>
+          <div className={classes.title}></div>
+          <NoWrapButton
+            variant="contained"
+            color={editMode ? "primary" : "default"}
+            onClick={handleClickOnEditMode}
+          >
+            {editMode ? "終了" : "支払い登録モード"}
+          </NoWrapButton>
+
+          <Box ml={1}>
+            <IconButton
+              aria-label="more"
+              aria-controls="long-menu"
+              aria-haspopup="true"
+              onClick={handleClick}
+            >
+              <MoreVertIcon />
+            </IconButton>
+            <Menu
+              id="other-operations"
+              elevation={0}
+              getContentAnchorEl={null}
+              anchorEl={anchorEl}
+              keepMounted
+              open={Boolean(anchorEl)}
+              onClose={handleClose(null)}
+              anchorOrigin={{
+                vertical: "bottom",
+                horizontal: "right",
+              }}
+              transformOrigin={{
+                vertical: "top",
+                horizontal: "right",
+              }}
+            >
+              <MenuItem onClick={handleClose("slack")}>Slackに招待</MenuItem>
+            </Menu>
+          </Box>
+        </>
       )}
     </Toolbar>
   );
@@ -268,11 +321,13 @@ export const EnhancedTable: React.FC<{
   defaultSortedBy: keyof Data;
   headCells: Array<HeadCell>;
   handleEditPaymnetStatus?: (id: number, status: boolean) => Promise<Data>;
+  handleClickMenu: handleClickMenuType;
 }> = ({
   rows: rowsBase,
   defaultSortedBy,
   headCells,
   handleEditPaymnetStatus,
+  handleClickMenu,
 }) => {
   const [rows, setRows] = React.useState<Array<Data>>(rowsBase);
   const classes = useStyles();
@@ -380,7 +435,9 @@ export const EnhancedTable: React.FC<{
           handleClickOnEditMode={() => {
             setSelected([]), setEditPaymentStatusMode(!editPaymentStatusMode);
           }}
+          handleClickMenu={handleClickMenu}
         />
+
         <TableContainer className={classes.tableWrapper}>
           <Table
             stickyHeader
