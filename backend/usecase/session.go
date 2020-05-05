@@ -78,8 +78,9 @@ var _ SessionUsecase = &sessionUsecase{}
 // SignUp - ユーザ新規登録
 func (us *sessionUsecase) Signup(ctx context.Context, user *domain.User) error {
 	user.SlackID = ""
-	user.Role = domain.EmailUnverified
+	user.Role = domain.NotMember
 	user.SlackInvitationStatus = domain.Never
+	user.EmailVerified = false
 
 	if err := user.Validate(); err != nil {
 		return err
@@ -96,8 +97,9 @@ func (us *sessionUsecase) Signup(ctx context.Context, user *domain.User) error {
 	}
 
 	token, err := us.jwtProvider.GenerateWithMap(map[string]interface{}{
-		"kind": "email_verification",
-		"uid":  strconv.Itoa(id),
+		"kind":  "email_verification",
+		"email": user.Email,
+		"uid":   strconv.Itoa(id),
 	})
 
 	if err != nil {
@@ -247,10 +249,20 @@ func (us *sessionUsecase) VerifyEmail(ctx context.Context, verifyToken string) (
 		return "", rest.NewBadRequest("invalid token(invalid character is contained)")
 	}
 
-	err = us.userRepository.UpdateRole(ctx, uid, domain.NewMember)
+	email, ok := claims["uid"].(string)
+
+	if !ok {
+		return "", rest.NewBadRequest("invalid token")
+	}
+
+	err = us.userRepository.VerifyEmail(ctx, uid, email)
+
+	if err == domain.ErrEmailAddressChanged {
+		return "", rest.NewBadRequest("Your email address has been changed")
+	}
 
 	if err != nil {
-		return "", xerrors.Errorf("failed to update user's role: %w", err)
+		return "", xerrors.Errorf("failed to verify email: %w", err)
 	}
 
 	token, err = tokenutil.GenerateRandomToken()
