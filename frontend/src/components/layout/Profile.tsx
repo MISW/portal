@@ -25,12 +25,17 @@ const Profile: React.FC<{
   user: ConfigurableProfile;
   editButton?: boolean;
   handleEditButton?: () => void;
-}> = ({ user, editButton, handleEditButton }) => {
+  title?: boolean;
+  size?: "small" | "medium";
+}> = ({ user, editButton, handleEditButton, title, size }) => {
   const toolbarClasses = useToolbarStyle();
+
+  title = title ?? true;
+  size = size ?? "medium";
 
   return (
     <TableContainer>
-      <Toolbar className={toolbarClasses.root}>
+      {title ? (<Toolbar className={toolbarClasses.root}>
         <Typography className={toolbarClasses.title} variant="h3">
           ユーザ情報
         </Typography>
@@ -46,9 +51,9 @@ const Profile: React.FC<{
             変更
           </NoWrapButton>
         ) : null}
-      </Toolbar>
+      </Toolbar>) : (<></>)}
 
-      <Table aria-label="user profile">
+      <Table aria-label="user profile" size={size}>
         <TableHead>
           <TableRow>
             <TableCell align="center">Key</TableCell>
@@ -56,19 +61,17 @@ const Profile: React.FC<{
           </TableRow>
         </TableHead>
         <TableBody>
-          {Object.entries(user as ConfigurableProfile).map(([key, value]) => (
-            <TableRow key={key}>
+          {labelsInJapanese.filter(({ id }) => (id as keyof ConfigurableProfile) in user).map(({ id, label }) => (
+            <TableRow key={id}>
               <TableCell component="th" scope="row" align="center">
-                <Box fontWeight="fontWeightBold">{`${
-                  labelsInJapanese[key as keyof typeof labelsInJapanese]
-                }`}</Box>
+                <Box fontWeight="fontWeightBold">{`${label}`}</Box>
               </TableCell>
-              <TableCell align="center">{`${value ? value : ""}`}</TableCell>
+              <TableCell align="center">{`${user[id as keyof ConfigurableProfile] ?? ""}`}</TableCell>
             </TableRow>
           ))}
         </TableBody>
       </Table>
-    </TableContainer>
+    </TableContainer >
   );
 };
 

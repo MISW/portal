@@ -2,13 +2,13 @@ import { labelsInJapanese, UserTableData } from "./user";
 
 export function usersCSV(users: UserTableData[]): string {
   return (
-    Object.values(labelsInJapanese).join(",") +
+    labelsInJapanese.map(({ label }) => label).join(",") +
     "\n" +
     users
       .map((user) =>
-        Object.keys(labelsInJapanese)
-          .map((key) =>
-            JSON.stringify(`${user[key as keyof UserTableData] ?? ""}`)
+        labelsInJapanese
+          .map(({ id }) =>
+            JSON.stringify(`${user[id as keyof UserTableData] ?? ""}`)
           )
           .join(",")
       )
