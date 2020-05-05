@@ -17,6 +17,7 @@ import {
   toUserTableData,
   labelsInJapanese,
 } from "../../src/user";
+import { usersCSV, saveFile } from "../../src/util";
 import { Typography } from "@material-ui/core";
 import Toolbar from "@material-ui/core/Toolbar";
 import SlackInvitationDialog from "../../src/components/layout/SlackInvitationDialog";
@@ -35,6 +36,9 @@ const Page: NextPage = () => {
     switch (param.kind) {
       case "slack":
         setSlackInvitationDialog(true);
+        break;
+      case "export":
+        saveFile("members.csv", usersCSV(users ?? []));
         break;
     }
   };
@@ -68,9 +72,10 @@ const Page: NextPage = () => {
           user.slackId.length === 0 &&
           user.slackInvitationStatus === "never"
       )
-      .map(
-        (user) => ({ id: user.id, description: `${user.generation}代 ${user.handle}(${user.name}): ${user.email}` })
-      ) ?? [];
+      .map((user) => ({
+        id: user.id,
+        description: `${user.generation}代 ${user.handle}(${user.name}): ${user.email}`,
+      })) ?? [];
 
   return (
     <>
@@ -94,8 +99,8 @@ const Page: NextPage = () => {
           handleClickMenu={handleClickMenu}
         />
       ) : (
-          "Loading..."
-        )}
+        "Loading..."
+      )}
 
       <SlackInvitationDialog
         open={slackInvitationDialog}
