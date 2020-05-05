@@ -39,13 +39,6 @@ var (
 			SlackInvitationStatus: domain.Never,
 		},
 		{
-			Email:                 "mischan4@example.com",
-			Generation:            54,
-			Sex:                   domain.Female,
-			Role:                  domain.EmailUnverified,
-			SlackInvitationStatus: domain.Never,
-		},
-		{
 			Email:                 "mischan5@example.com",
 			Generation:            54,
 			Sex:                   domain.Female,
