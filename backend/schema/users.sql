@@ -29,5 +29,5 @@ CREATE TABLE users (
 
 ALTER TABLE users ADD INDEX handle_index(handle);
 ALTER TABLE users ADD INDEX generation_index(generation);
-ALTER TABLE users ADD INDEX slack_id_role_index(slack_id, role);
+ALTER TABLE users ADD INDEX role_slack_id_index(role, slack_id);
 ALTER TABLE users ADD INDEX slack_invitation_status_index(slack_invitation_status);
