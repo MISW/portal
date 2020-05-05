@@ -8,8 +8,7 @@ func TestGetNewRole(t *testing.T) {
 			newRole := Roles[i].GetNewRole(j&1 != 0, j&2 != 0)
 
 			if Roles[i] == Admin ||
-				Roles[i] == Retired ||
-				Roles[i] == EmailUnverified {
+				Roles[i] == Retired {
 				if Roles[i] != newRole {
 					t.Fatalf("must be same role: %v -> %v", Roles[i], newRole)
 				}
