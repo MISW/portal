@@ -14,8 +14,8 @@ type UserRoleRepository interface {
 	Update(ctx context.Context, id int, role domain.RoleType) error
 
 	// UpdateWithRule - ルールに基づき自動でユーザのロールを変更する
-	UpdateWithRule(ctx context.Context, id int) error
+	UpdateWithRule(ctx context.Context, id, currentPeriod, paymentPeriod int) error
 
 	// UpdateAllWithRule - ルールに基づき自動で全てのユーザのロールを変更する
-	UpdateAllWithRule(ctx context.Context) error
+	UpdateAllWithRule(ctx context.Context, currentPeriod, paymentPeriod int) error
 }

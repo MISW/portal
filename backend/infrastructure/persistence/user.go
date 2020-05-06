@@ -363,18 +363,3 @@ func (up *userPersistence) VerifyEmail(ctx context.Context, id int, email string
 
 	return nil
 }
-
-// UpdateRole - ユーザのroleを更新する
-func (up *userPersistence) UpdateRole(ctx context.Context, id int, role domain.RoleType) error {
-	_, err := up.db.Exec(`
-	UPDATE users SET
-		role=?
-	WHERE id=?
-	`, string(role), id)
-
-	if err != nil {
-		return xerrors.Errorf("failed to update user(%d): %w", id, err)
-	}
-
-	return nil
-}

@@ -56,6 +56,7 @@ type ManagementUsecaseParams struct {
 	PaymentTransactionRepository repository.PaymentTransactionRepository
 	AppConfigRepository          repository.AppConfigRepository
 	SlackRepository              repository.SlackRepository
+	UserRoleRepository           repository.UserRoleRepository
 	SlackInviter                 workers.Worker `name:"slack"`
 }
 
@@ -304,7 +305,7 @@ func (mu *managementUsecase) UpdateRole(ctx context.Context, userID int, role do
 		return rest.NewBadRequest("存在しないロールが指定されています")
 	}
 
-	err := mu.UserRepository.UpdateRole(ctx, userID, role)
+	err := mu.UserRoleRepository.Update(ctx, userID, role)
 
 	if err != nil {
 		return xerrors.Errorf("failed to find user by id(%d): %w", userID, err)

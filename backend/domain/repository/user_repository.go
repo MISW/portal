@@ -33,7 +33,4 @@ type UserRepository interface {
 
 	// VerifyEmail - メールアドレスを認証済みにする
 	VerifyEmail(ctx context.Context, id int, email string) error
-
-	// UpdateRole - ユーザのroleを更新する
-	UpdateRole(ctx context.Context, id int, role domain.RoleType) error
 }
