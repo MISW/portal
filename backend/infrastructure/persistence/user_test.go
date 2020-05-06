@@ -226,7 +226,7 @@ func TestList(t *testing.T) {
 
 }
 
-func TestUpdate(t *testing.T) {
+func TestUserUpdate(t *testing.T) {
 	t.Run("normal", func(t *testing.T) {
 		conn := testutil.NewSQLConn(t)
 
