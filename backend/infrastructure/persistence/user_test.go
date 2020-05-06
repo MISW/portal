@@ -266,7 +266,7 @@ func TesstVerifyEmail(t *testing.T) {
 	user, err := up.GetByID(ctx, id)
 
 	if err != nil {
-		t.Fatalf("GetByID failed: %+V", err)
+		t.Fatalf("GetByID failed: %+v", err)
 	}
 
 	if user.EmailVerified {
@@ -280,7 +280,7 @@ func TesstVerifyEmail(t *testing.T) {
 	user, err = up.GetByID(ctx, id)
 
 	if err != nil {
-		t.Fatalf("GetByID failed: %+V", err)
+		t.Fatalf("GetByID failed: %+v", err)
 	}
 
 	if !user.EmailVerified {
