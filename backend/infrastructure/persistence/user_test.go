@@ -252,32 +252,6 @@ func TestUpdate(t *testing.T) {
 
 		compareUser(t, &tmp2, user)
 	})
-
-	t.Run("role", func(t *testing.T) {
-		conn := testutil.NewSQLConn(t)
-
-		up := persistence.NewUserPersistence(conn)
-
-		id := insertTestUserData(t, up)
-
-		updatedRole := domain.NotMember
-		err := up.UpdateRole(context.Background(), id, updatedRole)
-
-		if err != nil {
-			t.Fatalf("failed to update role: %+v", err)
-		}
-
-		user, err := up.GetByID(context.Background(), id)
-
-		if err != nil {
-			t.Fatalf("failed to get user: %+v", err)
-		}
-
-		if user.Role != updatedRole {
-			t.Fatalf("role is not updated: %s(expected: %s)", user.Role, updatedRole)
-		}
-	})
-
 }
 
 func TesstVerifyEmail(t *testing.T) {
