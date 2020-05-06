@@ -50,30 +50,17 @@ func (r RoleType) Validate() bool {
 }
 
 // GetNewRole - paidの状態によって次のroleの状態遷移を定義する
-func (r RoleType) GetNewRole(paid, previouslyPaid bool) RoleType {
+func (r RoleType) GetNewRole(paid bool) RoleType {
 	switch r {
 	case Admin, Retired:
 		return r
-
-	case Member:
-		if paid {
-			return Member
-		}
-
-		if previouslyPaid {
-			return NotMember
-		}
-
-		return NotMember
-	case NotMember:
-		if paid {
-			return Member
-		}
-
-		return NotMember
-	default:
-		panic("unknown role type: " + string(r))
 	}
+
+	if paid {
+		return Member
+	}
+
+	return NotMember
 }
 
 var (
