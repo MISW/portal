@@ -1,6 +1,8 @@
 package testutil
 
 import (
+	"context"
+	"database/sql"
 	"io/ioutil"
 	"math/rand"
 	"os"
@@ -30,6 +32,22 @@ func NewSQLMock(t *testing.T) (*sqlx.DB, sqlmock.Sqlmock) {
 type sqlxConn struct {
 	dbName string
 	*sqlx.DB
+}
+
+func (c *sqlxConn) BeginTxx(ctx context.Context, opts *sql.TxOptions) (*sqlx.Tx, error) {
+	tx, err := c.DB.BeginTxx(ctx, opts)
+
+	if err != nil {
+		return nil, err
+	}
+
+	_, err = tx.Exec("USE ?", c.dbName)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return tx, nil
 }
 
 func (c *sqlxConn) Close() error {
