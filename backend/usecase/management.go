@@ -175,7 +175,9 @@ func (mu *managementUsecase) AddPaymentStatus(ctx context.Context, userID, perio
 		return nil
 	}
 
-	// TODO: roleを再計算する
+	if err := mu.UserRoleRepository.UpdateWithRule(ctx, userID, currentPeriod, paymentPeriod); err != nil {
+		return xerrors.Errorf("failed to update role for user(%d) automatically: %w", userID, err)
+	}
 
 	return nil
 }
@@ -212,7 +214,9 @@ func (mu *managementUsecase) DeletePaymentStatus(ctx context.Context, userID, pe
 		return nil
 	}
 
-	// TODO: roleを再計算する
+	if err := mu.UserRoleRepository.UpdateWithRule(ctx, userID, currentPeriod, paymentPeriod); err != nil {
+		return xerrors.Errorf("failed to update role for user(%d) automatically: %w", userID, err)
+	}
 
 	return nil
 }
