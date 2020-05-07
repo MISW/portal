@@ -109,7 +109,9 @@ func (urp *userRolePersistence) UpdateAllWithRule(ctx context.Context, currentPe
 			newRole := currentRole.GetNewRole(users[i].Count > 0)
 
 			if currentRole != newRole {
-				db.ExecContext(ctx, "UPDATE users SET role=? WHERE id=?", newRole)
+				if _, err := db.ExecContext(ctx, "UPDATE users SET role=? WHERE id=?", newRole, users[i].ID); err != nil {
+					return xerrors.Errorf("failed to update role for user(%d) to %s: %w", users[i].ID, newRole, err)
+				}
 			}
 		}
 
