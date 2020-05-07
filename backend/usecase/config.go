@@ -1,8 +1,11 @@
 package usecase
 
 import (
+	"time"
+
 	"github.com/MISW/Portal/backend/domain/repository"
 	"github.com/MISW/Portal/backend/internal/rest"
+	"golang.org/x/net/context"
 	"golang.org/x/xerrors"
 )
 
@@ -23,14 +26,14 @@ type AppConfigUsecase interface {
 
 type appConfigUsecase struct {
 	appConfigRepository repository.AppConfigRepository
-	userRoleRepository repository.UserRoleRepository
+	userRoleRepository  repository.UserRoleRepository
 }
 
 // NewAppConfigUsecase - app config usecaseの初期化
 func NewAppConfigUsecase(appConfigRepository repository.AppConfigRepository, userRoleRepository repository.UserRoleRepository) AppConfigUsecase {
 	return &appConfigUsecase{
 		appConfigRepository: appConfigRepository,
-		userRoleRepository userRoleRepository,
+		userRoleRepository:  userRoleRepository,
 	}
 }
 
@@ -87,6 +90,9 @@ func (acu *appConfigUsecase) SetPaymentPeriod(period int) error {
 		return xerrors.Errorf("failed to set payment period: %w", err)
 	}
 
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+
 	if err := acu.userRoleRepository.UpdateAllWithRule(ctx, currentPeriod, period); err != nil {
 		return xerrors.Errorf("failed to update users' role automatically: %w", err)
 	}
@@ -122,6 +128,9 @@ func (acu *appConfigUsecase) SetCurrentPeriod(period int) error {
 	if err := acu.appConfigRepository.SetCurrentPeriod(period); err != nil {
 		return xerrors.Errorf("failed to set current period: %w", err)
 	}
+
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
 
 	if err := acu.userRoleRepository.UpdateAllWithRule(ctx, period, paymentPeriod); err != nil {
 		return xerrors.Errorf("failed to update users' role automatically: %w", err)
