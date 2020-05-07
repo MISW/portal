@@ -1,8 +1,11 @@
 package usecase
 
 import (
+	"fmt"
+	"html/template"
 	"time"
 
+	"github.com/MISW/Portal/backend/domain"
 	"github.com/MISW/Portal/backend/domain/repository"
 	"github.com/MISW/Portal/backend/internal/rest"
 	"golang.org/x/net/context"
@@ -22,6 +25,12 @@ type AppConfigUsecase interface {
 	GetCurrentPeriod() (int, error)
 
 	SetCurrentPeriod(period int) error
+
+	// Eメールのテンプレートを取得、設定
+
+	GetEmailTemplate(kind domain.EmailKind) (subject, body string, err error)
+
+	SetEmailTemplate(kind domain.EmailKind, subject, body string) error
 }
 
 type appConfigUsecase struct {
@@ -137,4 +146,34 @@ func (acu *appConfigUsecase) SetCurrentPeriod(period int) error {
 	}
 
 	return nil
+}
+
+func (acu *appConfigUsecase) SetEmailTemplate(kind domain.EmailKind, subject, body string) error {
+	_, err := template.New("").Parse(subject)
+
+	if err != nil {
+		return rest.NewBadRequest(fmt.Sprintf("subjectのフォーマットが不正です: %+v", err))
+	}
+
+	_, err = template.New("").Parse(body)
+
+	if err != nil {
+		return rest.NewBadRequest(fmt.Sprintf("bodyのフォーマットが不正です: %+v", err))
+	}
+
+	if err := acu.appConfigRepository.SetEmailTemplate(kind, subject, body); err != nil {
+		return xerrors.Errorf("failed to get config repository:: %w", err)
+	}
+
+	return nil
+}
+
+func (acu *appConfigUsecase) GetEmailTemplate(kind domain.EmailKind) (subject, body string, err error) {
+	subject, body, err = acu.appConfigRepository.GetEmailTemplate(kind)
+
+	if err != nil {
+		return "", "", xerrors.Errorf("failed to get email template: %w", err)
+	}
+
+	return subject, body, nil
 }
