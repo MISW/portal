@@ -133,17 +133,17 @@ func initDig(cfg *config.Config, addr string) *dig.Container {
 	err = c.Provide(func(
 		userRepository repository.UserRepository,
 		tokenRepository repository.TokenRepository,
+		appConfigRepository repository.AppConfigRepository,
 		authenticator oidc.Authenticator,
 		mailer email.Sender,
-		mailTemplates *config.EmailTemplates,
 		jwtProvider jwt.JWTProvider,
 	) usecase.SessionUsecase {
 		return usecase.NewSessionUsecase(
 			userRepository,
 			tokenRepository,
 			authenticator,
+			appConfigRepository,
 			mailer,
-			mailTemplates,
 			jwtProvider,
 			cfg.BaseURL,
 		)
@@ -195,13 +195,6 @@ func initDig(cfg *config.Config, addr string) *dig.Container {
 
 	err = c.Provide(func() (jwt.JWTProvider, error) {
 		return jwt.NewJWTProvider(cfg.JWTKey)
-	})
-	if err != nil {
-		panic(err)
-	}
-
-	err = c.Provide(func() *config.EmailTemplates {
-		return &cfg.Email.Templates
 	})
 	if err != nil {
 		panic(err)

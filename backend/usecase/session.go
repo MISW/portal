@@ -4,13 +4,13 @@ import (
 	"bytes"
 	"context"
 	"fmt"
+	"html/template"
 	"net/url"
 	"path"
 	"strconv"
 	"strings"
 	"time"
 
-	"github.com/MISW/Portal/backend/config"
 	"github.com/MISW/Portal/backend/domain"
 	"github.com/MISW/Portal/backend/domain/repository"
 	"github.com/MISW/Portal/backend/internal/email"
@@ -47,30 +47,30 @@ func NewSessionUsecase(
 	userRepository repository.UserRepository,
 	tokenRepository repository.TokenRepository,
 	authenticator oidc.Authenticator,
+	appConfigRpoeisotry repository.AppConfigRepository,
 	mailer email.Sender,
-	mailTemplates *config.EmailTemplates,
 	jwtProvider jwt.JWTProvider,
 	baseURL string,
 ) SessionUsecase {
 	return &sessionUsecase{
-		userRepository:             userRepository,
-		tokenRepository:            tokenRepository,
-		authenticator:              authenticator,
-		mailer:                     mailer,
-		emailVerificationTemplates: mailTemplates.EmailVerification,
-		jwtProvider:                jwtProvider,
-		baseURL:                    baseURL,
+		userRepository:      userRepository,
+		tokenRepository:     tokenRepository,
+		authenticator:       authenticator,
+		appConfigRpoeisotry: appConfigRpoeisotry,
+		mailer:              mailer,
+		jwtProvider:         jwtProvider,
+		baseURL:             baseURL,
 	}
 }
 
 type sessionUsecase struct {
-	userRepository             repository.UserRepository
-	tokenRepository            repository.TokenRepository
-	authenticator              oidc.Authenticator
-	mailer                     email.Sender
-	emailVerificationTemplates *config.EmailTemplate
-	jwtProvider                jwt.JWTProvider
-	baseURL                    string
+	appConfigRpoeisotry repository.AppConfigRepository
+	userRepository      repository.UserRepository
+	tokenRepository     repository.TokenRepository
+	authenticator       oidc.Authenticator
+	mailer              email.Sender
+	jwtProvider         jwt.JWTProvider
+	baseURL             string
 }
 
 var _ SessionUsecase = &sessionUsecase{}
@@ -122,17 +122,35 @@ func (us *sessionUsecase) Signup(ctx context.Context, user *domain.User) error {
 		"VerificationLink": u.String(),
 	}
 
-	subject := bytes.NewBuffer(nil)
-	body := bytes.NewBuffer(nil)
+	subject, body, err := us.appConfigRpoeisotry.GetEmailTemplate(domain.EmailVerification)
 
-	if err := us.emailVerificationTemplates.SubjectTemplate.Execute(subject, metadata); err != nil {
+	if err != nil {
+		return xerrors.Errorf("failed to get email template for verification: %w", err)
+	}
+
+	subjectTemplate, err := template.New("").Parse(subject)
+
+	if err != nil {
+		return xerrors.Errorf("failed to parse subject template: %w", err)
+	}
+
+	bodyTemplate, err := template.New("").Parse(body)
+
+	if err != nil {
+		return xerrors.Errorf("failed to parse body template: %w", err)
+	}
+
+	s := bytes.NewBuffer(nil)
+	b := bytes.NewBuffer(nil)
+
+	if err := subjectTemplate.Execute(s, metadata); err != nil {
 		return xerrors.Errorf("failed to execute the template for the subject: %w", err)
 	}
-	if err := us.emailVerificationTemplates.BodyTeamplte.Execute(body, metadata); err != nil {
+	if err := bodyTemplate.Execute(b, metadata); err != nil {
 		return xerrors.Errorf("failed to execute the template for the body: %w", err)
 	}
 
-	if err := us.mailer.Send(user.Email, subject.String(), body.String()); err != nil {
+	if err := us.mailer.Send(user.Email, s.String(), b.String()); err != nil {
 		return xerrors.Errorf("failed to send email to verify the email address(%s): %w", user.Email, err)
 	}
 

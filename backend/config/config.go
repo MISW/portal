@@ -3,7 +3,6 @@ package config
 import (
 	"context"
 	"fmt"
-	"html/template"
 	"os"
 	"path/filepath"
 	"strings"
@@ -22,58 +21,12 @@ type OpenIDConnect struct {
 	ProviderURL  string `config:"oidc-provider-url" json:"provider_url" yaml:"provider_url"`
 }
 
-// EmailTemplate - Email本文のフォーマット設定
-type EmailTemplate struct {
-	Subject string `config:"-" json:"subject" yaml:"subject"`
-	Body    string `config:"-" json:"body" yaml:"body"`
-
-	SubjectTemplate *template.Template `config:"-"`
-	BodyTeamplte    *template.Template `config:"-"`
-}
-
-func (b *EmailTemplate) parse() error {
-	subj, err := template.New("").Parse(b.Subject)
-
-	if err != nil {
-		return xerrors.Errorf("failed to parse subjet: %w", err)
-	}
-
-	body, err := template.New("").Parse(b.Body)
-
-	if err != nil {
-		return xerrors.Errorf("failed to parse subjet: %w", err)
-	}
-
-	b.SubjectTemplate = subj
-	b.BodyTeamplte = body
-
-	return nil
-}
-
-// EmailTemplates - Emailのテンプレート(テンプレートエンジン用)
-type EmailTemplates struct {
-	// EmailVerification - 登録時のメール送信
-	EmailVerification *EmailTemplate
-}
-
-func (b *EmailTemplates) parse() error {
-	err := b.EmailVerification.parse()
-
-	if err != nil {
-		return xerrors.Errorf("failed to generate template for email verification: %w", err)
-	}
-
-	return nil
-}
-
 // Email - Email周りの設定
 type Email struct {
 	SMTPServer string `config:"smtp_server" json:"smtp_server" yaml:"smtp_server"`
 	Username   string `config:"smtp_username" json:"username" yaml:"username"`
 	Password   string `config:"smtp_password" json:"password" yaml:"password"`
 	From       string `config:"smtp_from" json:"from" yaml:"from"`
-
-	Templates EmailTemplates `json:"templates" yaml:"templates"`
 }
 
 // Config - 各種設定用
@@ -128,10 +81,6 @@ func ReadConfig() (*Config, error) {
 
 	if err != nil {
 		return nil, xerrors.Errorf("failed to load config: %w", err)
-	}
-
-	if err := cfg.Email.Templates.parse(); err != nil {
-		return nil, xerrors.Errorf("failed to load templates: %w", err)
 	}
 
 	return cfg, nil
