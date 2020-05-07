@@ -41,7 +41,7 @@ func (c *sqlxConn) BeginTxx(ctx context.Context, opts *sql.TxOptions) (*sqlx.Tx,
 		return nil, err
 	}
 
-	_, err = tx.Exec("USE ?", c.dbName)
+	_, err = tx.Exec("USE " + c.dbName)
 
 	if err != nil {
 		return nil, err
