@@ -2,7 +2,6 @@ package persistence
 
 import (
 	"context"
-	"database/sql"
 
 	"github.com/MISW/Portal/backend/domain"
 	"github.com/MISW/Portal/backend/domain/repository"
@@ -58,11 +57,11 @@ func (urp *userRolePersistence) UpdateWithRule(ctx context.Context, id, currentP
 			id, currentPeriod, paymentPeriod,
 		).Scan(&counter)
 
-		if err != nil && err != sql.ErrNoRows {
+		if err != nil {
 			return xerrors.Errorf("failed to get payment statuses for current periods: %w", err)
 		}
 
-		newRole := role.GetNewRole(err != sql.ErrNoRows)
+		newRole := role.GetNewRole(counter > 0)
 
 		// roleの変更がない場合は何もしない
 		if role == newRole {
