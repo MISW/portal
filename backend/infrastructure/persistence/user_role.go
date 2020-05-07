@@ -41,7 +41,7 @@ func (urp *userRolePersistence) Update(ctx context.Context, id int, role domain.
 func (urp *userRolePersistence) UpdateWithRule(ctx context.Context, id, currentPeriod, paymentPeriod int) error {
 	err := db.RunInTransaction(ctx, urp.db, func(ctx context.Context, db db.Ext) error {
 		var role domain.RoleType
-		err := urp.db.QueryRowxContext(
+		err := db.QueryRowxContext(
 			ctx,
 			"SELECT role FROM users WHERE id = ?",
 			id,
@@ -52,7 +52,7 @@ func (urp *userRolePersistence) UpdateWithRule(ctx context.Context, id, currentP
 		}
 
 		var counter int
-		err = urp.db.QueryRowxContext(
+		err = db.QueryRowxContext(
 			ctx,
 			"SELECT COUNT(*) FROM payment_statuses WHERE id = ? AND period IN (?, ?)",
 			id, currentPeriod, paymentPeriod,
@@ -69,7 +69,7 @@ func (urp *userRolePersistence) UpdateWithRule(ctx context.Context, id, currentP
 			return nil
 		}
 
-		_, err = urp.db.ExecContext(
+		_, err = db.ExecContext(
 			ctx,
 			"UPDATE users SET role=? WHERE id=?",
 			newRole, id,
@@ -100,7 +100,7 @@ func (urp *userRolePersistence) UpdateAllWithRule(ctx context.Context, currentPe
 			Count int             `db:"count"`
 		}
 
-		if err := sqlx.GetContext(ctx, db, &users, query, currentPeriod, paymentPeriod); err != nil {
+		if err := sqlx.SelectContext(ctx, db, &users, query, currentPeriod, paymentPeriod); err != nil {
 			return xerrors.Errorf("failed to get current users: %w", err)
 		}
 
