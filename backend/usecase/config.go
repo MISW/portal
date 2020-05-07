@@ -112,7 +112,7 @@ func (acu *appConfigUsecase) SetCurrentPeriod(period int) error {
 	paymentPeriod, err := acu.appConfigRepository.GetPaymentPeriod()
 
 	if err != nil {
-		return xerrors.Errorf("failed to get current period: %w", err)
+		return xerrors.Errorf("failed to get payment period: %w", err)
 	}
 
 	if period := acu.diffPeriod(period, paymentPeriod); period < 0 || period > 1 {
