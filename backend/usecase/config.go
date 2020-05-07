@@ -23,12 +23,14 @@ type AppConfigUsecase interface {
 
 type appConfigUsecase struct {
 	appConfigRepository repository.AppConfigRepository
+	userRoleRepository repository.UserRoleRepository
 }
 
 // NewAppConfigUsecase - app config usecaseの初期化
-func NewAppConfigUsecase(appConfigRepository repository.AppConfigRepository) AppConfigUsecase {
+func NewAppConfigUsecase(appConfigRepository repository.AppConfigRepository, userRoleRepository repository.UserRoleRepository) AppConfigUsecase {
 	return &appConfigUsecase{
 		appConfigRepository: appConfigRepository,
+		userRoleRepository userRoleRepository,
 	}
 }
 
@@ -85,6 +87,10 @@ func (acu *appConfigUsecase) SetPaymentPeriod(period int) error {
 		return xerrors.Errorf("failed to set payment period: %w", err)
 	}
 
+	if err := acu.userRoleRepository.UpdateAllWithRule(ctx, currentPeriod, period); err != nil {
+		return xerrors.Errorf("failed to update users' role automatically: %w", err)
+	}
+
 	return nil
 }
 
@@ -99,5 +105,27 @@ func (acu *appConfigUsecase) GetCurrentPeriod() (int, error) {
 }
 
 func (acu *appConfigUsecase) SetCurrentPeriod(period int) error {
-	panic("not implemented")
+	if err := acu.validatePeriod(period); err != nil {
+		return err
+	}
+
+	paymentPeriod, err := acu.appConfigRepository.GetPaymentPeriod()
+
+	if err != nil {
+		return xerrors.Errorf("failed to get current period: %w", err)
+	}
+
+	if period := acu.diffPeriod(period, paymentPeriod); period < 0 || period > 1 {
+		return rest.NewBadRequest("現在の期間は現在の期間と同じか一つ次のみ指定できます")
+	}
+
+	if err := acu.appConfigRepository.SetCurrentPeriod(period); err != nil {
+		return xerrors.Errorf("failed to set current period: %w", err)
+	}
+
+	if err := acu.userRoleRepository.UpdateAllWithRule(ctx, period, paymentPeriod); err != nil {
+		return xerrors.Errorf("failed to update users' role automatically: %w", err)
+	}
+
+	return nil
 }
