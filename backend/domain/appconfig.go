@@ -10,3 +10,21 @@ const (
 	// SlackInvitation - Slack招待の際に同時に送信するリンク
 	SlackInvitation EmailKind = "slack_invitation"
 )
+
+var (
+	allEmailKinds = []EmailKind{
+		EmailVerification,
+		SlackInvitation,
+	}
+)
+
+// Validate - Email Kindの検証
+func (ek EmailKind) Validate() bool {
+	for i := range allEmailKinds {
+		if allEmailKinds[i] == ek {
+			return true
+		}
+	}
+
+	return false
+}
