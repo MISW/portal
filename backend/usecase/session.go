@@ -1,10 +1,8 @@
 package usecase
 
 import (
-	"bytes"
 	"context"
 	"fmt"
-	"html/template"
 	"net/url"
 	"path"
 	"strconv"
@@ -128,29 +126,13 @@ func (us *sessionUsecase) Signup(ctx context.Context, user *domain.User) error {
 		return xerrors.Errorf("failed to get email template for verification: %w", err)
 	}
 
-	subjectTemplate, err := template.New("").Parse(subject)
+	subject, body, err = email.GenerateEmailFromTemplate(subject, body, metadata)
 
 	if err != nil {
-		return xerrors.Errorf("failed to parse subject template: %w", err)
+		return xerrors.Errorf("failed to generate email from template: %w", err)
 	}
 
-	bodyTemplate, err := template.New("").Parse(body)
-
-	if err != nil {
-		return xerrors.Errorf("failed to parse body template: %w", err)
-	}
-
-	s := bytes.NewBuffer(nil)
-	b := bytes.NewBuffer(nil)
-
-	if err := subjectTemplate.Execute(s, metadata); err != nil {
-		return xerrors.Errorf("failed to execute the template for the subject: %w", err)
-	}
-	if err := bodyTemplate.Execute(b, metadata); err != nil {
-		return xerrors.Errorf("failed to execute the template for the body: %w", err)
-	}
-
-	if err := us.mailer.Send(user.Email, s.String(), b.String()); err != nil {
+	if err := us.mailer.Send(user.Email, subject, body); err != nil {
 		return xerrors.Errorf("failed to send email to verify the email address(%s): %w", user.Email, err)
 	}
 
