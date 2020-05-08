@@ -36,12 +36,6 @@ const (
 
 	// NotMember - 未払い状態のメンバー(会員資格なし)
 	NotMember RoleType = "not_member"
-
-	// NewMember - 新規登録(支払い未確認)のメンバー(会員資格なし) 自動削除
-	NewMember RoleType = "new_member"
-
-	// EmailUnverified - 新規登録(支払い未確認、メール未確認)のメンバー(会員資格なし) 自動削除
-	EmailUnverified RoleType = "email_unverified"
 )
 
 // Validate - 存在しているroleかどうかチェックし、すればtrue、しなければfalseを返す
@@ -56,37 +50,17 @@ func (r RoleType) Validate() bool {
 }
 
 // GetNewRole - paidの状態によって次のroleの状態遷移を定義する
-func (r RoleType) GetNewRole(paid, previouslyPaid bool) RoleType {
+func (r RoleType) GetNewRole(paid bool) RoleType {
 	switch r {
-	case Admin, Retired, EmailUnverified:
+	case Admin, Retired:
 		return r
-
-	case Member:
-		if paid {
-			return Member
-		}
-
-		if previouslyPaid {
-			return NotMember
-		}
-
-		return NewMember
-	case NotMember:
-		if paid {
-			return Member
-		}
-
-		return NotMember
-	case NewMember:
-		if paid {
-			return Member
-		}
-
-		return NewMember
-
-	default:
-		panic("unknown role type: " + string(r))
 	}
+
+	if paid {
+		return Member
+	}
+
+	return NotMember
 }
 
 var (
@@ -96,8 +70,6 @@ var (
 		Member,
 		Retired,
 		NotMember,
-		NewMember,
-		EmailUnverified,
 	}
 )
 
@@ -162,6 +134,8 @@ type User struct {
 	// 外部サービス
 	SlackID   string `json:"slack_id" yaml:"slack_id"`
 	DiscordID string `json:"discord_id,omitempty" yaml:"discord_id,omitempty"`
+
+	EmailVerified bool `json:"email_verified" yaml:"email_verified"`
 
 	CreatedAt time.Time `json:"created_at" yaml:"created_at"`
 	UpdatedAt time.Time `json:"updated_at" yaml:"updated_at"`
@@ -230,4 +204,7 @@ var (
 
 	// ErrNoUser - Userが存在しない
 	ErrNoUser = xerrors.New("no such user")
+
+	// ErrEmailAddressChanged - 既にEメールアドレスが変更されており、認証が失敗した
+	ErrEmailAddressChanged = xerrors.New("email address has been changed")
 )

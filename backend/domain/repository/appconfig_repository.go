@@ -1,5 +1,7 @@
 package repository
 
+import "github.com/MISW/Portal/backend/domain"
+
 //go:generate mockgen -source=$GOFILE -destination=mock_$GOFILE -package=$GOPACKAGE
 
 type AppConfigRepository interface {
@@ -14,4 +16,10 @@ type AppConfigRepository interface {
 	GetCurrentPeriod() (int, error)
 
 	SetCurrentPeriod(period int) error
+
+	// email template
+
+	GetEmailTemplate(kind domain.EmailKind) (subject, body string, err error)
+
+	SetEmailTemplate(kind domain.EmailKind, subject, body string) error
 }
