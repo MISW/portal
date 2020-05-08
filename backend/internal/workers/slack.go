@@ -8,44 +8,49 @@ import (
 
 	"github.com/MISW/Portal/backend/domain"
 	"github.com/MISW/Portal/backend/domain/repository"
+	"github.com/MISW/Portal/backend/internal/email"
 	"github.com/MISW/Portal/backend/internal/slack"
 	"golang.org/x/xerrors"
 )
 
 // NewSlackInviter -
-func NewSlackInviter(client *slack.Client, slackRepository repository.SlackRepository) Worker {
+func NewSlackInviter(client *slack.Client, slackRepository repository.SlackRepository, appConfigRpoeisotry repository.AppConfigRepository, sender email.Sender) Worker {
 	return &slackInviter{
-		client:          client,
-		trigger:         make(chan struct{}, 1),
-		slackRepository: slackRepository,
+		client:              client,
+		trigger:             make(chan struct{}, 1),
+		slackRepository:     slackRepository,
+		sender:              sender,
+		appConfigRpoeisotry: appConfigRpoeisotry,
 	}
 }
 
 type slackInviter struct {
-	client          *slack.Client
-	slackRepository repository.SlackRepository
-	trigger         chan struct{}
+	client              *slack.Client
+	slackRepository     repository.SlackRepository
+	appConfigRpoeisotry repository.AppConfigRepository
+	sender              email.Sender
+	trigger             chan struct{}
 }
 
 var _ Worker = &slackInviter{}
 
-func (si *slackInviter) inviteToSlack(handle, email string) error {
+func (si *slackInviter) inviteToSlack(user *domain.User, subjectTemplate, bodyTemplate string) error {
 	// Not inheriting context
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 
-	err := si.client.InviteToTeam(ctx, handle, "", email)
+	err := si.client.InviteToTeam(ctx, user.Handle, "", user.Email)
 
 	if strings.Contains(err.Error(), "user_disabled") ||
 		strings.Contains(err.Error(), "already_in_team") ||
 		strings.Contains(err.Error(), "already_in_team_invited_user") {
-		log.Printf("email(%s) is already used", email)
+		log.Printf("email(%s) is already used", user.Email)
 
 		return nil
 	}
 
 	if strings.Contains(err.Error(), "invalid_email") {
-		log.Printf("email(%s) is invalid", email)
+		log.Printf("email(%s) is invalid", user.Email)
 
 		return nil
 	}
@@ -54,11 +59,19 @@ func (si *slackInviter) inviteToSlack(handle, email string) error {
 		return xerrors.Errorf("failed to invite to slack: %w", err)
 	}
 
+	subject, body, err := email.GenerateEmailFromTemplate(subjectTemplate, bodyTemplate, user)
+
+	if err != nil {
+		log.Printf("failed to generate email from template: %+v", err)
+	} else if err := si.sender.Send(user.Email, subject, body); err != nil {
+		log.Printf("failed to send email to verify the email address(%s): %+v", user.Email, err)
+	}
+
 	return nil
 }
 
 // findPending returns true if there is no pending or an error happened
-func (si *slackInviter) findPending(ctx context.Context) bool {
+func (si *slackInviter) findPending(ctx context.Context, subjectTemplate, bodyTemplate string) bool {
 	user, err := si.slackRepository.GetPending(ctx)
 
 	if xerrors.Is(err, domain.ErrNoUser) {
@@ -75,7 +88,7 @@ func (si *slackInviter) findPending(ctx context.Context) bool {
 		return false // maybe due to temporal data inconsistency
 	}
 
-	if err := si.inviteToSlack(user.Handle, user.Email); err != nil {
+	if err := si.inviteToSlack(user, subjectTemplate, bodyTemplate); err != nil {
 		log.Printf("failed to invite to slack(%d, %s): %+v", user.ID, user.Email, err)
 
 		return true
@@ -106,8 +119,16 @@ func (si *slackInviter) Start(ctx context.Context) {
 		case <-si.trigger:
 		}
 
+		subjectTemplate, bodyTemplate, err := si.appConfigRpoeisotry.GetEmailTemplate(domain.SlackInvitation)
+
+		if err != nil {
+			log.Printf("failed to get an email template for slack invitation: %+v", err)
+
+			continue
+		}
+
 		for {
-			if si.findPending(ctx) {
+			if si.findPending(ctx, subjectTemplate, bodyTemplate) {
 				break
 			}
 		}
