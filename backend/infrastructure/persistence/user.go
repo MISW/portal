@@ -43,6 +43,8 @@ type user struct {
 	SlackID   sql.NullString `db:"slack_id"`
 	DiscordID sql.NullString `db:"discord_id"`
 
+	EmailVerified bool `db:"email_verified"`
+
 	CreatedAt time.Time `db:"created_at"`
 	UpdatedAt time.Time `db:"updated_at"`
 }
@@ -77,6 +79,8 @@ func newUser(u *domain.User) *user {
 			Valid:  len(u.DiscordID) != 0,
 		},
 
+		EmailVerified: u.EmailVerified,
+
 		CreatedAt: u.CreatedAt,
 		UpdatedAt: u.UpdatedAt,
 	}
@@ -107,6 +111,8 @@ func parseUser(u *user) *domain.User {
 
 		SlackID:   u.SlackID.String,
 		DiscordID: u.DiscordID.String,
+
+		EmailVerified: u.EmailVerified,
 
 		CreatedAt: u.CreatedAt,
 		UpdatedAt: u.UpdatedAt,
@@ -142,7 +148,8 @@ func (up *userPersistence) Insert(ctx context.Context, user *domain.User) (int, 
 		role,
 		slack_invitation_status,
 		slack_id,
-		discord_id
+		discord_id,
+		email_verified
 	) VALUES (
 		:email,
 		:generation,
@@ -161,7 +168,8 @@ func (up *userPersistence) Insert(ctx context.Context, user *domain.User) (int, 
 		:role,
 		:slack_invitation_status,
 		:slack_id,
-		:discord_id
+		:discord_id,
+		:email_verified
 	)
 	`, u)
 
@@ -315,7 +323,8 @@ func (up *userPersistence) Update(ctx context.Context, user *domain.User) error 
 		role=:role,
 		slack_invitation_status=:slack_invitation_status,
 		slack_id=:slack_id,
-		discord_id=:discord_id
+		discord_id=:discord_id,
+		email_verified=:email_verified
 	WHERE id=:id
 	`, u)
 
@@ -330,16 +339,26 @@ func (up *userPersistence) Update(ctx context.Context, user *domain.User) error 
 	return nil
 }
 
-// UpdateRole - ユーザのroleを更新する
-func (up *userPersistence) UpdateRole(ctx context.Context, id int, role domain.RoleType) error {
-	_, err := up.db.Exec(`
+// VerifyEmail - メールアドレスを認証済みにする
+func (up *userPersistence) VerifyEmail(ctx context.Context, id int, email string) error {
+	res, err := up.db.Exec(`
 	UPDATE users SET
-		role=?
-	WHERE id=?
-	`, string(role), id)
+		email_verified=1
+	WHERE id=? AND email=?
+	`, id, email)
 
 	if err != nil {
-		return xerrors.Errorf("failed to update user(%d): %w", id, err)
+		return xerrors.Errorf("failed to verify email(%d): %w", id, err)
+	}
+
+	affected, err := res.RowsAffected()
+
+	if err != nil {
+		return xerrors.Errorf("failed to get rows affected: %w", err)
+	}
+
+	if affected != 1 {
+		return domain.ErrEmailAddressChanged
 	}
 
 	return nil

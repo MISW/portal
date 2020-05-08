@@ -1,6 +1,7 @@
 package private
 
 import (
+	"encoding/json"
 	"fmt"
 
 	"github.com/MISW/Portal/backend/domain"
@@ -42,19 +43,27 @@ type ManagementHandler interface {
 
 	// InviteToSlack - Slackに招待されていないメンバーをSlackに招待する(非同期)
 	InviteToSlack(e echo.Context) error
+
+	// SetConfig - コンフィグの変更
+	SetConfig(e echo.Context) error
+
+	// GetConfig - コンフィグの取得
+	GetConfig(e echo.Context) error
 }
 
 // NewManagementHandler - ManagementHandlerを初期化
-func NewManagementHandler(mu usecase.ManagementUsecase) ManagementHandler {
+func NewManagementHandler(mu usecase.ManagementUsecase, acu usecase.AppConfigUsecase) ManagementHandler {
 	return &managementHandler{
-		mu: mu,
+		mu:  mu,
+		acu: acu,
 	}
 }
 
 var _ ManagementHandler = &managementHandler{}
 
 type managementHandler struct {
-	mu usecase.ManagementUsecase
+	mu  usecase.ManagementUsecase
+	acu usecase.AppConfigUsecase
 }
 
 // ListUsers - ユーザ一覧を返す
@@ -311,4 +320,150 @@ func (mh *managementHandler) InviteToSlack(e echo.Context) error {
 	}
 
 	return rest.RespondOK(e, nil)
+}
+
+// SetConfig - コンフィグの変更
+func (mh *managementHandler) SetConfig(e echo.Context) error {
+	var param struct {
+		Kind    string          `json:"kind"`
+		Payload json.RawMessage `json:"payload"`
+	}
+
+	if err := e.Bind(&param); err != nil {
+		return rest.RespondMessage(e, rest.NewBadRequest(fmt.Sprintf("invalid request values: %v", err)))
+	}
+
+	switch param.Kind {
+	case "payment_period":
+		var payload struct {
+			PaymentPeriod int `json:"payment_period"`
+		}
+
+		if err := json.Unmarshal(param.Payload, &payload); err != nil {
+			return rest.RespondMessage(e, rest.NewBadRequest(fmt.Sprintf("invalid request values: %v", err)))
+		}
+
+		err := mh.acu.SetPaymentPeriod(payload.PaymentPeriod)
+
+		var frerr rest.ErrorResponse
+		if xerrors.As(err, &frerr) {
+			return rest.RespondMessage(e, frerr)
+		}
+
+		if err != nil {
+			return xerrors.Errorf("failed to update payment status: %w", err)
+		}
+
+		return rest.RespondOKAny(e, nil)
+
+	case "current_period":
+		var payload struct {
+			CurrentPeriod int `json:"current_period"`
+		}
+
+		if err := json.Unmarshal(param.Payload, &payload); err != nil {
+			return rest.RespondMessage(e, rest.NewBadRequest(fmt.Sprintf("invalid request values: %v", err)))
+		}
+
+		err := mh.acu.SetPaymentPeriod(payload.CurrentPeriod)
+
+		var frerr rest.ErrorResponse
+		if xerrors.As(err, &frerr) {
+			return rest.RespondMessage(e, frerr)
+		}
+
+		if err != nil {
+			return xerrors.Errorf("failed to update current status: %w", err)
+		}
+
+		return rest.RespondOKAny(e, nil)
+
+	case "email_template":
+		var payload struct {
+			EmailKind domain.EmailKind `json:"email_kind"`
+			Subject   string           `json:"subject"`
+			Body      string           `json:"body"`
+		}
+
+		if err := json.Unmarshal(param.Payload, &payload); err != nil {
+			return rest.RespondMessage(e, rest.NewBadRequest(fmt.Sprintf("invalid request values: %v", err)))
+		}
+
+		err := mh.acu.SetEmailTemplate(payload.EmailKind, payload.Subject, payload.Body)
+
+		var frerr rest.ErrorResponse
+		if xerrors.As(err, &frerr) {
+			return rest.RespondMessage(e, frerr)
+		}
+
+		if err != nil {
+			return xerrors.Errorf("failed to update email template: %w", err)
+		}
+
+		return rest.RespondOKAny(e, nil)
+
+	default:
+		return rest.RespondMessage(e, rest.NewBadRequest("unknown kind: "+param.Kind))
+	}
+}
+
+// GetConfig - コンフィグの取得
+func (mh *managementHandler) GetConfig(e echo.Context) error {
+	kind := e.QueryParam("kind")
+
+	switch kind {
+	case "payment_period":
+		pp, err := mh.acu.GetPaymentPeriod()
+
+		var frerr rest.ErrorResponse
+		if xerrors.As(err, &frerr) {
+			return rest.RespondMessage(e, frerr)
+		}
+
+		if err != nil {
+			return xerrors.Errorf("failed to get payment period: %w", err)
+		}
+
+		return rest.RespondOK(e, map[string]interface{}{
+			"payment_period": pp,
+		})
+
+	case "current_period":
+		cp, err := mh.acu.GetCurrentPeriod()
+
+		var frerr rest.ErrorResponse
+		if xerrors.As(err, &frerr) {
+			return rest.RespondMessage(e, frerr)
+		}
+
+		if err != nil {
+			return xerrors.Errorf("failed to get current period: %w", err)
+		}
+
+		return rest.RespondOK(e, map[string]interface{}{
+			"current_period": cp,
+		})
+
+	case "email_template":
+		emailKind := domain.EmailKind(e.QueryParam("email_kind"))
+
+		subject, body, err := mh.acu.GetEmailTemplate(emailKind)
+
+		var frerr rest.ErrorResponse
+		if xerrors.As(err, &frerr) {
+			return rest.RespondMessage(e, frerr)
+		}
+
+		if err != nil {
+			return xerrors.Errorf("failed to get email template: %w", err)
+		}
+
+		return rest.RespondOK(e, map[string]interface{}{
+			"subject": subject,
+			"body":    body,
+		})
+
+	default:
+		return rest.RespondMessage(e, rest.NewBadRequest("unknown kind: "+kind))
+	}
 }

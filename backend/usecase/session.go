@@ -1,7 +1,6 @@
 package usecase
 
 import (
-	"bytes"
 	"context"
 	"fmt"
 	"net/url"
@@ -10,7 +9,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/MISW/Portal/backend/config"
 	"github.com/MISW/Portal/backend/domain"
 	"github.com/MISW/Portal/backend/domain/repository"
 	"github.com/MISW/Portal/backend/internal/email"
@@ -47,30 +45,30 @@ func NewSessionUsecase(
 	userRepository repository.UserRepository,
 	tokenRepository repository.TokenRepository,
 	authenticator oidc.Authenticator,
+	appConfigRpoeisotry repository.AppConfigRepository,
 	mailer email.Sender,
-	mailTemplates *config.EmailTemplates,
 	jwtProvider jwt.JWTProvider,
 	baseURL string,
 ) SessionUsecase {
 	return &sessionUsecase{
-		userRepository:             userRepository,
-		tokenRepository:            tokenRepository,
-		authenticator:              authenticator,
-		mailer:                     mailer,
-		emailVerificationTemplates: mailTemplates.EmailVerification,
-		jwtProvider:                jwtProvider,
-		baseURL:                    baseURL,
+		userRepository:      userRepository,
+		tokenRepository:     tokenRepository,
+		authenticator:       authenticator,
+		appConfigRpoeisotry: appConfigRpoeisotry,
+		mailer:              mailer,
+		jwtProvider:         jwtProvider,
+		baseURL:             baseURL,
 	}
 }
 
 type sessionUsecase struct {
-	userRepository             repository.UserRepository
-	tokenRepository            repository.TokenRepository
-	authenticator              oidc.Authenticator
-	mailer                     email.Sender
-	emailVerificationTemplates *config.EmailTemplate
-	jwtProvider                jwt.JWTProvider
-	baseURL                    string
+	appConfigRpoeisotry repository.AppConfigRepository
+	userRepository      repository.UserRepository
+	tokenRepository     repository.TokenRepository
+	authenticator       oidc.Authenticator
+	mailer              email.Sender
+	jwtProvider         jwt.JWTProvider
+	baseURL             string
 }
 
 var _ SessionUsecase = &sessionUsecase{}
@@ -78,8 +76,9 @@ var _ SessionUsecase = &sessionUsecase{}
 // SignUp - ユーザ新規登録
 func (us *sessionUsecase) Signup(ctx context.Context, user *domain.User) error {
 	user.SlackID = ""
-	user.Role = domain.EmailUnverified
+	user.Role = domain.NotMember
 	user.SlackInvitationStatus = domain.Never
+	user.EmailVerified = false
 
 	if err := user.Validate(); err != nil {
 		return err
@@ -96,8 +95,9 @@ func (us *sessionUsecase) Signup(ctx context.Context, user *domain.User) error {
 	}
 
 	token, err := us.jwtProvider.GenerateWithMap(map[string]interface{}{
-		"kind": "email_verification",
-		"uid":  strconv.Itoa(id),
+		"kind":  "email_verification",
+		"email": user.Email,
+		"uid":   strconv.Itoa(id),
 	})
 
 	if err != nil {
@@ -120,17 +120,19 @@ func (us *sessionUsecase) Signup(ctx context.Context, user *domain.User) error {
 		"VerificationLink": u.String(),
 	}
 
-	subject := bytes.NewBuffer(nil)
-	body := bytes.NewBuffer(nil)
+	subject, body, err := us.appConfigRpoeisotry.GetEmailTemplate(domain.EmailVerification)
 
-	if err := us.emailVerificationTemplates.SubjectTemplate.Execute(subject, metadata); err != nil {
-		return xerrors.Errorf("failed to execute the template for the subject: %w", err)
-	}
-	if err := us.emailVerificationTemplates.BodyTeamplte.Execute(body, metadata); err != nil {
-		return xerrors.Errorf("failed to execute the template for the body: %w", err)
+	if err != nil {
+		return xerrors.Errorf("failed to get email template for verification: %w", err)
 	}
 
-	if err := us.mailer.Send(user.Email, subject.String(), body.String()); err != nil {
+	subject, body, err = email.GenerateEmailFromTemplate(subject, body, metadata)
+
+	if err != nil {
+		return xerrors.Errorf("failed to generate email from template: %w", err)
+	}
+
+	if err := us.mailer.Send(user.Email, subject, body); err != nil {
 		return xerrors.Errorf("failed to send email to verify the email address(%s): %w", user.Email, err)
 	}
 
@@ -247,10 +249,20 @@ func (us *sessionUsecase) VerifyEmail(ctx context.Context, verifyToken string) (
 		return "", rest.NewBadRequest("invalid token(invalid character is contained)")
 	}
 
-	err = us.userRepository.UpdateRole(ctx, uid, domain.NewMember)
+	email, ok := claims["uid"].(string)
+
+	if !ok {
+		return "", rest.NewBadRequest("invalid token")
+	}
+
+	err = us.userRepository.VerifyEmail(ctx, uid, email)
+
+	if err == domain.ErrEmailAddressChanged {
+		return "", rest.NewBadRequest("Your email address has been changed")
+	}
 
 	if err != nil {
-		return "", xerrors.Errorf("failed to update user's role: %w", err)
+		return "", xerrors.Errorf("failed to verify email: %w", err)
 	}
 
 	token, err = tokenutil.GenerateRandomToken()

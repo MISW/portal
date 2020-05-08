@@ -23,11 +23,13 @@ CREATE TABLE users (
     slack_id VARCHAR(128) UNIQUE,
     discord_id VARCHAR(128),
 
+    email_verified BOOLEAN DEFAULT 0,
+
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 ALTER TABLE users ADD INDEX handle_index(handle);
 ALTER TABLE users ADD INDEX generation_index(generation);
-ALTER TABLE users ADD INDEX slack_id_role_index(slack_id, role);
+ALTER TABLE users ADD INDEX role_slack_id_index(role, slack_id);
 ALTER TABLE users ADD INDEX slack_invitation_status_index(slack_invitation_status);

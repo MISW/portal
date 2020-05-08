@@ -34,6 +34,7 @@ var (
 		Squads:                []string{"Web", "Webデザイン"},
 		Role:                  domain.Admin,
 		SlackInvitationStatus: domain.Invited,
+		EmailVerified:         false,
 		SlackID:               "UAJXXXXXX",
 		DiscordID:             "mischan#0123",
 	}
@@ -57,6 +58,7 @@ var (
 		Squads:                []string{"Web", "Webデザイン"},
 		Role:                  domain.Admin,
 		SlackInvitationStatus: domain.Invited,
+		EmailVerified:         true,
 		SlackID:               "UAJXXXXXX",
 		DiscordID:             "mischan#0123",
 	}
@@ -224,7 +226,7 @@ func TestList(t *testing.T) {
 
 }
 
-func TestUpdate(t *testing.T) {
+func TestUserUpdate(t *testing.T) {
 	t.Run("normal", func(t *testing.T) {
 		conn := testutil.NewSQLConn(t)
 
@@ -250,30 +252,42 @@ func TestUpdate(t *testing.T) {
 
 		compareUser(t, &tmp2, user)
 	})
+}
 
-	t.Run("role", func(t *testing.T) {
-		conn := testutil.NewSQLConn(t)
+func TesstVerifyEmail(t *testing.T) {
+	conn := testutil.NewSQLConn(t)
 
-		up := persistence.NewUserPersistence(conn)
+	up := persistence.NewUserPersistence(conn)
 
-		id := insertTestUserData(t, up)
+	id := insertTestUserData(t, up)
 
-		updatedRole := domain.NotMember
-		err := up.UpdateRole(context.Background(), id, updatedRole)
+	ctx := context.Background()
 
-		if err != nil {
-			t.Fatalf("failed to update role: %+v", err)
-		}
+	user, err := up.GetByID(ctx, id)
 
-		user, err := up.GetByID(context.Background(), id)
+	if err != nil {
+		t.Fatalf("GetByID failed: %+v", err)
+	}
 
-		if err != nil {
-			t.Fatalf("failed to get user: %+v", err)
-		}
+	if user.EmailVerified {
+		t.Fatalf("EmailVerified should be false")
+	}
 
-		if user.Role != updatedRole {
-			t.Fatalf("role is not updated: %s(expected: %s)", user.Role, updatedRole)
-		}
-	})
+	if err := up.VerifyEmail(ctx, id, userTemplate.Email); err != nil {
+		t.Fatalf("VerifyEmail failed: %+v", err)
+	}
 
+	user, err = up.GetByID(ctx, id)
+
+	if err != nil {
+		t.Fatalf("GetByID failed: %+v", err)
+	}
+
+	if !user.EmailVerified {
+		t.Fatalf("EmailVerified should be true")
+	}
+
+	if err := up.VerifyEmail(ctx, id, userTemplate.Email); err != domain.ErrEmailAddressChanged {
+		t.Fatalf("VerifyEmail should return ErrEmailAddressChanged: %+v", err)
+	}
 }

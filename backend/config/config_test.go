@@ -41,8 +41,6 @@ func init() {
 		Username:   "noreply@misw.jp",
 		Password:   "password",
 		From:       "noreply@misw.jp",
-
-		Templates: envExpectedConfig.Email.Templates,
 	}
 
 }
@@ -59,9 +57,6 @@ func TestLoadConfigFromEnv(t *testing.T) {
 	if err != nil {
 		t.Fatal("failed to load config: %w", err)
 	}
-
-	cfg.Email.Templates.EmailVerification.SubjectTemplate = nil
-	cfg.Email.Templates.EmailVerification.BodyTeamplte = nil
 
 	if *cfg != *envExpectedConfig {
 		t.Fatalf("config does not match: expected: %v actual: %v", *envExpectedConfig, *cfg)

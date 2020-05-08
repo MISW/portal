@@ -138,16 +138,16 @@ func (mr *MockUserRepositoryMockRecorder) Update(ctx, user interface{}) *gomock.
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Update", reflect.TypeOf((*MockUserRepository)(nil).Update), ctx, user)
 }
 
-// UpdateRole mocks base method
-func (m *MockUserRepository) UpdateRole(ctx context.Context, id int, role domain.RoleType) error {
+// VerifyEmail mocks base method
+func (m *MockUserRepository) VerifyEmail(ctx context.Context, id int, email string) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "UpdateRole", ctx, id, role)
+	ret := m.ctrl.Call(m, "VerifyEmail", ctx, id, email)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
-// UpdateRole indicates an expected call of UpdateRole
-func (mr *MockUserRepositoryMockRecorder) UpdateRole(ctx, id, role interface{}) *gomock.Call {
+// VerifyEmail indicates an expected call of VerifyEmail
+func (mr *MockUserRepositoryMockRecorder) VerifyEmail(ctx, id, email interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateRole", reflect.TypeOf((*MockUserRepository)(nil).UpdateRole), ctx, id, role)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VerifyEmail", reflect.TypeOf((*MockUserRepository)(nil).VerifyEmail), ctx, id, email)
 }

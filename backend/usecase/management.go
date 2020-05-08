@@ -56,6 +56,7 @@ type ManagementUsecaseParams struct {
 	PaymentTransactionRepository repository.PaymentTransactionRepository
 	AppConfigRepository          repository.AppConfigRepository
 	SlackRepository              repository.SlackRepository
+	UserRoleRepository           repository.UserRoleRepository
 	SlackInviter                 workers.Worker `name:"slack"`
 }
 
@@ -145,71 +146,6 @@ func (mu *managementUsecase) AuthorizeTransaction(ctx context.Context, token str
 	return nil
 }
 
-// updateRole - roleを再計算して設定する
-// currentRole、currentPeriod、paymentPeriodは既に取得済みの場合キャッシュとして利用する目的のため、取得済みでない場合は""または0を渡す
-func (mu *managementUsecase) updateRole(
-	ctx context.Context,
-	userID int,
-	currentRole domain.RoleType,
-	currentPeriod, paymentPeriod int,
-) error {
-	var err error
-
-	if len(currentRole) == 0 {
-		user, err := mu.getUser(ctx, userID)
-
-		if err != nil {
-			return xerrors.Errorf("failed to retrieve user info: %w", err)
-		}
-
-		currentRole = user.Role
-	}
-
-	if currentPeriod == 0 {
-		currentPeriod, err = mu.AppConfigRepository.GetCurrentPeriod()
-
-		if err != nil {
-			return xerrors.Errorf("failed to get current period: %w", err)
-		}
-	}
-
-	if paymentPeriod == 0 {
-		paymentPeriod, err = mu.AppConfigRepository.GetPaymentPeriod()
-
-		if err != nil {
-			return xerrors.Errorf("failed to get payment period: %w", err)
-		}
-	}
-
-	matched, err := mu.PaymentStatusRepository.HasMatchingPeriod(ctx, userID, []int{
-		currentPeriod,
-		paymentPeriod,
-	})
-
-	prevPaid := matched
-
-	if !matched {
-		// currentPeriod <= paymentPeriodであるから、currentPeriodより前に支払いがあるかどうかで以前加入していたか判定できる
-		isFirst, err := mu.PaymentStatusRepository.IsFirst(ctx, userID, currentPeriod)
-
-		if err != nil {
-			return xerrors.Errorf("failed to check payment status before current period: %w", err)
-		}
-
-		prevPaid = !isFirst
-	}
-
-	newRole := currentRole.GetNewRole(matched, prevPaid)
-
-	if newRole != currentRole {
-		if err := mu.UserRepository.UpdateRole(ctx, userID, newRole); err != nil {
-			return xerrors.Errorf("failed to update role: %w", err)
-		}
-	}
-
-	return nil
-}
-
 func (mu *managementUsecase) AddPaymentStatus(ctx context.Context, userID, period, authorizer int) error {
 	paymentPeriod, err := mu.AppConfigRepository.GetPaymentPeriod()
 
@@ -239,16 +175,8 @@ func (mu *managementUsecase) AddPaymentStatus(ctx context.Context, userID, perio
 		return nil
 	}
 
-	err = mu.updateRole(
-		ctx,
-		userID,
-		"",
-		currentPeriod,
-		paymentPeriod,
-	)
-
-	if err != nil {
-		return xerrors.Errorf("failed to update role: %w", err)
+	if err := mu.UserRoleRepository.UpdateWithRule(ctx, userID, currentPeriod, paymentPeriod); err != nil {
+		return xerrors.Errorf("failed to update role for user(%d) automatically: %w", userID, err)
 	}
 
 	return nil
@@ -286,16 +214,8 @@ func (mu *managementUsecase) DeletePaymentStatus(ctx context.Context, userID, pe
 		return nil
 	}
 
-	err = mu.updateRole(
-		ctx,
-		userID,
-		"",
-		currentPeriod,
-		paymentPeriod,
-	)
-
-	if err != nil {
-		return xerrors.Errorf("failed to update role: %w", err)
+	if err := mu.UserRoleRepository.UpdateWithRule(ctx, userID, currentPeriod, paymentPeriod); err != nil {
+		return xerrors.Errorf("failed to update role for user(%d) automatically: %w", userID, err)
 	}
 
 	return nil
@@ -389,7 +309,7 @@ func (mu *managementUsecase) UpdateRole(ctx context.Context, userID int, role do
 		return rest.NewBadRequest("存在しないロールが指定されています")
 	}
 
-	err := mu.UserRepository.UpdateRole(ctx, userID, role)
+	err := mu.UserRoleRepository.Update(ctx, userID, role)
 
 	if err != nil {
 		return xerrors.Errorf("failed to find user by id(%d): %w", userID, err)
