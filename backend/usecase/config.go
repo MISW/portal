@@ -149,6 +149,10 @@ func (acu *appConfigUsecase) SetCurrentPeriod(period int) error {
 }
 
 func (acu *appConfigUsecase) SetEmailTemplate(kind domain.EmailKind, subject, body string) error {
+	if !kind.Validate() {
+		return rest.NewBadRequest(fmt.Sprintf("不正なEメールの種別です: %s", kind))
+	}
+
 	_, err := template.New("").Parse(subject)
 
 	if err != nil {
