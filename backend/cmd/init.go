@@ -130,6 +130,11 @@ func initDig(cfg *config.Config, addr string) *dig.Container {
 		panic(err)
 	}
 
+	err = c.Provide(usecase.NewAppConfigUsecase)
+	if err != nil {
+		panic(err)
+	}
+
 	err = c.Provide(func(
 		userRepository repository.UserRepository,
 		tokenRepository repository.TokenRepository,
