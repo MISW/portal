@@ -365,7 +365,7 @@ func (mh *managementHandler) SetConfig(e echo.Context) error {
 			return rest.RespondMessage(e, rest.NewBadRequest(fmt.Sprintf("invalid request values: %v", err)))
 		}
 
-		err := mh.acu.SetPaymentPeriod(payload.CurrentPeriod)
+		err := mh.acu.SetCurrentPeriod(payload.CurrentPeriod)
 
 		var frerr rest.ErrorResponse
 		if xerrors.As(err, &frerr) {
