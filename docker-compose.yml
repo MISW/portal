@@ -40,6 +40,7 @@ services:
     environment:
       TZ: "Azia/Tokyo"
       ENVIRONMENT: dev
+      BACKEND_HOST: "http://backend"
 
   mysql:
     image: mysql:5.7
