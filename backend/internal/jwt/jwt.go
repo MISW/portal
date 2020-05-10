@@ -16,6 +16,8 @@ type JWTProvider interface {
 	ParseAsMap(tokenString string) (map[string]interface{}, error)
 
 	ParseAsStandard(tokenString string) (*jwt.StandardClaims, error)
+
+	ParseAs(tokenString string, as jwt.Claims) (jwt.Claims, error)
 }
 
 // NewJWTProvider - initialize jwt provider
@@ -101,4 +103,16 @@ func (p *jwtProvider) ParseAsStandard(tokenString string) (*jwt.StandardClaims, 
 	}
 
 	return standardClaims, nil
+}
+
+func (p *jwtProvider) ParseAs(tokenString string, as jwt.Claims) (jwt.Claims, error) {
+	token, err := jwt.ParseWithClaims(tokenString, as, func(token *jwt.Token) (interface{}, error) {
+		return []byte(tokenString), nil
+	})
+
+	if err != nil {
+		return nil, xerrors.Errorf("failed to parse token: %w", err)
+	}
+
+	return token.Claims, nil
 }

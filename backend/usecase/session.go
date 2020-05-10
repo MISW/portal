@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"net/url"
 	"path"
-	"strconv"
 	"strings"
 	"time"
 
@@ -16,6 +15,7 @@ import (
 	"github.com/MISW/Portal/backend/internal/oidc"
 	"github.com/MISW/Portal/backend/internal/rest"
 	"github.com/MISW/Portal/backend/internal/tokenutil"
+	jwtgo "github.com/dgrijalva/jwt-go"
 	"golang.org/x/xerrors"
 )
 
@@ -93,11 +93,11 @@ func (us *sessionUsecase) Signup(ctx context.Context, user *domain.User) error {
 	if err != nil {
 		return xerrors.Errorf("failed to insert new user: %w", err)
 	}
+	user.ID = id
 
 	token, err := us.jwtProvider.GenerateWithMap(map[string]interface{}{
-		"kind":  "email_verification",
-		"email": user.Email,
-		"uid":   strconv.Itoa(id),
+		"kind": "email_verification",
+		"user": user,
 	})
 
 	if err != nil {
@@ -116,8 +116,9 @@ func (us *sessionUsecase) Signup(ctx context.Context, user *domain.User) error {
 	u.Path = path.Join(u.Path, "/verify_email")
 	u.RawQuery = query.Encode()
 
-	metadata := map[string]string{
+	metadata := map[string]interface{}{
 		"VerificationLink": u.String(),
+		"User":             user,
 	}
 
 	subject, body, err := us.appConfigRpoeisotry.GetEmailTemplate(domain.EmailVerification)
@@ -223,7 +224,13 @@ func (us *sessionUsecase) Validate(ctx context.Context, token string) (user *dom
 
 // VerifyEmail - メールアドレスの検証(メールに届いたリンクを受け取る)
 func (us *sessionUsecase) VerifyEmail(ctx context.Context, verifyToken string) (token string, err error) {
-	claims, err := us.jwtProvider.ParseAsMap(verifyToken)
+	type customClaims struct {
+		User *domain.User `json:"user"`
+		Kind string       `json:"kind"`
+		jwtgo.StandardClaims
+	}
+
+	c, err := us.jwtProvider.ParseAs(verifyToken, &customClaims{})
 
 	if err != nil {
 		return "", rest.NewBadRequest(
@@ -231,31 +238,21 @@ func (us *sessionUsecase) VerifyEmail(ctx context.Context, verifyToken string) (
 		)
 	}
 
-	if claims["kind"] != "email_verification" {
+	claims, ok := c.(*customClaims)
+
+	if !ok {
+		return "", rest.NewBadRequest(
+			fmt.Sprintf("invalid token(incorrect claims)"),
+		)
+	}
+
+	if claims.Kind != "email_verification" {
 		return "", rest.NewBadRequest(
 			fmt.Sprintf("invalid token(%v)", err),
 		)
 	}
 
-	uidString, ok := claims["uid"].(string)
-
-	if !ok {
-		return "", rest.NewBadRequest("invalid token")
-	}
-
-	uid, err := strconv.Atoi(uidString)
-
-	if err != nil {
-		return "", rest.NewBadRequest("invalid token(invalid character is contained)")
-	}
-
-	email, ok := claims["uid"].(string)
-
-	if !ok {
-		return "", rest.NewBadRequest("invalid token")
-	}
-
-	err = us.userRepository.VerifyEmail(ctx, uid, email)
+	err = us.userRepository.VerifyEmail(ctx, claims.User.ID, claims.User.Email)
 
 	if err == domain.ErrEmailAddressChanged {
 		return "", rest.NewBadRequest("Your email address has been changed")
@@ -265,17 +262,45 @@ func (us *sessionUsecase) VerifyEmail(ctx context.Context, verifyToken string) (
 		return "", xerrors.Errorf("failed to verify email: %w", err)
 	}
 
+	if err := us.sendEmailAfterRegistration(claims.User); err != nil {
+		return "", xerrors.Errorf("failed to send email after registration: %w", err)
+	}
+
 	token, err = tokenutil.GenerateRandomToken()
 
 	if err != nil {
 		return "", xerrors.Errorf("failed to generate token: %w", err)
 	}
 
-	err = us.tokenRepository.Add(ctx, uid, token, time.Now().Add(10*24*time.Hour))
+	err = us.tokenRepository.Add(ctx, claims.User.ID, token, time.Now().Add(10*24*time.Hour))
 
 	if err != nil {
 		return "", xerrors.Errorf("failed to insert new token: %w", err)
 	}
 
 	return token, nil
+}
+
+func (us *sessionUsecase) sendEmailAfterRegistration(user *domain.User) error {
+	metadata := map[string]interface{}{
+		"User": user,
+	}
+
+	subject, body, err := us.appConfigRpoeisotry.GetEmailTemplate(domain.AfterRegistration)
+
+	if err != nil {
+		return xerrors.Errorf("failed to get email template for verification: %w", err)
+	}
+
+	subject, body, err = email.GenerateEmailFromTemplate(subject, body, metadata)
+
+	if err != nil {
+		return xerrors.Errorf("failed to generate email from template: %w", err)
+	}
+
+	if err := us.mailer.Send(user.Email, subject, body); err != nil {
+		return xerrors.Errorf("failed to send email to verify the email address(%s): %w", user.Email, err)
+	}
+
+	return nil
 }
