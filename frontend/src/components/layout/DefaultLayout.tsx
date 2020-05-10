@@ -13,8 +13,10 @@ import {
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import MUILink from "@material-ui/core/Link";
 import lighttheme from "../theme/lighttheme";
+import darktheme from "../theme/darktheme";
 import { loginContext } from "../../../pages/_app";
 import { useRouter } from "next/router";
+import { useSystemColorScheme } from "../../hooks/theme";
 
 const useStyles = makeStyles((theme: Theme) => ({
   appBar: {
@@ -84,8 +86,10 @@ export const DefaultLayout: React.FC<{ onLogout: () => void }> = ({
     onLogout();
   }, [handleClose, onLogout]);
 
+  const scheme = useSystemColorScheme();
+
   return (
-    <MuiThemeProvider theme={lighttheme}>
+    <MuiThemeProvider theme={scheme === "dark" ? darktheme : lighttheme}>
       <CssBaseline />
       <div className="container">
         <AppBar position="fixed" color="primary" className={classes.appBar}>
