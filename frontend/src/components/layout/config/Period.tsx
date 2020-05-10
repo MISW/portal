@@ -59,7 +59,7 @@ const Period: React.FC<{
               <Select
                 labelId="period-select-label"
                 id="period-select-label"
-                value={selected ?? ""}
+                value={selected && options.length !== 0 ? selected : ""}
                 onChange={handleChange}
               >
                 {

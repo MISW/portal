@@ -46,7 +46,7 @@ export const Config: React.FC<{
         {
           configs.map(
             config => (
-              <Box mb={3}>
+              <Box mb={3} key={config.title}>
                 <ExpansionPanel key={config.title} expanded={config.expanded}>
                   <ExpansionPanelSummary
                     expandIcon={<ExpandMoreIcon />}
