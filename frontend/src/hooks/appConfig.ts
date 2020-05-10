@@ -100,8 +100,11 @@ export const useCurrentPeriodConfig: PeriodConfigState = () => {
   return [currentPeriod, update];
 }
 
-export function useEmailTemplateConfig(kind: "email_verification" | "slack_invitation") {
-  const [template, setTemplate] = useState<{ subject: string, body: string }>({ subject: "", body: "" });
+export type emailTemplate = { subject: string, body: string };
+
+export function useEmailTemplateConfig(_kind: string): [emailTemplate, (k: string) => void, (subject: string, body: string) => Promise<void>] {
+  const [kind, setKind] = useState<string>(_kind);
+  const [template, setTemplate] = useState<emailTemplate>({ subject: "", body: "" });
 
   const get = async () => {
     const resp = await fetch("/api/private/management/config?kind=email_template&email_kind=" + kind);
@@ -146,7 +149,7 @@ export function useEmailTemplateConfig(kind: "email_verification" | "slack_invit
     get().catch(x => console.error(x));
 
     return () => { };
-  }, []);
+  }, [kind]);
 
-  return [template, update];
+  return [template, setKind, update];
 }

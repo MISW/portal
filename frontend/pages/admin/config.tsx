@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { NextPage } from "next";
 import { Config } from "../../src/components/layout/Config";
-import Period from "../../src/components/layout/config/period";
-import { usePaymentPeriodConfig, useCurrentPeriodConfig } from "../../src/hooks/appConfig";
+import Period from "../../src/components/layout/config/Period";
+import EmailTemplate from "../../src/components/layout/config/EmailTemplate";
+import { usePaymentPeriodConfig, useCurrentPeriodConfig, useEmailTemplateConfig } from "../../src/hooks/appConfig";
 import { calcPeriod } from "../../src/util";
 
 const Page: NextPage = () => {
@@ -16,8 +17,6 @@ const Page: NextPage = () => {
   const optionsForCurrent = paymentPeriod ? [
     calcPeriod(paymentPeriod, -1), paymentPeriod
   ] : [];
-  console.log(optionsForPayment);
-  console.log(optionsForCurrent);
 
   const paymentPeriodConfig = () => {
     const [expanded, setExpanded] = useState<boolean>(false);
@@ -33,7 +32,7 @@ const Page: NextPage = () => {
       node: (
         <Period
           title="支払い期間"
-          description="支払い期間の設定は支払い登録モードにおいて支払いを行う期間の指定です。会員権限の確認に前の期間を利用しつつ次の期間での支払い登録を行い、支払った人も会員と認めることができます。"
+          description="支払い期間の設定は支払い登録モードにおいて支払いを行う期間の指定です。会員権限の確認に現在の期間で指定された期間を利用しつつ支払い期間での支払い登録を行い、支払った人も会員と認めることができます。会費徴収が始まった際には、支払い期間だけを次に進め、会費徴収期間が終了したタイミングで支払い期間を進めることを推奨します。"
           selected={selected}
           setSelected={setSelected}
           options={optionsForPayment}
@@ -83,9 +82,57 @@ const Page: NextPage = () => {
       setExpanded,
     }
   };
+  const emailTemplateConfig = () => {
+    type kindType = "email_verification" | "slack_invitation";
+    const options: { key: kindType, label: string }[] = [
+      { key: "email_verification", label: "Eメール認証" },
+      { key: "slack_invitation", label: "Slack招待時の同時送信メール" },
+    ];
+
+    const [expanded, setExpanded] = useState<boolean>(false);
+    const [kind, setKind] = useState<kindType>("email_verification");
+
+    const [emailTemplateRemote, setKindRemote, setEmailTemplateRemote] = useEmailTemplateConfig(kind);
+    const [emailTemplate, setEmailTemplate] = useState<{ body: string, subject: string } | undefined>(emailTemplateRemote);
+
+    useEffect(() => {
+      if (emailTemplateRemote)
+        setEmailTemplate(emailTemplateRemote);
+    }, [emailTemplateRemote]);
+
+    useEffect(() => {
+      setKindRemote(kind);
+    }, [kind]);
+
+    return {
+      title: "メールテンプレート設定",
+      node: (
+        <EmailTemplate<kindType>
+          title="メールテンプレート設定"
+          selected={kind}
+          setSelected={kind => setKind(kind)}
+          values={emailTemplate}
+          setValues={setEmailTemplate}
+          options={options}
+          onClose={() => {
+            setEmailTemplate(emailTemplateRemote);
+            setKind("email_verification");
+
+            setExpanded(false);
+          }}
+          onSave={async () => {
+            setExpanded(false);
+            if (emailTemplate) await setEmailTemplateRemote(emailTemplate.subject, emailTemplate.body);
+          }}
+        />
+      ),
+      expanded,
+      setExpanded,
+    }
+  };
 
   return (
-    <Config configs={[currentPeriodConfig(), paymentPeriodConfig()]}>
+    <Config configs={[currentPeriodConfig(), paymentPeriodConfig(), emailTemplateConfig()]}>
     </Config>
   );
 };
