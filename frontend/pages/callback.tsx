@@ -35,7 +35,7 @@ const Page: NextPage = () => {
     sendStatus().catch((err) => {
       throw err;
     });
-  });
+  }, []);
   return (
     <>
       <Typography>Loading...</Typography>
