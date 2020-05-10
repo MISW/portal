@@ -99,8 +99,8 @@ const Page: NextPage = () => {
           handleClickMenu={handleClickMenu}
         />
       ) : (
-          "Loading..."
-        )}
+        "Loading..."
+      )}
 
       <SlackInvitationDialog
         open={slackInvitationDialog}

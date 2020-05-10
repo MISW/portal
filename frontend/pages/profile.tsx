@@ -10,6 +10,7 @@ import { Box } from "@material-ui/core";
 const Page: NextPage = () => {
   const [user, setUser] = useState<ConfigurableProfile>();
   const [paymentStatuses, setPaymentStatuses] = useState<PaymentStatus[]>();
+
   useEffect(() => {
     getProfile().then((u) => setUser(u));
     getPaymentStatuses().then((ps) => setPaymentStatuses(ps));
