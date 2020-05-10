@@ -2,12 +2,21 @@ import React, { useContext, useCallback } from "react";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
-import { makeStyles, Theme } from "@material-ui/core/styles";
-import { IconButton, MenuItem, Menu, Container } from "@material-ui/core";
+import { makeStyles, Theme, MuiThemeProvider } from "@material-ui/core/styles";
+import {
+  IconButton,
+  MenuItem,
+  Menu,
+  Container,
+  CssBaseline,
+} from "@material-ui/core";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import MUILink from "@material-ui/core/Link";
+import lighttheme from "../theme/lighttheme";
+import darktheme from "../theme/darktheme";
 import { loginContext } from "../../../pages/_app";
 import { useRouter } from "next/router";
+import { useSystemColorScheme } from "../../hooks/theme";
 
 const useStyles = makeStyles((theme: Theme) => ({
   appBar: {
@@ -77,8 +86,11 @@ export const DefaultLayout: React.FC<{ onLogout: () => void }> = ({
     onLogout();
   }, [handleClose, onLogout]);
 
+  const scheme = useSystemColorScheme();
+
   return (
-    <>
+    <MuiThemeProvider theme={scheme === "dark" ? darktheme : lighttheme}>
+      <CssBaseline />
       <div className="container">
         <AppBar position="fixed" color="primary" className={classes.appBar}>
           <Toolbar>
@@ -138,6 +150,6 @@ export const DefaultLayout: React.FC<{ onLogout: () => void }> = ({
           <Copyright />
         </footer>
       </div>
-    </>
+    </MuiThemeProvider>
   );
 };
