@@ -36,7 +36,7 @@ const Page: NextPage = () => {
     sendEmailToken().catch((err) => {
       throw err;
     });
-  });
+  }, []);
   return (
     <>
       {verified ? (
