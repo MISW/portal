@@ -20,21 +20,21 @@ const Page: NextPage = () => {
       {!user ? (
         "Loading..."
       ) : (
-          <Profile
-            user={user}
-            editButton={true}
-            handleEditButton={() => Router.push("/profile/update")}
-          />
-        )}
+        <Profile
+          user={user}
+          editButton={true}
+          handleEditButton={() => Router.push("/profile/update")}
+        />
+      )}
       <Box mt={6}>
         {!paymentStatuses ? (
           ""
         ) : (
-            <PaymentStatuses
-              paymentStatuses={paymentStatuses}
-              editButton={false}
-            />
-          )}
+          <PaymentStatuses
+            paymentStatuses={paymentStatuses}
+            editButton={false}
+          />
+        )}
       </Box>
     </>
   );

@@ -12,7 +12,13 @@ const Confirm: React.FC<{
   submitResult: SubmitResult;
   successMessage: ReactNode;
   onSubmit: () => Promise<void>;
-}> = ({ user, valid, onSubmit, successMessage, submitResult: submitResult }) => {
+}> = ({
+  user,
+  valid,
+  onSubmit,
+  successMessage,
+  submitResult: submitResult,
+}) => {
   const filledCorrectly = Object.values(valid).reduce(
     (prev, cur) => prev && cur,
     true

@@ -1,7 +1,5 @@
 import React from "react";
-import NextLink from "next/link";
 import Container from "@material-ui/core/Container";
-import Button from "@material-ui/core/Button";
 import { NextPage } from "next";
 import { Typography, Grid, Box } from "@material-ui/core";
 import LinkContentCard from "../../src/components/design/LinkContentCard";
@@ -19,7 +17,6 @@ const links = [
   },
 ];
 
-
 const Page: NextPage = () => {
   return (
     <Container fixed>
@@ -31,7 +28,7 @@ const Page: NextPage = () => {
           <LinkContentCard {...data} key={i} />
         ))}
       </Grid>
-    </Container >
+    </Container>
   );
 };
 
