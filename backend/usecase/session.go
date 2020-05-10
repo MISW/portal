@@ -15,7 +15,6 @@ import (
 	"github.com/MISW/Portal/backend/internal/oidc"
 	"github.com/MISW/Portal/backend/internal/rest"
 	"github.com/MISW/Portal/backend/internal/tokenutil"
-	jwtgo "github.com/dgrijalva/jwt-go"
 	"golang.org/x/xerrors"
 )
 
@@ -222,14 +221,17 @@ func (us *sessionUsecase) Validate(ctx context.Context, token string) (user *dom
 	return user, nil
 }
 
+type customClaims struct {
+	User *domain.User `json:"user"`
+	Kind string       `json:"kind"`
+}
+
+func (c *customClaims) Valid() error {
+	return nil
+}
+
 // VerifyEmail - メールアドレスの検証(メールに届いたリンクを受け取る)
 func (us *sessionUsecase) VerifyEmail(ctx context.Context, verifyToken string) (token string, err error) {
-	type customClaims struct {
-		User *domain.User `json:"user"`
-		Kind string       `json:"kind"`
-		jwtgo.StandardClaims
-	}
-
 	c, err := us.jwtProvider.ParseAs(verifyToken, &customClaims{})
 
 	if err != nil {

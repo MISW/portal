@@ -107,7 +107,11 @@ func (p *jwtProvider) ParseAsStandard(tokenString string) (*jwt.StandardClaims, 
 
 func (p *jwtProvider) ParseAs(tokenString string, as jwt.Claims) (jwt.Claims, error) {
 	token, err := jwt.ParseWithClaims(tokenString, as, func(token *jwt.Token) (interface{}, error) {
-		return []byte(tokenString), nil
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, xerrors.Errorf("Unexpected signing method: %v", token.Header["alg"])
+		}
+
+		return p.key, nil
 	})
 
 	if err != nil {
