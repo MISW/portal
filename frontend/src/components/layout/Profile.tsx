@@ -54,8 +54,8 @@ const Profile: React.FC<{
           ) : null}
         </Toolbar>
       ) : (
-          <></>
-        )}
+        <></>
+      )}
 
       <Table aria-label="user profile" size={size}>
         <TableHead>
@@ -74,7 +74,7 @@ const Profile: React.FC<{
                 </TableCell>
                 <TableCell align="center">{`${
                   user[id as keyof ConfigurableProfile] ?? ""
-                  }`}</TableCell>
+                }`}</TableCell>
               </TableRow>
             ))}
         </TableBody>
