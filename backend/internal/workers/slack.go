@@ -59,7 +59,9 @@ func (si *slackInviter) inviteToSlack(user *domain.User, subjectTemplate, bodyTe
 		return xerrors.Errorf("failed to invite to slack: %w", err)
 	}
 
-	subject, body, err := email.GenerateEmailFromTemplate(subjectTemplate, bodyTemplate, user)
+	subject, body, err := email.GenerateEmailFromTemplate(subjectTemplate, bodyTemplate, map[string]interface{}{
+		"User": user,
+	})
 
 	if err != nil {
 		log.Printf("failed to generate email from template: %+v", err)
