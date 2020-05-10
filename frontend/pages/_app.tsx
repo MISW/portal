@@ -6,7 +6,7 @@ import { ThemeProvider } from "@material-ui/styles";
 import { CssBaseline, createMuiTheme } from "@material-ui/core";
 import { NextPageContext } from "next";
 import Router, { useRouter } from "next/router";
-import { checkLoggingIn, logout } from "../src/network";
+import { logout } from "../src/network";
 import { DefaultLayout } from "../src/components/layout/DefaultLayout";
 import fetch from "isomorphic-unfetch";
 
