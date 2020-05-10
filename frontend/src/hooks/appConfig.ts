@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 
-export function usePaymentPeriodConfig() {
+export type PeriodConfigState = () => [number | undefined, (period: number) => Promise<void>];
+
+export const usePaymentPeriodConfig: PeriodConfigState = () => {
   const [paymentPeriod, setPaymentPeriod] = useState<number>();
 
   const get = async () => {
@@ -49,7 +51,7 @@ export function usePaymentPeriodConfig() {
   return [paymentPeriod, update];
 }
 
-export function useCurrentPeriodConfig() {
+export const useCurrentPeriodConfig: PeriodConfigState = () => {
   const [currentPeriod, setCurrentPeriod] = useState<number>();
 
   const get = async () => {

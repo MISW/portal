@@ -1,4 +1,5 @@
 import React from 'react';
+import { Box } from '@material-ui/core';
 import { Theme, createStyles, makeStyles } from '@material-ui/core/styles';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
@@ -23,38 +24,44 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 interface ConfigProps {
-
+  title: string,
+  node: React.ReactNode;
+  expanded: boolean;
+  setExpanded: (expanded: boolean) => void;
 };
 
-export const Config: React.FC<ConfigProps> = ({
-
+export const Config: React.FC<{
+  configs: ConfigProps[];
+}> = ({
+  configs,
 }) => {
-  const classes = useStyles();
+    const fn = async () => {
+      throw new Error("hello");
+    };
 
-  return (
-    <div className={classes.root}>
-      <ExpansionPanel>
-        <ExpansionPanelSummary
-          expandIcon={<ExpandMoreIcon />}
-          aria-controls="panel1a-content"
-          id="panel1a-header"
-        >
-          <Typography className={classes.heading}>Expansion Panel 1</Typography>
-        </ExpansionPanelSummary>
-        <ExpansionPanelDetails>
-          <Typography>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada lacus ex,
-            sit amet blandit leo lobortis eget.
-          </Typography>
-        </ExpansionPanelDetails>
-        <Divider />
-        <ExpansionPanelActions>
-          <Button size="small">Cancel</Button>
-          <Button size="small" color="primary">
-            Save
-          </Button>
-        </ExpansionPanelActions>
-      </ExpansionPanel>
-    </div>
-  );
-};
+    const classes = useStyles();
+
+    return (
+      <div className={classes.root}>
+        {
+          configs.map(
+            config => (
+              <Box mb={3}>
+                <ExpansionPanel key={config.title} expanded={config.expanded}>
+                  <ExpansionPanelSummary
+                    expandIcon={<ExpandMoreIcon />}
+                    aria-controls="panel1a-content"
+                    id="panel1a-header"
+                    onClick={() => config.setExpanded(!config.expanded)}
+                  >
+                    <Typography className={classes.heading}>{config.title}</Typography>
+                  </ExpansionPanelSummary>
+                  {config.node}
+                </ExpansionPanel>
+              </Box>
+            )
+          )
+        }
+      </div>
+    );
+  };
