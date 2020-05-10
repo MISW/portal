@@ -26,3 +26,9 @@ export function saveFile(name: string, data: string) {
   a.click();
   document.body.removeChild(a);
 }
+
+export function calcPeriod(current: number, diff: number): number {
+  const index = Math.floor(current / 100) * 2 + (current % 100 + 2) / 6 - 1 + diff;
+
+  return (index >> 1) * 100 + (index % 2 ? 10 : 4);
+}
