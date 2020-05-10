@@ -1,14 +1,19 @@
-import React, { useState, useEffect } from 'react';
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
-import { calcPeriod } from '../../../util';
-import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
-import ExpansionPanelActions from '@material-ui/core/ExpansionPanelActions';
-import { Box, Button, Divider, Typography, TextField, Grid } from '@material-ui/core';
+import React from "react";
+import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
+import InputLabel from "@material-ui/core/InputLabel";
+import MenuItem from "@material-ui/core/MenuItem";
+import FormControl from "@material-ui/core/FormControl";
+import Select from "@material-ui/core/Select";
+import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
+import ExpansionPanelActions from "@material-ui/core/ExpansionPanelActions";
+import {
+  Box,
+  Button,
+  Divider,
+  Typography,
+  TextField,
+  Grid,
+} from "@material-ui/core";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -17,24 +22,21 @@ const useStyles = makeStyles((theme: Theme) =>
       minWidth: 120,
     },
     box: {
-      width: "100%"
-    }
-  }),
+      width: "100%",
+    },
+  })
 );
 
-
 function EmailTemplate<T extends string>(param: {
-  title: string,
-  selected: string | undefined,
-  options: { key: T, label: string }[],
-  values: { subject: string, body: string } | undefined,
-  setSelected: (s: T) => void,
-  setValues: (v: { subject: string, body: string } | undefined) => void,
-  onClose: () => void,
-  onSave: () => void,
+  selected: string | undefined;
+  options: { key: T; label: string }[];
+  values: { subject: string; body: string } | undefined;
+  setSelected: (s: T) => void;
+  setValues: (v: { subject: string; body: string } | undefined) => void;
+  onClose: () => void;
+  onSave: () => void;
 }) {
   const {
-    title,
     selected,
     options,
     values,
@@ -50,9 +52,11 @@ function EmailTemplate<T extends string>(param: {
     setSelected(event.target.value as T);
   };
 
-  const handleChange = (kind: "subject" | "body", event: React.ChangeEvent<{ value: unknown }>) => {
-    if (values)
-      setValues({ ...values, [kind]: event.target.value as string });
+  const handleChange = (
+    kind: "subject" | "body",
+    event: React.ChangeEvent<{ value: unknown }>
+  ) => {
+    if (values) setValues({ ...values, [kind]: event.target.value as string });
   };
 
   return (
@@ -61,7 +65,9 @@ function EmailTemplate<T extends string>(param: {
         <Box display="block" className={classes.box} ml={1} mr={1}>
           <Grid container spacing={1}>
             <Grid item xs={12}>
-              <Typography>各種メールの送信用テンプレートの設定です。</Typography>
+              <Typography>
+                各種メールの送信用テンプレートの設定です。
+              </Typography>
             </Grid>
             <Grid item xs={6}>
               <FormControl disabled={selected === undefined}>
@@ -72,13 +78,13 @@ function EmailTemplate<T extends string>(param: {
                   value={selected ?? ""}
                   onChange={handleSelected}
                 >
-                  {
-                    options.map(p =>
-                      <MenuItem key={p.key} value={p.key}>{p.label}</MenuItem>)
-                  }
+                  {options.map((p) => (
+                    <MenuItem key={p.key} value={p.key}>
+                      {p.label}
+                    </MenuItem>
+                  ))}
                 </Select>
               </FormControl>
-
             </Grid>
             <Grid item xs={12}>
               <TextField
@@ -93,7 +99,7 @@ function EmailTemplate<T extends string>(param: {
                 }}
                 disabled={values === undefined}
                 value={values?.subject ?? ""}
-                onChange={event => handleChange("subject", event)}
+                onChange={(event) => handleChange("subject", event)}
               />
             </Grid>
             <Grid item xs={12}>
@@ -112,7 +118,7 @@ function EmailTemplate<T extends string>(param: {
                 rowsMax={10}
                 disabled={values === undefined}
                 value={values?.body ?? ""}
-                onChange={event => handleChange("body", event)}
+                onChange={(event) => handleChange("body", event)}
               />
             </Grid>
           </Grid>
@@ -120,11 +126,15 @@ function EmailTemplate<T extends string>(param: {
       </ExpansionPanelDetails>
       <Divider />
       <ExpansionPanelActions>
-        <Button size="small" onClick={onClose}>Cancel</Button>
-        <Button size="small" color="primary" onClick={onSave}>Save</Button>
+        <Button size="small" onClick={onClose}>
+          Cancel
+        </Button>
+        <Button size="small" color="primary" onClick={onSave}>
+          Save
+        </Button>
       </ExpansionPanelActions>
     </>
   );
-};
+}
 
 export default EmailTemplate;

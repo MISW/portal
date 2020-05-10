@@ -3,10 +3,16 @@ import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles, Theme, MuiThemeProvider } from "@material-ui/core/styles";
-import { IconButton, MenuItem, Menu, Container, CssBaseline } from "@material-ui/core";
+import {
+  IconButton,
+  MenuItem,
+  Menu,
+  Container,
+  CssBaseline,
+} from "@material-ui/core";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import MUILink from "@material-ui/core/Link";
-import lighttheme from "../theme/lighttheme"
+import lighttheme from "../theme/lighttheme";
 import { loginContext } from "../../../pages/_app";
 import { useRouter } from "next/router";
 
@@ -79,7 +85,7 @@ export const DefaultLayout: React.FC<{ onLogout: () => void }> = ({
   }, [handleClose, onLogout]);
 
   return (
-    <MuiThemeProvider theme={lighttheme} >
+    <MuiThemeProvider theme={lighttheme}>
       <CssBaseline />
       <div className="container">
         <AppBar position="fixed" color="primary" className={classes.appBar}>

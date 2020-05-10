@@ -1,10 +1,10 @@
-import { createMuiTheme } from '@material-ui/core/styles';
+import { createMuiTheme } from "@material-ui/core/styles";
 
 const theme = createMuiTheme({
   palette: {
-    type: 'dark', // ベースのテーマ lightかdarkか
+    type: "dark", // ベースのテーマ lightかdarkか
     primary: {
-      main: '#00479c',
+      main: "#00479c",
     },
   },
 });
