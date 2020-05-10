@@ -5,48 +5,19 @@ import { AppProps } from "next/app";
 import { ThemeProvider } from "@material-ui/styles";
 import { CssBaseline, createMuiTheme } from "@material-ui/core";
 import { NextPageContext } from "next";
-import { useRouter } from "next/router";
+import Router, { useRouter } from "next/router";
 import { checkLoggingIn, logout } from "../src/network";
 import { DefaultLayout } from "../src/components/layout/DefaultLayout";
+import fetch from "isomorphic-unfetch";
 
 export const loginContext = createContext(false);
 
-const App = (props: AppProps) => {
+const App = (props: AppProps & {isLogin: boolean}) => {
   const router = useRouter();
-  const [isLogin, setIsLogin] = useState(false);
+  const [isLogin, setIsLogin] = useState(props.isLogin);
   useEffect(() => {
-    // TODO: ここのpathによる分岐をなんとかしたい.
-    switch (router.pathname) {
-      case "/signup":
-        return;
-      case "/signup/form":
-        return;
-      case "/login":
-        return;
-      case "/callback":
-        return;
-      case "/verify_email":
-        return;
-      default: {
-        let unmounted = false;
-        if (!isLogin) {
-          (async () => {
-            const isLoginResult = await checkLoggingIn();
-            if (!isLoginResult && !unmounted) {
-              await router.push("/login");
-            } else {
-              setIsLogin(true);
-            }
-          })().catch((err) => {
-            throw err;
-          });
-        }
-        return () => {
-          unmounted = true;
-        };
-      }
-    }
-  }, [isLogin, router]);
+    setIsLogin(props.isLogin);
+  }, [props.isLogin])
   useEffect(() => {
     const jssStyles = document.querySelector("#jss-server-side");
     if (jssStyles && jssStyles.parentNode) {
@@ -80,10 +51,49 @@ App.getInitialProps = async ({
   Component: any;
   ctx: NextPageContext;
 }) => {
+  // getInitialPropsはサーバー側かブラウザ側で実行される. サーバー側で実行する時のみ ctx.res, ctx.reqが存在する. これ大事
+  const baseHeaders = {
+    Accept: "application/json, */*",
+  };
+  const headers = ctx.req
+    ? Object.assign({ cookie: ctx.req.headers.cookie }, baseHeaders)
+    : baseHeaders;
+
+  const backendHost = ctx.req ? process.env.BACKEND_HOST : `${location.protocol}//${location.host}`;
+  if (!backendHost) {
+    const msg = "Please set environment: BACKEND_HOST (ex. http://backend)";
+    console.error(msg);
+    throw new Error(msg);
+  }
+  const res = await fetch(`${backendHost}/api/private/profile`, {
+    headers,
+    credentials: "include",
+    method: "GET",
+  });
+
   const pageProps = Component.getInitialProps
     ? await Component.getInitialProps({ ...ctx })
     : {};
-  return { pageProps };
+  
+  const publicRoutes = ["/signup", "/signup/form", "/login", "/callback", "/verify_email"];
+  // 上記パス以外にアクセスした時, ログインしていなかったらリダイレクト
+  
+  if (Math.floor(res.status / 100) !== 2) {
+    if (publicRoutes.includes(ctx.pathname)) {
+      return { pageProps };
+    }
+    if (ctx.res) {
+      // サーバー側
+      ctx.res.writeHead(302, {Location: "/login"});
+      ctx.res.end();
+    } else {
+      // ブラウザ側
+      Router.push("/login")
+    }
+    return {pageProps, isLogin: false};
+  }
+
+  return { pageProps, isLogin: true };
 };
 
 export default App;

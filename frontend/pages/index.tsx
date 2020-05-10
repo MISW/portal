@@ -3,9 +3,8 @@ import { NextPage } from "next";
 import { Typography, Grid } from "@material-ui/core";
 import LinkContentCard from "../src/components/design/LinkContentCard";
 import fetch from "isomorphic-unfetch";
-import absoluteUrl from "next-absolute-url";
 
-const Page: NextPage<{ hoge: boolean }> = ({ hoge }) => {
+const Page: NextPage = () => {
   interface LinkData {
     title: string;
     description: string;
@@ -54,7 +53,6 @@ const Page: NextPage<{ hoge: boolean }> = ({ hoge }) => {
   );
   return (
     <>
-      {!hoge && "fugafuga"}
       <Typography variant="h2">
         Create MISW <br /> with your own hand.
       </Typography>
@@ -79,23 +77,6 @@ const Page: NextPage<{ hoge: boolean }> = ({ hoge }) => {
       </Grid>
     </>
   );
-};
-
-Page.getInitialProps = async ({ req }) => {
-  // const { origin } = absoluteUrl(req, "backend:3000");
-  const baseHeaders = {
-    Accept: "application/json, */*",
-  };
-  const headers = req
-    ? Object.assign({ cookie: req.headers.cookie }, baseHeaders)
-    : baseHeaders;
-  const res = await fetch("http://backend:80/api/private/profile", {
-    headers,
-    credentials: "include",
-    method: "GET",
-  });
-  console.log(await res.json());
-  return { hoge: true };
 };
 
 export default Page;
