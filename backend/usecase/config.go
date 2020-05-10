@@ -130,7 +130,7 @@ func (acu *appConfigUsecase) SetCurrentPeriod(period int) error {
 		return xerrors.Errorf("failed to get payment period: %w", err)
 	}
 
-	if period := acu.diffPeriod(period, paymentPeriod); period < 0 || period > 1 {
+	if period := acu.diffPeriod(period, paymentPeriod); period < -1 || period > 0 {
 		return rest.NewBadRequest("現在の期間は現在の期間と同じか一つ次のみ指定できます")
 	}
 
