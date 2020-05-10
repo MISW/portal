@@ -12,12 +12,12 @@ import fetch from "isomorphic-unfetch";
 
 export const loginContext = createContext(false);
 
-const App = (props: AppProps & {isLogin: boolean}) => {
+const App = (props: AppProps & { isLogin: boolean }) => {
   const router = useRouter();
   const [isLogin, setIsLogin] = useState(props.isLogin);
   useEffect(() => {
     setIsLogin(props.isLogin);
-  }, [props.isLogin])
+  }, [props.isLogin]);
   useEffect(() => {
     const jssStyles = document.querySelector("#jss-server-side");
     if (jssStyles && jssStyles.parentNode) {
@@ -59,7 +59,9 @@ App.getInitialProps = async ({
     ? Object.assign({ cookie: ctx.req.headers.cookie }, baseHeaders)
     : baseHeaders;
 
-  const backendHost = ctx.req ? process.env.BACKEND_HOST : `${location.protocol}//${location.host}`;
+  const backendHost = ctx.req
+    ? process.env.BACKEND_HOST
+    : `${location.protocol}//${location.host}`;
   if (!backendHost) {
     const msg = "Please set environment: BACKEND_HOST (ex. http://backend)";
     console.error(msg);
@@ -74,23 +76,29 @@ App.getInitialProps = async ({
   const pageProps = Component.getInitialProps
     ? await Component.getInitialProps({ ...ctx })
     : {};
-  
-  const publicRoutes = ["/signup", "/signup/form", "/login", "/callback", "/verify_email"];
+
+  const publicRoutes = [
+    "/signup",
+    "/signup/form",
+    "/login",
+    "/callback",
+    "/verify_email",
+  ];
   // 上記パス以外にアクセスした時, ログインしていなかったらリダイレクト
-  
+
   if (Math.floor(res.status / 100) !== 2) {
     if (publicRoutes.includes(ctx.pathname)) {
       return { pageProps };
     }
     if (ctx.res) {
       // サーバー側
-      ctx.res.writeHead(302, {Location: "/login"});
+      ctx.res.writeHead(302, { Location: "/login" });
       ctx.res.end();
     } else {
       // ブラウザ側
-      Router.push("/login")
+      Router.push("/login");
     }
-    return {pageProps, isLogin: false};
+    return { pageProps, isLogin: false };
   }
 
   return { pageProps, isLogin: true };
