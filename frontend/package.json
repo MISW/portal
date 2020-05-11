@@ -32,7 +32,7 @@
   "dependencies": {
     "@material-ui/core": "^4.9.13",
     "@material-ui/icons": "^4.9.1",
-    "@material-ui/lab": "^4.0.0-alpha.49",
+    "@material-ui/lab": "^4.0.0-alpha.52",
     "next": "^9.3.3",
     "react": "^16.12.0",
     "react-dom": "^16.12.0"
