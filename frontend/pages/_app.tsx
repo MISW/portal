@@ -1,6 +1,6 @@
 // https://github.com/mui-org/material-ui/blob/master/examples/nextjs/pages/_app.js 参照
 
-import React, { useEffect, createContext, useState, useCallback } from "react";
+import React, { useEffect, createContext, useCallback } from "react";
 import { AppProps } from "next/app";
 import { ThemeProvider } from "@material-ui/styles";
 import { CssBaseline, createMuiTheme } from "@material-ui/core";
@@ -18,7 +18,6 @@ export const accountInfoContext = createContext<UserAllInfoJSON | undefined>(
 const App = (props: AppProps & { userInfo: UserAllInfoJSON | undefined }) => {
   const { Component, pageProps, userInfo } = props;
   const router = useRouter();
-  const isLogin = Boolean(userInfo);
   useEffect(() => {
     const jssStyles = document.querySelector("#jss-server-side");
     if (jssStyles && jssStyles.parentNode) {
