@@ -9,10 +9,14 @@ import Router, { useRouter } from "next/router";
 import { logout } from "../src/network";
 import { DefaultLayout } from "../src/components/layout/DefaultLayout";
 import fetch from "isomorphic-unfetch";
+import { UserAllInfoJSON, RoleType } from "../src/user";
 
-export const loginContext = createContext(false);
+export const accountInfoContext = createContext({
+  isLogin: false,
+  role: "not_member" as RoleType,
+});
 
-const App = (props: AppProps & { isLogin: boolean }) => {
+const App = (props: AppProps & { isLogin: boolean; role: RoleType }) => {
   const router = useRouter();
   const [isLogin, setIsLogin] = useState(props.isLogin);
   useEffect(() => {
@@ -31,15 +35,15 @@ const App = (props: AppProps & { isLogin: boolean }) => {
     router.reload();
   }, [router]);
 
-  const { Component, pageProps } = props;
+  const { Component, pageProps, role } = props;
   return (
     <ThemeProvider theme={createMuiTheme({})}>
       <CssBaseline />
-      <loginContext.Provider value={isLogin}>
+      <accountInfoContext.Provider value={{ isLogin, role }}>
         <DefaultLayout onLogout={handleLogout}>
           <Component {...pageProps} />
         </DefaultLayout>
-      </loginContext.Provider>
+      </accountInfoContext.Provider>
     </ThemeProvider>
   );
 };
@@ -73,8 +77,11 @@ App.getInitialProps = async ({
     method: "GET",
   });
 
+  const userInfo = (await res.json()) as UserAllInfoJSON;
+  const role = userInfo.role;
+
   const pageProps = Component.getInitialProps
-    ? await Component.getInitialProps({ ...ctx })
+    ? await Component.getInitialProps({ ...ctx, userInfo })
     : {};
 
   const publicRoutes = [
@@ -85,11 +92,15 @@ App.getInitialProps = async ({
     "/verify_email",
   ];
   // 上記パス以外にアクセスした時, ログインしていなかったらリダイレクト
+  const isLogin = Math.floor(res.status / 100) === 2;
 
-  if (Math.floor(res.status / 100) !== 2) {
-    if (publicRoutes.includes(ctx.pathname)) {
-      return { pageProps };
-    }
+  if (publicRoutes.includes(ctx.pathname)) {
+    return { pageProps, isLogin, role };
+  }
+  console.log(isLogin);
+  console.log(res);
+
+  if (!isLogin) {
     if (ctx.res) {
       // サーバー側
       ctx.res.writeHead(302, { Location: "/login" });
@@ -98,10 +109,8 @@ App.getInitialProps = async ({
       // ブラウザ側
       Router.push("/login");
     }
-    return { pageProps, isLogin: false };
   }
-
-  return { pageProps, isLogin: true };
+  return { pageProps, isLogin, role };
 };
 
 export default App;

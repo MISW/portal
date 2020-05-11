@@ -14,7 +14,7 @@ import AccountCircle from "@material-ui/icons/AccountCircle";
 import MUILink from "@material-ui/core/Link";
 import lighttheme from "../theme/lighttheme";
 import darktheme from "../theme/darktheme";
-import { loginContext } from "../../../pages/_app";
+import { accountInfoContext } from "../../../pages/_app";
 import { useRouter } from "next/router";
 import { useSystemColorScheme } from "../../hooks/theme";
 
@@ -63,7 +63,7 @@ export const DefaultLayout: React.FC<{ onLogout: () => void }> = ({
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
-  const isLogin = useContext(loginContext);
+  const { isLogin } = useContext(accountInfoContext);
   const router = useRouter();
 
   const handleMenu = useCallback((event: React.MouseEvent<HTMLElement>) => {

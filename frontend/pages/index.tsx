@@ -1,55 +1,59 @@
-import React, { useMemo } from "react";
-import { NextPage } from "next";
+import React, { useContext } from "react";
 import { Typography, Grid } from "@material-ui/core";
 import LinkContentCard from "../src/components/design/LinkContentCard";
+import { NextPage } from "next";
+import { accountInfoContext } from "./_app";
+
+interface LinkData {
+  title: string;
+  description: string;
+  link: string;
+  image?: string;
+}
+
+const linkData: Array<LinkData> = [
+  {
+    title: "Slack",
+    description: "主な連絡ツール",
+    link: "https://misw-info.slack.com",
+  },
+  {
+    title: "Discord",
+    description: "ボイスチャット 2020春はここで",
+    link: "https://discord.gg/7e3qqqj",
+  },
+  {
+    title: "Kibela",
+    description: "サークル員専用ブログ, 資料置き場",
+    link: "https://misw.kibe.la",
+  },
+  {
+    title: "みすクラウド",
+    description: "サークル員専用クラウド",
+    link: "https://cloud.misw.jp",
+  },
+  {
+    title: "misw.jp",
+    description: "公式ホームページ",
+    link: "https://misw.jp",
+  },
+  {
+    title: "blog.misw.jp",
+    description: "サークル員による外部公開ブログ",
+    link: "https://blog.misw.jp",
+  },
+  {
+    title: "misw.github.io",
+    description: "主にプロ研の入門記事置き場",
+    link: "https://misw.github.io",
+  },
+];
 
 const Page: NextPage = () => {
-  interface LinkData {
-    title: string;
-    description: string;
-    link: string;
-    image?: string;
+  const { role } = useContext(accountInfoContext);
+  if (role === "not_member") {
+    return <p>新入会希望者は入会費1000円を振り込んでください的なことを書く</p>;
   }
-  const linkData = useMemo(
-    (): Array<LinkData> => [
-      {
-        title: "Slack",
-        description: "主な連絡ツール",
-        link: "https://misw-info.slack.com",
-      },
-      {
-        title: "Discord",
-        description: "ボイスチャット 2020春はここで",
-        link: "https://discord.gg/7e3qqqj",
-      },
-      {
-        title: "Kibela",
-        description: "サークル員専用ブログ, 資料置き場",
-        link: "https://misw.kibe.la",
-      },
-      {
-        title: "みすクラウド",
-        description: "サークル員専用クラウド",
-        link: "https://cloud.misw.jp",
-      },
-      {
-        title: "misw.jp",
-        description: "公式ホームページ",
-        link: "https://misw.jp",
-      },
-      {
-        title: "blog.misw.jp",
-        description: "サークル員による外部公開ブログ",
-        link: "https://blog.misw.jp",
-      },
-      {
-        title: "misw.github.io",
-        description: "主にプロ研の入門記事置き場",
-        link: "https://misw.github.io",
-      },
-    ],
-    []
-  );
   return (
     <>
       <Typography variant="h2">
@@ -77,5 +81,12 @@ const Page: NextPage = () => {
     </>
   );
 };
+
+// Page.getInitialProps = async ({
+//   res,
+//   userInfo,
+// }: NextPageContext & { userInfo?: UserAllInfoJSON }) => {
+//   // use userInfo
+// };
 
 export default Page;
