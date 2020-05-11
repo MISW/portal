@@ -10,6 +10,11 @@ export default class MyDocument extends Document {
       <html lang="en">
         <Head>
           {/* PWA primary color */}
+          <title>MISW Portal</title>
+          <meta
+            name="viewport"
+            content="initial-scale=1.0, width=device-width"
+          />
           <link
             rel="stylesheet"
             href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"

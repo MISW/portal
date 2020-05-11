@@ -1,8 +1,9 @@
 import React, { useContext } from "react";
-import { Typography, Grid } from "@material-ui/core";
+import { Typography, Grid, Button } from "@material-ui/core";
 import LinkContentCard from "../src/components/design/LinkContentCard";
 import { NextPage } from "next";
 import { accountInfoContext } from "./_app";
+import NextLink from "next/link";
 
 interface LinkData {
   title: string;
@@ -21,6 +22,11 @@ const linkData: Array<LinkData> = [
     title: "Discord",
     description: "ボイスチャット 2020春はここで",
     link: "https://discord.gg/7e3qqqj",
+  },
+  {
+    title: "Twitter",
+    description: "主な活動はここで..? MISWと検索してフォローを",
+    link: "https://twitter.com/misw_info",
   },
   {
     title: "Kibela",
@@ -79,6 +85,13 @@ const Page: NextPage = () => {
           <LinkContentCard {...data} key={i} />
         ))}
       </Grid>
+      <NextLink href="/admin">
+        <a>
+          <Button color="inherit" variant="contained">
+            管理者はこちら
+          </Button>
+        </a>
+      </NextLink>
     </>
   );
 };
