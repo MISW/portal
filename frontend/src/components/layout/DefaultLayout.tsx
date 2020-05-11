@@ -3,13 +3,7 @@ import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles, Theme, MuiThemeProvider } from "@material-ui/core/styles";
-import {
-  IconButton,
-  MenuItem,
-  Menu,
-  Container,
-  CssBaseline,
-} from "@material-ui/core";
+import { IconButton, MenuItem, Menu, Container } from "@material-ui/core";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import MUILink from "@material-ui/core/Link";
 import lighttheme from "../theme/lighttheme";
@@ -17,6 +11,7 @@ import darktheme from "../theme/darktheme";
 import { accountInfoContext } from "../../../pages/_app";
 import { useRouter } from "next/router";
 import { useSystemColorScheme } from "../../hooks/theme";
+import { getSuffix } from "../../util";
 
 const useStyles = makeStyles((theme: Theme) => ({
   appBar: {
@@ -63,7 +58,7 @@ export const DefaultLayout: React.FC<{ onLogout: () => void }> = ({
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
-  const { isLogin } = useContext(accountInfoContext);
+  const accountInfo = useContext(accountInfoContext);
   const router = useRouter();
 
   const handleMenu = useCallback((event: React.MouseEvent<HTMLElement>) => {
@@ -90,7 +85,6 @@ export const DefaultLayout: React.FC<{ onLogout: () => void }> = ({
 
   return (
     <MuiThemeProvider theme={scheme === "dark" ? darktheme : lighttheme}>
-      <CssBaseline />
       <div className="container">
         <AppBar position="fixed" color="primary" className={classes.appBar}>
           <Toolbar>
@@ -110,37 +104,52 @@ export const DefaultLayout: React.FC<{ onLogout: () => void }> = ({
             >
               MISW Portal
             </Typography>
-            {isLogin && (
-              <div>
-                <IconButton
-                  aria-label="account of current user"
-                  aria-controls="menu-appbar"
-                  aria-haspopup="true"
-                  onClick={handleMenu}
-                  color="inherit"
-                >
-                  <AccountCircle />
-                </IconButton>
-                <Menu
-                  id="menu-appbar"
-                  anchorEl={anchorEl}
-                  anchorOrigin={{
-                    vertical: "top",
-                    horizontal: "right",
-                  }}
-                  keepMounted
-                  transformOrigin={{
-                    vertical: "top",
-                    horizontal: "right",
-                  }}
-                  open={open}
-                  onClose={handleClose}
-                >
-                  <MenuItem onClick={handleClickProfile}>Profile</MenuItem>
-                  <MenuItem onClick={handleLogout}>Log out</MenuItem>
-                </Menu>
-              </div>
-            )}
+            {accountInfo &&
+              (() => {
+                const { generation, role, handle } = accountInfo;
+                const status =
+                  role === "member" || role === "retired"
+                    ? `${generation}${getSuffix(generation)}`
+                    : role;
+                return (
+                  <>
+                    <Typography variant="h6" color="inherit">
+                      {`<${status}> ${handle}`}
+                    </Typography>
+                    <div>
+                      <IconButton
+                        aria-label="account of current user"
+                        aria-controls="menu-appbar"
+                        aria-haspopup="true"
+                        onClick={handleMenu}
+                        color="inherit"
+                      >
+                        <AccountCircle />
+                      </IconButton>
+                      <Menu
+                        id="menu-appbar"
+                        anchorEl={anchorEl}
+                        anchorOrigin={{
+                          vertical: "top",
+                          horizontal: "right",
+                        }}
+                        keepMounted
+                        transformOrigin={{
+                          vertical: "top",
+                          horizontal: "right",
+                        }}
+                        open={open}
+                        onClose={handleClose}
+                      >
+                        <MenuItem onClick={handleClickProfile}>
+                          Profile
+                        </MenuItem>
+                        <MenuItem onClick={handleLogout}>Log out</MenuItem>
+                      </Menu>
+                    </div>
+                  </>
+                );
+              })()}
           </Toolbar>
         </AppBar>
         <main className={classes.layout}>

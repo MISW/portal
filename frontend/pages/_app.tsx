@@ -9,19 +9,16 @@ import Router, { useRouter } from "next/router";
 import { logout } from "../src/network";
 import { DefaultLayout } from "../src/components/layout/DefaultLayout";
 import fetch from "isomorphic-unfetch";
-import { UserAllInfoJSON, RoleType } from "../src/user";
+import { UserAllInfoJSON } from "../src/user";
 
-export const accountInfoContext = createContext({
-  isLogin: false,
-  role: "not_member" as RoleType,
-});
+export const accountInfoContext = createContext<UserAllInfoJSON | undefined>(
+  undefined
+);
 
-const App = (props: AppProps & { isLogin: boolean; role: RoleType }) => {
+const App = (props: AppProps & { userInfo: UserAllInfoJSON | undefined }) => {
+  const { Component, pageProps, userInfo } = props;
   const router = useRouter();
-  const [isLogin, setIsLogin] = useState(props.isLogin);
-  useEffect(() => {
-    setIsLogin(props.isLogin);
-  }, [props.isLogin]);
+  const isLogin = Boolean(userInfo);
   useEffect(() => {
     const jssStyles = document.querySelector("#jss-server-side");
     if (jssStyles && jssStyles.parentNode) {
@@ -31,15 +28,13 @@ const App = (props: AppProps & { isLogin: boolean; role: RoleType }) => {
 
   const handleLogout = useCallback(async () => {
     await logout();
-    setIsLogin(false);
     router.reload();
   }, [router]);
 
-  const { Component, pageProps, role } = props;
   return (
     <ThemeProvider theme={createMuiTheme({})}>
       <CssBaseline />
-      <accountInfoContext.Provider value={{ isLogin, role }}>
+      <accountInfoContext.Provider value={userInfo}>
         <DefaultLayout onLogout={handleLogout}>
           <Component {...pageProps} />
         </DefaultLayout>
@@ -77,12 +72,17 @@ App.getInitialProps = async ({
     method: "GET",
   });
 
-  const userInfo = (await res.json()) as UserAllInfoJSON;
-  const role = userInfo.role;
+  const isLogin = Math.floor(res.status / 100) === 2;
+
+  const userInfo = isLogin
+    ? ((await res.json()) as UserAllInfoJSON)
+    : undefined;
 
   const pageProps = Component.getInitialProps
     ? await Component.getInitialProps({ ...ctx, userInfo })
     : {};
+
+  const ret = { pageProps, userInfo };
 
   const publicRoutes = [
     "/signup",
@@ -92,13 +92,10 @@ App.getInitialProps = async ({
     "/verify_email",
   ];
   // 上記パス以外にアクセスした時, ログインしていなかったらリダイレクト
-  const isLogin = Math.floor(res.status / 100) === 2;
 
   if (publicRoutes.includes(ctx.pathname)) {
-    return { pageProps, isLogin, role };
+    return ret;
   }
-  console.log(isLogin);
-  console.log(res);
 
   if (!isLogin) {
     if (ctx.res) {
@@ -110,7 +107,7 @@ App.getInitialProps = async ({
       Router.push("/login");
     }
   }
-  return { pageProps, isLogin, role };
+  return ret;
 };
 
 export default App;
