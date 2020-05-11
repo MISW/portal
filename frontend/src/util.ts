@@ -1,4 +1,5 @@
-import { labelsInJapanese, UserTableData } from "./user";
+import { labelsInJapanese, UserTableData, UserAllInfoJSON } from "./user";
+import { NextPage, NextPageContext } from "next";
 
 export function usersCSV(users: UserTableData[]): string {
   return (
