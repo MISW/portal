@@ -9,6 +9,7 @@ import {
   Menu,
   Container,
   Tooltip,
+  CssBaseline,
 } from "@material-ui/core";
 import { AccountCircle, Lock } from "@material-ui/icons";
 import MUILink from "@material-ui/core/Link";
@@ -90,6 +91,7 @@ export const DefaultLayout: React.FC<{ onLogout: () => void }> = ({
 
   return (
     <MuiThemeProvider theme={scheme === "dark" ? darktheme : lighttheme}>
+      <CssBaseline />
       <div className="container">
         <AppBar position="fixed" color="primary" className={classes.appBar}>
           <Toolbar>
