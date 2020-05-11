@@ -35,11 +35,9 @@ export const getProfile = async (): Promise<ConfigurableProfile> => {
     method: "GET",
   });
   if (res.status >= 400) {
-    console.log(res);
     return Promise.reject("Error: status-code >= 400");
   }
   const body = (await res.json()) as UserInfoJSON;
-  console.log(body);
   return toUserProfile(body);
 };
 
@@ -47,7 +45,6 @@ export const updateProfile = async (
   user: ConfigurableProfile
 ): Promise<ConfigurableProfile> => {
   const body = JSON.stringify(toUserInfoJSON(user));
-  console.log(body);
 
   const res = await fetch(`${getHostAPI()}/private/profile`, {
     headers: {
@@ -57,11 +54,9 @@ export const updateProfile = async (
     body,
   });
   if (res.status >= 400) {
-    console.log(res);
     return Promise.reject("Error: status-code >= 400");
   }
   const resUser = ((await res.json()) as unknown) as UserInfoJSON;
-  console.log(resUser);
   return toUserProfile(resUser);
 };
 
@@ -87,16 +82,11 @@ export const checkLoggingIn = async (): Promise<boolean> => {
     credentials: "include",
     method: "GET",
   });
-  const body = await res.json();
-  console.log(body);
-
-  // TODO: ガバガバ
   return res.status < 400;
 };
 
 export const signUp = async (user: ConfigurableProfile) => {
   const body = JSON.stringify(toUserInfoJSON(user));
-  console.log(body);
 
   const res = await fetch(`${getHostAPI()}/public/signup`, {
     headers: {
@@ -106,7 +96,6 @@ export const signUp = async (user: ConfigurableProfile) => {
     body,
   });
   if (res.status >= 400) {
-    console.log(res);
     return Promise.reject("Error: status-code >= 400");
   }
 };
@@ -141,7 +130,6 @@ export const listUsers = async (): Promise<Array<UserTableData>> => {
     console.error(userList);
     throw new Error("not array");
   }
-  console.log(userList);
   return userList.map((u) => toUserTableData(u));
 };
 

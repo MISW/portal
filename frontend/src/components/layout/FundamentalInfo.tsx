@@ -77,8 +77,6 @@ const KanaNameField: React.FC<FormContentProps<string>> = ({
           defaultValue={lastName}
           onBlur={(e) => {
             // eslint-disable-next-line no-irregular-whitespace
-            console.log(Boolean(e.target.value.match(/^[ァ-ヶー　]+$/)));
-            // eslint-disable-next-line no-irregular-whitespace
             onChange(`${e.target.value.split(/\s|'　'/g)} ${firstName}`);
           }}
         />

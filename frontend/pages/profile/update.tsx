@@ -14,10 +14,7 @@ const Page: NextPage = () => {
   }, []);
   const onSubmit = (user: ConfigurableProfile): Promise<SubmitResult> => {
     return updateProfile(user)
-      .then((u) => {
-        console.log(u);
-        return { status: "success" as const };
-      })
+      .then(() => ({ status: "success" as const }))
       .catch((err) => {
         console.error(err);
         return { status: "error", message: "エラーが発生しました" };

@@ -1,5 +1,15 @@
 import React, { useContext } from "react";
-import { Typography, Grid, Button, Paper, makeStyles } from "@material-ui/core";
+import {
+  Grid,
+  Paper,
+  makeStyles,
+  TableContainer,
+  Table,
+  TableBody,
+  TableRow,
+  TableCell,
+  Typography,
+} from "@material-ui/core";
 import LinkContentCard from "../src/components/design/LinkContentCard";
 import { NextPage } from "next";
 import { accountInfoContext } from "./_app";
@@ -55,6 +65,15 @@ const linkData: Array<LinkData> = [
   },
 ];
 
+const paymentData = [
+  ["銀行名", "株式会社みずほ銀行"],
+  ["支店名", "高田馬場支店(店番号：064)"],
+  ["口座", "普通預金"],
+  ["口座番号", "0519948"],
+  ["口座名義", "ｹｲｴｲｼﾞﾖｳﾎｳｶﾞﾂｶｲ(MISW)"],
+  ["振込依頼人名", "自分の名前"],
+];
+
 const useStyles = makeStyles((theme) => ({
   paper: {
     marginTop: theme.spacing(1),
@@ -70,13 +89,17 @@ const useStyles = makeStyles((theme) => ({
 
 const Page: NextPage = () => {
   const accountInfo = useContext(accountInfoContext);
-
   const classes = useStyles();
-  if (
-    accountInfo &&
-    accountInfo.role === "not_member" &&
-    accountInfo.email_verified
-  ) {
+  if (!accountInfo) {
+    return (
+      <p>
+        ログインしていません /signup からアカウントを作るか,
+        auth0経由でアクセスしてください
+      </p>
+    );
+  }
+
+  if (accountInfo.role === "not_member" && accountInfo.email_verified) {
     return (
       <div>
         <Paper className={classes.paper}>
@@ -84,21 +107,31 @@ const Page: NextPage = () => {
             <AlertTitle>まだ会員登録は終わっていません！</AlertTitle>
             会費を払うことで会員として各種サービスを利用出来ます。
           </Alert>
-          <p>新入会希望者は入会費1000円を以下の口座へ振り込んでください。</p>
-          <p>
-            振込が確認され次第, メール宛にサークル内の連絡ツール
-            <strong>Slack</strong>の招待が届きます!
-          </p>
           <div>
-            <ul>
-              <li>銀行名：株式会社みずほ銀行</li>
-              <li>支店名：高田馬場支店(店番号：064)</li>
-              <li>普通預金</li>
-              <li>口座番号：0519948</li>
-              <li>口座名義：ｹｲｴｲｼﾞﾖｳﾎｳｶﾞﾂｶｲ(MISW)</li>
-              <li>振込依頼人名：自分の名前</li>
-            </ul>
+            <p>
+              新入会希望者は<strong>入会費1000円</strong>
+              を以下の口座へ振り込んでください。
+            </p>
+            <p>
+              振込が確認され次第, メール {accountInfo.email}
+              宛にサークル内の連絡ツール
+              <strong>Slack</strong>の招待が届きます!
+            </p>
           </div>
+          <TableContainer component={Paper}>
+            <Table aria-label="simple table">
+              <TableBody>
+                {paymentData.map((row) => (
+                  <TableRow key={row[0]}>
+                    <TableCell component="th" scope="row">
+                      {row[0]}
+                    </TableCell>
+                    <TableCell>{row[1]}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
 
           <Alert severity="error">
             もし振込から1週間以上経ってもSlack招待が確認出来ない場合は
