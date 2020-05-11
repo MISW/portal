@@ -1,7 +1,7 @@
 import { useState, useCallback, useEffect } from "react";
 
 export const useSystemColorScheme = () => {
-  const [colorScheme, setColorScheme] = useState<"dark" | "light">("dark");
+  const [colorScheme, setColorScheme] = useState<"dark" | "light">("light");
 
   const callback = useCallback(
     (param: { matches: boolean }) => {
@@ -16,18 +16,24 @@ export const useSystemColorScheme = () => {
 
   useEffect(() => {
     const matches =
-      window.matchMedia &&
-      window.matchMedia("(prefers-color-scheme: dark)").matches;
+      window?.
+        matchMedia("(prefers-color-scheme: dark)")?.
+        matches ?? undefined;
+
+    if (matches === undefined) {
+      return;
+    }
+
     callback({ matches });
 
     window
       .matchMedia("(prefers-color-scheme: dark)")
-      .addEventListener("change", callback);
+      .addListener(callback);
 
     return () => {
       window
         .matchMedia("(prefers-color-scheme: dark)")
-        .removeEventListener("change", callback);
+        .removeListener(callback);
     };
   }, [callback]);
 
