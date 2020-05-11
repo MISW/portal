@@ -50,7 +50,8 @@ const linkData: Array<LinkData> = [
 ];
 
 const Page: NextPage = () => {
-  const { role } = useContext(accountInfoContext);
+  const accountInfo = useContext(accountInfoContext);
+  const role = accountInfo?.role ?? "not_member";
   if (role === "not_member") {
     return <p>新入会希望者は入会費1000円を振り込んでください的なことを書く</p>;
   }

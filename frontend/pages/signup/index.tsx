@@ -11,7 +11,12 @@ const Page: NextPage<{}> = () => {
         <li>フォームを埋める</li>
         <li>送信される確認メールをチェック</li>
         <li>指定の講座番号へ入会費1000円を振込</li>
-        <li>振込が会計によって確認され次第, 会員登録完了!</li>
+        <li>
+          <div>
+            <p>振込が会計によって確認され次第, 会員登録完了!</p>
+            <p>MISWの連絡ツール Slack への招待リンクがメアド宛に送られます!</p>
+          </div>
+        </li>
       </ol>
       <Link href="/signup/form">
         <Button color="primary" variant="contained">

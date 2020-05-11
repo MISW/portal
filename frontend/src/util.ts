@@ -34,3 +34,16 @@ export function calcPeriod(current: number, diff: number): number {
 
   return (index >> 1) * 100 + (index % 2 ? 10 : 4);
 }
+
+export const getSuffix = (n: number): string => {
+  if ([11, 12, 13].includes(n % 100)) return "th";
+  switch (n % 10) {
+    case 1:
+      return "st";
+    case 2:
+      return "nd";
+    case 3:
+      return "rd";
+  }
+  return "th";
+};
