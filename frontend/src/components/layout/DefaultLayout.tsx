@@ -3,8 +3,14 @@ import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles, Theme, MuiThemeProvider } from "@material-ui/core/styles";
-import { IconButton, MenuItem, Menu, Container } from "@material-ui/core";
-import AccountCircle from "@material-ui/icons/AccountCircle";
+import {
+  IconButton,
+  MenuItem,
+  Menu,
+  Container,
+  Tooltip,
+} from "@material-ui/core";
+import { AccountCircle, Lock } from "@material-ui/icons";
 import MUILink from "@material-ui/core/Link";
 import lighttheme from "../theme/lighttheme";
 import darktheme from "../theme/darktheme";
@@ -12,6 +18,7 @@ import { accountInfoContext } from "../../../pages/_app";
 import { useRouter } from "next/router";
 import { useSystemColorScheme } from "../../hooks/theme";
 import { getSuffix } from "../../util";
+import NextLink from "next/link";
 
 const useStyles = makeStyles((theme: Theme) => ({
   appBar: {
@@ -69,8 +76,6 @@ export const DefaultLayout: React.FC<{ onLogout: () => void }> = ({
     setAnchorEl(null);
   }, []);
 
-  const handleClickTitle = useCallback(() => router.push("/"), [router]);
-
   const handleClickProfile = useCallback(() => {
     handleClose();
     router.push("/profile");
@@ -96,14 +101,14 @@ export const DefaultLayout: React.FC<{ onLogout: () => void }> = ({
             >
               <MenuIcon />
             </IconButton> */}
-            <Typography
-              variant="h6"
-              color="inherit"
-              className={classes.title}
-              onClick={handleClickTitle}
-            >
-              MISW Portal
-            </Typography>
+            <div className={classes.title}>
+              <NextLink href="/">
+                {/* hrefを設定しないとカーソルがいい感じに変わらない */}
+                <MUILink href="" variant="h6" color="inherit">
+                  MISW Portal
+                </MUILink>
+              </NextLink>
+            </div>
             {accountInfo &&
               (() => {
                 const { generation, role, handle } = accountInfo;
@@ -117,15 +122,33 @@ export const DefaultLayout: React.FC<{ onLogout: () => void }> = ({
                       {`<${status}> ${handle}`}
                     </Typography>
                     <div>
-                      <IconButton
-                        aria-label="account of current user"
-                        aria-controls="menu-appbar"
-                        aria-haspopup="true"
-                        onClick={handleMenu}
-                        color="inherit"
-                      >
-                        <AccountCircle />
-                      </IconButton>
+                      {role === "admin" && (
+                        <NextLink href="/admin">
+                          <a>
+                            <Tooltip title="管理者">
+                              <IconButton
+                                aria-label="admin"
+                                aria-controls="menu-appbar"
+                                aria-haspopup="true"
+                                color="secondary"
+                              >
+                                <Lock />
+                              </IconButton>
+                            </Tooltip>
+                          </a>
+                        </NextLink>
+                      )}
+                      <Tooltip title="Settings">
+                        <IconButton
+                          aria-label="account of current user"
+                          aria-controls="menu-appbar"
+                          aria-haspopup="true"
+                          onClick={handleMenu}
+                          color="inherit"
+                        >
+                          <AccountCircle />
+                        </IconButton>
+                      </Tooltip>
                       <Menu
                         id="menu-appbar"
                         anchorEl={anchorEl}
