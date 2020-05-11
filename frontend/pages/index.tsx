@@ -1,9 +1,9 @@
 import React, { useContext } from "react";
-import { Typography, Grid, Button } from "@material-ui/core";
+import { Typography, Grid, Button, Paper, makeStyles } from "@material-ui/core";
 import LinkContentCard from "../src/components/design/LinkContentCard";
 import { NextPage } from "next";
 import { accountInfoContext } from "./_app";
-import NextLink from "next/link";
+import { Alert, AlertTitle } from "@material-ui/lab";
 
 interface LinkData {
   title: string;
@@ -15,7 +15,7 @@ interface LinkData {
 const linkData: Array<LinkData> = [
   {
     title: "Slack",
-    description: "主な連絡ツール",
+    description: "主な連絡ツール. 大事な連絡はこれで送られます",
     link: "https://misw-info.slack.com",
   },
   {
@@ -25,7 +25,7 @@ const linkData: Array<LinkData> = [
   },
   {
     title: "Twitter",
-    description: "主な活動はここで..? MISWと検索してフォローを",
+    description: "サークル員の生息地 MISWと検索してフォローを!",
     link: "https://twitter.com/misw_info",
   },
   {
@@ -55,11 +55,65 @@ const linkData: Array<LinkData> = [
   },
 ];
 
+const useStyles = makeStyles((theme) => ({
+  paper: {
+    marginTop: theme.spacing(1),
+    marginBottom: theme.spacing(3),
+    padding: theme.spacing(2),
+    [theme.breakpoints.up(600 + theme.spacing(3) * 2)]: {
+      marginTop: theme.spacing(6),
+      marginBottom: theme.spacing(6),
+      padding: theme.spacing(2),
+    },
+  },
+}));
+
 const Page: NextPage = () => {
   const accountInfo = useContext(accountInfoContext);
-  const role = accountInfo?.role ?? "not_member";
-  if (role === "not_member") {
-    return <p>新入会希望者は入会費1000円を振り込んでください的なことを書く</p>;
+
+  const classes = useStyles();
+  if (
+    accountInfo &&
+    accountInfo.role === "not_member" &&
+    accountInfo.email_verified
+  ) {
+    return (
+      <div>
+        <Paper className={classes.paper}>
+          <Alert severity="warning">
+            <AlertTitle>まだ会員登録は終わっていません！</AlertTitle>
+            会費を払うことで会員として各種サービスを利用出来ます。
+          </Alert>
+          <p>新入会希望者は入会費1000円を以下の口座へ振り込んでください。</p>
+          <p>
+            振込が確認され次第, メール宛にサークル内の連絡ツール
+            <strong>Slack</strong>の招待が届きます!
+          </p>
+          <div>
+            <ul>
+              <li>銀行名：株式会社みずほ銀行</li>
+              <li>支店名：高田馬場支店(店番号：064)</li>
+              <li>普通預金</li>
+              <li>口座番号：0519948</li>
+              <li>口座名義：ｹｲｴｲｼﾞﾖｳﾎｳｶﾞﾂｶｲ(MISW)</li>
+              <li>振込依頼人名：自分の名前</li>
+            </ul>
+          </div>
+
+          <Alert severity="error">
+            もし振込から1週間以上経ってもSlack招待が確認出来ない場合は
+            <ul>
+              <li>メール info@misw.jp</li>
+              <li>Twitter @misw_info</li>
+            </ul>
+            のいずれかへその由を伝えてください。
+          </Alert>
+          <Alert severity="info">
+            会費は部室の備品購入やコミケなどへの参加費用等に使われます。
+          </Alert>
+        </Paper>
+      </div>
+    );
   }
   return (
     <>
@@ -85,13 +139,6 @@ const Page: NextPage = () => {
           <LinkContentCard {...data} key={i} />
         ))}
       </Grid>
-      <NextLink href="/admin">
-        <a>
-          <Button color="inherit" variant="contained">
-            管理者はこちら
-          </Button>
-        </a>
-      </NextLink>
     </>
   );
 };
