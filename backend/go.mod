@@ -14,7 +14,7 @@ require (
 	github.com/labstack/echo/v4 v4.1.16
 	github.com/labstack/gommon v0.3.0
 	github.com/pquerna/cachecontrol v0.0.0-20180517163645-1555304b9b35 // indirect
-	github.com/slack-go/slack v0.6.3
+	github.com/slack-go/slack v0.6.4
 	github.com/stretchr/testify v1.5.0 // indirect
 	go.uber.org/dig v1.8.0
 	golang.org/x/crypto v0.0.0-20200214034016-1d94cc7ab1c6
