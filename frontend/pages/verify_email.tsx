@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { NextPage } from "next";
 import { Alert } from "@material-ui/lab";
-import { Button } from "@material-ui/core";
-import Link from "next/link";
+import { useRouter } from "next/router";
 
 const Page: NextPage = () => {
   const [verified, setVerified] = useState(false);
+  const router = useRouter();
   useEffect(() => {
     const sendEmailToken = async () => {
       const params = new URLSearchParams(location.search);
@@ -30,21 +30,18 @@ const Page: NextPage = () => {
         console.error(res);
         throw new Error(`Status >= 400 message = ${body.message}`);
       }
-      console.log(body);
       setVerified(true);
+      await router.push("/");
     };
     sendEmailToken().catch((err) => {
       throw err;
     });
-  });
+  }, [router]);
   return (
     <>
       {verified ? (
         <>
           <Alert severity="success">メールアドレスが認証出来ました!</Alert>
-          <Link href="/">
-            <Button>Home</Button>
-          </Link>
         </>
       ) : (
         <p>loading</p>

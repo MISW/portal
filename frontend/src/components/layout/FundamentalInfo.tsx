@@ -73,11 +73,10 @@ const KanaNameField: React.FC<FormContentProps<string>> = ({
           label="セイ"
           error={error}
           fullWidth
+          helperText={error ? "カタカナで記入してください" : null}
           autoComplete="lname kana"
           defaultValue={lastName}
-          onBlur={(e) => {
-            // eslint-disable-next-line no-irregular-whitespace
-            console.log(Boolean(e.target.value.match(/^[ァ-ヶー　]+$/)));
+          onChange={(e) => {
             // eslint-disable-next-line no-irregular-whitespace
             onChange(`${e.target.value.split(/\s|'　'/g)} ${firstName}`);
           }}
@@ -93,7 +92,7 @@ const KanaNameField: React.FC<FormContentProps<string>> = ({
           error={error}
           autoComplete="fname kana"
           defaultValue={firstName}
-          onBlur={(e) => {
+          onChange={(e) => {
             // eslint-disable-next-line no-irregular-whitespace
             onChange(`${lastName} ${e.target.value.split(/\s|'　'/g)}`);
           }}
@@ -158,7 +157,7 @@ const PhoneNumberField: React.FC<FormContentProps<string>> = ({
         defaultValue={value}
         helperText="半角数字ハイフンなしで入力"
         error={error}
-        onBlur={(e) => {
+        onChange={(e) => {
           onChange(e.target.value);
         }}
       />

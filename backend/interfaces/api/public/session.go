@@ -184,7 +184,7 @@ func (s *sessionHandler) VerifyEmail(e echo.Context) error {
 	cookie.Name = cookies.TokenCookieKey
 	cookie.Value = token
 	cookie.MaxAge = int(30 * 24 * time.Hour / time.Second)
-        cookie.Path = "/"
+	cookie.Path = "/"
 
 	e.SetCookie(cookie)
 
