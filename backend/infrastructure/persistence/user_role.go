@@ -53,7 +53,7 @@ func (urp *userRolePersistence) UpdateWithRule(ctx context.Context, id, currentP
 		var counter int
 		err = db.QueryRowxContext(
 			ctx,
-			"SELECT COUNT(*) FROM payment_statuses WHERE id = ? AND period IN (?, ?)",
+			"SELECT COUNT(*) FROM payment_statuses WHERE user_id = ? AND period IN (?, ?)",
 			id, currentPeriod, paymentPeriod,
 		).Scan(&counter)
 
