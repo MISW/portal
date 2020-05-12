@@ -105,7 +105,6 @@ export const WorkshopsForm: React.FC<FormContentProps<Array<string>>> = ({
           onChange={(e) => {
             e.preventDefault();
             onChange([...(e.target.value as string[])]);
-            console.log(e.target.value);
           }}
           input={<Input />}
           renderValue={(selected) => (selected as string[]).join(", ")}

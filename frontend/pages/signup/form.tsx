@@ -9,16 +9,15 @@ import { Alert } from "@material-ui/lab";
 
 const Page: NextPage<{}> = () => {
   const [email, setEmail] = useState<string>();
-  const onSubmit = (user: ConfigurableProfile): Promise<SubmitResult> => {
-    return signUp(user)
-      .then(() => {
-        setEmail(user.email);
-        return { status: "success" as const };
-      })
-      .catch((err) => {
-        console.error(err);
-        return { status: "error" as const, message: "エラーが発生しました" };
-      });
+  const onSubmit = async (user: ConfigurableProfile): Promise<SubmitResult> => {
+    try {
+      await signUp(user);
+      setEmail(user.email);
+      return { status: "success" as const };
+    } catch (err) {
+      console.error(err);
+      return { status: "error" as const, message: "エラーが発生しました" };
+    }
   };
 
   return (

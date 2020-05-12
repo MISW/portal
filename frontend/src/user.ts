@@ -53,6 +53,7 @@ export interface UserAllInfoJSON {
 
   created_at: number;
   updated_at: number;
+  email_verified: boolean;
 }
 
 export type UserWithPaymentJSON = UserAllInfoJSON & {
@@ -65,6 +66,7 @@ export type UserInfoJSON = Omit<
   | "role"
   | "slack_invitation_status"
   | "created_at"
+  | "email_verified"
   | "updated_at"
   | "id"
 > & {

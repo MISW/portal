@@ -7,7 +7,7 @@ const Page: NextPage = () => {
     login().catch((err) => {
       throw err;
     });
-  });
+  }, []);
   return <>Trying Login...</>;
 };
 
