@@ -41,21 +41,21 @@ func (si *slackInviter) inviteToSlack(user *domain.User, subjectTemplate, bodyTe
 
 	err := si.client.InviteToTeam(ctx, user.Handle, "", user.Email)
 
-	if strings.Contains(err.Error(), "user_disabled") ||
-		strings.Contains(err.Error(), "already_in_team") ||
-		strings.Contains(err.Error(), "already_in_team_invited_user") {
-		log.Printf("email(%s) is already used", user.Email)
-
-		return nil
-	}
-
-	if strings.Contains(err.Error(), "invalid_email") {
-		log.Printf("email(%s) is invalid", user.Email)
-
-		return nil
-	}
-
 	if err != nil {
+		if strings.Contains(err.Error(), "user_disabled") ||
+			strings.Contains(err.Error(), "already_in_team") ||
+			strings.Contains(err.Error(), "already_in_team_invited_user") {
+			log.Printf("email(%s) is already used", user.Email)
+
+			return nil
+		}
+
+		if strings.Contains(err.Error(), "invalid_email") {
+			log.Printf("email(%s) is invalid", user.Email)
+
+			return nil
+		}
+
 		return xerrors.Errorf("failed to invite to slack: %w", err)
 	}
 
