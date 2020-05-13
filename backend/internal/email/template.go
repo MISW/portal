@@ -2,7 +2,7 @@ package email
 
 import (
 	"bytes"
-	"html/template"
+	"text/template"
 
 	"golang.org/x/xerrors"
 )
