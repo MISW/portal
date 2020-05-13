@@ -95,8 +95,9 @@ func (us *sessionUsecase) Signup(ctx context.Context, user *domain.User) error {
 	user.ID = id
 
 	token, err := us.jwtProvider.GenerateWithMap(map[string]interface{}{
-		"kind": "email_verification",
-		"user": user,
+		"kind":  "email_verification",
+		"id":    user.ID,
+		"email": user.Email,
 	})
 
 	if err != nil {
@@ -222,8 +223,9 @@ func (us *sessionUsecase) Validate(ctx context.Context, token string) (user *dom
 }
 
 type customClaims struct {
-	User *domain.User `json:"user"`
-	Kind string       `json:"kind"`
+	Email string `json:"email"`
+	ID    int    `json:"id"`
+	Kind  string `json:"kind"`
 }
 
 func (c *customClaims) Valid() error {
@@ -254,7 +256,7 @@ func (us *sessionUsecase) VerifyEmail(ctx context.Context, verifyToken string) (
 		)
 	}
 
-	err = us.userRepository.VerifyEmail(ctx, claims.User.ID, claims.User.Email)
+	err = us.userRepository.VerifyEmail(ctx, claims.ID, claims.Email)
 
 	if err == domain.ErrEmailAddressChanged {
 		return "", rest.NewBadRequest("Your email address has been changed")
@@ -264,7 +266,13 @@ func (us *sessionUsecase) VerifyEmail(ctx context.Context, verifyToken string) (
 		return "", xerrors.Errorf("failed to verify email: %w", err)
 	}
 
-	if err := us.sendEmailAfterRegistration(claims.User); err != nil {
+	user, err := us.userRepository.GetByID(ctx, claims.ID)
+
+	if err != nil {
+		return "", xerrors.Errorf("failed to find user: %w", err)
+	}
+
+	if err := us.sendEmailAfterRegistration(user); err != nil {
 		return "", xerrors.Errorf("failed to send email after registration: %w", err)
 	}
 
@@ -274,7 +282,7 @@ func (us *sessionUsecase) VerifyEmail(ctx context.Context, verifyToken string) (
 		return "", xerrors.Errorf("failed to generate token: %w", err)
 	}
 
-	err = us.tokenRepository.Add(ctx, claims.User.ID, token, time.Now().Add(10*24*time.Hour))
+	err = us.tokenRepository.Add(ctx, claims.ID, token, time.Now().Add(10*24*time.Hour))
 
 	if err != nil {
 		return "", xerrors.Errorf("failed to insert new token: %w", err)
