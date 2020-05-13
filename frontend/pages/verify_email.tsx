@@ -1,17 +1,21 @@
 import React, { useEffect, useState } from "react";
 import { NextPage } from "next";
-import { Alert } from "@material-ui/lab";
+import { Alert, AlertTitle } from "@material-ui/lab";
 import { useRouter } from "next/router";
 
 const Page: NextPage = () => {
-  const [verified, setVerified] = useState(false);
+  const [state, setState] = useState<"loading" | "success" | "error">(
+    "loading"
+  );
   const router = useRouter();
   useEffect(() => {
     const sendEmailToken = async () => {
       const params = new URLSearchParams(location.search);
       const token = params.get("token");
       if (token === null) {
-        throw new Error("There is no status and code in query parameter");
+        console.error("token is not set");
+        setState("error");
+        return;
       }
       const res = await fetch(
         `${location.protocol}//${location.host}/api/public/verify_email`,
@@ -27,10 +31,11 @@ const Page: NextPage = () => {
       );
       const body = await res.json();
       if (res.status >= 400) {
-        console.error(res);
-        throw new Error(`Status >= 400 message = ${body.message}`);
+        console.error(body);
+        setState("error");
+        return;
       }
-      setVerified(true);
+      setState("success");
       await router.push("/");
     };
     sendEmailToken().catch((err) => {
@@ -39,9 +44,17 @@ const Page: NextPage = () => {
   }, [router]);
   return (
     <>
-      {verified ? (
+      {state === "success" ? (
         <>
           <Alert severity="success">メールアドレスが認証出来ました!</Alert>
+        </>
+      ) : state === "error" ? (
+        <>
+          <Alert severity="error">
+            <AlertTitle>エラーが発生しました</AlertTitle>
+            info@misw.jp や Twitter @misw_info または
+            Discordへ問題を報告してください....
+          </Alert>
         </>
       ) : (
         <p>loading</p>
