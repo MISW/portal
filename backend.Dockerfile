@@ -16,7 +16,7 @@ RUN wget https://github.com/cs3238-tsuzu/dbenv/releases/download/${DBENV_VERSION
     && rm dbenv_linux_x86_64.tar.gz
 
 
-FROM golang:1.14.3 as build-backend
+FROM golang:1.14.2 as build-backend
 
 ADD ./backend /backend
 ENV GO111MODULE=on
@@ -28,7 +28,7 @@ RUN cd /backend && go build \
     -tags 'osusergo netgo static_build' \
     -o ./portal
 
-FROM golang:1.14.3
+FROM golang:1.14.2
 
 COPY --from=tools /usr/local/bin/dockerize /bin
 COPY --from=tools /usr/local/bin/mysqldef /bin
