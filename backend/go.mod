@@ -17,8 +17,8 @@ require (
 	github.com/slack-go/slack v0.6.4
 	github.com/stretchr/testify v1.5.0 // indirect
 	go.uber.org/dig v1.9.0
-	golang.org/x/crypto v0.0.0-20200214034016-1d94cc7ab1c6
-	golang.org/x/net v0.0.0-20200202094626-16171245cfb2
+	golang.org/x/crypto v0.0.0-20200221231518-2aa609cf4a9d
+	golang.org/x/net v0.0.0-20200226121028-0de0cce0169b
 	golang.org/x/oauth2 v0.0.0-20200107190931-bf48bf16ab8d
 	golang.org/x/xerrors v0.0.0-20191204190536-9bdfabe68543
 	gopkg.in/square/go-jose.v2 v2.4.1 // indirect

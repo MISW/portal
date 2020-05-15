@@ -8,6 +8,12 @@ import (
 	"github.com/MISW/Portal/backend/internal/email"
 )
 
+const (
+	subject = "メール送信テスト\nメール送信テスト\nメール送信テスト\nメール送信テスト\nメール送信テスト\nメール送信テスト\nメール送信テスト\nメール送信テスト\nメール送信テスト\nメール送信テスト\nメール送信テスト\nメール送信テスト\nメール送信テスト\nメール送信テスト\nメール送信テスト\nメール送信テスト\nメール送信テスト\nメール送信テスト\nメール送信テスト\nメール送信テスト\n"
+
+	body = "ハローワールド\nHello, world!\nHello, world!\nHello, world!\nHello, world!\nHello, world!\nHello, world!\nHello, world!\nHello, world!\nHello, world!\nHello, world!\nHello, world!\nHello, world!\nHello, world!\nHello, world!\nHello, world!\nHello, world!\nHello, world!\nHello, world!\nHello, world!\nHello, world!\n"
+)
+
 func TestSendEmail(t *testing.T) {
 	smtpServer := "mis-w.sakura.ne.jp"
 	username := "noreply@misw.jp"
@@ -15,7 +21,7 @@ func TestSendEmail(t *testing.T) {
 
 	sender := email.NewSender(smtpServer, username, password, username)
 
-	if err := sender.Send("misw.sysad@gmail.com", "メール送信テスト", "Hello, world!"); err != nil {
+	if err := sender.Send("misw.sysad@gmail.com", subject, body); err != nil {
 		t.Fatalf("failed to send email: %+v", err)
 	}
 }

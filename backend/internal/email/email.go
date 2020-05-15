@@ -1,6 +1,9 @@
 package email
 
 import (
+	"bytes"
+	"encoding/base64"
+	"net/mail"
 	"net/smtp"
 
 	"golang.org/x/xerrors"
@@ -30,9 +33,30 @@ type sender struct {
 }
 
 func (es *sender) composeBody(to, subject, body string) string {
-	return "To: " + to + "\r\n" +
-		"Subject: " + subject + "\r\n\r\n" +
-		body + "\r\n"
+	fromAddr := mail.Address{Address: es.from}
+	toAddr := mail.Address{Address: to}
+
+	payload := bytes.NewBuffer(nil)
+
+	// header
+	payload.WriteString("From: " + fromAddr.String() + "\r\n")
+	payload.WriteString("To: " + toAddr.String() + "\r\n")
+	payload.WriteString(encodeSubject(subject))
+	payload.WriteString("MIME-Version: 1.0\r\n")
+	payload.WriteString("Content-Type: text/plain; charset=\"utf-8\"\r\n")
+	payload.WriteString("Content-Transfer-Encoding: base64\r\n")
+	payload.WriteString("\r\n")
+
+	split := splitInLength(
+		base64.StdEncoding.EncodeToString([]byte(body)),
+		76,
+	)
+
+	for i := range split {
+		payload.WriteString(split[i])
+	}
+
+	return payload.String()
 }
 
 func (es *sender) Send(to, subject, body string) error {
