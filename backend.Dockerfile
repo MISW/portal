@@ -28,7 +28,7 @@ RUN cd /backend && go build \
     -tags 'osusergo netgo static_build' \
     -o ./portal
 
-FROM golang:1.14.1
+FROM golang:1.14.3
 
 COPY --from=tools /usr/local/bin/dockerize /bin
 COPY --from=tools /usr/local/bin/mysqldef /bin
