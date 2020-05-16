@@ -16,6 +16,7 @@ import {
   FormHelperText,
 } from "@material-ui/core";
 import { UserProfileHooks, FormContentProps } from "../../hooks/formHooks";
+import { Alert } from "@material-ui/lab";
 
 export const GenerationSelector: React.FC<
   FormContentProps<number> & {
@@ -137,6 +138,7 @@ export const SquadsForm: React.FC<FormContentProps<Array<string>>> = ({
       name="squads"
       label="班"
       fullWidth
+      helperText="MISWには研究会以外に様々な班が存在します。空白でもOK。"
       defaultValue={value}
       // TODO: 雑
       onChange={(e) => onChange(e.target.value.split(" "))}
@@ -201,6 +203,11 @@ const CircleInfo: React.FC<{
         <SquadsForm {...squads} />
         <OtherCircleForm {...otherCircles} />
         <DiscordIdForm {...discordId} />
+        <Alert severity="info" style={{ width: "100%" }}>
+          ここで入力した情報は代以外あとで変えることが出来ます。
+          <br />
+          研究会/班は現在興味のあるものを選択してください。
+        </Alert>
       </Grid>
     </React.Fragment>
   );
