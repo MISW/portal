@@ -88,7 +88,7 @@ const useUserHooks = (
     ),
     squads: useStateWithValidate(user?.squads ?? []),
     discordId: useStateWithValidate(user?.discordId ?? "", (value) =>
-      /(^$)|(^\S+#[0-9]{4}$)/.test(value)
+      /(^$)|(^.+#[0-9]{4}$)/.test(value)
     ),
   };
 };
