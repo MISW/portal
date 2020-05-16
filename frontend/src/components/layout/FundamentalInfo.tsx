@@ -203,9 +203,9 @@ const FundamentalInfo: React.FC<{
           <EmailField {...email} />
         </Grid>
         <Alert severity="info" style={{ width: "100%" }}>
-          大学に提出する資料と必要な情報です.
+          大学に提出する資料に必要な情報です。
           <br />
-          それ以外の目的で了承なく情報を使うことはありません
+          それ以外の目的で了承なく情報を使うことはありません。
         </Alert>
       </Grid>
     </>
