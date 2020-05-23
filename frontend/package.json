@@ -27,7 +27,7 @@
     "eslint-plugin-react": "^7.19.0",
     "eslint-plugin-react-hooks": "^3.0.0",
     "prettier": "^2.0.5",
-    "typescript": "^3.7.5"
+    "typescript": "^3.9.3"
   },
   "dependencies": {
     "@material-ui/core": "^4.9.13",
