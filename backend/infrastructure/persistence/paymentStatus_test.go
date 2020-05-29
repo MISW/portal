@@ -347,7 +347,8 @@ func TestListUnpaidMembers(t *testing.T) {
 		t.Fatalf("ListUnpaidMembers failed: %+v", err)
 	}
 
-	if len(users) != 2 || !(users[0].ID == 2 && users[1].ID == 3) {
+	// 2 & 3
+	if len(users) != 2 || users[0].ID*users[1].ID != 6 {
 		t.Fatalf("invalid response: %+v", users)
 	}
 }
