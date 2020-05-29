@@ -11,6 +11,7 @@ import {
   addPaymentStatus,
   deletePaymentStatus,
   inviteToSlack,
+  remindPayment,
 } from "../../src/network";
 import {
   UserTableData,
@@ -21,6 +22,7 @@ import { usersCSV, saveFile } from "../../src/util";
 import { Typography } from "@material-ui/core";
 import Toolbar from "@material-ui/core/Toolbar";
 import SlackInvitationDialog from "../../src/components/layout/SlackInvitationDialog";
+import RemindPaymentDialog from "../../src/components/layout/RemindPaymentDialog";
 
 const headCells: HeadCell[] = labelsInJapanese.map(
   ({ id, label }) => ({ id, label } as HeadCell)
@@ -29,6 +31,9 @@ const headCells: HeadCell[] = labelsInJapanese.map(
 const Page: NextPage = () => {
   const [users, setUsers] = useState<Array<UserTableData> | null>(null);
   const [slackInvitationDialog, setSlackInvitationDialog] = useState<boolean>(
+    false
+  );
+  const [remindPaymentDialog, setRemindPaymentDialog] = useState<boolean>(
     false
   );
 
@@ -40,6 +45,9 @@ const Page: NextPage = () => {
       case "export":
         saveFile("members.csv", usersCSV(users ?? []));
         break;
+      case "remind_payment":
+        setRemindPaymentDialog(true);
+        break;
     }
   };
 
@@ -48,6 +56,12 @@ const Page: NextPage = () => {
       inviteToSlack().then();
     }
     setSlackInvitationDialog(false);
+  };
+  const handleRemindPaymentDialogClose = (value: "OK" | "Cancel") => {
+    if (value === "OK") {
+      remindPayment().then();
+    }
+    setRemindPaymentDialog(false);
   };
 
   useEffect(() => {
@@ -77,6 +91,18 @@ const Page: NextPage = () => {
         description: `${user.generation}代 ${user.handle}(${user.name}): ${user.email}`,
       })) ?? [];
 
+  const targetUsers =
+    users
+      ?.filter(
+        (user) =>
+          ["admin", "member"].includes(user.role) &&
+          user.paid === "NO"
+      )
+      .map((user) => ({
+        id: user.id,
+        description: `${user.generation}代 ${user.handle}(${user.name}): ${user.email}`,
+      })) ?? [];
+
   return (
     <>
       <Toolbar>
@@ -99,13 +125,18 @@ const Page: NextPage = () => {
           handleClickMenu={handleClickMenu}
         />
       ) : (
-        "Loading..."
-      )}
+          "Loading..."
+        )}
 
       <SlackInvitationDialog
         open={slackInvitationDialog}
         onClose={handleSlackInvitationClose}
         invitedUsers={invitedUsers}
+      />
+      <RemindPaymentDialog
+        open={remindPaymentDialog}
+        onClose={handleRemindPaymentDialogClose}
+        targetUsers={targetUsers}
       />
     </>
   );
