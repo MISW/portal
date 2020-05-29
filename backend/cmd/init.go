@@ -273,6 +273,8 @@ func initHandler(cfg *config.Config, addr string, digc *dig.Container) *echo.Ech
 			g.PUT("/payment_status", mh.AddPaymentStatus)
 			g.GET("/payment_statuses", mh.GetPaymentStatuses)
 
+			g.POST("/remind_payment", mh.RemindPayment)
+
 			g.GET("/config", mh.GetConfig)
 			g.POST("/config", mh.SetConfig)
 
