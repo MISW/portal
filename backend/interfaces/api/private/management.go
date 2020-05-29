@@ -467,3 +467,28 @@ func (mh *managementHandler) GetConfig(e echo.Context) error {
 		return rest.RespondMessage(e, rest.NewBadRequest("unknown kind: "+kind))
 	}
 }
+
+func (mh *managementHandler) RemindPayment(e echo.Context) error {
+	var param struct {
+		Filter []int `json:"filter"`
+	}
+
+	if err := e.Bind(&param); err != nil {
+		return rest.RespondMessage(e, rest.NewBadRequest(fmt.Sprintf("invalid request values: %v", err)))
+	}
+
+	err := mh.mu.RemindPayment(e.Request().Context(), param.Filter)
+
+	var frerr rest.ErrorResponse
+	if xerrors.As(err, &frerr) {
+		e.Logger().Errorf("failed to send payment reminder: %+v", frerr)
+
+		return rest.RespondMessage(e, frerr)
+	}
+
+	if err != nil {
+		return err
+	}
+
+	return rest.RespondOK(e, nil)
+}

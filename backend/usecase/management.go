@@ -2,8 +2,11 @@ package usecase
 
 import (
 	"context"
+	"fmt"
+	"strings"
 	"time"
 
+	"github.com/MISW/Portal/backend/internal/email"
 	"github.com/MISW/Portal/backend/internal/rest"
 	"github.com/MISW/Portal/backend/internal/workers"
 	"go.uber.org/dig"
@@ -46,6 +49,9 @@ type ManagementUsecase interface {
 
 	// InviteToSlack - Slackに招待されていないメンバーをSlackに招待する(非同期)
 	InviteToSlack(ctx context.Context) error
+
+	// RemindPayment - 未払い会員に催促メールを送る
+	RemindPayment(ctx context.Context, filter []int) error
 }
 
 type ManagementUsecaseParams struct {
@@ -58,6 +64,7 @@ type ManagementUsecaseParams struct {
 	SlackRepository              repository.SlackRepository
 	UserRoleRepository           repository.UserRoleRepository
 	SlackInviter                 workers.Worker `name:"slack"`
+	EmailSender                  email.Sender
 }
 
 type managementUsecase struct {
@@ -326,4 +333,58 @@ func (mu *managementUsecase) InviteToSlack(ctx context.Context) error {
 	mu.SlackInviter.Trigger()
 
 	return nil
+}
+
+func (mu *managementUsecase) RemindPayment(ctx context.Context, filter []int) error {
+	period, err := mu.AppConfigRepository.GetPaymentPeriod()
+
+	if err != nil {
+		return xerrors.Errorf("failed to get payment period: %w", err)
+	}
+
+	unpaid, err := mu.PaymentStatusRepository.ListUnpaidMembers(ctx, period)
+
+	if err != nil {
+		return xerrors.Errorf("failed to list unpaid members: %w", err)
+	}
+
+	subject, body, err := mu.AppConfigRepository.GetEmailTemplate(domain.PaymentReminder)
+
+	if err != nil {
+		return xerrors.Errorf("failed to get email template for payment reminder: %w", err)
+	}
+
+	filterSet := map[int]struct{}{}
+	for i := range filter {
+		filterSet[filter[i]] = struct{}{}
+	}
+
+	failed := make([]string, 0, len(unpaid))
+	for i := range unpaid {
+		if len(filter) != 0 {
+			_, ok := filterSet[unpaid[i].ID]
+
+			if !ok {
+				continue
+			}
+		}
+
+		subject, body, err := email.GenerateEmailFromTemplate(subject, body, map[string]interface{}{
+			"User": unpaid[i],
+		})
+
+		if err != nil {
+			return err
+		}
+
+		if err := mu.EmailSender.Send(unpaid[i].Email, subject, body); err != nil {
+			failed = append(failed, fmt.Sprintf("%d(%s): %v", unpaid[i].ID, unpaid[i].Email, err))
+		}
+	}
+
+	if len(failed) == 0 {
+		return nil
+	}
+
+	return rest.NewInternalServerError(strings.Join(failed, "\n"))
 }
