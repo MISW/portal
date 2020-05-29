@@ -32,7 +32,10 @@ import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import { UserTableData } from "../../user";
 
-export type handleClickMenuParam = { kind: "slack" } | { kind: "export" } | { kind: "remind_payment" };
+export type handleClickMenuParam =
+  | { kind: "slack" }
+  | { kind: "export" }
+  | { kind: "remind_payment" };
 
 export type handleClickMenuType = (param: handleClickMenuParam) => void;
 
@@ -58,9 +61,9 @@ function getComparator<Key extends keyof any>(
   order: Order,
   orderBy: Key
 ): (
-    a: { [key in Key]: number | string },
-    b: { [key in Key]: number | string }
-  ) => number {
+  a: { [key in Key]: number | string },
+  b: { [key in Key]: number | string }
+) => number {
   return order === "desc"
     ? (a, b) => descendingComparator(a, b, orderBy)
     : (a, b) => -descendingComparator(a, b, orderBy);
@@ -191,13 +194,13 @@ const useToolbarStyles = makeStyles((theme: Theme) =>
     highlight:
       theme.palette.type === "light"
         ? {
-          color: theme.palette.secondary.main,
-          backgroundColor: lighten(theme.palette.secondary.light, 0.85),
-        }
+            color: theme.palette.secondary.main,
+            backgroundColor: lighten(theme.palette.secondary.light, 0.85),
+          }
         : {
-          color: theme.palette.text.primary,
-          backgroundColor: theme.palette.secondary.dark,
-        },
+            color: theme.palette.text.primary,
+            backgroundColor: theme.palette.secondary.dark,
+          },
     title: {
       flex: "1 1 100%",
     },
@@ -225,7 +228,9 @@ const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
     setAnchorEl(event.currentTarget);
   };
 
-  const handleClose = (name: "slack" | "export" | "remind_payment" | null) => () => {
+  const handleClose = (
+    name: "slack" | "export" | "remind_payment" | null
+  ) => () => {
     setAnchorEl(null);
 
     switch (name) {
@@ -265,54 +270,58 @@ const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
           </Tooltip>
         </>
       ) : (
-          <>
-            <Tooltip title="Filter list">
-              <IconButton aria-label="filter list">
-                <FilterListIcon />
-              </IconButton>
-            </Tooltip>
-            <div className={classes.title}></div>
-            <NoWrapButton
-              variant="contained"
-              color={editMode ? "primary" : "default"}
-              onClick={handleClickOnEditMode}
-            >
-              {editMode ? "終了" : "支払い登録モード"}
-            </NoWrapButton>
+        <>
+          <Tooltip title="Filter list">
+            <IconButton aria-label="filter list">
+              <FilterListIcon />
+            </IconButton>
+          </Tooltip>
+          <div className={classes.title}></div>
+          <NoWrapButton
+            variant="contained"
+            color={editMode ? "primary" : "default"}
+            onClick={handleClickOnEditMode}
+          >
+            {editMode ? "終了" : "支払い登録モード"}
+          </NoWrapButton>
 
-            <Box ml={1}>
-              <IconButton
-                aria-label="more"
-                aria-controls="long-menu"
-                aria-haspopup="true"
-                onClick={handleClick}
-              >
-                <MoreVertIcon />
-              </IconButton>
-              <Menu
-                id="other-operations"
-                elevation={0}
-                getContentAnchorEl={null}
-                anchorEl={anchorEl}
-                keepMounted
-                open={Boolean(anchorEl)}
-                onClose={handleClose(null)}
-                anchorOrigin={{
-                  vertical: "bottom",
-                  horizontal: "right",
-                }}
-                transformOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-              >
-                <MenuItem onClick={handleClose("slack")}>Slackに招待</MenuItem>
-                <MenuItem onClick={handleClose("export")}>CSVエクスポート</MenuItem>
-                <MenuItem onClick={handleClose("remind_payment")}>会費未払い通知メール</MenuItem>
-              </Menu>
-            </Box>
-          </>
-        )}
+          <Box ml={1}>
+            <IconButton
+              aria-label="more"
+              aria-controls="long-menu"
+              aria-haspopup="true"
+              onClick={handleClick}
+            >
+              <MoreVertIcon />
+            </IconButton>
+            <Menu
+              id="other-operations"
+              elevation={0}
+              getContentAnchorEl={null}
+              anchorEl={anchorEl}
+              keepMounted
+              open={Boolean(anchorEl)}
+              onClose={handleClose(null)}
+              anchorOrigin={{
+                vertical: "bottom",
+                horizontal: "right",
+              }}
+              transformOrigin={{
+                vertical: "top",
+                horizontal: "right",
+              }}
+            >
+              <MenuItem onClick={handleClose("slack")}>Slackに招待</MenuItem>
+              <MenuItem onClick={handleClose("export")}>
+                CSVエクスポート
+              </MenuItem>
+              <MenuItem onClick={handleClose("remind_payment")}>
+                会費未払い通知メール
+              </MenuItem>
+            </Menu>
+          </Box>
+        </>
+      )}
     </Toolbar>
   );
 };
@@ -337,212 +346,212 @@ export const EnhancedTable: React.FC<{
   handleEditPaymnetStatus,
   handleClickMenu,
 }) => {
-    const [rows, setRows] = React.useState<Array<Data>>(rowsBase);
-    const classes = useStyles();
-    const [order, setOrder] = React.useState<Order>("asc");
-    const [orderBy, setOrderBy] = React.useState<keyof Data>(defaultSortedBy);
-    const [selected, setSelected] = React.useState<number[]>([]);
-    const [page, setPage] = React.useState(0);
-    const [dense, setDense] = React.useState(false);
-    const [rowsPerPage, setRowsPerPage] = React.useState(25);
-    const [editPaymentStatusMode, setEditPaymentStatusMode] = React.useState(
-      false
-    );
+  const [rows, setRows] = React.useState<Array<Data>>(rowsBase);
+  const classes = useStyles();
+  const [order, setOrder] = React.useState<Order>("asc");
+  const [orderBy, setOrderBy] = React.useState<keyof Data>(defaultSortedBy);
+  const [selected, setSelected] = React.useState<number[]>([]);
+  const [page, setPage] = React.useState(0);
+  const [dense, setDense] = React.useState(false);
+  const [rowsPerPage, setRowsPerPage] = React.useState(25);
+  const [editPaymentStatusMode, setEditPaymentStatusMode] = React.useState(
+    false
+  );
 
-    const handleRequestSort = (
-      event: React.MouseEvent<unknown>,
-      property: keyof Data
-    ) => {
-      const isAsc = orderBy === property && order === "asc";
-      setOrder(isAsc ? "desc" : "asc");
-      setOrderBy(property);
-    };
-
-    const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
-      if (editPaymentStatusMode) {
-        return;
-      }
-
-      if (event.target.checked) {
-        const newSelecteds = rows.map((n) => n.id);
-        setSelected(newSelecteds);
-        return;
-      }
-      setSelected([]);
-    };
-
-    const handleClick = (event: React.MouseEvent<unknown>, id: number) => {
-      if (editPaymentStatusMode) {
-        return;
-      }
-
-      const selectedIndex = selected.indexOf(id);
-      let newSelected: number[] = [];
-
-      if (selectedIndex === -1) {
-        newSelected = newSelected.concat(selected, id);
-      } else if (selectedIndex === 0) {
-        newSelected = newSelected.concat(selected.slice(1));
-      } else if (selectedIndex === selected.length - 1) {
-        newSelected = newSelected.concat(selected.slice(0, -1));
-      } else if (selectedIndex > 0) {
-        newSelected = newSelected.concat(
-          selected.slice(0, selectedIndex),
-          selected.slice(selectedIndex + 1)
-        );
-      }
-
-      setSelected(newSelected);
-    };
-
-    const handleChangePage = (event: unknown, newPage: number) => {
-      setPage(newPage);
-    };
-
-    const handleChangeRowsPerPage = (
-      event: React.ChangeEvent<HTMLInputElement>
-    ) => {
-      setRowsPerPage(parseInt(event.target.value, 10));
-      setPage(0);
-    };
-
-    const handleChangeDense = (event: React.ChangeEvent<HTMLInputElement>) => {
-      setDense(event.target.checked);
-    };
-
-    const handleClickOnEditPaymentStatus = (id: number) => {
-      const paid = rows.filter((x) => x.id === id).map((x) => x.paid)[0];
-      setRows(
-        rows.map((x) =>
-          x.id !== id
-            ? x
-            : { ...x, paid: x.paid === "YES" ? "NO(WIP)" : "YES(WIP)" }
-        )
-      );
-
-      if (handleEditPaymnetStatus) {
-        handleEditPaymnetStatus(id, paid !== "YES")
-          .then((data) => {
-            setRows(rows.map((x) => (x.id !== id ? x : data)));
-          })
-          .catch((err) => console.error(err));
-      }
-    };
-
-    const isSelected = (id: number) => selected.indexOf(id) !== -1;
-
-    const emptyRows =
-      rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
-
-    return (
-      <div className={classes.root}>
-        <Paper className={classes.paper}>
-          <EnhancedTableToolbar
-            numSelected={selected.length}
-            editMode={editPaymentStatusMode}
-            handleClickOnEditMode={() => {
-              setSelected([]), setEditPaymentStatusMode(!editPaymentStatusMode);
-            }}
-            handleClickMenu={handleClickMenu}
-          />
-
-          <TableContainer className={classes.tableWrapper}>
-            <Table
-              stickyHeader
-              className={classes.table}
-              aria-labelledby="tableTitle"
-              size={dense ? "small" : "medium"}
-              aria-label="enhanced table"
-            >
-              <EnhancedTableHead
-                classes={classes}
-                numSelected={selected.length}
-                disabledCheckbox={editPaymentStatusMode}
-                order={order}
-                orderBy={orderBy}
-                headCells={headCells}
-                onSelectAllClick={handleSelectAllClick}
-                onRequestSort={handleRequestSort}
-                rowCount={rows.length}
-              />
-              <TableBody>
-                {stableSort(rows, getComparator(order, orderBy))
-                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((row, index) => {
-                    const isItemSelected = isSelected(row.id);
-                    const labelId = `enhanced-table-checkbox-${index}`;
-
-                    return (
-                      <TableRow
-                        hover
-                        onClick={(event) => handleClick(event, row.id)}
-                        role="checkbox"
-                        aria-checked={isItemSelected}
-                        tabIndex={-1}
-                        key={row.id}
-                        selected={isItemSelected}
-                      >
-                        <TableCell padding="checkbox">
-                          <Checkbox
-                            checked={isItemSelected}
-                            inputProps={{ "aria-labelledby": labelId }}
-                            disabled={editPaymentStatusMode}
-                          />
-                        </TableCell>
-                        <TableCell
-                          component="th"
-                          id={labelId}
-                          scope="row"
-                          padding="none"
-                        >
-                          {row.id}
-                        </TableCell>
-                        {headCells
-                          .filter(({ id }) => id !== "id")
-                          .map(({ id: propertyName }) =>
-                            propertyName == "paid" && editPaymentStatusMode ? (
-                              <TableCell padding="none" key={propertyName}>
-                                <NoTopBottomPaddingCheckbox
-                                  checked={row[propertyName].startsWith("YES")}
-                                  disabled={row[propertyName].includes("(WIP)")}
-                                  onClick={() =>
-                                    handleClickOnEditPaymentStatus(row.id)
-                                  }
-                                />
-                              </TableCell>
-                            ) : (
-                                <TableCell align="left" key={propertyName}>
-                                  {row[propertyName]}
-                                </TableCell>
-                              )
-                          )}
-                      </TableRow>
-                    );
-                  })}
-                {emptyRows > 0 && (
-                  <TableRow style={{ height: (dense ? 33 : 53) * emptyRows }}>
-                    <TableCell colSpan={6} />
-                  </TableRow>
-                )}
-              </TableBody>
-            </Table>
-          </TableContainer>
-          <TablePagination
-            rowsPerPageOptions={[10, 25, 50, 100]}
-            component="div"
-            count={rows.length}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            onChangePage={handleChangePage}
-            onChangeRowsPerPage={handleChangeRowsPerPage}
-          />
-        </Paper>
-        <FormControlLabel
-          control={<Switch checked={dense} onChange={handleChangeDense} />}
-          label="Dense padding"
-        />
-      </div>
-    );
+  const handleRequestSort = (
+    event: React.MouseEvent<unknown>,
+    property: keyof Data
+  ) => {
+    const isAsc = orderBy === property && order === "asc";
+    setOrder(isAsc ? "desc" : "asc");
+    setOrderBy(property);
   };
+
+  const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (editPaymentStatusMode) {
+      return;
+    }
+
+    if (event.target.checked) {
+      const newSelecteds = rows.map((n) => n.id);
+      setSelected(newSelecteds);
+      return;
+    }
+    setSelected([]);
+  };
+
+  const handleClick = (event: React.MouseEvent<unknown>, id: number) => {
+    if (editPaymentStatusMode) {
+      return;
+    }
+
+    const selectedIndex = selected.indexOf(id);
+    let newSelected: number[] = [];
+
+    if (selectedIndex === -1) {
+      newSelected = newSelected.concat(selected, id);
+    } else if (selectedIndex === 0) {
+      newSelected = newSelected.concat(selected.slice(1));
+    } else if (selectedIndex === selected.length - 1) {
+      newSelected = newSelected.concat(selected.slice(0, -1));
+    } else if (selectedIndex > 0) {
+      newSelected = newSelected.concat(
+        selected.slice(0, selectedIndex),
+        selected.slice(selectedIndex + 1)
+      );
+    }
+
+    setSelected(newSelected);
+  };
+
+  const handleChangePage = (event: unknown, newPage: number) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
+  const handleChangeDense = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setDense(event.target.checked);
+  };
+
+  const handleClickOnEditPaymentStatus = (id: number) => {
+    const paid = rows.filter((x) => x.id === id).map((x) => x.paid)[0];
+    setRows(
+      rows.map((x) =>
+        x.id !== id
+          ? x
+          : { ...x, paid: x.paid === "YES" ? "NO(WIP)" : "YES(WIP)" }
+      )
+    );
+
+    if (handleEditPaymnetStatus) {
+      handleEditPaymnetStatus(id, paid !== "YES")
+        .then((data) => {
+          setRows(rows.map((x) => (x.id !== id ? x : data)));
+        })
+        .catch((err) => console.error(err));
+    }
+  };
+
+  const isSelected = (id: number) => selected.indexOf(id) !== -1;
+
+  const emptyRows =
+    rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
+
+  return (
+    <div className={classes.root}>
+      <Paper className={classes.paper}>
+        <EnhancedTableToolbar
+          numSelected={selected.length}
+          editMode={editPaymentStatusMode}
+          handleClickOnEditMode={() => {
+            setSelected([]), setEditPaymentStatusMode(!editPaymentStatusMode);
+          }}
+          handleClickMenu={handleClickMenu}
+        />
+
+        <TableContainer className={classes.tableWrapper}>
+          <Table
+            stickyHeader
+            className={classes.table}
+            aria-labelledby="tableTitle"
+            size={dense ? "small" : "medium"}
+            aria-label="enhanced table"
+          >
+            <EnhancedTableHead
+              classes={classes}
+              numSelected={selected.length}
+              disabledCheckbox={editPaymentStatusMode}
+              order={order}
+              orderBy={orderBy}
+              headCells={headCells}
+              onSelectAllClick={handleSelectAllClick}
+              onRequestSort={handleRequestSort}
+              rowCount={rows.length}
+            />
+            <TableBody>
+              {stableSort(rows, getComparator(order, orderBy))
+                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                .map((row, index) => {
+                  const isItemSelected = isSelected(row.id);
+                  const labelId = `enhanced-table-checkbox-${index}`;
+
+                  return (
+                    <TableRow
+                      hover
+                      onClick={(event) => handleClick(event, row.id)}
+                      role="checkbox"
+                      aria-checked={isItemSelected}
+                      tabIndex={-1}
+                      key={row.id}
+                      selected={isItemSelected}
+                    >
+                      <TableCell padding="checkbox">
+                        <Checkbox
+                          checked={isItemSelected}
+                          inputProps={{ "aria-labelledby": labelId }}
+                          disabled={editPaymentStatusMode}
+                        />
+                      </TableCell>
+                      <TableCell
+                        component="th"
+                        id={labelId}
+                        scope="row"
+                        padding="none"
+                      >
+                        {row.id}
+                      </TableCell>
+                      {headCells
+                        .filter(({ id }) => id !== "id")
+                        .map(({ id: propertyName }) =>
+                          propertyName == "paid" && editPaymentStatusMode ? (
+                            <TableCell padding="none" key={propertyName}>
+                              <NoTopBottomPaddingCheckbox
+                                checked={row[propertyName].startsWith("YES")}
+                                disabled={row[propertyName].includes("(WIP)")}
+                                onClick={() =>
+                                  handleClickOnEditPaymentStatus(row.id)
+                                }
+                              />
+                            </TableCell>
+                          ) : (
+                            <TableCell align="left" key={propertyName}>
+                              {row[propertyName]}
+                            </TableCell>
+                          )
+                        )}
+                    </TableRow>
+                  );
+                })}
+              {emptyRows > 0 && (
+                <TableRow style={{ height: (dense ? 33 : 53) * emptyRows }}>
+                  <TableCell colSpan={6} />
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </TableContainer>
+        <TablePagination
+          rowsPerPageOptions={[10, 25, 50, 100]}
+          component="div"
+          count={rows.length}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onChangePage={handleChangePage}
+          onChangeRowsPerPage={handleChangeRowsPerPage}
+        />
+      </Paper>
+      <FormControlLabel
+        control={<Switch checked={dense} onChange={handleChangeDense} />}
+        label="Dense padding"
+      />
+    </div>
+  );
+};
 
 export default EnhancedTable;

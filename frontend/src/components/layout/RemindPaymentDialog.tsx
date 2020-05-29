@@ -33,10 +33,10 @@ const RemindPaymentDialog: React.FC<Props> = (props) => {
           {targetUsers.length === 0
             ? "なし"
             : targetUsers.map((user) => (
-              <ListItem button key={user.id}>
-                <ListItemText primary={user.description} />
-              </ListItem>
-            ))}
+                <ListItem button key={user.id}>
+                  <ListItemText primary={user.description} />
+                </ListItem>
+              ))}
         </List>
       </DialogContent>
       <DialogActions>
