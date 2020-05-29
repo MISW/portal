@@ -95,8 +95,7 @@ const Page: NextPage = () => {
     users
       ?.filter(
         (user) =>
-          ["admin", "member"].includes(user.role) &&
-          user.paid === "NO"
+          ["admin", "member"].includes(user.role) && user.paid === "NO"
       )
       .map((user) => ({
         id: user.id,
