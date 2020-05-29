@@ -49,6 +49,9 @@ type ManagementHandler interface {
 
 	// GetConfig - コンフィグの取得
 	GetConfig(e echo.Context) error
+
+	// RemindPayment - 未払い会員に対する催促メールを送信
+	RemindPayment(e echo.Context) error
 }
 
 // NewManagementHandler - ManagementHandlerを初期化
@@ -468,6 +471,7 @@ func (mh *managementHandler) GetConfig(e echo.Context) error {
 	}
 }
 
+// RemindPayment - 未払い会員に対する催促メールを送信
 func (mh *managementHandler) RemindPayment(e echo.Context) error {
 	var param struct {
 		Filter []int `json:"filter"`
