@@ -16,21 +16,21 @@ import (
 
 var (
 	paymentStatusTemplate = &domain.PaymentStatus{
-		UserID:     10,
+		UserID:     1,
 		Period:     201010,
 		Authorizer: 2,
 	}
 
 	// same in user_id
 	paymentStatusTemplate2 = &domain.PaymentStatus{
-		UserID:     10,
+		UserID:     1,
 		Period:     201004,
 		Authorizer: 2,
 	}
 
 	// same in period
 	paymentStatusTemplate3 = &domain.PaymentStatus{
-		UserID:     12,
+		UserID:     2,
 		Period:     201010,
 		Authorizer: 2,
 	}
@@ -311,5 +311,44 @@ func TestPaymentStatusHasMatchingPeriod(t *testing.T) {
 
 	if matched {
 		t.Fatal("should be false, but got true")
+	}
+}
+
+func TestListUnpaidMembers(t *testing.T) {
+	conn := testutil.NewSQLConn(t)
+
+	psp := persistence.NewPaymentStatusPersistence(conn)
+	up := persistence.NewUserPersistence(conn)
+
+	up.Insert(context.Background(), &domain.User{
+		Email:                 "1@example.com",
+		Sex:                   domain.Male,
+		Role:                  domain.Member,
+		SlackInvitationStatus: domain.Invited,
+	})
+	up.Insert(context.Background(), &domain.User{
+		Email:                 "2@example.com",
+		Sex:                   domain.Male,
+		Role:                  domain.Member,
+		SlackInvitationStatus: domain.Invited,
+	})
+	up.Insert(context.Background(), &domain.User{
+		Email:                 "3@example.com",
+		Sex:                   domain.Male,
+		Role:                  domain.Admin,
+		SlackInvitationStatus: domain.Invited,
+	})
+
+	insertTestPaymentStatusData(t, psp)
+
+	users, err := psp.ListUnpaidMembers(context.Background(), 201004)
+
+	if err != nil {
+		t.Fatalf("ListUnpaidMembers failed: %+v", err)
+	}
+
+	// 2 & 3
+	if len(users) != 2 || users[0].ID*users[1].ID != 6 {
+		t.Fatalf("invalid response: %+v", users)
 	}
 }

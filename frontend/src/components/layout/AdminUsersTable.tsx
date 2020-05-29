@@ -32,7 +32,10 @@ import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import { UserTableData } from "../../user";
 
-export type handleClickMenuParam = { kind: "slack" } | { kind: "export" };
+export type handleClickMenuParam =
+  | { kind: "slack" }
+  | { kind: "export" }
+  | { kind: "remind_payment" };
 
 export type handleClickMenuType = (param: handleClickMenuParam) => void;
 
@@ -225,7 +228,9 @@ const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
     setAnchorEl(event.currentTarget);
   };
 
-  const handleClose = (name: "slack" | "export" | null) => () => {
+  const handleClose = (
+    name: "slack" | "export" | "remind_payment" | null
+  ) => () => {
     setAnchorEl(null);
 
     switch (name) {
@@ -234,6 +239,9 @@ const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
         break;
       case "export":
         handleClickMenu({ kind: "export" });
+        break;
+      case "remind_payment":
+        handleClickMenu({ kind: "remind_payment" });
         break;
     }
   };
@@ -306,6 +314,9 @@ const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
               <MenuItem onClick={handleClose("slack")}>Slackに招待</MenuItem>
               <MenuItem onClick={handleClose("export")}>
                 CSVエクスポート
+              </MenuItem>
+              <MenuItem onClick={handleClose("remind_payment")}>
+                会費未払い通知メール
               </MenuItem>
             </Menu>
           </Box>

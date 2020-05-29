@@ -49,6 +49,9 @@ type ManagementHandler interface {
 
 	// GetConfig - コンフィグの取得
 	GetConfig(e echo.Context) error
+
+	// RemindPayment - 未払い会員に対する催促メールを送信
+	RemindPayment(e echo.Context) error
 }
 
 // NewManagementHandler - ManagementHandlerを初期化
@@ -466,4 +469,30 @@ func (mh *managementHandler) GetConfig(e echo.Context) error {
 	default:
 		return rest.RespondMessage(e, rest.NewBadRequest("unknown kind: "+kind))
 	}
+}
+
+// RemindPayment - 未払い会員に対する催促メールを送信
+func (mh *managementHandler) RemindPayment(e echo.Context) error {
+	var param struct {
+		Filter []int `json:"filter"`
+	}
+
+	if err := e.Bind(&param); err != nil {
+		return rest.RespondMessage(e, rest.NewBadRequest(fmt.Sprintf("invalid request values: %v", err)))
+	}
+
+	err := mh.mu.RemindPayment(e.Request().Context(), param.Filter)
+
+	var frerr rest.ErrorResponse
+	if xerrors.As(err, &frerr) {
+		e.Logger().Errorf("failed to send payment reminder: %+v", frerr)
+
+		return rest.RespondMessage(e, frerr)
+	}
+
+	if err != nil {
+		return err
+	}
+
+	return rest.RespondOK(e, nil)
 }

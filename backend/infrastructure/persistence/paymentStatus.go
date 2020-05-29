@@ -230,3 +230,26 @@ func (psp *paymentStatusPersistence) HasMatchingPeriod(ctx context.Context, user
 
 	return counter != 0, nil
 }
+
+// ListUnpaidMembers returns all unpaid members for the specified period
+func (psp *paymentStatusPersistence) ListUnpaidMembers(ctx context.Context, paymentPeriod int) ([]*domain.User, error) {
+	query, args, err := sqlx.In(`SELECT u.* FROM users AS u LEFT JOIN payment_statuses AS ps ON u.id=ps.user_id AND period=? where (u.role="member" OR u.role="admin") and ps.id IS NULL`, paymentPeriod)
+
+	if err != nil {
+		return nil, xerrors.Errorf("failed to compose a query: %w", err)
+	}
+
+	var users []*user
+	err = sqlx.SelectContext(ctx, psp.db, &users, query, args...)
+
+	if err != nil {
+		return nil, xerrors.Errorf("failed to list unpaid members: %w", err)
+	}
+
+	res := make([]*domain.User, len(users))
+	for i := range users {
+		res[i] = parseUser(users[i])
+	}
+
+	return res, nil
+}
