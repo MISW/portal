@@ -94,8 +94,7 @@ const Page: NextPage = () => {
   const targetUsers =
     users
       ?.filter(
-        (user) =>
-          ["admin", "member"].includes(user.role) && user.paid === "NO"
+        (user) => ["admin", "member"].includes(user.role) && user.paid === "NO"
       )
       .map((user) => ({
         id: user.id,
@@ -124,8 +123,8 @@ const Page: NextPage = () => {
           handleClickMenu={handleClickMenu}
         />
       ) : (
-          "Loading..."
-        )}
+        "Loading..."
+      )}
 
       <SlackInvitationDialog
         open={slackInvitationDialog}

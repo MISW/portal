@@ -207,7 +207,6 @@ export const inviteToSlack = async () => {
   }
 };
 
-
 export const remindPayment = async () => {
   const res = await fetch(`${getHostAPI()}/private/management/remind_payment`, {
     method: "POST",
