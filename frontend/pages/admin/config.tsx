@@ -86,7 +86,8 @@ const useEmailTemplateNode = () => {
   type kindType =
     | "email_verification"
     | "slack_invitation"
-    | "after_registration";
+    | "after_registration"
+    | "payment_reminder";
   const options: { key: kindType; label: string }[] = [
     { key: "email_verification", label: "Eメール認証" },
     { key: "slack_invitation", label: "Slack招待時の同時送信メール" },
@@ -94,6 +95,10 @@ const useEmailTemplateNode = () => {
       key: "after_registration",
       label: "メールアドレス確認後の支払い方法案内メール",
     },
+    {
+      key: "payment_reminder",
+      label: "未払いメンバーに対する催促メール"
+    }
   ];
 
   const [expanded, setExpanded] = useState<boolean>(false);
