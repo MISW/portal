@@ -97,8 +97,8 @@ const useEmailTemplateNode = () => {
     },
     {
       key: "payment_reminder",
-      label: "未払いメンバーに対する催促メール"
-    }
+      label: "未払いメンバーに対する催促メール",
+    },
   ];
 
   const [expanded, setExpanded] = useState<boolean>(false);
