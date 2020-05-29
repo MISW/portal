@@ -118,7 +118,11 @@ const Page: NextPage = () => {
               await deletePaymentStatus(id);
             }
 
-            return toUserTableData(await getUserAsAdmin(id));
+            const user = toUserTableData(await getUserAsAdmin(id));
+
+            setUsers(users.map((u) => (u.id == user.id ? user : u)));
+
+            return user;
           }}
           handleClickMenu={handleClickMenu}
         />
