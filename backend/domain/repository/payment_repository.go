@@ -39,6 +39,9 @@ type PaymentStatusRepository interface {
 
 	// HasMatchingPeriod returns whether there is a payment status matching parameters
 	HasMatchingPeriod(ctx context.Context, userID int, periods []int) (bool, error)
+
+	// ListUnpaidMembers returns all unpaid members for the specified period
+	ListUnpaidMembers(ctx context.Context, paymentPeriod int) ([]*domain.User, error)
 }
 
 // PaymentTransactionRepository - サークル費支払い時のトークン管理

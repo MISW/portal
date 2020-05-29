@@ -12,6 +12,9 @@ const (
 
 	// AfterRegistration - 新規登録時(メール確認後)
 	AfterRegistration EmailKind = "after_registration"
+
+	// PaymentReminder - 支払いが完了していないメンバーに対してメールを送る
+	PaymentReminder EmailKind = "payment_reminder"
 )
 
 var (
@@ -19,6 +22,7 @@ var (
 		EmailVerification,
 		SlackInvitation,
 		AfterRegistration,
+		PaymentReminder,
 	}
 )
 
