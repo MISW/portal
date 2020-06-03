@@ -14,6 +14,7 @@ import LinkContentCard from "../src/components/design/LinkContentCard";
 import { NextPage } from "next";
 import { accountInfoContext } from "./_app";
 import { Alert, AlertTitle } from "@material-ui/lab";
+import { withLogin, NextPageWithUserInfo } from "../src/middlewares/withLogin";
 
 interface LinkData {
   title: string;
@@ -87,17 +88,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Page: NextPage = () => {
-  const accountInfo = useContext(accountInfoContext);
+const Page: NextPageWithUserInfo = ({ userInfo: accountInfo }) => {
   const classes = useStyles();
-  if (!accountInfo) {
-    return (
-      <p>
-        ログインしていません /signup からアカウントを作るか,
-        auth0経由でアクセスしてください
-      </p>
-    );
-  }
 
   if (accountInfo.role === "not_member" && accountInfo.email_verified) {
     return (
@@ -183,4 +175,4 @@ const Page: NextPage = () => {
 //   // use userInfo
 // };
 
-export default Page;
+export default withLogin(Page);
