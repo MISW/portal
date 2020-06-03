@@ -82,30 +82,6 @@ App.getInitialProps = async ({
     : {};
 
   const ret = { pageProps, userInfo };
-
-  const publicRoutes = [
-    "/signup",
-    "/signup/form",
-    "/login",
-    "/callback",
-    "/verify_email",
-  ];
-  // 上記パス以外にアクセスした時, ログインしていなかったらリダイレクト
-
-  if (publicRoutes.includes(ctx.pathname)) {
-    return ret;
-  }
-
-  if (!isLogin) {
-    if (ctx.res) {
-      // サーバー側
-      ctx.res.writeHead(302, { Location: "/login" });
-      ctx.res.end();
-    } else {
-      // ブラウザ側
-      Router.push("/login");
-    }
-  }
   return ret;
 };
 
