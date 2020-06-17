@@ -16,7 +16,7 @@ require (
 	github.com/pquerna/cachecontrol v0.0.0-20180517163645-1555304b9b35 // indirect
 	github.com/slack-go/slack v0.6.4
 	github.com/stretchr/testify v1.5.0 // indirect
-	go.uber.org/dig v1.9.0
+	go.uber.org/dig v1.10.0
 	golang.org/x/crypto v0.0.0-20200221231518-2aa609cf4a9d
 	golang.org/x/net v0.0.0-20200226121028-0de0cce0169b
 	golang.org/x/oauth2 v0.0.0-20200107190931-bf48bf16ab8d
