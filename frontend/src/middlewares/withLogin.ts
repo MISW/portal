@@ -13,7 +13,7 @@ export type NextPageWithUserInfo<P = {}, IP = P> = NextComponentType<
 export const withLogin = <P, IP>(page: NextPageWithUserInfo<P, IP>) => {
   const wrapped: NextPage<
     P & { readonly userInfo: UserAllInfoJSON },
-    IP | undefined
+    (IP & { readonly userInfo: UserAllInfoJSON }) | undefined
   > = (props) => React.createElement(page, props);
   wrapped.getInitialProps = async (ctx) => {
     const userInfo = ctx.userInfo;
@@ -29,7 +29,15 @@ export const withLogin = <P, IP>(page: NextPageWithUserInfo<P, IP>) => {
         return;
       }
     }
-    return await page.getInitialProps?.({ ...ctx, userInfo });
+    const initialProps = await page.getInitialProps?.({ ...ctx, userInfo });
+    return {
+      userInfo,
+      ...initialProps,
+    } as
+      | ({
+          userInfo: UserAllInfoJSON;
+        } & IP)
+      | undefined;
   };
   return wrapped;
 };
