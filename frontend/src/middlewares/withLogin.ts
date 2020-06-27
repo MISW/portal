@@ -9,7 +9,9 @@ export type NextPageWithUserInfo<P = {}, IP = P> = NextComponentType<
   P & { readonly userInfo: UserAllInfoJSON }
 >;
 
-/// ログインしていることを強制する．ログインしてなかったら/loginに飛ばす
+/**
+ * ログインしていることを強制する．ログインしてなかったら/loginに飛ばす
+ */
 export const withLogin = <P, IP>(page: NextPageWithUserInfo<P, IP>) => {
   const wrapped: NextPage<
     P & { readonly userInfo: UserAllInfoJSON },
@@ -18,10 +20,10 @@ export const withLogin = <P, IP>(page: NextPageWithUserInfo<P, IP>) => {
   wrapped.getInitialProps = async (ctx) => {
     const userInfo = ctx.userInfo;
     if (userInfo == null) {
-      if (ctx.req) {
+      if (ctx.res) {
         // server
-        ctx.res?.writeHead(302, { Location: "/login" });
-        ctx.res?.end();
+        ctx.res.writeHead(302, { Location: "/login" });
+        ctx.res.end();
         return;
       } else {
         // client
