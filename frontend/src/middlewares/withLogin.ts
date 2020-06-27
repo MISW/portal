@@ -1,10 +1,11 @@
 import React from "react";
 import { NextPage, NextComponentType, NextPageContext } from "next";
 import Router from "next/router";
-import { UserAllInfoJSON } from "../user";
+import { UserAllInfoJSON } from "user";
+import { RootState } from "store";
 
 export type NextPageWithUserInfo<P = {}, IP = P> = NextComponentType<
-  NextPageContext & { readonly userInfo: UserAllInfoJSON },
+  NextPageContext<RootState> & { readonly userInfo: UserAllInfoJSON },
   IP,
   P & { readonly userInfo: UserAllInfoJSON }
 >;

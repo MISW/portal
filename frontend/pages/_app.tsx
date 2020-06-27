@@ -1,14 +1,15 @@
 // https://github.com/mui-org/material-ui/blob/master/examples/nextjs/pages/_app.js 参照
 
-import React, { useEffect, createContext, useCallback } from "react";
+import React, { useEffect, createContext } from "react";
 import { AppProps } from "next/app";
 import { ThemeProvider } from "@material-ui/styles";
 import { CssBaseline, createMuiTheme } from "@material-ui/core";
 import { NextPageContext } from "next";
-import { useRouter } from "next/router";
-import { logout } from "../src/network";
 import { DefaultLayout } from "../src/components/layout/DefaultLayout";
 import { UserAllInfoJSON } from "../src/user";
+import { wrapper, RootState } from "store";
+import { fetchCurrentUser, selectCurrentUser } from "store/currentUser";
+import { useLogout } from "hooks/useLogout";
 
 export const accountInfoContext = createContext<UserAllInfoJSON | undefined>(
   undefined
@@ -16,7 +17,6 @@ export const accountInfoContext = createContext<UserAllInfoJSON | undefined>(
 
 const App = (props: AppProps & { userInfo: UserAllInfoJSON | undefined }) => {
   const { Component, pageProps, userInfo } = props;
-  const router = useRouter();
   useEffect(() => {
     const jssStyles = document.querySelector("#jss-server-side");
     if (jssStyles && jssStyles.parentNode) {
@@ -24,10 +24,7 @@ const App = (props: AppProps & { userInfo: UserAllInfoJSON | undefined }) => {
     }
   });
 
-  const handleLogout = useCallback(async () => {
-    await logout();
-    router.reload();
-  }, [router]);
+  const handleLogout = useLogout();
 
   return (
     <ThemeProvider theme={createMuiTheme({})}>
@@ -46,35 +43,13 @@ App.getInitialProps = async ({
   ctx,
 }: {
   Component: any;
-  ctx: NextPageContext;
+  ctx: NextPageContext<RootState, any>;
 }) => {
   // getInitialPropsはサーバー側かブラウザ側で実行される. サーバー側で実行する時のみ ctx.res, ctx.reqが存在する. これ大事
-  const baseHeaders = {
-    Accept: "application/json, */*",
-  };
-  const headers = ctx.req
-    ? Object.assign({ cookie: ctx.req.headers.cookie }, baseHeaders)
-    : baseHeaders;
 
-  const backendHost = ctx.req
-    ? process.env.BACKEND_HOST
-    : `${location.protocol}//${location.host}`;
-  if (!backendHost) {
-    const msg = "Please set environment: BACKEND_HOST (ex. http://backend)";
-    console.error(msg);
-    throw new Error(msg);
-  }
-  const res = await fetch(`${backendHost}/api/private/profile`, {
-    headers,
-    credentials: "include",
-    method: "GET",
-  });
-
-  const isLogin = Math.floor(res.status / 100) === 2;
-
-  const userInfo = isLogin
-    ? ((await res.json()) as UserAllInfoJSON)
-    : undefined;
+  let userInfo = selectCurrentUser(ctx.store.getState());
+  if (userInfo == null) await ctx.store.dispatch(fetchCurrentUser());
+  userInfo = selectCurrentUser(ctx.store.getState());
 
   const pageProps = Component.getInitialProps
     ? await Component.getInitialProps({ ...ctx, userInfo })
@@ -84,4 +59,4 @@ App.getInitialProps = async ({
   return ret;
 };
 
-export default App;
+export default wrapper.withRedux(App);
