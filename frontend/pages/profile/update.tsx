@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { NextPage } from "next";
+import { Alert } from "@material-ui/lab";
 import RegisterForm, {
   SubmitResult,
 } from "../../src/components/layout/RegisterForm";
 import { ConfigurableProfile } from "../../src/user";
 import { getProfile, updateProfile } from "../../src/network";
-import { Alert } from "@material-ui/lab";
+import { withLogin } from "../../src/middlewares/withLogin";
 
 const Page: NextPage = () => {
   const [user, setUser] = useState<ConfigurableProfile>();
@@ -39,4 +40,4 @@ const Page: NextPage = () => {
   );
 };
 
-export default Page;
+export default withLogin(Page);
