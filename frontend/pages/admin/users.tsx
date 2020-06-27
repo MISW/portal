@@ -23,6 +23,7 @@ import { Typography } from "@material-ui/core";
 import Toolbar from "@material-ui/core/Toolbar";
 import SlackInvitationDialog from "../../src/components/layout/SlackInvitationDialog";
 import RemindPaymentDialog from "../../src/components/layout/RemindPaymentDialog";
+import { withLogin } from "../../src/middlewares/withLogin";
 
 const headCells: HeadCell[] = labelsInJapanese.map(
   ({ id, label }) => ({ id, label } as HeadCell)
@@ -144,4 +145,4 @@ const Page: NextPage = () => {
   );
 };
 
-export default Page;
+export default withLogin(Page);

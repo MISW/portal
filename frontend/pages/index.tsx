@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React from "react";
 import {
   Grid,
   Paper,
@@ -11,8 +11,6 @@ import {
   Typography,
 } from "@material-ui/core";
 import LinkContentCard from "../src/components/design/LinkContentCard";
-import { NextPage } from "next";
-import { accountInfoContext } from "./_app";
 import { Alert, AlertTitle } from "@material-ui/lab";
 import { withLogin, NextPageWithUserInfo } from "../src/middlewares/withLogin";
 
@@ -167,12 +165,5 @@ const Page: NextPageWithUserInfo = ({ userInfo: accountInfo }) => {
     </>
   );
 };
-
-// Page.getInitialProps = async ({
-//   res,
-//   userInfo,
-// }: NextPageContext & { userInfo?: UserAllInfoJSON }) => {
-//   // use userInfo
-// };
 
 export default withLogin(Page);
