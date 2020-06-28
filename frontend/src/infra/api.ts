@@ -1,6 +1,5 @@
 import ky from "ky-universal";
 import { Options } from "ky";
-import { UserAllInfoJSON } from "user";
 import { toCamelCase } from "./converter";
 import { User } from "models/user";
 

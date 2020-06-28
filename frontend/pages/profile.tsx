@@ -8,9 +8,10 @@ import PaymentStatuses from "../src/components/layout/PaymentStatuses";
 import { Box } from "@material-ui/core";
 import { withLogin } from "../src/middlewares/withLogin";
 import { useCurrentUser } from "features/currentUser";
+import { nonNullOrThrow } from "utils";
 
 const Page: NextPage = () => {
-  const currentUser = useCurrentUser()!;
+  const currentUser = nonNullOrThrow(useCurrentUser());
   const [paymentStatuses, setPaymentStatuses] = useState<PaymentStatus[]>();
 
   useEffect(() => {
