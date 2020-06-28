@@ -1,12 +1,12 @@
 import { createAppAsyncThunk } from "store/helpers";
-import { userAdded, userCleared } from "features/users/slice";
+import { userUpserted, userCleared } from "features/users/slice";
 import { logouted } from "./slice";
 
 export const fetchCurrentUser = createAppAsyncThunk(
   "currentUser/fetch",
   async (_, { dispatch, extra: { api } }) => {
     const user = await api.fetchCurrentProfile();
-    dispatch(userAdded(user));
+    dispatch(userUpserted(user));
     return user.id;
   }
 );

@@ -1,7 +1,8 @@
 import { useCallback } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/router";
 import { logout } from "features/currentUser";
+import { selectCurrentUser } from "./selectors";
 
 export const useLogout = () => {
   const dispatch = useDispatch();
@@ -12,3 +13,5 @@ export const useLogout = () => {
   }, [router, dispatch]);
   return handleLogout;
 };
+
+export const useCurrentUser = () => useSelector(selectCurrentUser);
