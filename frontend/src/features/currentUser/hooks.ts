@@ -9,6 +9,6 @@ export const useLogout = () => {
   const handleLogout = useCallback(async () => {
     await dispatch(logout());
     router.push("/login");
-  }, [router]);
+  }, [router, dispatch]);
   return handleLogout;
 };
