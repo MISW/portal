@@ -3,7 +3,6 @@ import {
   createAsyncThunk,
   AsyncThunk,
   AsyncThunkPayloadCreator,
-  ThunkDispatch,
   AnyAction,
 } from "@reduxjs/toolkit";
 import { HYDRATE } from "next-redux-wrapper";
@@ -48,6 +47,6 @@ export const useThunk = <ThunkType extends AsyncThunk<any, any, {}>>(
 
   return useCallback(
     (arg: ArgumentType<ThunkType>): Promise<AnyAction> => dispatch(thunk(arg)),
-    [dispatch]
+    [dispatch, thunk]
   );
 };

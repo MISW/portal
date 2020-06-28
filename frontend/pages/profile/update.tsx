@@ -8,9 +8,10 @@ import { ConfigurableProfile } from "../../src/user";
 import { updateProfile } from "../../src/network";
 import { withLogin } from "../../src/middlewares/withLogin";
 import { useCurrentUser, useFetchCurrentUser } from "features/currentUser";
+import { nonNullOrThrow } from "utils";
 
 const Page: NextPage = () => {
-  const currentUser = useCurrentUser()!;
+  const currentUser = nonNullOrThrow(useCurrentUser());
   const fetchCurrentUser = useFetchCurrentUser();
   const onSubmit = async (user: ConfigurableProfile): Promise<SubmitResult> => {
     try {
