@@ -30,7 +30,7 @@ const linkData: Array<LinkData> = [
   {
     title: "Discord",
     description: "ボイスチャット 2020春はここで",
-    link: "https://discord.gg/7e3qqqj",
+    link: "https://discord.com/invite/bEtrsRX",
   },
   {
     title: "Twitter",
