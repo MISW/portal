@@ -89,7 +89,7 @@ const useStyles = makeStyles((theme) => ({
 const Page: NextPageWithUserInfo = ({ currentUser }) => {
   const classes = useStyles();
 
-  if (currentUser.role === "not_member" && currentUser.email_verified) {
+  if (currentUser.role === "not_member" && currentUser.emailVerified) {
     return (
       <div>
         <Paper className={classes.paper}>
