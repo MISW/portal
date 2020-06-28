@@ -1,5 +1,5 @@
-import { createAppAsyncThunk } from "../helpers";
-import { userAdded, userCleared } from "store/users/slice";
+import { createAppAsyncThunk } from "store/helpers";
+import { userAdded, userCleared } from "features/users/slice";
 import { logouted } from "./slice";
 
 export const fetchCurrentUser = createAppAsyncThunk(

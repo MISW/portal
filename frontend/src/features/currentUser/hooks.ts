@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 import { useDispatch } from "react-redux";
 import { useRouter } from "next/router";
-import { logout } from "store/currentUser";
+import { logout } from "features/currentUser";
 
 export const useLogout = () => {
   const dispatch = useDispatch();

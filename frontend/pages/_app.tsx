@@ -8,8 +8,11 @@ import { NextPageContext } from "next";
 import { DefaultLayout } from "../src/components/layout/DefaultLayout";
 import { UserAllInfoJSON } from "../src/user";
 import { wrapper, RootState } from "store";
-import { fetchCurrentUser, selectCurrentUser } from "store/currentUser";
-import { useLogout } from "hooks/useLogout";
+import {
+  fetchCurrentUser,
+  selectCurrentUser,
+  useLogout,
+} from "features/currentUser";
 
 export const accountInfoContext = createContext<UserAllInfoJSON | undefined>(
   undefined
