@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/router";
 import { useThunk } from "store/helpers";
 import { selectCurrentUser } from "./selectors";
-import { logout, fetchCurrentUser } from "./operations";
+import { logout, updateCurrentUser } from "./operations";
 
 export const useLogout = () => {
   const dispatch = useDispatch();
@@ -16,4 +16,4 @@ export const useLogout = () => {
 };
 
 export const useCurrentUser = () => useSelector(selectCurrentUser);
-export const useFetchCurrentUser = () => useThunk(fetchCurrentUser);
+export const useUpdateCurrentUser = () => useThunk(updateCurrentUser);

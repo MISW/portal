@@ -1,4 +1,4 @@
 export { currentUserReducer } from "./slice";
-export { fetchCurrentUser, logout } from "./operations";
+export { fetchCurrentUser } from "./operations";
 export { selectCurrentUser } from "./selectors";
-export { useLogout, useCurrentUser, useFetchCurrentUser } from "./hooks";
+export { useLogout, useCurrentUser, useUpdateCurrentUser } from "./hooks";

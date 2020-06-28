@@ -32,3 +32,14 @@ export type User = {
   updatedAt: number;
   emailVerified: boolean;
 };
+
+export type UpdateUserProfileInput = Omit<
+  User,
+  | "slackId"
+  | "role"
+  | "slackInvitationStatus"
+  | "createdAt"
+  | "updatedAt"
+  | "emailVerified"
+  | "id"
+>;

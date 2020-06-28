@@ -1,7 +1,5 @@
 import {
   ConfigurableProfile,
-  UserInfoJSON,
-  toUserProfile,
   toUserInfoJSON,
   UserWithPaymentJSON,
   UserTableData,
@@ -24,25 +22,6 @@ export const login = async () => {
   }
   const body = await res.json();
   location.href = body.redirect_url;
-};
-
-export const updateProfile = async (
-  user: ConfigurableProfile
-): Promise<ConfigurableProfile> => {
-  const body = JSON.stringify(toUserInfoJSON(user));
-
-  const res = await fetch(`${getHostAPI()}/private/profile`, {
-    headers: {
-      "Content-Type": "application/json",
-    },
-    method: "POST",
-    body,
-  });
-  if (res.status >= 400) {
-    return Promise.reject("Error: status-code >= 400");
-  }
-  const resUser = ((await res.json()) as unknown) as UserInfoJSON;
-  return toUserProfile(resUser);
 };
 
 export const getPaymentStatuses = async () => {

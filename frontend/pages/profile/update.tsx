@@ -5,18 +5,17 @@ import RegisterForm, {
   SubmitResult,
 } from "../../src/components/layout/RegisterForm";
 import { ConfigurableProfile } from "../../src/user";
-import { updateProfile } from "../../src/network";
 import { withLogin } from "../../src/middlewares/withLogin";
-import { useCurrentUser, useFetchCurrentUser } from "features/currentUser";
+import { useCurrentUser, useUpdateCurrentUser } from "features/currentUser";
 import { nonNullOrThrow } from "utils";
+import { unwrapResult } from "@reduxjs/toolkit";
 
 const Page: NextPage = () => {
   const currentUser = nonNullOrThrow(useCurrentUser());
-  const fetchCurrentUser = useFetchCurrentUser();
+  const updateCurrentUser = useUpdateCurrentUser();
   const onSubmit = async (user: ConfigurableProfile): Promise<SubmitResult> => {
     try {
-      await updateProfile(user);
-      fetchCurrentUser([]).catch((e) => console.error(e));
+      await updateCurrentUser(user).then(unwrapResult);
       return { status: "success" as const };
     } catch (e) {
       console.error(e);
