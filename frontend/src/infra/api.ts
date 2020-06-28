@@ -1,7 +1,7 @@
 import ky from "ky-universal";
 import { Options } from "ky";
 import { toCamelCase } from "./converter";
-import { User } from "models/user";
+import { User, UpdateUserProfileInput } from "models/user";
 
 export class ApiClient {
   private http: typeof ky;
@@ -16,6 +16,14 @@ export class ApiClient {
   async fetchCurrentProfile(): Promise<User> {
     return toCamelCase(
       await this.http.get("api/private/profile").json()
+    ) as User;
+  }
+
+  async updateCurrentProfile(
+    input: Readonly<UpdateUserProfileInput>
+  ): Promise<User> {
+    return toCamelCase(
+      await this.http.post("api/private/profile", { json: input }).json()
     ) as User;
   }
 
