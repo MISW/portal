@@ -86,10 +86,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Page: NextPageWithUserInfo = ({ userInfo: accountInfo }) => {
+const Page: NextPageWithUserInfo = ({ currentUser }) => {
   const classes = useStyles();
 
-  if (accountInfo.role === "not_member" && accountInfo.email_verified) {
+  if (currentUser.role === "not_member" && currentUser.email_verified) {
     return (
       <div>
         <Paper className={classes.paper}>
@@ -103,7 +103,7 @@ const Page: NextPageWithUserInfo = ({ userInfo: accountInfo }) => {
               を以下の口座へ振り込んでください。
             </p>
             <p>
-              振込が確認され次第, メール {accountInfo.email}
+              振込が確認され次第, メール {currentUser.email}
               宛にサークル内の連絡ツール
               <strong>Slack</strong>の招待が届きます!
             </p>

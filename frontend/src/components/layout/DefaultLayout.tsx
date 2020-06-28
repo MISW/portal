@@ -1,4 +1,4 @@
-import React, { useContext, useCallback } from "react";
+import React, { useCallback } from "react";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
@@ -15,11 +15,12 @@ import { AccountCircle, Lock } from "@material-ui/icons";
 import MUILink from "@material-ui/core/Link";
 import lighttheme from "../theme/lighttheme";
 import darktheme from "../theme/darktheme";
-import { accountInfoContext } from "../../../pages/_app";
 import { useRouter } from "next/router";
 import { useSystemColorScheme } from "../../hooks/theme";
 import { getSuffix } from "../../util";
 import NextLink from "next/link";
+import { useSelector } from "react-redux";
+import { selectCurrentUser } from "features/currentUser";
 
 const useStyles = makeStyles((theme: Theme) => ({
   appBar: {
@@ -66,7 +67,7 @@ export const DefaultLayout: React.FC<{ onLogout: () => void }> = ({
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
-  const accountInfo = useContext(accountInfoContext);
+  const currentUser = useSelector(selectCurrentUser);
   const router = useRouter();
 
   const handleMenu = useCallback((event: React.MouseEvent<HTMLElement>) => {
@@ -111,9 +112,9 @@ export const DefaultLayout: React.FC<{ onLogout: () => void }> = ({
                 </MUILink>
               </NextLink>
             </div>
-            {accountInfo &&
+            {currentUser &&
               (() => {
-                const { generation, role, handle } = accountInfo;
+                const { generation, role, handle } = currentUser;
                 const status =
                   role === "member" || role === "retired"
                     ? `${generation}${getSuffix(generation)}`
