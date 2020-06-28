@@ -51,7 +51,7 @@ const makeStore: MakeStore<RootState> = (ctx) => {
     ? ctx.req
     : undefined;
   const cookie = req?.headers.cookie;
-  const baseUrl = process.browser ? "/" : process.env.BACKEND_HOST!;
+  const baseUrl = process.browser ? "/" : process.env.BACKEND_HOST ?? "/";
   const api = new ApiClient(baseUrl, cookie ? { headers: { cookie } } : {});
   return createStore({ api });
 };
