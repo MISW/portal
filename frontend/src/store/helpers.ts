@@ -5,7 +5,7 @@ import {
   AsyncThunkPayloadCreator,
 } from "@reduxjs/toolkit";
 import { HYDRATE } from "next-redux-wrapper";
-import type { RootState, AppDispatch, ExtraArgument } from "./store";
+import { RootState, AppDispatch, ExtraArgument } from "./store";
 
 export const hydrated = createAction<RootState, typeof HYDRATE>(HYDRATE);
 

@@ -1,5 +1,5 @@
 import ky from "ky-universal";
-import type { Options } from "ky";
+import { Options } from "ky";
 import { UserAllInfoJSON } from "user";
 
 export class ApiClient {
