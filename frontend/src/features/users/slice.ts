@@ -1,6 +1,7 @@
 import { createSlice, createEntityAdapter } from "@reduxjs/toolkit";
 import { UserWithPaymentJSON } from "user";
 import { hydrated } from "store/helpers";
+import { nonNull } from "../../util";
 
 type User = UserWithPaymentJSON;
 
@@ -18,7 +19,10 @@ const usersSlice = createSlice({
     userCleared: userAdapter.removeAll,
   },
   extraReducers: (builder) => {
-    builder.addCase(hydrated, (_, { payload }) => payload.users);
+    builder.addCase(hydrated, (state, { payload }) => {
+      const users = Object.values(payload.users.entities).filter(nonNull);
+      return userAdapter.upsertMany(state, users);
+    });
   },
 });
 
