@@ -1,6 +1,6 @@
 import { Selector } from "store/helpers";
 import { UserAllInfoJSON } from "user";
-import { selectUserById } from "store/users";
+import { selectUserById } from "features/users";
 
 export const selectCurrentUser: Selector<UserAllInfoJSON | undefined> = (
   state

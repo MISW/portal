@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { hydrated } from "../helpers";
+import { hydrated } from "store/helpers";
 import { fetchCurrentUser } from "./operations";
 
 type CurrentUserState = {

@@ -1,6 +1,6 @@
 import { createSlice, createEntityAdapter } from "@reduxjs/toolkit";
 import { UserWithPaymentJSON } from "user";
-import { hydrated } from "../helpers";
+import { hydrated } from "store/helpers";
 
 type User = UserWithPaymentJSON;
 
