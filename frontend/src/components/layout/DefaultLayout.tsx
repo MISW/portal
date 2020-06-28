@@ -17,7 +17,7 @@ import lighttheme from "../theme/lighttheme";
 import darktheme from "../theme/darktheme";
 import { useRouter } from "next/router";
 import { useSystemColorScheme } from "../../hooks/theme";
-import { getSuffix } from "../../util";
+import { getSuffix } from "../../utils";
 import NextLink from "next/link";
 import { useSelector } from "react-redux";
 import { selectCurrentUser } from "features/currentUser";
