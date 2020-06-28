@@ -3,11 +3,15 @@ import { NextPage, NextComponentType, NextPageContext } from "next";
 import Router from "next/router";
 import { UserAllInfoJSON } from "user";
 import { RootState } from "store";
+import { selectCurrentUser } from "features/currentUser";
+import { Merge } from "type-fest";
+
+type WithCurrentUser<T> = Merge<T, { readonly currentUser: UserAllInfoJSON }>;
 
 export type NextPageWithUserInfo<P = {}, IP = P> = NextComponentType<
-  NextPageContext<RootState> & { readonly userInfo: UserAllInfoJSON },
+  WithCurrentUser<NextPageContext<RootState>>,
   IP,
-  P & { readonly userInfo: UserAllInfoJSON }
+  WithCurrentUser<P>
 >;
 
 /**
@@ -15,12 +19,12 @@ export type NextPageWithUserInfo<P = {}, IP = P> = NextComponentType<
  */
 export const withLogin = <P, IP>(page: NextPageWithUserInfo<P, IP>) => {
   const wrapped: NextPage<
-    P & { readonly userInfo: UserAllInfoJSON },
-    (IP & { readonly userInfo: UserAllInfoJSON }) | undefined
+    WithCurrentUser<P>,
+    WithCurrentUser<IP> | undefined
   > = (props) => React.createElement(page, props);
   wrapped.getInitialProps = async (ctx) => {
-    const userInfo = ctx.userInfo;
-    if (userInfo == null) {
+    const currentUser = selectCurrentUser(ctx.store.getState());
+    if (currentUser == null) {
       if (ctx.res) {
         // server
         ctx.res.writeHead(302, { Location: "/login" });
@@ -32,15 +36,14 @@ export const withLogin = <P, IP>(page: NextPageWithUserInfo<P, IP>) => {
         return;
       }
     }
-    const initialProps = await page.getInitialProps?.({ ...ctx, userInfo });
+    const initialProps = await page.getInitialProps?.({
+      ...ctx,
+      currentUser,
+    });
     return {
-      userInfo,
+      currentUser,
       ...initialProps,
-    } as
-      | ({
-          userInfo: UserAllInfoJSON;
-        } & IP)
-      | undefined;
+    } as WithCurrentUser<IP>;
   };
   return wrapped;
 };

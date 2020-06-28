@@ -6,7 +6,6 @@ import { ThemeProvider } from "@material-ui/styles";
 import { CssBaseline, createMuiTheme } from "@material-ui/core";
 import { NextPageContext } from "next";
 import { DefaultLayout } from "../src/components/layout/DefaultLayout";
-import { UserAllInfoJSON } from "../src/user";
 import { wrapper, RootState } from "store";
 import {
   fetchCurrentUser,
@@ -14,12 +13,8 @@ import {
   useLogout,
 } from "features/currentUser";
 
-export const accountInfoContext = createContext<UserAllInfoJSON | undefined>(
-  undefined
-);
-
-const App = (props: AppProps & { userInfo: UserAllInfoJSON | undefined }) => {
-  const { Component, pageProps, userInfo } = props;
+const App = (props: AppProps) => {
+  const { Component, pageProps } = props;
   useEffect(() => {
     const jssStyles = document.querySelector("#jss-server-side");
     if (jssStyles && jssStyles.parentNode) {
@@ -32,11 +27,9 @@ const App = (props: AppProps & { userInfo: UserAllInfoJSON | undefined }) => {
   return (
     <ThemeProvider theme={createMuiTheme({})}>
       <CssBaseline />
-      <accountInfoContext.Provider value={userInfo}>
-        <DefaultLayout onLogout={handleLogout}>
-          <Component {...pageProps} />
-        </DefaultLayout>
-      </accountInfoContext.Provider>
+      <DefaultLayout onLogout={handleLogout}>
+        <Component {...pageProps} />
+      </DefaultLayout>
     </ThemeProvider>
   );
 };
@@ -48,17 +41,14 @@ App.getInitialProps = async ({
   Component: any;
   ctx: NextPageContext<RootState, any>;
 }) => {
-  // getInitialPropsはサーバー側かブラウザ側で実行される. サーバー側で実行する時のみ ctx.res, ctx.reqが存在する. これ大事
-
-  let userInfo = selectCurrentUser(ctx.store.getState());
+  const userInfo = selectCurrentUser(ctx.store.getState());
   if (userInfo == null) await ctx.store.dispatch(fetchCurrentUser());
-  userInfo = selectCurrentUser(ctx.store.getState());
 
   const pageProps = Component.getInitialProps
-    ? await Component.getInitialProps({ ...ctx, userInfo })
+    ? await Component.getInitialProps({ ...ctx })
     : {};
 
-  const ret = { pageProps, userInfo };
+  const ret = { pageProps };
   return ret;
 };
 
