@@ -18,7 +18,7 @@ import {
   toUserTableData,
   labelsInJapanese,
 } from "../../src/user";
-import { usersCSV, saveFile } from "../../src/util";
+import { usersCSV, saveFile } from "../../src/utils";
 import { Typography } from "@material-ui/core";
 import Toolbar from "@material-ui/core/Toolbar";
 import SlackInvitationDialog from "../../src/components/layout/SlackInvitationDialog";

@@ -1,7 +1,7 @@
 import { createSlice, createEntityAdapter } from "@reduxjs/toolkit";
 import { User } from "models/user";
 import { hydrated } from "store/helpers";
-import { nonNull } from "../../util";
+import { nonNull } from "utils";
 
 export const userAdapter = createEntityAdapter<User>({
   selectId: (u) => u.id,
