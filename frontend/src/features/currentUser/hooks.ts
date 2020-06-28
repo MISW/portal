@@ -1,8 +1,9 @@
 import { useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/router";
-import { logout } from "features/currentUser";
+import { useThunk } from "store/helpers";
 import { selectCurrentUser } from "./selectors";
+import { logout, fetchCurrentUser } from "./operations";
 
 export const useLogout = () => {
   const dispatch = useDispatch();
@@ -15,3 +16,4 @@ export const useLogout = () => {
 };
 
 export const useCurrentUser = () => useSelector(selectCurrentUser);
+export const useFetchCurrentUser = () => useThunk(fetchCurrentUser);

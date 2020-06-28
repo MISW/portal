@@ -3,9 +3,13 @@ import {
   createAsyncThunk,
   AsyncThunk,
   AsyncThunkPayloadCreator,
+  ThunkDispatch,
+  AnyAction,
 } from "@reduxjs/toolkit";
 import { HYDRATE } from "next-redux-wrapper";
 import { RootState, AppDispatch, ExtraArgument } from "./store";
+import { useDispatch } from "react-redux";
+import { useCallback } from "react";
 
 export const hydrated = createAction<RootState, typeof HYDRATE>(HYDRATE);
 
@@ -35,3 +39,15 @@ type CreateAppAsyncThunk = <
 export const createAppAsyncThunk = createAsyncThunk as CreateAppAsyncThunk;
 
 export type Selector<A> = (state: RootState) => A;
+
+type ArgumentType<F> = F extends (...args: infer Args) => any ? Args : never;
+export const useThunk = <ThunkType extends AsyncThunk<any, any, {}>>(
+  thunk: ThunkType
+) => {
+  const dispatch = useDispatch();
+
+  return useCallback(
+    (arg: ArgumentType<ThunkType>): Promise<AnyAction> => dispatch(thunk(arg)),
+    [dispatch]
+  );
+};
