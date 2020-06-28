@@ -26,21 +26,6 @@ export const login = async () => {
   location.href = body.redirect_url;
 };
 
-export const getProfile = async (): Promise<ConfigurableProfile> => {
-  const res = await fetch(`${getHostAPI()}/private/profile`, {
-    headers: {
-      Accept: "application/json, */*",
-    },
-    credentials: "include",
-    method: "GET",
-  });
-  if (res.status >= 400) {
-    return Promise.reject("Error: status-code >= 400");
-  }
-  const body = (await res.json()) as UserInfoJSON;
-  return toUserProfile(body);
-};
-
 export const updateProfile = async (
   user: ConfigurableProfile
 ): Promise<ConfigurableProfile> => {
@@ -96,19 +81,6 @@ export const signUp = async (user: ConfigurableProfile) => {
     body,
   });
   if (res.status >= 400) {
-    return Promise.reject("Error: status-code >= 400");
-  }
-};
-
-export const logout = async () => {
-  const res = await fetch(`${getHostAPI()}/private/logout`, {
-    headers: {
-      "Content-Type": "application/json",
-    },
-    method: "POST",
-  });
-  if (res.status >= 400) {
-    console.error(res);
     return Promise.reject("Error: status-code >= 400");
   }
 };

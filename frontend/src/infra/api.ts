@@ -1,6 +1,8 @@
 import ky from "ky-universal";
 import { Options } from "ky";
 import { UserAllInfoJSON } from "user";
+import { toCamelCase } from "./converter";
+import { User } from "models/user";
 
 export class ApiClient {
   private http: typeof ky;
@@ -12,8 +14,10 @@ export class ApiClient {
     });
   }
 
-  async fetchCurrentProfile(): Promise<UserAllInfoJSON> {
-    return await this.http.get("api/private/profile").json();
+  async fetchCurrentProfile(): Promise<User> {
+    return toCamelCase(
+      await this.http.get("api/private/profile").json()
+    ) as User;
   }
 
   async logout(): Promise<void> {

@@ -1,10 +1,12 @@
 import React, { ReactNode } from "react";
 import { Box, Button, FormHelperText } from "@material-ui/core";
-import { ConfigurableProfile } from "../../user";
+import { ConfigurableProfile, toUserInfoJSON } from "../../user";
 import { UserValidation } from "../../hooks/formHooks";
 import Profile from "./Profile";
 import { SubmitResult } from "./RegisterForm";
 import { Alert } from "@material-ui/lab";
+import { toCamelCase } from "infra/converter";
+import { User } from "models/user";
 
 const Confirm: React.FC<{
   user: ConfigurableProfile;
@@ -25,7 +27,11 @@ const Confirm: React.FC<{
   );
   return (
     <>
-      <Profile user={user} title={false} size="small"></Profile>
+      <Profile
+        user={toCamelCase(toUserInfoJSON(user)) as User}
+        title={false}
+        size="small"
+      ></Profile>
 
       <Box mt={4}>
         {(!submitResult || submitResult.status !== "success") && (
