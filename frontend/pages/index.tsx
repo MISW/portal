@@ -1,4 +1,5 @@
 import React from "react";
+import { NextPage } from "next";
 import {
   Grid,
   Paper,
@@ -12,7 +13,7 @@ import {
 } from "@material-ui/core";
 import LinkContentCard from "../src/components/design/LinkContentCard";
 import { Alert, AlertTitle } from "@material-ui/lab";
-import { withLogin, NextPageWithUserInfo } from "../src/middlewares/withLogin";
+import { withLogin } from "../src/middlewares/withLogin";
 import { useCurrentUser } from "features/currentUser/hooks";
 
 interface LinkData {
@@ -87,7 +88,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Page: NextPageWithUserInfo = () => {
+const Page: NextPage = () => {
   const classes = useStyles();
   const currentUser = useCurrentUser()!;
 

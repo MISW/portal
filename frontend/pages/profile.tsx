@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from "react";
+import { NextPage } from "next";
 import Router from "next/router";
 import Profile from "../src/components/layout/Profile";
 import { PaymentStatus } from "../src/user";
 import { getPaymentStatuses } from "../src/network";
 import PaymentStatuses from "../src/components/layout/PaymentStatuses";
 import { Box } from "@material-ui/core";
-import { withLogin, NextPageWithUserInfo } from "../src/middlewares/withLogin";
+import { withLogin } from "../src/middlewares/withLogin";
+import { useCurrentUser } from "features/currentUser";
 
-const Page: NextPageWithUserInfo = ({ currentUser }) => {
+const Page: NextPage = () => {
+  const currentUser = useCurrentUser()!;
   const [paymentStatuses, setPaymentStatuses] = useState<PaymentStatus[]>();
 
   useEffect(() => {
