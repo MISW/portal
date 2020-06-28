@@ -13,6 +13,7 @@ import {
 import LinkContentCard from "../src/components/design/LinkContentCard";
 import { Alert, AlertTitle } from "@material-ui/lab";
 import { withLogin, NextPageWithUserInfo } from "../src/middlewares/withLogin";
+import { useCurrentUser } from "features/currentUser/hooks";
 
 interface LinkData {
   title: string;
@@ -86,8 +87,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Page: NextPageWithUserInfo = ({ currentUser }) => {
+const Page: NextPageWithUserInfo = () => {
   const classes = useStyles();
+  const currentUser = useCurrentUser()!;
 
   if (currentUser.role === "not_member" && currentUser.emailVerified) {
     return (
