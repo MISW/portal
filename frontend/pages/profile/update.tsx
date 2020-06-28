@@ -1,23 +1,21 @@
 import React from "react";
+import { NextPage } from "next";
 import { Alert } from "@material-ui/lab";
 import RegisterForm, {
   SubmitResult,
 } from "../../src/components/layout/RegisterForm";
 import { ConfigurableProfile } from "../../src/user";
 import { updateProfile } from "../../src/network";
-import {
-  withLogin,
-  NextPageWithUserInfo,
-} from "../../src/middlewares/withLogin";
-import { useDispatch } from "react-redux";
-import { fetchCurrentUser } from "features/currentUser";
+import { withLogin } from "../../src/middlewares/withLogin";
+import { useCurrentUser, useFetchCurrentUser } from "features/currentUser";
 
-const Page: NextPageWithUserInfo = ({ currentUser }) => {
-  const dispatch = useDispatch();
+const Page: NextPage = () => {
+  const currentUser = useCurrentUser()!;
+  const fetchCurrentUser = useFetchCurrentUser();
   const onSubmit = async (user: ConfigurableProfile): Promise<SubmitResult> => {
     try {
       await updateProfile(user);
-      dispatch(fetchCurrentUser());
+      fetchCurrentUser([]).catch((e) => console.error(e));
       return { status: "success" as const };
     } catch (e) {
       console.error(e);
