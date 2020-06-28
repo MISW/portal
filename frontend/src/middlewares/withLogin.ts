@@ -1,12 +1,12 @@
 import React from "react";
 import { NextPage, NextComponentType, NextPageContext } from "next";
 import Router from "next/router";
-import { UserAllInfoJSON } from "user";
 import { RootState } from "store";
 import { selectCurrentUser } from "features/currentUser";
 import { Merge } from "type-fest";
+import { User } from "models/user";
 
-type WithCurrentUser<T> = Merge<T, { readonly currentUser: UserAllInfoJSON }>;
+type WithCurrentUser<T> = Merge<T, { readonly currentUser: User }>;
 
 export type NextPageWithUserInfo<P = {}, IP = P> = NextComponentType<
   WithCurrentUser<NextPageContext<RootState>>,

@@ -1,9 +1,7 @@
 import { createSlice, createEntityAdapter } from "@reduxjs/toolkit";
-import { UserWithPaymentJSON } from "user";
+import { User } from "models/user";
 import { hydrated } from "store/helpers";
 import { nonNull } from "../../util";
-
-type User = UserWithPaymentJSON;
 
 export const userAdapter = createEntityAdapter<User>({
   selectId: (u) => u.id,

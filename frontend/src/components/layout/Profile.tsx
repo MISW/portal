@@ -11,6 +11,7 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import { ConfigurableProfile, labelsInJapanese } from "../../user";
 import NoWrapButton from "./NoWrapButton";
+import { User } from "models/user";
 
 const useToolbarStyle = makeStyles(() =>
   createStyles({
@@ -21,8 +22,20 @@ const useToolbarStyle = makeStyles(() =>
   })
 );
 
+const RowItem: React.FC<{ label: string; value: string | number }> = ({
+  label,
+  value,
+}) => (
+  <TableRow>
+    <TableCell component="th" scope="row" align="center">
+      <Box fontWeight="fontWeightBold">{label}</Box>
+    </TableCell>
+    <TableCell align="center">{value}</TableCell>
+  </TableRow>
+);
+
 const Profile: React.FC<{
-  user: ConfigurableProfile;
+  user: User;
   editButton?: boolean;
   handleEditButton?: () => void;
   title?: boolean;
@@ -65,18 +78,24 @@ const Profile: React.FC<{
           </TableRow>
         </TableHead>
         <TableBody>
-          {labelsInJapanese
-            .filter(({ id }) => (id as keyof ConfigurableProfile) in user)
-            .map(({ id, label }) => (
-              <TableRow key={id}>
-                <TableCell component="th" scope="row" align="center">
-                  <Box fontWeight="fontWeightBold">{`${label}`}</Box>
-                </TableCell>
-                <TableCell align="center">{`${
-                  user[id as keyof ConfigurableProfile] ?? ""
-                }`}</TableCell>
-              </TableRow>
-            ))}
+          <RowItem label="ID" value={user.id} />
+          <RowItem label="代" value={user.generation} />
+          <RowItem label="ハンドル" value={user.handle} />
+          <RowItem label="権限" value={user.role} />
+          <RowItem label="氏名" value={user.name} />
+          <RowItem label="氏名(カナ)" value={user.kana} />
+          <RowItem label="性別" value={user.sex} />
+          <RowItem label="大学名" value={user.university.name} />
+          <RowItem label="学部" value={user.university.department} />
+          <RowItem label="学科" value={user.university.subject} />
+          <RowItem label="学籍番号" value={user.studentId} />
+          <RowItem label="Email" value={user.email} />
+          <RowItem label="緊急連絡先" value={user.emergencyPhoneNumber} />
+          <RowItem label="研究会" value={user.workshops.join(", ")} />
+          <RowItem label="班" value={user.squads.join(", ")} />
+          <RowItem label="他サークル" value={user.otherCircles} />
+          <RowItem label="Slack ID" value={user.slackId} />
+          <RowItem label="Discord ID" value={user.discordId} />
         </TableBody>
       </Table>
     </TableContainer>
