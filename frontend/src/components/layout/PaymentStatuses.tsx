@@ -9,7 +9,8 @@ import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
-import { periodsInJapanese, PaymentStatus } from "../../user";
+import { periodsInJapanese } from "../../user";
+import { PaymentStatus } from "models/user";
 
 const useToolbarStyle = makeStyles(() =>
   createStyles({
@@ -29,7 +30,7 @@ const paymentStatusesStyle = makeStyles(() =>
 );
 
 const PaymentStatuses: React.FC<{
-  paymentStatuses: PaymentStatus[];
+  paymentStatuses: readonly PaymentStatus[];
   editButton?: boolean;
   handleEditButton?: () => void;
 }> = ({ paymentStatuses }) => {
@@ -66,12 +67,12 @@ const PaymentStatuses: React.FC<{
             </TableRow>
           ) : (
             paymentStatuses.map((value) => (
-              <TableRow key={`${value.period}:${value.created_at}`}>
+              <TableRow key={`${value.period}:${value.createdAt}`}>
                 <TableCell component="th" scope="row" align="center">
                   {`${periodsInJapanese(value.period)}`}
                 </TableCell>
                 <TableCell align="center">{`${value.authorizer}`}</TableCell>
-                <TableCell align="center">{`${value.created_at}`}</TableCell>
+                <TableCell align="center">{`${value.createdAt}`}</TableCell>
               </TableRow>
             ))
           )}

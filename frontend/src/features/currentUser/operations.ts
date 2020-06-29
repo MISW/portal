@@ -24,6 +24,15 @@ export const updateCurrentUser = createAppAsyncThunk(
       },
     });
     dispatch(userUpserted(user));
+    return user.id;
+  }
+);
+
+export const fetchCurrentPaymentStatuses = createAppAsyncThunk(
+  "currentUser/fetchPaymentStatuses",
+  async (_, { extra: { api } }) => {
+    const paymentStatuses = await api.fetchCurrentPaymentStatuses();
+    return paymentStatuses;
   }
 );
 
