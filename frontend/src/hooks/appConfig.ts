@@ -11,7 +11,6 @@ import {
   fetchEmailTemplate,
   updateEmailTemplate,
 } from "features/appconfig";
-import { unwrapResult } from "@reduxjs/toolkit";
 import { EmailKind } from "models/appconfig";
 
 export type PeriodConfigState = () => [
@@ -23,17 +22,15 @@ export const usePaymentPeriodConfig: PeriodConfigState = () => {
   const dispatch = useDispatch();
   const paymentPeriod = useSelector(selectPaymentPeriod);
   useEffect(() => {
-    const task = dispatch(fetchPaymentPeriod());
-    return () => task.abort();
+    dispatch(fetchPaymentPeriod());
   }, [dispatch]);
 
   const update = useCallback(
     async (newPaymentPeriod: number) => {
       try {
-        await dispatch(updatePaymentPeriod(newPaymentPeriod)).then(
-          unwrapResult
-        );
+        await dispatch(updatePaymentPeriod(newPaymentPeriod));
       } catch (e) {
+        console.error(e);
         throw new Error("支払い期間の更新に失敗しました: " + e.message);
       }
     },
@@ -47,16 +44,13 @@ export const useCurrentPeriodConfig: PeriodConfigState = () => {
   const dispatch = useDispatch();
   const currentPeriod = useSelector(selectCurrentPeriod);
   useEffect(() => {
-    const task = dispatch(fetchCurrentPeriod());
-    return () => task.abort();
+    dispatch(fetchCurrentPeriod());
   }, [dispatch]);
 
   const update = useCallback(
     async (newCurrentPeriod: number) => {
       try {
-        await dispatch(updateCurrentPeriod(newCurrentPeriod)).then(
-          unwrapResult
-        );
+        await dispatch(updateCurrentPeriod(newCurrentPeriod));
       } catch (e) {
         throw new Error("現在の期間の更新に失敗しました: " + e.message);
       }
@@ -83,8 +77,7 @@ export function useEmailTemplateConfig(
     body: "",
   };
   useEffect(() => {
-    const task = dispatch(fetchEmailTemplate(kind));
-    return () => task.abort();
+    dispatch(fetchEmailTemplate(kind));
   }, [kind, dispatch]);
 
   const update = useCallback(
@@ -92,7 +85,7 @@ export function useEmailTemplateConfig(
       try {
         await dispatch(
           updateEmailTemplate({ kind, template: { subject, body } })
-        ).then(unwrapResult);
+        );
       } catch (e) {
         throw new Error(
           "Eメールテンプレートの更新に失敗しました: " + e.message
