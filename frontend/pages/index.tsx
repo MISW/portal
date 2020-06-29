@@ -14,8 +14,9 @@ import {
 import LinkContentCard from "../src/components/design/LinkContentCard";
 import { Alert, AlertTitle } from "@material-ui/lab";
 import { withLogin } from "../src/middlewares/withLogin";
-import { useCurrentUser } from "features/currentUser/hooks";
 import { nonNullOrThrow } from "utils";
+import { useSelector } from "react-redux";
+import { selectCurrentUser } from "features/currentUser";
 
 interface LinkData {
   title: string;
@@ -91,7 +92,7 @@ const useStyles = makeStyles((theme) => ({
 
 const Page: NextPage = () => {
   const classes = useStyles();
-  const currentUser = nonNullOrThrow(useCurrentUser());
+  const currentUser = nonNullOrThrow(useSelector(selectCurrentUser));
 
   if (currentUser.role === "not_member" && currentUser.emailVerified) {
     return (
