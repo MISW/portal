@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React from "react";
 import {
   Grid,
   Paper,
@@ -11,9 +11,8 @@ import {
   Typography,
 } from "@material-ui/core";
 import LinkContentCard from "../src/components/design/LinkContentCard";
-import { NextPage } from "next";
-import { accountInfoContext } from "./_app";
 import { Alert, AlertTitle } from "@material-ui/lab";
+import { withLogin, NextPageWithUserInfo } from "../src/middlewares/withLogin";
 
 interface LinkData {
   title: string;
@@ -87,19 +86,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Page: NextPage = () => {
-  const accountInfo = useContext(accountInfoContext);
+const Page: NextPageWithUserInfo = ({ currentUser }) => {
   const classes = useStyles();
-  if (!accountInfo) {
-    return (
-      <p>
-        ログインしていません /signup からアカウントを作るか,
-        auth0経由でアクセスしてください
-      </p>
-    );
-  }
 
-  if (accountInfo.role === "not_member" && accountInfo.email_verified) {
+  if (currentUser.role === "not_member" && currentUser.email_verified) {
     return (
       <div>
         <Paper className={classes.paper}>
@@ -113,7 +103,7 @@ const Page: NextPage = () => {
               を以下の口座へ振り込んでください。
             </p>
             <p>
-              振込が確認され次第, メール {accountInfo.email}
+              振込が確認され次第, メール {currentUser.email}
               宛にサークル内の連絡ツール
               <strong>Slack</strong>の招待が届きます!
             </p>
@@ -176,11 +166,4 @@ const Page: NextPage = () => {
   );
 };
 
-// Page.getInitialProps = async ({
-//   res,
-//   userInfo,
-// }: NextPageContext & { userInfo?: UserAllInfoJSON }) => {
-//   // use userInfo
-// };
-
-export default Page;
+export default withLogin(Page);

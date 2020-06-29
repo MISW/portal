@@ -3,6 +3,7 @@ import Container from "@material-ui/core/Container";
 import { NextPage } from "next";
 import { Typography, Grid, Box } from "@material-ui/core";
 import LinkContentCard from "../../src/components/design/LinkContentCard";
+import { withLogin } from "../../src/middlewares/withLogin";
 
 const links = [
   {
@@ -32,4 +33,4 @@ const Page: NextPage = () => {
   );
 };
 
-export default Page;
+export default withLogin(Page);

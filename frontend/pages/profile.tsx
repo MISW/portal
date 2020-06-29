@@ -6,6 +6,7 @@ import { ConfigurableProfile, PaymentStatus } from "../src/user";
 import { getProfile, getPaymentStatuses } from "../src/network";
 import PaymentStatuses from "../src/components/layout/PaymentStatuses";
 import { Box } from "@material-ui/core";
+import { withLogin } from "../src/middlewares/withLogin";
 
 const Page: NextPage = () => {
   const [user, setUser] = useState<ConfigurableProfile>();
@@ -40,4 +41,4 @@ const Page: NextPage = () => {
   );
 };
 
-export default Page;
+export default withLogin(Page);

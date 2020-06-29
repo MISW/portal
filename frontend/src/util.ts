@@ -46,3 +46,5 @@ export const getSuffix = (n: number): string => {
   }
   return "th";
 };
+
+export const nonNull = <A>(x: A | undefined | null): x is A => x != null;

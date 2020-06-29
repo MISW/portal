@@ -1,5 +1,6 @@
 import React from "react";
 import { NextPage } from "next";
+import { withLogin } from "../../src/middlewares/withLogin";
 
 const Page: NextPage = () => {
   return (
@@ -26,4 +27,4 @@ const Page: NextPage = () => {
   );
 };
 
-export default Page;
+export default withLogin(Page);
