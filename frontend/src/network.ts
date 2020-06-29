@@ -32,46 +32,6 @@ export const signUp = async (user: ConfigurableProfile) => {
   }
 };
 
-export const addPaymentStatus = async (id: number) => {
-  const res = await fetch(`${getHostAPI()}/private/management/payment_status`, {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    credentials: "include",
-    body: JSON.stringify({
-      user_id: id,
-    }),
-  });
-
-  if (res.status == 409) {
-    return;
-  }
-
-  if (res.status >= 400) {
-    console.error(res);
-    return Promise.reject("Error: status-code is " + res.statusText);
-  }
-};
-
-export const deletePaymentStatus = async (id: number) => {
-  const res = await fetch(`${getHostAPI()}/private/management/payment_status`, {
-    method: "DELETE",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    credentials: "include",
-    body: JSON.stringify({
-      user_id: id,
-    }),
-  });
-
-  if (res.status >= 400) {
-    console.error(res);
-    return Promise.reject("Error: status-code is " + res.statusText);
-  }
-};
-
 export const inviteToSlack = async () => {
   const res = await fetch(`${getHostAPI()}/private/management/slack/invite`, {
     method: "POST",
