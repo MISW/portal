@@ -1,2 +1,3 @@
 export { usersReducer } from "./slice";
-export { selectUserById } from "./selectors";
+export { selectUserById, selectAllUsers } from "./selectors";
+export { fetchAllUsers, fetchUserById } from "./operations";

@@ -6,31 +6,45 @@ import AdminUsersTable, {
   handleClickMenuParam,
 } from "../../src/components/layout/AdminUsersTable";
 import {
-  listUsers,
-  getUserAsAdmin,
   addPaymentStatus,
   deletePaymentStatus,
   inviteToSlack,
   remindPayment,
 } from "../../src/network";
-import {
-  UserTableData,
-  toUserTableData,
-  labelsInJapanese,
-} from "../../src/user";
-import { usersCSV, saveFile } from "../../src/utils";
+import { UserTableData, labelsInJapanese } from "../../src/user";
+import { usersCSV, saveFile, nonNullOrThrow } from "../../src/utils";
 import { Typography } from "@material-ui/core";
 import Toolbar from "@material-ui/core/Toolbar";
 import SlackInvitationDialog from "../../src/components/layout/SlackInvitationDialog";
 import RemindPaymentDialog from "../../src/components/layout/RemindPaymentDialog";
 import { withLogin } from "../../src/middlewares/withLogin";
+import { User } from "models/user";
+import { useDispatch, useSelector } from "react-redux";
+import { selectAllUsers, fetchAllUsers, fetchUserById } from "features/users";
+import { unwrapResult } from "@reduxjs/toolkit";
 
 const headCells: HeadCell[] = labelsInJapanese.map(
   ({ id, label }) => ({ id, label } as HeadCell)
 );
 
+const toTableData = (u: User): UserTableData => ({
+  ...u,
+  univName: u.university.name,
+  department: u.university.department,
+  subject: u.university.subject,
+  workshops: u.workshops.join(", "),
+  squads: u.squads.join(", "),
+  authorizer: u.paymentStatus?.authorizer ?? "",
+  paid: u.paymentStatus ? "YES" : "NO",
+});
+
 const Page: NextPage = () => {
-  const [users, setUsers] = useState<Array<UserTableData> | null>(null);
+  const users = useSelector(selectAllUsers);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    const thunkAction = dispatch(fetchAllUsers());
+    return () => thunkAction.abort();
+  }, [dispatch]);
   const [slackInvitationDialog, setSlackInvitationDialog] = useState<boolean>(
     false
   );
@@ -44,7 +58,7 @@ const Page: NextPage = () => {
         setSlackInvitationDialog(true);
         break;
       case "export":
-        saveFile("members.csv", usersCSV(users ?? []));
+        saveFile("members.csv", usersCSV(users.map(toTableData)));
         break;
       case "remind_payment":
         setRemindPaymentDialog(true);
@@ -65,20 +79,6 @@ const Page: NextPage = () => {
     setRemindPaymentDialog(false);
   };
 
-  useEffect(() => {
-    let unmounted = false;
-    const getListUsers = async () => {
-      const u = await listUsers();
-      if (!unmounted) {
-        setUsers(u);
-      }
-    };
-    getListUsers();
-    return () => {
-      unmounted = true;
-    };
-  }, []);
-
   const invitedUsers =
     users
       ?.filter(
@@ -95,7 +95,8 @@ const Page: NextPage = () => {
   const targetUsers =
     users
       ?.filter(
-        (user) => ["admin", "member"].includes(user.role) && user.paid === "NO"
+        (user) =>
+          ["admin", "member"].includes(user.role) && user.paymentStatus == null
       )
       .map((user) => ({
         id: user.id,
@@ -109,7 +110,7 @@ const Page: NextPage = () => {
       </Toolbar>
       {users ? (
         <AdminUsersTable
-          rows={users}
+          rows={users.map(toTableData)}
           headCells={headCells}
           defaultSortedBy={"id"}
           handleEditPaymnetStatus={async (id, status): Promise<Data> => {
@@ -119,9 +120,11 @@ const Page: NextPage = () => {
               await deletePaymentStatus(id);
             }
 
-            const user = toUserTableData(await getUserAsAdmin(id));
-
-            setUsers(users.map((u) => (u.id == user.id ? user : u)));
+            const user = toTableData(
+              nonNullOrThrow(
+                await dispatch(fetchUserById({ id })).then(unwrapResult)
+              )
+            );
 
             return user;
           }}
