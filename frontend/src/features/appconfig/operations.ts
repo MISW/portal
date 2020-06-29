@@ -37,7 +37,7 @@ export const updatePaymentPeriod = createAppAsyncThunk(
       kind: "payment_period",
       payload: { paymentPeriod },
     });
-    dispatch(fetchPaymentPeriod);
+    dispatch(fetchPaymentPeriod());
   }
 );
 
@@ -48,7 +48,7 @@ export const updateCurrentPeriod = createAppAsyncThunk(
       kind: "current_period",
       payload: { currentPeriod },
     });
-    dispatch(fetchCurrentPeriod);
+    dispatch(fetchCurrentPeriod());
   }
 );
 
