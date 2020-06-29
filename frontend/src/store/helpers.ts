@@ -38,7 +38,6 @@ export const createAppAsyncThunk = createAsyncThunk as CreateAppAsyncThunk;
 
 export type Selector<A> = (state: RootState) => A;
 
-type ArgumentType1<F> = F extends (arg: infer Arg) => any ? Arg : never;
 export const useThunk = <ReturnType, ArgType>(
   thunk: AsyncThunk<ReturnType, ArgType, DefaultThunkApiConfig>
 ) => {

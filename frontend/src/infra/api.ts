@@ -13,6 +13,11 @@ export class ApiClient {
     });
   }
 
+  // Private Endpoints
+  async logout(): Promise<void> {
+    await this.http.post("api/private/logout", { json: {} }).json();
+  }
+
   async fetchCurrentProfile(): Promise<User> {
     return toCamelCase(
       await this.http.get("api/private/profile").json()
@@ -27,7 +32,26 @@ export class ApiClient {
     ) as User;
   }
 
-  async logout(): Promise<void> {
-    await this.http.post("api/private/logout", { json: {} }).json();
+  // Management Endpoints
+  async fetchAllUsers(): Promise<User[]> {
+    return (toCamelCase(
+      await this.http.get("api/private/management/users").json()
+    ) as { users: User[] }).users;
+  }
+
+  async fetchUserById(id: number): Promise<User | undefined> {
+    try {
+      const res = await this.http
+        .get("api/private/management/user", {
+          searchParams: { user_id: `${id}` },
+        })
+        .json<{ user: unknown }>();
+      return toCamelCase(res.user) as User;
+    } catch (e) {
+      if (e instanceof ky.HTTPError) {
+        if (e.response.status === 404) return undefined;
+      }
+      throw e;
+    }
   }
 }

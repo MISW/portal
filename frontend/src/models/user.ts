@@ -31,6 +31,8 @@ export type User = {
   createdAt: number;
   updatedAt: number;
   emailVerified: boolean;
+
+  paymentStatus?: PaymentStatus;
 };
 
 export type UpdateUserProfileInput = Omit<

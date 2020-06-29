@@ -1,11 +1,4 @@
-import {
-  ConfigurableProfile,
-  toUserInfoJSON,
-  UserWithPaymentJSON,
-  UserTableData,
-  PaymentStatus,
-  toUserTableData,
-} from "./user";
+import { ConfigurableProfile, toUserInfoJSON, PaymentStatus } from "./user";
 
 const getHostAPI = () => `${location.protocol}//${location.host}/api`;
 
@@ -64,26 +57,6 @@ export const signUp = async (user: ConfigurableProfile) => {
   }
 };
 
-export const listUsers = async (): Promise<Array<UserTableData>> => {
-  const res = await fetch(`${getHostAPI()}/private/management/users`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    credentials: "include",
-  });
-  if (res.status >= 400) {
-    console.error(res);
-    return Promise.reject("Error: status-code >= 400");
-  }
-  const userList = (await res.json()).users as Array<UserWithPaymentJSON>;
-  if (!Array.isArray(userList)) {
-    console.error(userList);
-    throw new Error("not array");
-  }
-  return userList.map((u) => toUserTableData(u));
-};
-
 export const addPaymentStatus = async (id: number) => {
   const res = await fetch(`${getHostAPI()}/private/management/payment_status`, {
     method: "PUT",
@@ -122,28 +95,6 @@ export const deletePaymentStatus = async (id: number) => {
     console.error(res);
     return Promise.reject("Error: status-code is " + res.statusText);
   }
-};
-
-export const getUserAsAdmin = async (
-  id: number
-): Promise<UserWithPaymentJSON> => {
-  const res = await fetch(
-    `${getHostAPI()}/private/management/user?user_id=${id}`,
-    {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-    }
-  );
-
-  if (res.status >= 400) {
-    console.error(res);
-    return Promise.reject("Error: status-code is " + res.statusText);
-  }
-
-  return (await res.json()).user as UserWithPaymentJSON;
 };
 
 export const inviteToSlack = async () => {
