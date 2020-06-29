@@ -1,7 +1,7 @@
 import ky from "ky-universal";
 import { Options } from "ky";
 import { toCamelCase, toSnakeCase } from "./converter";
-import { User, UpdateUserProfileInput } from "models/user";
+import { User, UpdateUserProfileInput, PaymentStatus } from "models/user";
 import { Period, EmailKind, EmailTemplate } from "models/appconfig";
 import { UpdateAppConfigInput } from "./type";
 
@@ -34,6 +34,13 @@ export class ApiClient {
         .post("api/private/profile", { json: toSnakeCase(input) })
         .json()
     ) as User;
+  }
+
+  async fetchCurrentPaymentStatuses(): Promise<readonly PaymentStatus[]> {
+    const res = await this.http
+      .get("api/private/profile/payment_statuses")
+      .json<{ payment_statuses: unknown[] }>();
+    return toCamelCase(res.payment_statuses) as PaymentStatus[];
   }
 
   // Management Endpoints
