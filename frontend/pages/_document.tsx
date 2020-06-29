@@ -7,7 +7,7 @@ import { ServerStyleSheets } from "@material-ui/core/styles";
 export default class MyDocument extends Document {
   render() {
     return (
-      <html lang="en">
+      <html lang="ja">
         <Head>
           {/* PWA primary color */}
           <title>MISW Portal</title>

@@ -9,6 +9,7 @@ import {
   useEmailTemplateConfig,
 } from "../../src/hooks/appConfig";
 import { calcPeriod } from "../../src/util";
+import { withLogin } from "../../src/middlewares/withLogin";
 
 const usePaymentPeriodNode = (
   paymentPeriod: number | undefined,
@@ -182,4 +183,4 @@ const Page: NextPage = () => {
   );
 };
 
-export default Page;
+export default withLogin(Page);
