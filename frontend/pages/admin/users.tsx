@@ -5,12 +5,7 @@ import AdminUsersTable, {
   Data,
   handleClickMenuParam,
 } from "../../src/components/layout/AdminUsersTable";
-import {
-  addPaymentStatus,
-  deletePaymentStatus,
-  inviteToSlack,
-  remindPayment,
-} from "../../src/network";
+import { inviteToSlack, remindPayment } from "../../src/network";
 import { UserTableData, labelsInJapanese } from "../../src/user";
 import { usersCSV, saveFile, nonNullOrThrow } from "../../src/utils";
 import { Typography } from "@material-ui/core";
@@ -19,9 +14,14 @@ import SlackInvitationDialog from "../../src/components/layout/SlackInvitationDi
 import RemindPaymentDialog from "../../src/components/layout/RemindPaymentDialog";
 import { withLogin } from "../../src/middlewares/withLogin";
 import { User } from "models/user";
-import { useDispatch, useSelector } from "react-redux";
-import { selectAllUsers, fetchAllUsers, fetchUserById } from "features/users";
-import { unwrapResult } from "@reduxjs/toolkit";
+import { useDispatch, useSelector, useStore } from "react-redux";
+import {
+  selectAllUsers,
+  fetchAllUsers,
+  addPaymentStatus,
+  deletePaymentStatus,
+  selectUserById,
+} from "features/users";
 
 const headCells: HeadCell[] = labelsInJapanese.map(
   ({ id, label }) => ({ id, label } as HeadCell)
@@ -40,6 +40,7 @@ const toTableData = (u: User): UserTableData => ({
 
 const Page: NextPage = () => {
   const users = useSelector(selectAllUsers);
+  const store = useStore();
   const dispatch = useDispatch();
   useEffect(() => {
     const thunkAction = dispatch(fetchAllUsers());
@@ -115,15 +116,13 @@ const Page: NextPage = () => {
           defaultSortedBy={"id"}
           handleEditPaymnetStatus={async (id, status): Promise<Data> => {
             if (status) {
-              await addPaymentStatus(id);
+              await dispatch(addPaymentStatus({ targetUserId: id }));
             } else {
-              await deletePaymentStatus(id);
+              await dispatch(deletePaymentStatus({ targetUserId: id }));
             }
 
             const user = toTableData(
-              nonNullOrThrow(
-                await dispatch(fetchUserById({ id })).then(unwrapResult)
-              )
+              nonNullOrThrow(selectUserById(store.getState(), id))
             );
 
             return user;

@@ -101,4 +101,24 @@ export class ApiClient {
       .post("api/private/management/config", { json: toSnakeCase(input) })
       .json();
   }
+  async addPaymentStatus(targetUserId: number): Promise<void> {
+    try {
+      await this.http
+        .put("api/private/management/payment_status", {
+          json: { user_id: targetUserId },
+        })
+        .json();
+    } catch (e) {
+      if (e instanceof ky.HTTPError) {
+        if (e.response.status === 409) return;
+      }
+      throw e;
+    }
+  }
+
+  async deletePaymentStatus(targetUserId: number): Promise<void> {
+    await this.http.delete("api/private/management/payment_status", {
+      json: { user_id: targetUserId },
+    });
+  }
 }

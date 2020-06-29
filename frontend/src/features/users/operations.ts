@@ -19,3 +19,31 @@ export const fetchUserById = createAppAsyncThunk(
     return user;
   }
 );
+
+type AddPaymentStatusParams = Readonly<{
+  targetUserId: number;
+}>;
+
+export const addPaymentStatus = createAppAsyncThunk(
+  "users/addPaymentStatus",
+  async (
+    { targetUserId }: AddPaymentStatusParams,
+    { dispatch, extra: { api } }
+  ) => {
+    await api.addPaymentStatus(targetUserId);
+    await dispatch(fetchUserById({ id: targetUserId }));
+  }
+);
+
+type DeletePaymentStatusParams = AddPaymentStatusParams;
+
+export const deletePaymentStatus = createAppAsyncThunk(
+  "users/deletePaymentStatus",
+  async (
+    { targetUserId }: DeletePaymentStatusParams,
+    { dispatch, extra: { api } }
+  ) => {
+    await api.deletePaymentStatus(targetUserId);
+    await dispatch(fetchUserById({ id: targetUserId }));
+  }
+);
