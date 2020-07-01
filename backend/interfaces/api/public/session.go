@@ -57,6 +57,7 @@ func (s *sessionHandler) Login(e echo.Context) error {
 	if !insecureCookie() {
 		cookie.HttpOnly = true
 		cookie.Secure = true
+		cookie.SameSite = http.SameSiteStrictMode
 	}
 
 	cookie.Name = cookies.StateCookieKey
