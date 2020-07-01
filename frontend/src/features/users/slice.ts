@@ -1,9 +1,8 @@
 import { createSlice, createEntityAdapter } from "@reduxjs/toolkit";
-import { UserWithPaymentJSON } from "user";
+import { User } from "models/user";
 import { hydrated } from "store/helpers";
-import { nonNull } from "../../util";
-
-type User = UserWithPaymentJSON;
+import { nonNull } from "utils";
+import { fetchAllUsers } from "./operations";
 
 export const userAdapter = createEntityAdapter<User>({
   selectId: (u) => u.id,
@@ -15,16 +14,20 @@ const usersSlice = createSlice({
   name: "users",
   initialState: userAdapter.getInitialState(),
   reducers: {
-    userAdded: userAdapter.addOne,
+    userUpserted: userAdapter.upsertOne,
     userCleared: userAdapter.removeAll,
   },
   extraReducers: (builder) => {
-    builder.addCase(hydrated, (state, { payload }) => {
-      const users = Object.values(payload.users.entities).filter(nonNull);
-      return userAdapter.upsertMany(state, users);
-    });
+    builder
+      .addCase(hydrated, (state, { payload }) => {
+        const users = Object.values(payload.users.entities).filter(nonNull);
+        return userAdapter.upsertMany(state, users);
+      })
+      .addCase(fetchAllUsers.fulfilled, (state, action) => {
+        return userAdapter.upsertMany(state, action.payload);
+      });
   },
 });
 
-export const { userAdded, userCleared } = usersSlice.actions;
+export const { userUpserted, userCleared } = usersSlice.actions;
 export const usersReducer = usersSlice.reducer;

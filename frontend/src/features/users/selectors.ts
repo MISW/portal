@@ -1,6 +1,11 @@
-import { userAdapter } from "./slice";
 import { RootState } from "store";
+import { userAdapter } from "./slice";
 
-export const { selectById: selectUserById } = userAdapter.getSelectors<
-  RootState
->((state) => state.users);
+const adapterSelectors = userAdapter.getSelectors(
+  (state: RootState) => state.users
+);
+
+export const {
+  selectById: selectUserById,
+  selectAll: selectAllUsers,
+} = adapterSelectors;

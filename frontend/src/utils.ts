@@ -48,3 +48,8 @@ export const getSuffix = (n: number): string => {
 };
 
 export const nonNull = <A>(x: A | undefined | null): x is A => x != null;
+
+export const nonNullOrThrow = <A>(x: A | undefined | null): A => {
+  if (x == null) throw new TypeError("nullish value");
+  return x;
+};

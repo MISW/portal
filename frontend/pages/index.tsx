@@ -1,4 +1,5 @@
 import React from "react";
+import { NextPage } from "next";
 import {
   Grid,
   Paper,
@@ -12,7 +13,10 @@ import {
 } from "@material-ui/core";
 import LinkContentCard from "../src/components/design/LinkContentCard";
 import { Alert, AlertTitle } from "@material-ui/lab";
-import { withLogin, NextPageWithUserInfo } from "../src/middlewares/withLogin";
+import { withLogin } from "../src/middlewares/withLogin";
+import { nonNullOrThrow } from "utils";
+import { useSelector } from "react-redux";
+import { selectCurrentUser } from "features/currentUser";
 
 interface LinkData {
   title: string;
@@ -86,10 +90,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Page: NextPageWithUserInfo = ({ currentUser }) => {
+const Page: NextPage = () => {
   const classes = useStyles();
+  const currentUser = nonNullOrThrow(useSelector(selectCurrentUser));
 
-  if (currentUser.role === "not_member" && currentUser.email_verified) {
+  if (currentUser.role === "not_member" && currentUser.emailVerified) {
     return (
       <div>
         <Paper className={classes.paper}>

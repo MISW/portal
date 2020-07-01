@@ -1,32 +1,30 @@
 import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { NextPage } from "next";
 import Router from "next/router";
 import Profile from "../src/components/layout/Profile";
-import { ConfigurableProfile, PaymentStatus } from "../src/user";
-import { getProfile, getPaymentStatuses } from "../src/network";
+import { PaymentStatus } from "../src/user";
+import { getPaymentStatuses } from "../src/network";
 import PaymentStatuses from "../src/components/layout/PaymentStatuses";
 import { Box } from "@material-ui/core";
 import { withLogin } from "../src/middlewares/withLogin";
+import { selectCurrentUser } from "features/currentUser";
+import { nonNullOrThrow } from "utils";
 
 const Page: NextPage = () => {
-  const [user, setUser] = useState<ConfigurableProfile>();
+  const currentUser = nonNullOrThrow(useSelector(selectCurrentUser));
   const [paymentStatuses, setPaymentStatuses] = useState<PaymentStatus[]>();
 
   useEffect(() => {
-    getProfile().then((u) => setUser(u));
     getPaymentStatuses().then((ps) => setPaymentStatuses(ps));
   }, []);
   return (
     <>
-      {!user ? (
-        "Loading..."
-      ) : (
-        <Profile
-          user={user}
-          editButton={true}
-          handleEditButton={() => Router.push("/profile/update")}
-        />
-      )}
+      <Profile
+        user={currentUser}
+        editButton={true}
+        handleEditButton={() => Router.push("/profile/update")}
+      />
       <Box mt={6}>
         {!paymentStatuses ? (
           ""

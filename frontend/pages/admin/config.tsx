@@ -8,7 +8,7 @@ import {
   useCurrentPeriodConfig,
   useEmailTemplateConfig,
 } from "../../src/hooks/appConfig";
-import { calcPeriod } from "../../src/util";
+import { calcPeriod } from "../../src/utils";
 import { withLogin } from "../../src/middlewares/withLogin";
 
 const usePaymentPeriodNode = (
