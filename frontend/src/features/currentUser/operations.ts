@@ -1,13 +1,29 @@
 import { createAppAsyncThunk } from "store/helpers";
-import { userAdded, userCleared } from "features/users/slice";
+import { userUpserted, userCleared } from "features/users/slice";
 import { logouted } from "./slice";
+import { ConfigurableProfile } from "user";
 
 export const fetchCurrentUser = createAppAsyncThunk(
   "currentUser/fetch",
   async (_, { dispatch, extra: { api } }) => {
     const user = await api.fetchCurrentProfile();
-    dispatch(userAdded(user));
+    dispatch(userUpserted(user));
     return user.id;
+  }
+);
+
+export const updateCurrentUser = createAppAsyncThunk(
+  "currentUser/update",
+  async (updateInput: ConfigurableProfile, { dispatch, extra: { api } }) => {
+    const user = await api.updateCurrentProfile({
+      ...updateInput,
+      university: {
+        name: updateInput.univName,
+        department: updateInput.department,
+        subject: updateInput.subject,
+      },
+    });
+    dispatch(userUpserted(user));
   }
 );
 

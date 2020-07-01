@@ -1,13 +1,4 @@
-import {
-  ConfigurableProfile,
-  UserInfoJSON,
-  toUserProfile,
-  toUserInfoJSON,
-  UserWithPaymentJSON,
-  UserTableData,
-  PaymentStatus,
-  toUserTableData,
-} from "./user";
+import { ConfigurableProfile, toUserInfoJSON, PaymentStatus } from "./user";
 
 const getHostAPI = () => `${location.protocol}//${location.host}/api`;
 
@@ -24,40 +15,6 @@ export const login = async () => {
   }
   const body = await res.json();
   location.href = body.redirect_url;
-};
-
-export const getProfile = async (): Promise<ConfigurableProfile> => {
-  const res = await fetch(`${getHostAPI()}/private/profile`, {
-    headers: {
-      Accept: "application/json, */*",
-    },
-    credentials: "include",
-    method: "GET",
-  });
-  if (res.status >= 400) {
-    return Promise.reject("Error: status-code >= 400");
-  }
-  const body = (await res.json()) as UserInfoJSON;
-  return toUserProfile(body);
-};
-
-export const updateProfile = async (
-  user: ConfigurableProfile
-): Promise<ConfigurableProfile> => {
-  const body = JSON.stringify(toUserInfoJSON(user));
-
-  const res = await fetch(`${getHostAPI()}/private/profile`, {
-    headers: {
-      "Content-Type": "application/json",
-    },
-    method: "POST",
-    body,
-  });
-  if (res.status >= 400) {
-    return Promise.reject("Error: status-code >= 400");
-  }
-  const resUser = ((await res.json()) as unknown) as UserInfoJSON;
-  return toUserProfile(resUser);
 };
 
 export const getPaymentStatuses = async () => {
@@ -100,39 +57,6 @@ export const signUp = async (user: ConfigurableProfile) => {
   }
 };
 
-export const logout = async () => {
-  const res = await fetch(`${getHostAPI()}/private/logout`, {
-    headers: {
-      "Content-Type": "application/json",
-    },
-    method: "POST",
-  });
-  if (res.status >= 400) {
-    console.error(res);
-    return Promise.reject("Error: status-code >= 400");
-  }
-};
-
-export const listUsers = async (): Promise<Array<UserTableData>> => {
-  const res = await fetch(`${getHostAPI()}/private/management/users`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    credentials: "include",
-  });
-  if (res.status >= 400) {
-    console.error(res);
-    return Promise.reject("Error: status-code >= 400");
-  }
-  const userList = (await res.json()).users as Array<UserWithPaymentJSON>;
-  if (!Array.isArray(userList)) {
-    console.error(userList);
-    throw new Error("not array");
-  }
-  return userList.map((u) => toUserTableData(u));
-};
-
 export const addPaymentStatus = async (id: number) => {
   const res = await fetch(`${getHostAPI()}/private/management/payment_status`, {
     method: "PUT",
@@ -171,28 +95,6 @@ export const deletePaymentStatus = async (id: number) => {
     console.error(res);
     return Promise.reject("Error: status-code is " + res.statusText);
   }
-};
-
-export const getUserAsAdmin = async (
-  id: number
-): Promise<UserWithPaymentJSON> => {
-  const res = await fetch(
-    `${getHostAPI()}/private/management/user?user_id=${id}`,
-    {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-    }
-  );
-
-  if (res.status >= 400) {
-    console.error(res);
-    return Promise.reject("Error: status-code is " + res.statusText);
-  }
-
-  return (await res.json()).user as UserWithPaymentJSON;
 };
 
 export const inviteToSlack = async () => {
