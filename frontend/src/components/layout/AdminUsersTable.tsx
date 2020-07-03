@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import clsx from "clsx";
 import {
   createStyles,
@@ -347,6 +347,10 @@ export const EnhancedTable: React.FC<{
   handleClickMenu,
 }) => {
   const [rows, setRows] = React.useState<Array<Data>>(rowsBase);
+  // workaround
+  useEffect(() => {
+    setRows(rowsBase);
+  }, [rowsBase]);
   const classes = useStyles();
   const [order, setOrder] = React.useState<Order>("asc");
   const [orderBy, setOrderBy] = React.useState<keyof Data>(defaultSortedBy);

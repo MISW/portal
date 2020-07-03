@@ -28,8 +28,8 @@ export type User = {
   discordId: string;
   slackInvitationStatus: string;
 
-  createdAt: number;
-  updatedAt: number;
+  createdAt: string;
+  updatedAt: string;
   emailVerified: boolean;
 
   paymentStatus?: PaymentStatus;
