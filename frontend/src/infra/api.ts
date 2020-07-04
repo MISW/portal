@@ -2,6 +2,8 @@ import ky from "ky-universal";
 import { Options } from "ky";
 import { toCamelCase, toSnakeCase } from "./converter";
 import { User, UpdateUserProfileInput } from "models/user";
+import { Period, EmailKind, EmailTemplate } from "models/appconfig";
+import { UpdateAppConfigInput } from "./type";
 
 export class ApiClient {
   private http: typeof ky;
@@ -55,5 +57,41 @@ export class ApiClient {
       }
       throw e;
     }
+  }
+
+  async fetchPaymentPeriodConfig(): Promise<Period> {
+    const res = await this.http
+      .get("api/private/management/config", {
+        searchParams: { kind: "payment_period" },
+      })
+      .json<{ payment_period: Period }>();
+    return res.payment_period;
+  }
+
+  async fetchCurrentPeriodConfig(): Promise<Period> {
+    const res = await this.http
+      .get("api/private/management/config", {
+        searchParams: { kind: "current_period" },
+      })
+      .json<{ current_period: Period }>();
+    return res.current_period;
+  }
+
+  async fetchEmailTemplateConfig(kind: EmailKind): Promise<EmailTemplate> {
+    const res = await this.http
+      .get("api/private/management/config", {
+        searchParams: { kind: "email_template", email_kind: kind },
+      })
+      .json<EmailTemplate>();
+    return {
+      subject: res.subject,
+      body: res.body,
+    };
+  }
+
+  async updateAppConfig(input: UpdateAppConfigInput): Promise<void> {
+    await this.http
+      .post("api/private/management/config", { json: toSnakeCase(input) })
+      .json();
   }
 }
