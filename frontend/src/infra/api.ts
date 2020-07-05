@@ -36,7 +36,7 @@ export class ApiClient {
     ) as User;
   }
 
-  async fetchCurrentPaymentStatuses(): Promise<readonly PaymentStatus[]> {
+  async fetchCurrentPaymentStatuses(): Promise<PaymentStatus[]> {
     const res = await this.http
       .get("api/private/profile/payment_statuses")
       .json<{ payment_statuses: unknown[] }>();
