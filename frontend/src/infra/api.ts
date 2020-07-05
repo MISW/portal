@@ -1,7 +1,7 @@
 import ky from "ky-universal";
 import { Options } from "ky";
 import { toCamelCase, toSnakeCase } from "./converter";
-import { User, UpdateUserProfileInput } from "models/user";
+import { User, UpdateUserProfileInput, PaymentStatus } from "models/user";
 import { Period, EmailKind, EmailTemplate } from "models/appconfig";
 import { UpdateAppConfigInput } from "./type";
 
@@ -34,6 +34,13 @@ export class ApiClient {
         .post("api/private/profile", { json: toSnakeCase(input) })
         .json()
     ) as User;
+  }
+
+  async fetchCurrentPaymentStatuses(): Promise<PaymentStatus[]> {
+    const res = await this.http
+      .get("api/private/profile/payment_statuses")
+      .json<{ payment_statuses: unknown[] }>();
+    return toCamelCase(res.payment_statuses) as PaymentStatus[];
   }
 
   // Management Endpoints
@@ -93,5 +100,25 @@ export class ApiClient {
     await this.http
       .post("api/private/management/config", { json: toSnakeCase(input) })
       .json();
+  }
+  async addPaymentStatus(targetUserId: number): Promise<void> {
+    try {
+      await this.http
+        .put("api/private/management/payment_status", {
+          json: { user_id: targetUserId },
+        })
+        .json();
+    } catch (e) {
+      if (e instanceof ky.HTTPError) {
+        if (e.response.status === 409) return;
+      }
+      throw e;
+    }
+  }
+
+  async deletePaymentStatus(targetUserId: number): Promise<void> {
+    await this.http.delete("api/private/management/payment_status", {
+      json: { user_id: targetUserId },
+    });
   }
 }
