@@ -1,23 +1,26 @@
-import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import React, { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { NextPage } from "next";
 import Router from "next/router";
 import Profile from "../src/components/layout/Profile";
-import { PaymentStatus } from "../src/user";
-import { getPaymentStatuses } from "../src/network";
 import PaymentStatuses from "../src/components/layout/PaymentStatuses";
 import { Box } from "@material-ui/core";
 import { withLogin } from "../src/middlewares/withLogin";
-import { selectCurrentUser } from "features/currentUser";
+import {
+  selectCurrentUser,
+  selectCurrentPaymentStatuses,
+  fetchCurrentPaymentStatuses,
+} from "features/currentUser";
 import { nonNullOrThrow } from "utils";
 
 const Page: NextPage = () => {
+  const dispatch = useDispatch();
   const currentUser = nonNullOrThrow(useSelector(selectCurrentUser));
-  const [paymentStatuses, setPaymentStatuses] = useState<PaymentStatus[]>();
-
+  const paymentStatuses = useSelector(selectCurrentPaymentStatuses);
   useEffect(() => {
-    getPaymentStatuses().then((ps) => setPaymentStatuses(ps));
-  }, []);
+    dispatch(fetchCurrentPaymentStatuses());
+  }, [dispatch]);
+
   return (
     <>
       <Profile
@@ -26,9 +29,7 @@ const Page: NextPage = () => {
         handleEditButton={() => Router.push("/profile/update")}
       />
       <Box mt={6}>
-        {!paymentStatuses ? (
-          ""
-        ) : (
+        {paymentStatuses != null && (
           <PaymentStatuses
             paymentStatuses={paymentStatuses}
             editButton={false}

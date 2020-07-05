@@ -1,4 +1,4 @@
-import { createAppAsyncThunk } from "store/helpers";
+import { createAppAsyncThunk, AppThunk } from "store/helpers";
 import { userUpserted } from "./slice";
 
 export const fetchAllUsers = createAppAsyncThunk(
@@ -19,3 +19,29 @@ export const fetchUserById = createAppAsyncThunk(
     return user;
   }
 );
+
+type AddPaymentStatusParams = Readonly<{
+  targetUserId: number;
+}>;
+
+export const addPaymentStatus = ({
+  targetUserId,
+}: AddPaymentStatusParams): AppThunk => async (dispatch, _, { api }) => {
+  try {
+    await api.addPaymentStatus(targetUserId);
+  } finally {
+    await dispatch(fetchUserById({ id: targetUserId }));
+  }
+};
+
+type DeletePaymentStatusParams = AddPaymentStatusParams;
+
+export const deletePaymentStatus = ({
+  targetUserId,
+}: DeletePaymentStatusParams): AppThunk => async (dispatch, _, { api }) => {
+  try {
+    await api.deletePaymentStatus(targetUserId);
+  } finally {
+    await dispatch(fetchUserById({ id: targetUserId }));
+  }
+};

@@ -1,4 +1,4 @@
-import { ConfigurableProfile, toUserInfoJSON, PaymentStatus } from "./user";
+import { ConfigurableProfile, toUserInfoJSON } from "./user";
 
 const getHostAPI = () => `${location.protocol}//${location.host}/api`;
 
@@ -17,31 +17,6 @@ export const login = async () => {
   location.href = body.redirect_url;
 };
 
-export const getPaymentStatuses = async () => {
-  const res = await fetch(`${getHostAPI()}/private/profile/payment_statuses`, {
-    method: "GET",
-    credentials: "include",
-  });
-
-  if (res.status >= 400) {
-    console.error(res);
-    return Promise.reject("Error: status-code is " + res.statusText);
-  }
-
-  return (await res.json()).payment_statuses as Array<PaymentStatus>;
-};
-
-export const checkLoggingIn = async (): Promise<boolean> => {
-  const res = await fetch(`${getHostAPI()}/private/profile`, {
-    headers: {
-      Accept: "application/json, */*",
-    },
-    credentials: "include",
-    method: "GET",
-  });
-  return res.status < 400;
-};
-
 export const signUp = async (user: ConfigurableProfile) => {
   const body = JSON.stringify(toUserInfoJSON(user));
 
@@ -54,46 +29,6 @@ export const signUp = async (user: ConfigurableProfile) => {
   });
   if (res.status >= 400) {
     return Promise.reject("Error: status-code >= 400");
-  }
-};
-
-export const addPaymentStatus = async (id: number) => {
-  const res = await fetch(`${getHostAPI()}/private/management/payment_status`, {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    credentials: "include",
-    body: JSON.stringify({
-      user_id: id,
-    }),
-  });
-
-  if (res.status == 409) {
-    return;
-  }
-
-  if (res.status >= 400) {
-    console.error(res);
-    return Promise.reject("Error: status-code is " + res.statusText);
-  }
-};
-
-export const deletePaymentStatus = async (id: number) => {
-  const res = await fetch(`${getHostAPI()}/private/management/payment_status`, {
-    method: "DELETE",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    credentials: "include",
-    body: JSON.stringify({
-      user_id: id,
-    }),
-  });
-
-  if (res.status >= 400) {
-    console.error(res);
-    return Promise.reject("Error: status-code is " + res.statusText);
   }
 };
 
