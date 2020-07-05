@@ -1,17 +1,13 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { hydrated } from "store/helpers";
-import {
-  fetchCurrentUser,
-  updateCurrentUser,
-  fetchCurrentPaymentStatuses,
-} from "./operations";
+import { fetchCurrentUser, updateCurrentUser } from "./operations";
 import { PaymentStatus } from "models/user";
 
 type UserId = number;
 
 type CurrentUserState = {
   id: UserId | undefined;
-  paymentStatuses: Readonly<PaymentStatus>[] | undefined;
+  paymentStatuses: PaymentStatus[] | undefined;
 };
 
 const initialState: CurrentUserState = {
@@ -33,17 +29,17 @@ const currentUserSlice = createSlice({
     logouted: (state) => {
       state.id = undefined;
     },
+    paymentStatusesFetched: (state, action: PayloadAction<PaymentStatus[]>) => {
+      state.paymentStatuses = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder
       .addCase(hydrated, (_, action) => action.payload.currentUser)
       .addCase(fetchCurrentUser.fulfilled, updateUserId)
-      .addCase(updateCurrentUser.fulfilled, updateUserId)
-      .addCase(fetchCurrentPaymentStatuses.fulfilled, (state, action) => {
-        state.paymentStatuses = [...action.payload];
-      });
+      .addCase(updateCurrentUser.fulfilled, updateUserId);
   },
 });
 
-export const { logouted } = currentUserSlice.actions;
+export const { logouted, paymentStatusesFetched } = currentUserSlice.actions;
 export const currentUserReducer = currentUserSlice.reducer;

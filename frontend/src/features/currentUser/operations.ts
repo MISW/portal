@@ -1,6 +1,6 @@
-import { createAppAsyncThunk } from "store/helpers";
+import { createAppAsyncThunk, AppThunk } from "store/helpers";
 import { userUpserted, userCleared } from "features/users/slice";
-import { logouted } from "./slice";
+import { logouted, paymentStatusesFetched } from "./slice";
 import { ConfigurableProfile } from "user";
 
 export const fetchCurrentUser = createAppAsyncThunk(
@@ -28,13 +28,14 @@ export const updateCurrentUser = createAppAsyncThunk(
   }
 );
 
-export const fetchCurrentPaymentStatuses = createAppAsyncThunk(
-  "currentUser/fetchPaymentStatuses",
-  async (_, { extra: { api } }) => {
-    const paymentStatuses = await api.fetchCurrentPaymentStatuses();
-    return paymentStatuses;
-  }
-);
+export const fetchCurrentPaymentStatuses = (): AppThunk => async (
+  dispatch,
+  _,
+  { api }
+) => {
+  const paymentStatuses = await api.fetchCurrentPaymentStatuses();
+  dispatch(paymentStatusesFetched(paymentStatuses));
+};
 
 export const logout = createAppAsyncThunk(
   "currentUser/logout",

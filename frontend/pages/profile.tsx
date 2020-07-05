@@ -18,8 +18,7 @@ const Page: NextPage = () => {
   const currentUser = nonNullOrThrow(useSelector(selectCurrentUser));
   const paymentStatuses = useSelector(selectCurrentPaymentStatuses);
   useEffect(() => {
-    const act = dispatch(fetchCurrentPaymentStatuses());
-    return () => act.abort();
+    dispatch(fetchCurrentPaymentStatuses());
   }, [dispatch]);
 
   return (
