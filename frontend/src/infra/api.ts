@@ -15,6 +15,28 @@ export class ApiClient {
     });
   }
 
+  // Public Endpoints
+  async signup(input: Readonly<UpdateUserProfileInput>): Promise<void> {
+    await this.http.post("api/public/signup", { json: toSnakeCase(input) });
+  }
+
+  async verifyEmail(token: string): Promise<void> {
+    await this.http.post("api/public/verify_email", { json: { token } });
+  }
+
+  async login(): Promise<{ redirectUrl: string }> {
+    const res = await this.http
+      .post("api/public/login", { json: {} })
+      .json<{ redirect_url: string }>();
+    return {
+      redirectUrl: res.redirect_url,
+    };
+  }
+
+  async processCallback(code: string, state: string) {
+    await this.http.post("api/public/callback", { json: { code, state } });
+  }
+
   // Private Endpoints
   async logout(): Promise<void> {
     await this.http.post("api/private/logout", { json: {} }).json();

@@ -1,34 +1,58 @@
-import { ConfigurableProfile, toUserInfoJSON } from "./user";
+import { PaymentStatus } from "./user";
 
 const getHostAPI = () => `${location.protocol}//${location.host}/api`;
 
-export const login = async () => {
-  const res = await fetch(`${getHostAPI()}/public/login`, {
-    headers: {
-      Accept: "application/json, */*",
-      "Content-type": "application/json",
-    },
-    method: "POST",
+export const getPaymentStatuses = async () => {
+  const res = await fetch(`${getHostAPI()}/private/profile/payment_statuses`, {
+    method: "GET",
+    credentials: "include",
   });
+
   if (res.status >= 400) {
-    return Promise.reject(`Failed to login. Response=${res}`);
+    console.error(res);
+    return Promise.reject("Error: status-code is " + res.statusText);
   }
-  const body = await res.json();
-  location.href = body.redirect_url;
+
+  return (await res.json()).payment_statuses as Array<PaymentStatus>;
 };
 
-export const signUp = async (user: ConfigurableProfile) => {
-  const body = JSON.stringify(toUserInfoJSON(user));
-
-  const res = await fetch(`${getHostAPI()}/public/signup`, {
+export const addPaymentStatus = async (id: number) => {
+  const res = await fetch(`${getHostAPI()}/private/management/payment_status`, {
+    method: "PUT",
     headers: {
       "Content-Type": "application/json",
     },
-    method: "POST",
-    body,
+    credentials: "include",
+    body: JSON.stringify({
+      user_id: id,
+    }),
   });
+
+  if (res.status == 409) {
+    return;
+  }
+
   if (res.status >= 400) {
-    return Promise.reject("Error: status-code >= 400");
+    console.error(res);
+    return Promise.reject("Error: status-code is " + res.statusText);
+  }
+};
+
+export const deletePaymentStatus = async (id: number) => {
+  const res = await fetch(`${getHostAPI()}/private/management/payment_status`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "include",
+    body: JSON.stringify({
+      user_id: id,
+    }),
+  });
+
+  if (res.status >= 400) {
+    console.error(res);
+    return Promise.reject("Error: status-code is " + res.statusText);
   }
 };
 

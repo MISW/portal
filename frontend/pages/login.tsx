@@ -1,13 +1,12 @@
 import React, { useEffect } from "react";
 import { NextPage } from "next";
-import { login } from "../src/network";
+import { useLogin } from "features/auth";
 
 const Page: NextPage = () => {
+  const { login } = useLogin();
   useEffect(() => {
-    login().catch((err) => {
-      throw err;
-    });
-  }, []);
+    login();
+  }, [login]);
   return <>Trying Login...</>;
 };
 
