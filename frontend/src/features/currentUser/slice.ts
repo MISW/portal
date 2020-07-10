@@ -26,9 +26,6 @@ const currentUserSlice = createSlice({
   name: "currentUser",
   initialState,
   reducers: {
-    logouted: (state) => {
-      state.id = undefined;
-    },
     paymentStatusesFetched: (state, action: PayloadAction<PaymentStatus[]>) => {
       state.paymentStatuses = action.payload;
     },
@@ -41,5 +38,5 @@ const currentUserSlice = createSlice({
   },
 });
 
-export const { logouted, paymentStatusesFetched } = currentUserSlice.actions;
+export const { paymentStatusesFetched } = currentUserSlice.actions;
 export const currentUserReducer = currentUserSlice.reducer;
