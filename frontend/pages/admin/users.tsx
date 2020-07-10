@@ -5,7 +5,6 @@ import AdminUsersTable, {
   Data,
   handleClickMenuParam,
 } from "../../src/components/layout/AdminUsersTable";
-import { inviteToSlack, remindPayment } from "../../src/network";
 import { UserTableData, labelsInJapanese } from "../../src/user";
 import { usersCSV, saveFile, nonNullOrThrow } from "../../src/utils";
 import { Typography } from "@material-ui/core";
@@ -22,6 +21,7 @@ import {
   deletePaymentStatus,
   selectUserById,
 } from "features/users";
+import { inviteToSlack, remindPayment } from "features/admin";
 
 const headCells: HeadCell[] = labelsInJapanese.map(
   ({ id, label }) => ({ id, label } as HeadCell)
@@ -69,13 +69,13 @@ const Page: NextPage = () => {
 
   const handleSlackInvitationClose = (value: "OK" | "Cancel") => {
     if (value === "OK") {
-      inviteToSlack().then();
+      dispatch(inviteToSlack());
     }
     setSlackInvitationDialog(false);
   };
   const handleRemindPaymentDialogClose = (value: "OK" | "Cancel") => {
     if (value === "OK") {
-      remindPayment().then();
+      dispatch(remindPayment());
     }
     setRemindPaymentDialog(false);
   };
