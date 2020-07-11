@@ -7,11 +7,8 @@ import { CssBaseline, createMuiTheme } from "@material-ui/core";
 import { NextPageContext } from "next";
 import { DefaultLayout } from "../src/components/layout/DefaultLayout";
 import { wrapper, RootState } from "store";
-import {
-  fetchCurrentUser,
-  selectCurrentUser,
-  useLogout,
-} from "features/currentUser";
+import { fetchCurrentUser, selectCurrentUser } from "features/currentUser";
+import { useLogout } from "features/auth";
 
 const App = (props: AppProps) => {
   const { Component, pageProps } = props;
@@ -22,7 +19,7 @@ const App = (props: AppProps) => {
     }
   });
 
-  const handleLogout = useLogout();
+  const { handleLogout } = useLogout();
 
   return (
     <ThemeProvider theme={createMuiTheme({})}>

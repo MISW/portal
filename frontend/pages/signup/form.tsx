@@ -3,15 +3,17 @@ import { NextPage } from "next";
 import RegisterForm, {
   SubmitResult,
 } from "../../src/components/layout/RegisterForm";
-import { signUp } from "../../src/network";
 import { ConfigurableProfile } from "../../src/user";
 import { Alert } from "@material-ui/lab";
+import { useDispatch } from "react-redux";
+import { signup } from "features/auth";
 
 const Page: NextPage<{}> = () => {
+  const dispatch = useDispatch();
   const [email, setEmail] = useState<string>();
   const onSubmit = async (user: ConfigurableProfile): Promise<SubmitResult> => {
     try {
-      await signUp(user);
+      await dispatch(signup(user));
       setEmail(user.email);
       return { status: "success" as const };
     } catch (err) {

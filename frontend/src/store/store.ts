@@ -7,7 +7,7 @@ import {
 import { Context, MakeStore, createWrapper } from "next-redux-wrapper";
 import { AppContext } from "next/app";
 import rootReducer from "./reducer";
-import { ApiClient } from "infra/api";
+import { ApiClient, createApiClient } from "infra/api";
 import { nonNullOrThrow } from "utils";
 
 export type ExtraArgument = Readonly<{
@@ -55,7 +55,7 @@ const makeStore: MakeStore<RootState> = (ctx) => {
   const baseUrl = process.browser
     ? "/"
     : nonNullOrThrow(process.env.BACKEND_HOST);
-  const api = new ApiClient(baseUrl, cookie ? { headers: { cookie } } : {});
+  const api = createApiClient(baseUrl, cookie ? { headers: { cookie } } : {});
   return createStore({ api });
 };
 
