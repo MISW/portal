@@ -39,11 +39,7 @@ export type handleClickMenuParam =
 
 export type handleClickMenuType = (param: handleClickMenuParam) => void;
 
-export type Data = UserTableData extends Record<string, string | number> & {
-  id: number;
-}
-  ? UserTableData
-  : never;
+export type Data = UserTableData;
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) {
