@@ -38,7 +38,7 @@
     "@material-ui/lab": "^4.0.0-alpha.56",
     "@reduxjs/toolkit": "^1.4.0",
     "isomorphic-unfetch": "^3.0.0",
-    "ky": "^0.21.0",
+    "ky": "^0.23.0",
     "ky-universal": "^0.8.1",
     "next": "^9.4.4",
     "next-redux-wrapper": "^6.0.2",
