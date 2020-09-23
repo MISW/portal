@@ -51,7 +51,7 @@ func newCookie(key, value string, age time.Duration) *http.Cookie {
 	if !insecureCookie() {
 		cookie.HttpOnly = true
 		cookie.Secure = true
-		cookie.SameSite = http.SameSiteStrictMode
+		cookie.SameSite = http.SameSiteLaxMode
 	}
 
 	cookie.Name = key
