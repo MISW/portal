@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useEffect, useCallback, useMemo } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
   selectPaymentPeriod,
@@ -9,7 +9,7 @@ import {
   updateCurrentPeriod,
   selectEmailTemplateOf,
   fetchEmailTemplate,
-  updateEmailTemplate,
+  updateEmailTemplate as updateEmailTemplateThunk,
 } from "features/appconfig";
 import { EmailKind } from "models/appconfig";
 
@@ -61,39 +61,32 @@ export const useCurrentPeriodConfig: PeriodConfigState = () => {
   return [currentPeriod, update];
 };
 
-export type emailTemplate = { subject: string; body: string };
+export type EmailTemplate = { subject: string; body: string };
 
-export function useEmailTemplateConfig(
-  initialKind: EmailKind
-): [
-  emailTemplate,
-  (k: EmailKind) => void,
-  (subject: string, body: string) => Promise<void>
-] {
+export function useEmailTemplateConfig(emailKind: EmailKind) {
   const dispatch = useDispatch();
-  const [kind, setKind] = useState<EmailKind>(initialKind);
-  const template = useSelector(selectEmailTemplateOf(kind)) ?? {
-    subject: "",
-    body: "",
-  };
+  const emailTemplate = useSelector(
+    useMemo(() => selectEmailTemplateOf(emailKind), [emailKind])
+  );
   useEffect(() => {
-    dispatch(fetchEmailTemplate(kind));
-  }, [kind, dispatch]);
+    if (emailTemplate == null) dispatch(fetchEmailTemplate(emailKind));
+  }, [emailKind, emailTemplate, dispatch]);
 
-  const update = useCallback(
-    async (subject: string, body: string) => {
+  const updateEmailTemplate = useCallback(
+    async (template: Readonly<EmailTemplate>) => {
       try {
-        await dispatch(
-          updateEmailTemplate({ kind, template: { subject, body } })
-        );
+        await dispatch(updateEmailTemplateThunk({ kind: emailKind, template }));
       } catch (e) {
         throw new Error(
           "Eメールテンプレートの更新に失敗しました: " + e.message
         );
       }
     },
-    [kind, dispatch]
+    [emailKind, dispatch]
   );
 
-  return [template, setKind, update];
+  return {
+    emailTemplate,
+    updateEmailTemplate,
+  } as const;
 }
