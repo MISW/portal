@@ -7,6 +7,7 @@ import {
   usePaymentPeriodConfig,
   useCurrentPeriodConfig,
   useEmailTemplateConfig,
+  EmailTemplate as EmailTemplateType,
 } from "../../src/hooks/appConfig";
 import { calcPeriod } from "../../src/utils";
 import { withLogin } from "../../src/middlewares/withLogin";
@@ -84,12 +85,12 @@ const useCurrentPeriodNode = (
 };
 
 const useEmailTemplateNode = () => {
-  type kindType =
+  type KindType =
     | "email_verification"
     | "slack_invitation"
     | "after_registration"
     | "payment_reminder";
-  const options: { key: kindType; label: string }[] = [
+  const options: { key: KindType; label: string }[] = [
     { key: "email_verification", label: "Eメール認証" },
     { key: "slack_invitation", label: "Slack招待時の同時送信メール" },
     {
@@ -102,48 +103,39 @@ const useEmailTemplateNode = () => {
     },
   ];
 
-  const [expanded, setExpanded] = useState<boolean>(false);
-  const [kind, setKind] = useState<kindType>("email_verification");
+  const [expanded, setExpanded] = useState(false);
+  const [kind, setKind] = useState<KindType>("email_verification");
 
-  const [
-    emailTemplateRemote,
-    setKindRemote,
-    setEmailTemplateRemote,
-  ] = useEmailTemplateConfig(kind);
+  const {
+    emailTemplate: remoteEmailTemplate,
+    updateEmailTemplate,
+  } = useEmailTemplateConfig(kind);
   const [emailTemplate, setEmailTemplate] = useState<
-    { body: string; subject: string } | undefined
-  >(emailTemplateRemote);
+    EmailTemplateType | undefined
+  >(remoteEmailTemplate);
 
   useEffect(() => {
-    if (emailTemplateRemote) setEmailTemplate(emailTemplateRemote);
-  }, [emailTemplateRemote]);
-
-  useEffect(() => {
-    setKindRemote(kind);
-  }, [kind, setKindRemote]);
+    setEmailTemplate(remoteEmailTemplate);
+  }, [remoteEmailTemplate]);
 
   return {
     title: "メールテンプレート設定",
     node: (
-      <EmailTemplate<kindType>
+      <EmailTemplate
         selected={kind}
-        setSelected={(kind) => setKind(kind)}
-        values={emailTemplate}
+        setSelected={setKind}
+        values={emailTemplate ?? { subject: "", body: "" }}
         setValues={setEmailTemplate}
         options={options}
         onClose={() => {
-          setEmailTemplate(emailTemplateRemote);
+          setEmailTemplate(remoteEmailTemplate);
           setKind("email_verification");
 
           setExpanded(false);
         }}
         onSave={async () => {
           setExpanded(false);
-          if (emailTemplate)
-            await setEmailTemplateRemote(
-              emailTemplate.subject,
-              emailTemplate.body
-            );
+          if (emailTemplate) await updateEmailTemplate(emailTemplate);
         }}
       />
     ),
