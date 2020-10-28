@@ -4,4 +4,4 @@ init:
 
 .PHONY: seed
 seed:
-	docker-compose exec mysql bash -c "mysql -u root -proot portal < /seeds/*.sql"
+	docker-compose exec mysql bash -c "cat /seeds/*.sql | mysql -u root -proot portal"
