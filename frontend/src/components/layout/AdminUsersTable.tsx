@@ -353,7 +353,7 @@ export const EnhancedTable: React.FC<{
   const [selected, setSelected] = React.useState<number[]>([]);
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
-  const [rowsPerPage, setRowsPerPage] = React.useState(25);
+  const [rowsPerPage, setRowsPerPage] = React.useState(1e9);
   const [editPaymentStatusMode, setEditPaymentStatusMode] = React.useState(
     false
   );
@@ -537,7 +537,7 @@ export const EnhancedTable: React.FC<{
           </Table>
         </TableContainer>
         <TablePagination
-          rowsPerPageOptions={[10, 25, 50, 100]}
+          rowsPerPageOptions={[1e9, 10, 25, 50, 100]}
           component="div"
           count={rows.length}
           rowsPerPage={rowsPerPage}
