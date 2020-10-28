@@ -24,6 +24,13 @@ INSERT INTO users (
     discord_id,
 
     email_verified
-) VALUES (
+) VALUES
+(
     "tsuzu@example.com", 53, "TSUZU", "ツズ", "Tsuzu", "male", "Foo大学", "Bar学部", "Hoge学科", "12345678", "0123456789", "", "プログラミング", "Web", "admin", "invited", "UAJ1882QP", NULL, 1
+),
+(
+    "tosuke@example.com", 53, "TOSUKE", "トスケ", "tosuke", "male", "Foo大学", "Bar学部", "Hoge学科", "35782161", "0123456789", "", "プログラミング", "Web", "admin", "invited", "UJDEJGY2V", NULL, 1
+),
+(
+    "biraki@example.com", 53, "BIRAKI", "ビラキ", "biraki", "male", "Foo大学", "Bar学部", "Hoge学科", "35782161", "0123456789", "", "プログラミング", "Web", "admin", "invited", "UAGR0VB6X", NULL, 1
 );
