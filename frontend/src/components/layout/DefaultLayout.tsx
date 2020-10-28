@@ -179,7 +179,9 @@ export const DefaultLayout: React.FC<{ onLogout: () => void }> = ({
           </Toolbar>
         </AppBar>
         <main className={classes.layout}>
-          <Container maxWidth="lg">{children}</Container>
+          <Container maxWidth="lg">
+            <>{children}</>
+          </Container>
         </main>
         <footer>
           <Copyright />
