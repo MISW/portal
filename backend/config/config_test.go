@@ -4,6 +4,8 @@ import (
 	"os"
 	"strings"
 	"testing"
+
+	"github.com/google/go-cmp/cmp"
 )
 
 var (
@@ -58,7 +60,7 @@ func TestLoadConfigFromEnv(t *testing.T) {
 		t.Fatal("failed to load config: %w", err)
 	}
 
-	if *cfg != *envExpectedConfig {
+	if diff := cmp.Diff(cfg, envExpectedConfig); diff != "" {
 		t.Fatalf("config does not match: expected: %v actual: %v", *envExpectedConfig, *cfg)
 	}
 }

@@ -9,6 +9,7 @@ import (
 	"github.com/MISW/Portal/backend/domain"
 	"github.com/MISW/Portal/backend/domain/repository"
 	"github.com/MISW/Portal/backend/infrastructure/persistence"
+	"github.com/MISW/Portal/backend/interfaces/api/external"
 	"github.com/MISW/Portal/backend/interfaces/api/private"
 	"github.com/MISW/Portal/backend/interfaces/api/public"
 	"github.com/MISW/Portal/backend/internal/db"
@@ -29,10 +30,16 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
+func must(err error) {
+	if err != nil {
+		panic(err)
+	}
+}
+
 func initDig(cfg *config.Config, addr string) *dig.Container {
 	c := dig.New()
 
-	err := c.Provide(func() (oidc.Authenticator, error) {
+	must(c.Provide(func() (oidc.Authenticator, error) {
 		ctx := context.Background()
 
 		oidcCfg := cfg.OpenIDConnect
@@ -51,21 +58,13 @@ func initDig(cfg *config.Config, addr string) *dig.Container {
 		}
 
 		return auth, nil
-	})
+	}))
 
-	if err != nil {
-		panic(err)
-	}
-
-	err = c.Provide(func() *slack.Client {
+	must(c.Provide(func() *slack.Client {
 		return slack.NewClient(cfg.SlackToken, cfg.SlackTeamID)
-	})
+	}))
 
-	if err != nil {
-		panic(err)
-	}
-
-	err = c.Provide(func() email.Sender {
+	must(c.Provide(func() email.Sender {
 		if os.Getenv("DEBUG_MODE") == "1" {
 			return email.NewMock()
 		}
@@ -76,13 +75,9 @@ func initDig(cfg *config.Config, addr string) *dig.Container {
 			cfg.Email.Password,
 			cfg.Email.From,
 		)
-	})
+	}))
 
-	if err != nil {
-		panic(err)
-	}
-
-	err = c.Provide(func() (db.Ext, error) {
+	must(c.Provide(func() (db.Ext, error) {
 		conn, err := sqlx.Connect("mysql", cfg.Database)
 
 		if err != nil {
@@ -90,52 +85,25 @@ func initDig(cfg *config.Config, addr string) *dig.Container {
 		}
 
 		return conn, nil
-	})
-	if err != nil {
-		panic(err)
-	}
+	}))
 
-	err = c.Provide(persistence.NewPaymentStatusPersistence)
-	if err != nil {
-		panic(err)
-	}
+	must(c.Provide(persistence.NewPaymentStatusPersistence))
 
-	err = c.Provide(persistence.NewTokenPersistence)
-	if err != nil {
-		panic(err)
-	}
+	must(c.Provide(persistence.NewTokenPersistence))
 
-	err = c.Provide(persistence.NewUserPersistence)
-	if err != nil {
-		panic(err)
-	}
+	must(c.Provide(persistence.NewUserPersistence))
 
-	err = c.Provide(persistence.NewSlackPersistence)
-	if err != nil {
-		panic(err)
-	}
+	must(c.Provide(persistence.NewSlackPersistence))
 
-	err = c.Provide(persistence.NewPaymentTransactionPersistence)
-	if err != nil {
-		panic(err)
-	}
+	must(c.Provide(persistence.NewPaymentTransactionPersistence))
 
-	err = c.Provide(persistence.NewAppConfigPersistence)
-	if err != nil {
-		panic(err)
-	}
+	must(c.Provide(persistence.NewAppConfigPersistence))
 
-	err = c.Provide(persistence.NewUserRolePersistence)
-	if err != nil {
-		panic(err)
-	}
+	must(c.Provide(persistence.NewUserRolePersistence))
 
-	err = c.Provide(usecase.NewAppConfigUsecase)
-	if err != nil {
-		panic(err)
-	}
+	must(c.Provide(usecase.NewAppConfigUsecase))
 
-	err = c.Provide(func(
+	must(c.Provide(func(
 		userRepository repository.UserRepository,
 		tokenRepository repository.TokenRepository,
 		appConfigRepository repository.AppConfigRepository,
@@ -152,63 +120,35 @@ func initDig(cfg *config.Config, addr string) *dig.Container {
 			jwtProvider,
 			cfg.BaseURL,
 		)
-	})
-	if err != nil {
-		panic(err)
-	}
-	err = c.Provide(usecase.NewProfileUsecase)
-	if err != nil {
-		panic(err)
-	}
-	err = c.Provide(usecase.NewManagementUsecase)
-	if err != nil {
-		panic(err)
-	}
-	err = c.Provide(usecase.NewWebhookUsecase)
-	if err != nil {
-		panic(err)
-	}
+	}))
 
-	err = c.Provide(private.NewSessionHandler)
-	if err != nil {
-		panic(err)
-	}
-	err = c.Provide(private.NewProfileHandler)
-	if err != nil {
-		panic(err)
-	}
-	err = c.Provide(private.NewManagementHandler)
-	if err != nil {
-		panic(err)
-	}
+	must(c.Provide(usecase.NewProfileUsecase))
 
-	err = c.Provide(public.NewSessionHandler)
-	if err != nil {
-		panic(err)
-	}
-	err = c.Provide(func(wu usecase.WebhookUsecase) public.WebhookHandler {
+	must(c.Provide(usecase.NewManagementUsecase))
+
+	must(c.Provide(usecase.NewWebhookUsecase))
+
+	must(c.Provide(private.NewSessionHandler))
+
+	must(c.Provide(private.NewProfileHandler))
+
+	must(c.Provide(private.NewManagementHandler))
+
+	must(c.Provide(external.NewExternalHandler))
+
+	must(c.Provide(public.NewSessionHandler))
+
+	must(c.Provide(func(wu usecase.WebhookUsecase) public.WebhookHandler {
 		return public.NewWebhookHandler(cfg.SlackSigningSecret, wu)
-	})
-	if err != nil {
-		panic(err)
-	}
+	}))
 
-	err = c.Provide(middleware.NewAuthMiddleware)
-	if err != nil {
-		panic(err)
-	}
+	must(c.Provide(middleware.NewAuthMiddleware))
 
-	err = c.Provide(func() (jwt.JWTProvider, error) {
+	must(c.Provide(func() (jwt.JWTProvider, error) {
 		return jwt.NewJWTProvider(cfg.JWTKey)
-	})
-	if err != nil {
-		panic(err)
-	}
+	}))
 
-	err = c.Provide(workers.NewSlackInviter, dig.Name("slack"))
-	if err != nil {
-		panic(err)
-	}
+	must(c.Provide(workers.NewSlackInviter, dig.Name("slack")))
 
 	return c
 }
@@ -240,7 +180,7 @@ func initHandler(cfg *config.Config, addr string, digc *dig.Container) *echo.Ech
 	c, _ := yaml.Marshal(e.Routes())
 	e.Logger.Infof("addr: %s,\nconfig: %s", addr, c)
 
-	err := digc.Invoke(func(auth middleware.AuthMiddleware, sh private.SessionHandler) error {
+	must(digc.Invoke(func(auth middleware.AuthMiddleware, sh private.SessionHandler) error {
 		g := e.Group("/api/private", auth.Authenticate)
 
 		g.POST("/logout", sh.Logout)
@@ -287,13 +227,9 @@ func initHandler(cfg *config.Config, addr string, digc *dig.Container) *echo.Ech
 		}
 
 		return nil
-	})
+	}))
 
-	if err != nil {
-		panic(err)
-	}
-
-	err = digc.Invoke(func(sh public.SessionHandler) error {
+	must(digc.Invoke(func(sh public.SessionHandler) error {
 		g := e.Group("/api/public")
 
 		g.POST("/login", sh.Login)
@@ -310,11 +246,16 @@ func initHandler(cfg *config.Config, addr string, digc *dig.Container) *echo.Ech
 		}
 
 		return nil
-	})
+	}))
 
-	if err != nil {
-		panic(err)
-	}
+	must(digc.Invoke(func(eh *external.ExternalHandler) error {
+		g := e.Group("/api/external")
+		g.Use(middleware.NewStaticTokenAuthMiddleware(cfg.ExternalIntegrationTokens))
+
+		g.POST("/find_role", eh.GetUserRoleFromSlackID)
+
+		return nil
+	}))
 
 	if os.Getenv("DEBUG_MODE") != "" {
 		e.Logger.SetLevel(log.DEBUG)
