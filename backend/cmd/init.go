@@ -101,6 +101,8 @@ func initDig(cfg *config.Config, addr string) *dig.Container {
 
 	must(c.Provide(persistence.NewUserRolePersistence))
 
+	must(c.Provide(persistence.NewExternalIntegrationPersistence))
+
 	must(c.Provide(usecase.NewAppConfigUsecase))
 
 	must(c.Provide(func(
@@ -127,6 +129,8 @@ func initDig(cfg *config.Config, addr string) *dig.Container {
 	must(c.Provide(usecase.NewManagementUsecase))
 
 	must(c.Provide(usecase.NewWebhookUsecase))
+
+	must(c.Provide(usecase.NewExternalIntegrationUsecase))
 
 	must(c.Provide(private.NewSessionHandler))
 
