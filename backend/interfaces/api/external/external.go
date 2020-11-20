@@ -21,14 +21,14 @@ type ExternalHandler struct {
 
 func (h *ExternalHandler) GetUserRoleFromSlackID(e echo.Context) error {
 	var param struct {
-		slackID string `query:"slack_id"`
+		SlackID string `query:"slack_id"`
 	}
 
 	if err := e.Bind(&param); err != nil {
 		return rest.RespondMessage(e, rest.NewBadRequest("invalid slack_id"))
 	}
 
-	role, err := h.eu.GetUserRoleFromSlackID(param.slackID)
+	role, err := h.eu.GetUserRoleFromSlackID(param.SlackID)
 
 	var frerr rest.ErrorResponse
 	if xerrors.As(err, &frerr) {
