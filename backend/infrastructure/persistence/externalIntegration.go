@@ -25,7 +25,7 @@ var _ repository.ExternalIntegrationRepository = &externalIntegrationPersistence
 func (p *externalIntegrationPersistence) GetUserRoleFromSlackID(slackID string) (string, error) {
 	var role string
 	err := sqlx.Get(
-		p.db, role,
+		p.db, &role,
 		"SELECT role FROM users WHERE slack_id = ?", slackID,
 	)
 

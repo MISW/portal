@@ -256,7 +256,7 @@ func initHandler(cfg *config.Config, addr string, digc *dig.Container) *echo.Ech
 		g := e.Group("/api/external")
 		g.Use(middleware.NewStaticTokenAuthMiddleware(cfg.ExternalIntegrationTokens))
 
-		g.POST("/find_role", eh.GetUserRoleFromSlackID)
+		g.GET("/find_role", eh.GetUserRoleFromSlackID)
 
 		return nil
 	}))
