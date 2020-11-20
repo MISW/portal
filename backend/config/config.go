@@ -31,12 +31,13 @@ type Email struct {
 
 // Config - 各種設定用
 type Config struct {
-	Database           string `config:"database-url" json:"database" yaml:"database"`
-	BaseURL            string `config:"base-url" json:"base_url" yaml:"base_url"`
-	JWTKey             string `config:"jwt-key" json:"jwt_key" yaml:"jwt_key"`
-	SlackToken         string `config:"slack-token" json:"slack_token" yaml:"slack_token"`
-	SlackSigningSecret string `config:"slack-signing-secret" json:"slack_signing_secret" yaml:"slack_signing_secret"`
-	SlackTeamID        string `config:"slack-team-id" json:"slack_team_id" yaml:"slack_team_id"`
+	Database                  string   `config:"database-url" json:"database" yaml:"database"`
+	BaseURL                   string   `config:"base-url" json:"base_url" yaml:"base_url"`
+	JWTKey                    string   `config:"jwt-key" json:"jwt_key" yaml:"jwt_key"`
+	ExternalIntegrationTokens []string `config:"external-integration-tokens" json:"external_integration_tokens" yaml:"external_integration_tokens"`
+	SlackToken                string   `config:"slack-token" json:"slack_token" yaml:"slack_token"`
+	SlackSigningSecret        string   `config:"slack-signing-secret" json:"slack_signing_secret" yaml:"slack_signing_secret"`
+	SlackTeamID               string   `config:"slack-team-id" json:"slack_team_id" yaml:"slack_team_id"`
 
 	OpenIDConnect OpenIDConnect `json:"oidc" yaml:"oidc"`
 	Email         Email         `json:"email" yaml:"email"`
