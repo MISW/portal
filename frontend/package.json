@@ -8,9 +8,9 @@
     "docker": "next --hostname 0.0.0.0",
     "build": "next build",
     "start": "next start --hostname 0.0.0.0",
-    "lint": "eslint '{src,pages}/**/*.{ts,tsx}'",
-    "format": "eslint --fix 'src/**/*.{ts,tsx}' 'pages/**/*.{ts,tsx}'",
-    "ci": "eslint 'pages/**/*.{ts,tsx}'"
+    "lint": "eslint 'src/**/*.{ts,tsx}'",
+    "format": "prettier --write 'src/**/*.{ts,tsx}'",
+    "ci": "eslint 'src/**/*.{ts,tsx}'"
   },
   "keywords": [],
   "author": "",
