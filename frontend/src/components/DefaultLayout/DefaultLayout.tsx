@@ -4,7 +4,7 @@ import { Footer } from "./Footer";
 
 export const DefaultLayout: React.FC = ({ children }) => {
   return (
-    <div className="w-screen">
+    <div className="w-full">
       <header>
         <Header userName="tosuke" isAdmin />
       </header>

@@ -10,7 +10,7 @@ type LinkCardProps = Readonly<{
 }>;
 const LinkCard: React.VFC<LinkCardProps> = ({ title, description, url }) => (
   <a
-    className="rounded-md bg-white dark:bg-gray-800 border border-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none focus:bg-gray-200 dark:focus:bg-gray-700"
+    className="rounded-md bg-white dark:bg-gray-800 border dark:border-0 border-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:bg-gray-100 dark:focus:bg-gray-700"
     href={url}
     target="_blank"
     rel="noreferrer noopener"
@@ -46,7 +46,7 @@ const Home: NextPage = () => {
             </li>
           </ol>
         </section>
-        <section className="w-full">
+        <section>
           <h3 className="text-xl font-bold text-center">Useful Links</h3>
           <div className="mt-4 grid gap-4 place-items-stretch grid-cols-1 md:grid-cols-2">
             <LinkCard
