@@ -12,18 +12,6 @@ module.exports = {
     "prettier",
     "prettier/@typescript-eslint",
   ],
-  overrides: [
-    {
-      files: ["**/*.tsx"],
-      rules: {
-        "react/prop-types": "off",
-      },
-    },
-  ],
-  globals: {
-    Atomics: "readonly",
-    SharedArrayBuffer: "readonly",
-  },
   parser: "@typescript-eslint/parser",
   parserOptions: {
     ecmaFeatures: {
@@ -37,6 +25,7 @@ module.exports = {
     "linebreak-style": ["error", "unix"],
     "@typescript-eslint/explicit-function-return-type": 0,
     "@typescript-eslint/no-explicit-any": 0,
+    "react/prop-types": "off",
     "react-hooks/rules-of-hooks": "error",
     "react-hooks/exhaustive-deps": "warn",
   },

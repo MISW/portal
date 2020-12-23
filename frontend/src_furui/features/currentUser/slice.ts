@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from "../src_furui/@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { hydrated } from "../src_furui/store/helpers";
 import { fetchCurrentUser, updateCurrentUser } from "./operations";
 import { PaymentStatus } from "../src_furui/models/user";

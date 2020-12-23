@@ -1,4 +1,4 @@
-import { createAppAsyncThunk, AppThunk } from "../src_furui/store/helpers";
+import { createAppAsyncThunk, AppThunk } from "store/helpers";
 import { userUpserted } from "../src_furui/features/users/slice";
 import { ConfigurableProfile } from "../src_furui/user";
 import { paymentStatusesFetched } from "./slice";
