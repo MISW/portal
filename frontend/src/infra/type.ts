@@ -1,8 +1,4 @@
-import {
-  Period,
-  EmailTemplate,
-  EmailKind,
-} from "../src_furui/models/appconfig";
+import type { Period, EmailTemplate, EmailKind } from "models/appconfig";
 export type SexType = "male" | "female" | "other";
 export type RoleType =
   // 管理者(会員資格あり)

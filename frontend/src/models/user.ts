@@ -1,4 +1,4 @@
-import { SexType, University, RoleType } from "../src_furui/infra/type";
+import type { SexType, University, RoleType } from "infra/type";
 
 export type PaymentStatus = {
   userId: number;

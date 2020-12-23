@@ -1,18 +1,11 @@
-import ky from "../src_furui/ky-universal";
-import { Options } from "../src_furui/ky";
+import ky from "ky";
+import { Options } from "ky";
 import { toCamelCase, toSnakeCase } from "./converter";
-import {
-  User,
-  UpdateUserProfileInput,
-  PaymentStatus,
-} from "../src_furui/models/user";
-import {
-  Period,
-  EmailKind,
-  EmailTemplate,
-} from "../src_furui/models/appconfig";
+import { User, UpdateUserProfileInput, PaymentStatus } from "models/user";
+import { Period, EmailKind, EmailTemplate } from "models/appconfig";
 import { UpdateAppConfigInput } from "./type";
 
+/* eslint-disable @typescript-eslint/camelcase */
 export const createApiClient = (baseUrl: string, options?: Options) => {
   const http = ky.create({
     prefixUrl: baseUrl,
