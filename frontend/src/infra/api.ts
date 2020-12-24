@@ -23,9 +23,9 @@ export const HTTPClientProvider: React.FC<HTTPClientProviderProps> = ({
   baseUrl,
   options,
 }) => {
-  const http = useMemo(() => ky.create({ prefixUrl: baseUrl, ...options }), [
-    baseUrl,
-    options,
-  ]);
+  const http = useMemo(
+    () => ky.create({ prefixUrl: baseUrl, credentials: "include", ...options }),
+    [baseUrl, options]
+  );
   return createElement(HTTPClientContext.Provider, { value: http }, children);
 };

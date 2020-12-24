@@ -9,6 +9,8 @@ const CallbackPage: NextPage = () => {
   const router = useRouter();
   const { processAuthCode, error } = useAuthCode();
 
+  // routerへの変更を加えるとrouterが変わってしまう
+  /* eslint-disable react-hooks/exhaustive-deps */
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     const code = params.get("code");
@@ -20,9 +22,11 @@ const CallbackPage: NextPage = () => {
     processAuthCode(code, state).then(() => {
       router.push("/");
     });
-  }, [router, processAuthCode]);
+  }, [processAuthCode /* router */]);
+  /* eslint-enable */
 
   useEffect(() => {
+    if (error == null) return;
     console.error(error);
     if (error instanceof ky.HTTPError) {
       error.response.json().then((json) => {
