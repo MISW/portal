@@ -18,5 +18,5 @@ export const useAuthCode = () => {
   return {
     processAuthCode,
     error,
-  };
+  } as const;
 };

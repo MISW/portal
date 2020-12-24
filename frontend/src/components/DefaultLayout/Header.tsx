@@ -8,6 +8,7 @@ import {
   DropdownItem,
   useDropdown,
 } from "components/Dropdown";
+import { useLogout } from "features/auth/useLogout";
 
 const AdminLink: React.VFC = () => (
   <Link href="/admin">
@@ -23,6 +24,7 @@ type HeaderProps = Readonly<{
 }>;
 export const Header: React.VFC<HeaderProps> = ({ userName, isAdmin }) => {
   const { rootRef, show, toggle } = useDropdown();
+  const { logout } = useLogout();
 
   return (
     <div className="w-full h-16 px-8 py-2 shadow bg-gray-800">
@@ -52,7 +54,7 @@ export const Header: React.VFC<HeaderProps> = ({ userName, isAdmin }) => {
                   <p className="p-4 text-xs">Profile</p>
                 </DropdownItem>
               </Link>
-              <DropdownItem as="button">
+              <DropdownItem as="button" onClick={logout}>
                 <p className="p-4 text-xs">Logout</p>
               </DropdownItem>
             </Dropdown>
