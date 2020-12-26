@@ -30,7 +30,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
   return show ? (
     <nav
       className={clsx(
-        "absolute rounded shadow bg-white dark:bg-gray-700",
+        "absolute rounded-sm shadow bg-white dark:bg-gray-700",
         top,
         left,
         right,

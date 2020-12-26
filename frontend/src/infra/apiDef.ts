@@ -1,4 +1,4 @@
-import ky from "ky";
+import ky from "ky-universal";
 import { Options } from "ky";
 import { toCamelCase, toSnakeCase } from "./converter";
 import { User, UpdateUserProfileInput, PaymentStatus } from "models/user";

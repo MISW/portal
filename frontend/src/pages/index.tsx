@@ -27,7 +27,7 @@ const LinkCard: React.VFC<LinkCardProps> = ({ title, description, url }) => (
 
 const Home: NextPage = () => {
   return (
-    <DefaultLayout>
+    <DefaultLayout requireAuth>
       <div className="mx-auto mt-8 px-8 w-full max-w-screen-lg flex flex-col items-center space-y-4">
         <h2 className="text-4xl md:text-5xl">Welcome to MISW!</h2>
         {/* 入会完了後のフローとして終わっているのでなんとかする */}
