@@ -51,7 +51,7 @@ type DropdownItemProps<As extends keyof JSX.IntrinsicElements> = Readonly<
 export class DropdownItem<
   As extends keyof JSX.IntrinsicElements
 > extends React.Component<DropdownItemProps<As>> {
-  render() {
+  render(): React.ReactElement {
     const { as, children, ...rest } = this.props;
     return React.createElement(
       as,

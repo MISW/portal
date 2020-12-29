@@ -5,7 +5,6 @@ import { User, UpdateUserProfileInput, PaymentStatus } from "models/user";
 import { Period, EmailKind, EmailTemplate } from "models/appconfig";
 import { UpdateAppConfigInput } from "./type";
 
-/* eslint-disable @typescript-eslint/camelcase */
 export const createApiClient = (baseUrl: string, options?: Options) => {
   const http = ky.create({
     prefixUrl: baseUrl,

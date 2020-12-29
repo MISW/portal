@@ -8,7 +8,7 @@ if (process.env.NODE_ENV === "development") {
   HTTPClientContext.displayName = "HTTPClientContext";
 }
 
-export const useHTTPClient = () => {
+export const useHTTPClient = (): HTTPClient => {
   const http = useContext(HTTPClientContext);
   if (http == null) throw new Error("don't call out of HTTPClientContext");
   return http;

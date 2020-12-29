@@ -23,7 +23,7 @@ module.exports = {
   plugins: ["react", "@typescript-eslint", "react-hooks"],
   rules: {
     "linebreak-style": ["error", "unix"],
-    "@typescript-eslint/explicit-function-return-type": 0,
+    "@typescript-eslint/explicit-module-bondary-types": "off",
     "@typescript-eslint/no-explicit-any": 0,
     "react/prop-types": "off",
     "react-hooks/rules-of-hooks": "error",

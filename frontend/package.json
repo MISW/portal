@@ -10,7 +10,9 @@
     "start": "next start --hostname 0.0.0.0",
     "lint": "eslint 'src/**/*.{ts,tsx}'",
     "format": "prettier --write 'src/**/*.{ts,tsx}'",
-    "ci": "eslint 'src/**/*.{ts,tsx}'"
+    "ci": "eslint 'src/**/*.{ts,tsx}'",
+    "generate-colors": "ts-node -O '{\"module\":\"commonjs\"}' -T tools/theme.ts",
+    "postinstall": "npm run generate-colors"
   },
   "keywords": [],
   "author": "",
@@ -21,8 +23,8 @@
     "@types/react-dom": "^16.9.9",
     "@types/react-redux": "^7.1.11",
     "@types/styled-jsx": "^2.2.8",
-    "@typescript-eslint/eslint-plugin": "^2.34.0",
-    "@typescript-eslint/parser": "^2.34.0",
+    "@typescript-eslint/eslint-plugin": "^4.11.1",
+    "@typescript-eslint/parser": "^4.11.1",
     "autoprefixer": "^10.1.0",
     "babel-plugin-inline-react-svg": "^1.1.2",
     "cross-env": "^7.0.2",
