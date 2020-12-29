@@ -1,0 +1,6 @@
+.spinner {
+  @apply rounded-full;
+  @apply border-solid border-8;
+  border-color: var(--tint-color);
+  border-top-color: transparent;
+}
