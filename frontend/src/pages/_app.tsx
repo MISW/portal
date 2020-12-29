@@ -1,5 +1,6 @@
 import React from "react";
-import "styles/index.css";
+import "tailwindcss/tailwind.css";
+import "styles/global.css";
 import type { AppProps } from "next/app";
 import { HTTPClientProvider } from "infra/api";
 
