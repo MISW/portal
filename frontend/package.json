@@ -11,7 +11,7 @@
     "lint": "eslint 'src/**/*.{ts,tsx}'",
     "format": "prettier --write 'src/**/*.{ts,tsx}'",
     "ci": "eslint 'src/**/*.{ts,tsx}'",
-    "generate-colors": "ts-node -O '{\"module\":\"commonjs\"}' -T tools/theme.ts",
+    "generate-colors": "ts-node -T tools/theme.ts",
     "postinstall": "npm run generate-colors"
   },
   "keywords": [],
@@ -38,6 +38,7 @@
     "postcss-flexbugs-fixes": "^5.0.2",
     "postcss-preset-env": "^6.7.0",
     "prettier": "^2.1.2",
+    "ts-node": "^9.1.1",
     "type-fest": "^0.20.2",
     "typescript": "^4.1.3"
   },
