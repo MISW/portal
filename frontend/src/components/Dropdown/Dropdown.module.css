@@ -1,0 +1,16 @@
+.dropdown {
+  @apply absolute rounded-sm shadow;
+  @apply bg-white;
+  @apply divide-y divide-gray-200;
+  @apply dark:bg-gray-700 dark:divide-gray-500;
+
+  & > * {
+    @apply block w-full text-left;
+  }
+  & > *:hover,
+  & > *:focus {
+    outline: none;
+    @apply dark:bg-gray-600;
+    @apply bg-gray-100;
+  }
+}

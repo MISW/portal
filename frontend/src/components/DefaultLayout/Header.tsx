@@ -2,12 +2,7 @@ import React from "react";
 import Link from "next/link";
 import { MdAccountCircle, MdLock } from "react-icons/md";
 import MISWLogo from "../../assets/misw_logo.svg";
-import {
-  DropdownRoot,
-  Dropdown,
-  DropdownItem,
-  useDropdown,
-} from "components/Dropdown";
+import { DropdownRoot, Dropdown, useDropdown } from "components/Dropdown";
 
 const AdminLink: React.VFC = () => (
   <Link href="/admin">
@@ -32,14 +27,12 @@ const UserDropdown: React.VFC<UserDropdownProps> = ({ logout }) => {
       </button>
 
       <Dropdown show={show} top="top-12" right="right-0" width="w-24">
-        <Link href="/profile" passHref>
-          <DropdownItem as="a">
-            <p className="p-4 text-xs">Profile</p>
-          </DropdownItem>
+        <Link href="/profile">
+          <a className="p-4 text-xs">Profile</a>
         </Link>
-        <DropdownItem as="button" onClick={logout}>
-          <p className="p-4 text-xs">Logout</p>
-        </DropdownItem>
+        <button onClick={logout} className="p-4 text-xs">
+          Logout
+        </button>
       </Dropdown>
     </DropdownRoot>
   );

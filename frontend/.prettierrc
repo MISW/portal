@@ -1,5 +1,12 @@
 {
-  "parser": "babel-ts",
   "semi": true,
-  "singleQuote": false
+  "singleQuote": false,
+  "overrides": [
+    {
+      "files": ["*.ts", "*.tsx"],
+      "options": {
+        "parser": "babel-ts"
+      }
+    }
+  ]
 }
