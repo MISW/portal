@@ -1,5 +1,6 @@
 import { useCallback, useState } from "react";
 import { useHTTPClient } from "infra/api";
+import { loadState } from "./restoreState";
 
 export const useAuthCode = () => {
   const [error, setError] = useState<unknown>();
@@ -8,6 +9,7 @@ export const useAuthCode = () => {
     async (code: string, state: string) => {
       try {
         await http.post("public/callback", { json: { code, state } }).json();
+        return loadState();
       } catch (e) {
         setError(e);
       }

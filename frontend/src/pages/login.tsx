@@ -1,15 +1,22 @@
 import React, { useEffect } from "react";
 import type { NextPage } from "next";
+import { useRouter } from "next/router";
 import ky from "ky-universal";
 import { useLogin } from "features/auth/useLogin";
 import { Spinner } from "components/ui";
 
 const Login: NextPage = () => {
+  const { query } = useRouter();
   const { login, error } = useLogin();
 
   useEffect(() => {
-    login();
-  }, [login]);
+    const continuePath = query.continue;
+    if (typeof continuePath === "string") {
+      login(decodeURIComponent(continuePath));
+    } else {
+      login();
+    }
+  }, [login, query]);
 
   useEffect(() => {
     console.error(error);

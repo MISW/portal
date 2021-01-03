@@ -19,8 +19,10 @@ const CallbackPage: NextPage = () => {
       router.push("/");
       return;
     }
-    processAuthCode(code, state).then(() => {
-      router.push("/");
+    processAuthCode(code, state).then((continuePath) => {
+      router.push(continuePath ?? "/").then((success) => {
+        if (!success) router.push("/");
+      });
     });
   }, [processAuthCode /* router */]);
   /* eslint-enable */

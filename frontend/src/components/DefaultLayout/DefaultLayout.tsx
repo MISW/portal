@@ -21,7 +21,8 @@ export const DefaultLayout: React.FC<DefaultLayoutProps> = ({
 
   useEffect(() => {
     if (requireAuth && profileError != null) {
-      router.push("/login");
+      const path = router.route;
+      router.push(`/login?continue=${encodeURIComponent(path)}`);
     }
   }, [requireAuth, profileError, router]);
 
