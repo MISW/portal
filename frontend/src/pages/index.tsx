@@ -10,7 +10,7 @@ type LinkCardProps = Readonly<{
 }>;
 const LinkCard: React.VFC<LinkCardProps> = ({ title, description, url }) => (
   <a
-    className="rounded-md bg-white dark:bg-gray-800 border dark:border-0 border-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:bg-gray-100 dark:focus:bg-gray-700"
+    className="rounded-md bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800 focus:outline-none focus:bg-gray-100 dark:focus:bg-gray-800"
     href={url}
     target="_blank"
     rel="noreferrer noopener"

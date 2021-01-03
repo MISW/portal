@@ -49,7 +49,7 @@ export const Header: React.VFC<HeaderProps> = ({
   isAdmin,
 }) => {
   return (
-    <div className="w-full h-16 px-8 py-2 shadow bg-gray-800">
+    <div className="w-full h-16 px-8 py-2 shadow bg-gray-800 dark:bg-gray-900">
       <div className="mx-auto w-full max-w-screen-lg flex flex-row justify-between items-center">
         <div className="md:flex-1" aria-hidden />
         <div className="flex-1 flex-shrink">
