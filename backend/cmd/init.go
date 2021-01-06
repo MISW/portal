@@ -207,8 +207,8 @@ func initHandler(cfg *config.Config, addr string, digc *dig.Container) *echo.Ech
 			g.GET("/users", mh.ListUsers)
 
 			g.GET("/user", mh.GetUser)
-			e.POST("/user", mh.UpdateUser)
-			e.PATCH("/user", mh.UpdateRole)
+			g.POST("/user", mh.UpdateUser)
+			g.PATCH("/user", mh.UpdateRole)
 
 			g.POST("/authorize_transaction", mh.AuthorizeTransaction)
 
