@@ -37,7 +37,7 @@ export const DefaultLayout: React.FC<DefaultLayoutProps> = ({
       <header>
         <Header
           logout={logout}
-          userName={profile?.name}
+          userName={profile?.handle}
           isAdmin={profile?.role === "admin"}
         />
       </header>
@@ -52,9 +52,11 @@ export const DefaultLayout: React.FC<DefaultLayoutProps> = ({
           </div>
         )}
       </main>
-      <footer className="my-4">
-        <Footer />
-      </footer>
+      {contentIsDrawable && (
+        <footer className="my-4">
+          <Footer />
+        </footer>
+      )}
     </div>
   );
 };
