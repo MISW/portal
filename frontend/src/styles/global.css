@@ -6,3 +6,8 @@ body {
 * {
   @apply transition-colors;
 }
+
+button:focus:not(:focus-visible),
+a:focus:not(:focus-visible) {
+  @apply outline-none !important;
+}

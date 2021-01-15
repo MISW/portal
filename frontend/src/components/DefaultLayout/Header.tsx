@@ -1,8 +1,9 @@
 import React from "react";
+import clsx from "clsx";
 import Link from "next/link";
+import { Transition, Menu } from "@headlessui/react";
 import { MdAccountCircle, MdLock } from "react-icons/md";
 import MISWLogo from "../../assets/misw_logo.svg";
-import { DropdownRoot, Dropdown, useDropdown } from "components/Dropdown";
 
 const AdminLink: React.VFC = () => (
   <Link href="/admin">
@@ -18,29 +19,65 @@ const AdminLink: React.VFC = () => (
 type UserDropdownProps = Readonly<{
   logout?: () => void;
 }>;
-const UserDropdown: React.VFC<UserDropdownProps> = ({ logout }) => {
-  const { rootRef, show, toggle } = useDropdown();
-  return (
-    <DropdownRoot ref={rootRef}>
-      <button
-        className="w-12 h-12 rounded-full bg-gray-100 bg-opacity-0 hover:bg-opacity-10 focus:bg-opacity-10 active:bg-opacity-30 outline-none focus-visible:outline-white"
-        role="menu"
-        onClick={toggle}
-      >
-        <MdAccountCircle className="m-auto w-8 h-8 text-gray-100" />
-      </button>
-
-      <Dropdown show={show} top="top-12" right="right-0" width="w-24">
-        <Link href="/profile">
-          <a className="p-4 text-xs">Profile</a>
-        </Link>
-        <button onClick={logout} className="p-4 text-xs">
-          Logout
-        </button>
-      </Dropdown>
-    </DropdownRoot>
-  );
-};
+const UserDropdown: React.VFC<UserDropdownProps> = ({ logout }) => (
+  <div className="relative">
+    <Menu>
+      {({ open }) => (
+        <>
+          <Menu.Button
+            className="w-12 h-12 rounded-full bg-gray-100 bg-opacity-0 hover:bg-opacity-10 focus:bg-opacity-10 active:bg-opacity-20"
+            aria-label="ユーザーメニューを開く"
+          >
+            <MdAccountCircle className="m-auto w-8 h-8 text-gray-100" />
+          </Menu.Button>
+          <Transition
+            show={open}
+            className="absolute top-12 right-0"
+            enter="transition ease-out duration-100"
+            enterFrom="transform opacity-0 scale-95"
+            enterTo="transform opacity-100 scale-95"
+            leave="transition ease-in duration-75"
+            leaveFrom="transform opacity-100 scale-100"
+            leaveTo="transform opacity-0 scale-95"
+          >
+            <Menu.Items
+              static
+              className="w-32 rounded-sm shadow outline-none divide-y bg-white dark:bg-gray-800 divide-gray-200 dark:divide-gray-600"
+            >
+              <Link passHref href="/profile">
+                <Menu.Item as="a">
+                  {({ active }) => (
+                    <p
+                      className={clsx(
+                        "w-full p-4 text-xs",
+                        active && "bg-gray-100 dark:bg-gray-700"
+                      )}
+                    >
+                      プロフィール
+                    </p>
+                  )}
+                </Menu.Item>
+              </Link>
+              <Menu.Item>
+                {({ active }) => (
+                  <button
+                    className={clsx(
+                      "w-full p-4 text-left text-xs text-red-500",
+                      active && "bg-gray-100 dark:bg-gray-700"
+                    )}
+                    onClick={logout}
+                  >
+                    ログアウト
+                  </button>
+                )}
+              </Menu.Item>
+            </Menu.Items>
+          </Transition>
+        </>
+      )}
+    </Menu>
+  </div>
+);
 
 type HeaderProps = Readonly<{
   logout: () => void;
