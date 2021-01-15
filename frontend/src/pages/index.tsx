@@ -1,6 +1,6 @@
 import React from "react";
 import type { NextPage } from "next";
-import { Caption } from "components/ui";
+import { Caption, Card } from "components/ui";
 import { DefaultLayout } from "components/DefaultLayout";
 
 type LinkCardProps = Readonly<{
@@ -9,8 +9,10 @@ type LinkCardProps = Readonly<{
   url: string;
 }>;
 const LinkCard: React.VFC<LinkCardProps> = ({ title, description, url }) => (
-  <a
-    className="rounded-md bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800 focus:outline-none focus:bg-gray-100 dark:focus:bg-gray-800"
+  <Card
+    as="a"
+    interactive
+    className="rounded-md border"
     href={url}
     target="_blank"
     rel="noreferrer noopener"
@@ -22,16 +24,16 @@ const LinkCard: React.VFC<LinkCardProps> = ({ title, description, url }) => (
       </h5>
       <p>{description}</p>
     </div>
-  </a>
+  </Card>
 );
 
 const Home: NextPage = () => {
   return (
     <DefaultLayout requireAuth>
-      <div className="mx-auto mt-8 px-8 w-full max-w-screen-lg flex flex-col items-center space-y-4">
-        <h2 className="text-4xl md:text-5xl">Welcome to MISW!</h2>
+      <div className="mx-auto mt-8 w-full max-w-screen-lg flex flex-col items-center space-y-4">
+        <h2 className="mx-8 text-4xl md:text-5xl">Welcome to MISW!</h2>
         {/* 入会完了後のフローとして終わっているのでなんとかする */}
-        <section>
+        <section className="mx-8">
           <h3 className="text-xl font-bold text-center">Getting Started</h3>
           <ol className="mt-4 list-decimal list-inside">
             <li>slackの情報を登録</li>
@@ -48,7 +50,7 @@ const Home: NextPage = () => {
         </section>
         <section>
           <h3 className="text-xl font-bold text-center">Useful Links</h3>
-          <div className="mt-4 grid gap-4 place-items-stretch grid-cols-1 md:grid-cols-2">
+          <div className="mt-4 grid gap-4 place-items-stretch grid-cols-1 sm:grid-cols-2">
             <LinkCard
               title="Slack"
               description="主な連絡ツール。大事な連絡はこれで送られます"
