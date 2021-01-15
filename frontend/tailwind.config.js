@@ -6,7 +6,9 @@ module.exports = {
   },
   variants: {
     extend: {
-      borderWidth: ["dark", "first"],
+      borderWidth: ["dark"],
+      backgroundOpacity: ["active"],
+      outline: ["focus-visible"],
     },
   },
   plugins: [],

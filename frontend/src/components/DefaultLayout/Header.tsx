@@ -6,7 +6,10 @@ import { DropdownRoot, Dropdown, useDropdown } from "components/Dropdown";
 
 const AdminLink: React.VFC = () => (
   <Link href="/admin">
-    <a className="w-12 h-12 rounded-full flex place-items-center hover:bg-opacity-20 hover:bg-red-600 focus:bg-opacity-20 focus:bg-red-600 focus:outline-none">
+    <a
+      className="w-12 h-12 rounded-full flex bg-opacity-0 bg-red-600 hover:bg-opacity-20 focus:bg-opacity-20 active:bg-opacity-30"
+      aria-label="管理者画面を開く"
+    >
       <MdLock className="m-auto w-8 h-8 text-red-600" />
     </a>
   </Link>
@@ -20,7 +23,8 @@ const UserDropdown: React.VFC<UserDropdownProps> = ({ logout }) => {
   return (
     <DropdownRoot ref={rootRef}>
       <button
-        className="w-12 h-12 rounded-full hover:bg-opacity-10 hover:bg-gray-100 focus:bg-opacity-10 focus:bg-gray-100 focus:outline-none"
+        className="w-12 h-12 rounded-full bg-gray-100 bg-opacity-0 hover:bg-opacity-10 focus:bg-opacity-10 active:bg-opacity-30 outline-none focus-visible:outline-white"
+        role="menu"
         onClick={toggle}
       >
         <MdAccountCircle className="m-auto w-8 h-8 text-gray-100" />
@@ -49,14 +53,16 @@ export const Header: React.VFC<HeaderProps> = ({
   isAdmin,
 }) => {
   return (
-    <div className="w-full h-16 px-8 py-2 shadow bg-gray-800 dark:bg-gray-900">
-      <div className="mx-auto w-full max-w-screen-lg flex flex-row justify-between items-center">
-        <div className="md:flex-1" aria-hidden />
-        <div className="flex-1 flex-shrink">
+    <div className="w-full h-16 px-4 py-2 shadow bg-gray-800 dark:bg-gray-900">
+      <div className="mx-auto w-full flex flex-row justify-between items-center">
+        <div>
           <Link href="/">
-            <a className="flex h-12 px-4 place-content-center rounded-lg hover:bg-opacity-20 hover:bg-blue-700">
+            <a
+              className="sm:px-4 flex justify-center items-center rounded-lg bg-opacity-0 bg-blue-700 hover:bg-opacity-20 active:bg-opacity-30"
+              aria-label="ホームに戻る"
+            >
               <MISWLogo
-                className="flex-1 max-h-12"
+                className="flex-1 w-40 h-12"
                 style={{
                   filter: "brightness(150%)",
                 }}
