@@ -26,7 +26,9 @@ const UserDropdown: React.VFC<UserDropdownProps> = ({ logout }) => (
         <>
           <Menu.Button
             className="w-12 h-12 rounded-full bg-gray-100 bg-opacity-0 hover:bg-opacity-10 focus:bg-opacity-10 active:bg-opacity-20"
-            aria-label="ユーザーメニューを開く"
+            aria-label={
+              open ? "ユーザーメニューを閉じる" : "ユーザーメニューを開く"
+            }
           >
             <MdAccountCircle className="m-auto w-8 h-8 text-gray-100" />
           </Menu.Button>
@@ -45,17 +47,16 @@ const UserDropdown: React.VFC<UserDropdownProps> = ({ logout }) => (
               className="w-32 rounded-sm shadow outline-none divide-y bg-white dark:bg-gray-800 divide-gray-200 dark:divide-gray-600"
             >
               <Link passHref href="/profile">
-                <Menu.Item as="a">
-                  {({ active }) => (
-                    <p
-                      className={clsx(
-                        "w-full p-4 text-xs",
-                        active && "bg-gray-100 dark:bg-gray-700"
-                      )}
-                    >
-                      プロフィール
-                    </p>
-                  )}
+                <Menu.Item
+                  as="a"
+                  className={({ active }) =>
+                    clsx(
+                      "block w-full p-4 text-xs",
+                      active && "bg-gray-100 dark:bg-gray-700"
+                    )
+                  }
+                >
+                  プロフィール
                 </Menu.Item>
               </Link>
               <Menu.Item>
