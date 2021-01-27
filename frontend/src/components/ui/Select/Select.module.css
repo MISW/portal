@@ -1,22 +1,8 @@
 .select {
-  @apply appearance-none;
-  @apply rounded-md;
-  @apply pl-4 pr-12 py-2;
-  @apply border-2 border-transparent;
   background-image: url("./unfold_more.svg");
   background-repeat: no-repeat;
   background-position: right 0.75rem center;
   background-size: 1.5rem;
-
-  &:hover {
-    @apply dark:border-gray-600;
-    @apply border-gray-400;
-  }
-  &:focus {
-    @apply dark:bg-black;
-    @apply bg-white;
-    @apply border-blue-500;
-  }
 }
 
 @media (prefers-color-scheme: dark) {

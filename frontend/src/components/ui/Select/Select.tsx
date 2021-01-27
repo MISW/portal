@@ -7,6 +7,16 @@ export const Select = forwardRef(function Select(
   ref: React.ForwardedRef<HTMLSelectElement>
 ) {
   return (
-    <select ref={ref} className={clsx(styles.select, className)} {...rest} />
+    <select
+      ref={ref}
+      className={clsx(
+        styles.select,
+        "appearance-none rounded-md pl-4 pr-12 py-2 border-2 border-transparent",
+        "dark:hover:border-gray-600 hover:border-gray-400",
+        "focus:bg-white dark:focus:bg-black focus:border-blue-500",
+        className
+      )}
+      {...rest}
+    />
   );
 });

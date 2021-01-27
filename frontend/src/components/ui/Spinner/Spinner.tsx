@@ -15,7 +15,12 @@ export const Spinner: React.VFC<SpinnerProps> = ({
   const vars = useThemeColor(["--tint-color", tintColor]);
   return (
     <div
-      className={clsx(styles.spinner, spin && "animate-spin", "w-24 h-24")}
+      className={clsx(
+        styles.spinner,
+        "rounded-full border-8",
+        spin && "animate-spin",
+        "w-24 h-24"
+      )}
       style={vars}
     />
   );
