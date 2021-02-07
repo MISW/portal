@@ -1,5 +1,7 @@
 import type { SexType, University, RoleType } from "infra/type";
 
+export type { SexType, University, RoleType } from "infra/type";
+
 export type PaymentStatus = {
   userId: number;
   authorizer: number;
