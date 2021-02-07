@@ -4,10 +4,11 @@ body {
 }
 
 * {
-  @apply transition-colors;
+  transition-property: background-color, border-color, opacity;
+  @apply ease-in-out;
+  @apply delay-100;
 }
 
-button:focus:not(:focus-visible),
-a:focus:not(:focus-visible) {
+*:focus:not(:focus-visible) {
   @apply outline-none !important;
 }
