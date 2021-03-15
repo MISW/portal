@@ -40,11 +40,6 @@ module.exports = {
       cssLoader.options.modules = {
         auto: true,
         localIdentName: "[name]__[local]--[hash:base64:5]",
-        // Tailwindがダークモード生成に使うクラスがCSS Modulesの修飾を受けるのを抑制する
-        // FYI: https://github.com/tailwindlabs/tailwindcss/issues/3258
-        getLocalIdent: (_context, _localIdentName, localName) => {
-          if (localName === "dark") return "dark";
-        },
       };
     }
 
