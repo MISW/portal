@@ -1,8 +1,12 @@
 .select {
   background-image: url("./unfold_more.svg");
   background-repeat: no-repeat;
-  background-position: right 0.75rem center;
-  background-size: 1.5rem;
+  background-position: right theme("spacing.3") center;
+  background-size: theme("spacing.6");
+}
+
+.select:focus {
+  @apply border-blue-500 !important;
 }
 
 @media (prefers-color-scheme: dark) {

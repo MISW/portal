@@ -1,17 +1,28 @@
 import React from "react";
+import clsx from "clsx";
 import { Card } from "components/ui";
 
 type SettingsCardProps = Readonly<{
   label: string;
-}>;
+}> &
+  React.PropsWithoutRef<JSX.IntrinsicElements["form"]>;
 
 export const SettingsCard: React.FC<SettingsCardProps> = ({
   children,
   label,
+  className,
+  ...rest
 }) => (
   <div className="max-w-screen-md">
     <h3 className="mx-4 text-xl">{label}</h3>
-    <Card className="mt-2 border-t border-b md:border-l md:border-r md:rounded-md flex flex-col divide-y">
+    <Card
+      as="form"
+      {...rest}
+      className={clsx(
+        className,
+        "mt-2 border-t border-b md:border-l md:border-r md:rounded-md flex flex-col divide-y"
+      )}
+    >
       {children}
     </Card>
   </div>
@@ -33,6 +44,6 @@ export const SettingsCardItem: React.FC<SettingsCardItemProps> = ({
         {label}
       </label>
     </div>
-    <div className="flex-grow">{children}</div>
+    <div className="flex-grow flex-1 flex flex-col">{children}</div>
   </section>
 );

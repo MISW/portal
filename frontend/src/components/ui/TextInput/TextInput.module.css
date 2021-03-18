@@ -1,0 +1,7 @@
+.input:invalid {
+  @apply border-red-500;
+}
+
+.input:focus {
+  @apply border-blue-500 !important;
+}
