@@ -130,7 +130,7 @@ type User struct {
 	Sex                  SexType    `json:"sex" yaml:"sex"`
 	University           University `json:"university" yaml:"university"`
 	StudentID            string     `json:"student_id" yaml:"student_id"`
-	EmergencyPhoneNumber string     `json:"emerr_circales" yaml:"other_circles"`
+	EmergencyPhoneNumber string     `json:"emergency_phone_number" yaml:"emergency_phone_number"`
 	OtherCircles         string     `json:"other_circles" yaml:"other_circles"`
 	Workshops            []string   `json:"workshops" yaml:"workshops"`
 	Squads               []string   `json:"squads" yaml:"squads"`
