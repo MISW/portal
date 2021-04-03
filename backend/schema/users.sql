@@ -7,6 +7,9 @@ CREATE TABLE users (
     handle VARCHAR(128) NOT NULL,
     sex VARCHAR(16) NOT NULL,
 
+    avatar_url VARCHAR(256),
+    avatar_thumbnail_url VARCHAR(256),
+
     university_name VARCHAR(256) NOT NULL,
     university_department VARCHAR(256) NOT NULL,
     university_subject VARCHAR(256) NOT NULL,
@@ -22,8 +25,10 @@ CREATE TABLE users (
 
     slack_id VARCHAR(128) UNIQUE,
     discord_id VARCHAR(128),
+    twitter_screen_name VARCHAR(128),
 
     email_verified BOOLEAN DEFAULT 0,
+    card_published BOOLEAN DEFAULT 0,
 
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP

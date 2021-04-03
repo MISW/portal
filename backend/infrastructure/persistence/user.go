@@ -20,30 +20,34 @@ func NewUserPersistence(db db.Ext) repository.UserRepository {
 }
 
 type user struct {
-	ID                   int    `db:"id"`
-	Email                string `db:"email"`
-	Generation           int    `db:"generation"`
-	Name                 string `db:"name"`
-	Kana                 string `db:"kana"`
-	Handle               string `db:"handle"`
-	Sex                  string `db:"sex"`
-	University           string `db:"university_name"`
-	UniversityDepartment string `db:"university_department"`
-	UniversitySubject    string `db:"university_subject"`
-	StudentID            string `db:"student_id"`
-	EmergencyPhoneNumber string `db:"emergency_phone_number"`
-	OtherCircles         string `db:"other_circles"`
-	Workshops            string `db:"workshops"`
-	Squads               string `db:"squads"`
-	Role                 string `db:"role"`
+	ID                   int            `db:"id"`
+	Email                string         `db:"email"`
+	Generation           int            `db:"generation"`
+	Name                 string         `db:"name"`
+	Kana                 string         `db:"kana"`
+	Handle               string         `db:"handle"`
+	Sex                  string         `db:"sex"`
+	AvatarURL            sql.NullString `db:"avatar_url"`
+	AvatarThumbnailURL   sql.NullString `db:"avatar_thumbnail_url"`
+	University           string         `db:"university_name"`
+	UniversityDepartment string         `db:"university_department"`
+	UniversitySubject    string         `db:"university_subject"`
+	StudentID            string         `db:"student_id"`
+	EmergencyPhoneNumber string         `db:"emergency_phone_number"`
+	OtherCircles         string         `db:"other_circles"`
+	Workshops            string         `db:"workshops"`
+	Squads               string         `db:"squads"`
+	Role                 string         `db:"role"`
 
 	SlackInvitationStatus string `db:"slack_invitation_status"`
 
 	// 外部サービス
-	SlackID   sql.NullString `db:"slack_id"`
-	DiscordID sql.NullString `db:"discord_id"`
+	SlackID           sql.NullString `db:"slack_id"`
+	DiscordID         sql.NullString `db:"discord_id"`
+	TwitterScreenName sql.NullString `db:"twitter_screen_name"`
 
 	EmailVerified bool `db:"email_verified"`
+	CardPublished bool `db:"card_published"`
 
 	CreatedAt time.Time `db:"created_at"`
 	UpdatedAt time.Time `db:"updated_at"`
@@ -51,13 +55,21 @@ type user struct {
 
 func newUser(u *domain.User) *user {
 	return &user{
-		ID:                   u.ID,
-		Email:                u.Email,
-		Generation:           u.Generation,
-		Name:                 u.Name,
-		Kana:                 u.Kana,
-		Handle:               u.Handle,
-		Sex:                  string(u.Sex),
+		ID:         u.ID,
+		Email:      u.Email,
+		Generation: u.Generation,
+		Name:       u.Name,
+		Kana:       u.Kana,
+		Handle:     u.Handle,
+		Sex:        string(u.Sex),
+		AvatarURL: sql.NullString{
+			String: u.Avatar.URL,
+			Valid:  len(u.Avatar.URL) != 0,
+		},
+		AvatarThumbnailURL: sql.NullString{
+			String: u.Avatar.ThumbnailURL,
+			Valid:  len(u.Avatar.ThumbnailURL) != 0,
+		},
 		University:           u.University.Name,
 		UniversityDepartment: u.University.Department,
 		UniversitySubject:    u.University.Subject,
@@ -78,8 +90,13 @@ func newUser(u *domain.User) *user {
 			String: u.DiscordID,
 			Valid:  len(u.DiscordID) != 0,
 		},
+		TwitterScreenName: sql.NullString{
+			String: u.TwitterScreenName,
+			Valid:  len(u.TwitterScreenName) != 0,
+		},
 
 		EmailVerified: u.EmailVerified,
+		CardPublished: u.CardPublished,
 
 		CreatedAt: u.CreatedAt,
 		UpdatedAt: u.UpdatedAt,
@@ -87,6 +104,13 @@ func newUser(u *domain.User) *user {
 }
 
 func parseUser(u *user) *domain.User {
+	var avatar *domain.Avatar
+	if u.AvatarURL.Valid && u.AvatarThumbnailURL.Valid {
+		avatar = &domain.Avatar{
+			URL:          u.AvatarURL.String,
+			ThumbnailURL: u.AvatarThumbnailURL.String,
+		}
+	}
 	return &domain.User{
 		ID:         u.ID,
 		Email:      u.Email,
@@ -95,6 +119,7 @@ func parseUser(u *user) *domain.User {
 		Kana:       u.Kana,
 		Handle:     u.Handle,
 		Sex:        domain.SexType(u.Sex),
+		Avatar:     avatar,
 		University: domain.University{
 			Name:       u.University,
 			Department: u.UniversityDepartment,
@@ -109,10 +134,12 @@ func parseUser(u *user) *domain.User {
 
 		SlackInvitationStatus: domain.SlackInvitationStatus(u.SlackInvitationStatus),
 
-		SlackID:   u.SlackID.String,
-		DiscordID: u.DiscordID.String,
+		SlackID:           u.SlackID.String,
+		DiscordID:         u.DiscordID.String,
+		TwitterScreenName: u.TwitterScreenName.String,
 
 		EmailVerified: u.EmailVerified,
+		CardPublished: u.CardPublished,
 
 		CreatedAt: u.CreatedAt,
 		UpdatedAt: u.UpdatedAt,
@@ -137,6 +164,8 @@ func (up *userPersistence) Insert(ctx context.Context, user *domain.User) (int, 
 		kana,
 		handle,
 		sex,
+		avatar_url,
+		avatar_thumbnail_url,
 		university_name,
 		university_department,
 		university_subject,
@@ -149,7 +178,9 @@ func (up *userPersistence) Insert(ctx context.Context, user *domain.User) (int, 
 		slack_invitation_status,
 		slack_id,
 		discord_id,
-		email_verified
+		twitter_screen_name,
+		email_verified,
+		card_published
 	) VALUES (
 		:email,
 		:generation,
@@ -157,6 +188,8 @@ func (up *userPersistence) Insert(ctx context.Context, user *domain.User) (int, 
 		:kana,
 		:handle,
 		:sex,
+		:avatar_url,
+		:avatar_thumbnail_url,
 		:university_name,
 		:university_department,
 		:university_subject,
@@ -169,7 +202,9 @@ func (up *userPersistence) Insert(ctx context.Context, user *domain.User) (int, 
 		:slack_invitation_status,
 		:slack_id,
 		:discord_id,
-		:email_verified
+		:twitter_screen_name,
+		:email_verified,
+		:card_published
 	)
 	`, u)
 
@@ -312,6 +347,8 @@ func (up *userPersistence) Update(ctx context.Context, user *domain.User) error 
 		kana=:kana,
 		handle=:handle,
 		sex=:sex,
+		avatar_url=:avatar_url,
+		avatar_thumbnail_url=:avatar_thumbnail_url,
 		university_name=:university_name,
 		university_department=:university_department,
 		university_subject=:university_subject,
@@ -324,7 +361,9 @@ func (up *userPersistence) Update(ctx context.Context, user *domain.User) error 
 		slack_invitation_status=:slack_invitation_status,
 		slack_id=:slack_id,
 		discord_id=:discord_id,
-		email_verified=:email_verified
+		twitter_screen_name=:twitter_screen_name,
+		email_verified=:email_verified,
+		card_published=:card_published
 	WHERE id=:id
 	`, u)
 

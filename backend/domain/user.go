@@ -80,6 +80,12 @@ type University struct {
 	Subject    string `json:"subject" yaml:"subject"`
 }
 
+// Avatar - アイコン画像
+type Avatar struct {
+	URL          string `json:"url" yaml:"url"`
+	ThumbnailURL string `json:"thumbnail_url" yaml:"thumbnail_url"`
+}
+
 // SlackInvitationStatus - Slack招待のステータス
 type SlackInvitationStatus string
 
@@ -120,10 +126,11 @@ type User struct {
 	Name                 string     `json:"name" yaml:"name"`
 	Kana                 string     `json:"kana" yaml:"kana"`
 	Handle               string     `json:"handle" yaml:"handle"`
+	Avatar               *Avatar    `json:"avatar,omitempty" yaml:"avatar,omitempty"`
 	Sex                  SexType    `json:"sex" yaml:"sex"`
 	University           University `json:"university" yaml:"university"`
 	StudentID            string     `json:"student_id" yaml:"student_id"`
-	EmergencyPhoneNumber string     `json:"emergency_phone_number" yaml:"emergency_phone_number"`
+	EmergencyPhoneNumber string     `json:"emerr_circales" yaml:"other_circles"`
 	OtherCircles         string     `json:"other_circles" yaml:"other_circles"`
 	Workshops            []string   `json:"workshops" yaml:"workshops"`
 	Squads               []string   `json:"squads" yaml:"squads"`
@@ -132,10 +139,12 @@ type User struct {
 	SlackInvitationStatus SlackInvitationStatus `json:"slack_invitation_status" yaml:"slack_invitation_status"`
 
 	// 外部サービス
-	SlackID   string `json:"slack_id" yaml:"slack_id"`
-	DiscordID string `json:"discord_id,omitempty" yaml:"discord_id,omitempty"`
+	SlackID           string `json:"slack_id" yaml:"slack_id"`
+	DiscordID         string `json:"discord_id,omitempty" yaml:"discord_id,omitempty"`
+	TwitterScreenName string `json:"twitter_screen_name,omitempty" yaml:"twitter_screen_name,omitempty"`
 
 	EmailVerified bool `json:"email_verified" yaml:"email_verified"`
+	CardPublished bool `json:"card_published" yaml:"card_published"`
 
 	CreatedAt time.Time `json:"created_at" yaml:"created_at"`
 	UpdatedAt time.Time `json:"updated_at" yaml:"updated_at"`
@@ -151,6 +160,8 @@ var (
 	emailValidator = regexp.MustCompile(`^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$`)
 
 	discordValidator = regexp.MustCompile(`(.*)#(\d{4})`)
+
+	twitterScreenNameValidator = regexp.MustCompile(`[\w_]+`)
 
 	invalidWordsForSquads = []string{"\n", "\r"}
 )
@@ -173,6 +184,9 @@ func (user *User) Validate() error {
 	}
 	if user.DiscordID != "" && !discordValidator.MatchString(user.DiscordID) {
 		return rest.NewBadRequest("DiscordIDの形式が不正です")
+	}
+	if user.TwitterScreenName != "" && !twitterScreenNameValidator.MatchString(user.TwitterScreenName) {
+		return rest.NewBadRequest("Twitterのスクリーンネームの形式が不正です")
 	}
 	if !user.Role.Validate() {
 		return rest.NewBadRequest("存在しないロールが指定されています")
