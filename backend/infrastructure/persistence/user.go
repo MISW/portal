@@ -54,6 +54,12 @@ type user struct {
 }
 
 func newUser(u *domain.User) *user {
+	var avatarURL, avatarThumbnailURL string
+	if u.Avatar != nil {
+		avatarURL = u.Avatar.URL
+		avatarThumbnailURL = u.Avatar.ThumbnailURL
+	}
+
 	return &user{
 		ID:         u.ID,
 		Email:      u.Email,
@@ -63,12 +69,12 @@ func newUser(u *domain.User) *user {
 		Handle:     u.Handle,
 		Sex:        string(u.Sex),
 		AvatarURL: sql.NullString{
-			String: u.Avatar.URL,
-			Valid:  len(u.Avatar.URL) != 0,
+			String: avatarURL,
+			Valid:  len(avatarURL) != 0,
 		},
 		AvatarThumbnailURL: sql.NullString{
-			String: u.Avatar.ThumbnailURL,
-			Valid:  len(u.Avatar.ThumbnailURL) != 0,
+			String: avatarThumbnailURL,
+			Valid:  len(avatarThumbnailURL) != 0,
 		},
 		University:           u.University.Name,
 		UniversityDepartment: u.University.Department,
