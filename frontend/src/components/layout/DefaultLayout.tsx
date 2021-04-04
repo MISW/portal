@@ -10,12 +10,12 @@ import {
   Container,
   Tooltip,
   CssBaseline,
+  Avatar,
 } from "@material-ui/core";
 import { AccountCircle, Lock } from "@material-ui/icons";
 import MUILink from "@material-ui/core/Link";
 import lighttheme from "../theme/lighttheme";
 import darktheme from "../theme/darktheme";
-import { useRouter } from "next/router";
 import { useSystemColorScheme } from "../../hooks/theme";
 import { getSuffix } from "../../utils";
 import NextLink from "next/link";
@@ -68,7 +68,6 @@ export const DefaultLayout: React.FC<{ onLogout: () => void }> = ({
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const currentUser = useSelector(selectCurrentUser);
-  const router = useRouter();
 
   const handleMenu = useCallback((event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -77,11 +76,6 @@ export const DefaultLayout: React.FC<{ onLogout: () => void }> = ({
   const handleClose = useCallback(() => {
     setAnchorEl(null);
   }, []);
-
-  const handleClickProfile = useCallback(() => {
-    handleClose();
-    router.push("/profile");
-  }, [handleClose, router]);
 
   const handleLogout = useCallback(() => {
     handleClose();
@@ -96,25 +90,16 @@ export const DefaultLayout: React.FC<{ onLogout: () => void }> = ({
       <div className="container">
         <AppBar position="fixed" color="primary" className={classes.appBar}>
           <Toolbar>
-            {/* <IconButton
-              edge="start"
-              className={classes.menuButton}
-              color="inherit"
-              aria-label="menu"
-            >
-              <MenuIcon />
-            </IconButton> */}
             <div className={classes.title}>
-              <NextLink href="/">
-                {/* hrefを設定しないとカーソルがいい感じに変わらない */}
-                <MUILink href="" variant="h6" color="inherit">
+              <NextLink href="/" passHref>
+                <MUILink variant="h6" color="inherit">
                   MISW Portal
                 </MUILink>
               </NextLink>
             </div>
             {currentUser &&
               (() => {
-                const { generation, role, handle } = currentUser;
+                const { generation, role, handle, avatar } = currentUser;
                 const status =
                   role === "member" || role === "retired"
                     ? `${generation}${getSuffix(generation)}`
@@ -126,30 +111,34 @@ export const DefaultLayout: React.FC<{ onLogout: () => void }> = ({
                     </Typography>
                     <div>
                       {role === "admin" && (
-                        <NextLink href="/admin">
-                          <a>
-                            <Tooltip title="管理者">
-                              <IconButton
-                                aria-label="admin"
-                                aria-controls="menu-appbar"
-                                aria-haspopup="true"
-                                color="secondary"
-                              >
-                                <Lock />
-                              </IconButton>
-                            </Tooltip>
-                          </a>
+                        <NextLink href="/admin" passHref>
+                          <Tooltip title="管理者">
+                            <IconButton
+                              component="a"
+                              aria-label="admin"
+                              aria-controls="menu-appbar"
+                              aria-haspopup="true"
+                              color="secondary"
+                            >
+                              <Lock />
+                            </IconButton>
+                          </Tooltip>
                         </NextLink>
                       )}
-                      <Tooltip title="Settings">
+                      <Tooltip title="各種設定">
                         <IconButton
-                          aria-label="account of current user"
+                          title={handle}
+                          aria-label={handle}
                           aria-controls="menu-appbar"
                           aria-haspopup="true"
                           onClick={handleMenu}
                           color="inherit"
                         >
-                          <AccountCircle />
+                          {avatar != null ? (
+                            <Avatar alt={handle} src={avatar.thumbnailUrl} />
+                          ) : (
+                            <AccountCircle />
+                          )}
                         </IconButton>
                       </Tooltip>
                       <Menu
@@ -167,9 +156,11 @@ export const DefaultLayout: React.FC<{ onLogout: () => void }> = ({
                         open={open}
                         onClose={handleClose}
                       >
-                        <MenuItem onClick={handleClickProfile}>
-                          Profile
-                        </MenuItem>
+                        <NextLink passHref href="/profile">
+                          <MenuItem component="a" onClick={handleClose}>
+                            Profile
+                          </MenuItem>
+                        </NextLink>
                         <MenuItem onClick={handleLogout}>Log out</MenuItem>
                       </Menu>
                     </div>
