@@ -26,8 +26,8 @@ export type User = {
   role: RoleType;
 
   slackId: string;
-  discordId: string;
-  twitterScreenName: string;
+  discordId?: string;
+  twitterScreenName?: string;
   slackInvitationStatus: string;
 
   createdAt: string;
