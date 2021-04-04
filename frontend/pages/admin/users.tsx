@@ -28,6 +28,7 @@ const headCells: HeadCell[] = labelsInJapanese.map(
 );
 
 const toTableData = (u: User): UserTableData => ({
+  discordId: "",
   ...u,
   univName: u.university.name,
   department: u.university.department,
