@@ -1,4 +1,4 @@
-import { SexType, University, RoleType } from "infra/type";
+import { SexType, University, RoleType, Avatar } from "infra/type";
 
 export type PaymentStatus = {
   userId: number;
@@ -16,6 +16,7 @@ export type User = {
   kana: string;
   handle: string;
   sex: SexType;
+  avatar?: Avatar;
   university: University;
   studentId: string;
   emergencyPhoneNumber: string;
@@ -26,6 +27,7 @@ export type User = {
 
   slackId: string;
   discordId: string;
+  twitterScreenName: string;
   slackInvitationStatus: string;
 
   createdAt: string;
