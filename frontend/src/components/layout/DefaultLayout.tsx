@@ -161,6 +161,11 @@ export const DefaultLayout: React.FC<{ onLogout: () => void }> = ({
                             Profile
                           </MenuItem>
                         </NextLink>
+                        <NextLink passHref href="/card">
+                          <MenuItem component="a" onClick={handleClose}>
+                            Card
+                          </MenuItem>
+                        </NextLink>
                         <MenuItem onClick={handleLogout}>Log out</MenuItem>
                       </Menu>
                     </div>
