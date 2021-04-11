@@ -7,7 +7,7 @@ import { AppProps } from "next/app";
 import { ThemeProvider } from "@material-ui/styles";
 import { CssBaseline, createMuiTheme } from "@material-ui/core";
 import { NextPageContext } from "next";
-import { DefaultLayout } from "../src/components/layout/DefaultLayout";
+import { DefaultLayout } from "components/layout/DefaultLayout";
 import { wrapper, RootState } from "store";
 import { fetchCurrentUser, selectCurrentUser } from "features/currentUser";
 import { useLogout } from "features/auth";

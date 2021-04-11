@@ -1,9 +1,7 @@
 import React, { useState } from "react";
 import { NextPage } from "next";
-import RegisterForm, {
-  SubmitResult,
-} from "../../src/components/layout/RegisterForm";
-import { ConfigurableProfile } from "../../src/user";
+import RegisterForm, { SubmitResult } from "components/layout/RegisterForm";
+import { ConfigurableProfile } from "user";
 import { Alert } from "@material-ui/lab";
 import { useDispatch } from "react-redux";
 import { signup } from "features/auth";
