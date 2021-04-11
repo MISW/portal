@@ -3,7 +3,7 @@
 import "tailwindcss/tailwind.css";
 import "focus-visible";
 import React, { useEffect } from "react";
-import { AppProps } from "next/app";
+import { AppProps, AppContext } from "next/app";
 import { ThemeProvider } from "@material-ui/styles";
 import { CssBaseline, createMuiTheme } from "@material-ui/core";
 import { NextPageContext } from "next";
@@ -37,9 +37,8 @@ App.getInitialProps = async ({
   Component,
   ctx,
 }: {
-  Component: any;
   ctx: NextPageContext<RootState, any>;
-}) => {
+} & AppContext) => {
   const userInfo = selectCurrentUser(ctx.store.getState());
   if (userInfo == null) await ctx.store.dispatch(fetchCurrentUser());
 
