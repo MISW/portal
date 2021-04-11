@@ -87,7 +87,7 @@ export const DefaultLayout: React.FC<{ onLogout: () => void }> = ({
   return (
     <MuiThemeProvider theme={scheme === "dark" ? darktheme : lighttheme}>
       <CssBaseline />
-      <div className="container">
+      <div>
         <AppBar position="fixed" color="primary" className={classes.appBar}>
           <Toolbar>
             <div className={classes.title}>

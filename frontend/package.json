@@ -21,6 +21,7 @@
     "@types/react-dom": "^17.0.0",
     "@types/react-redux": "^7.1.14",
     "@types/styled-jsx": "^2.2.8",
+    "@types/tailwindcss": "^2.0.2",
     "@typescript-eslint/eslint-plugin": "^2.34.0",
     "@typescript-eslint/parser": "^2.34.0",
     "cross-env": "^7.0.3",
@@ -38,18 +39,23 @@
     "typescript": "^4.1.3"
   },
   "dependencies": {
+    "@headlessui/react": "^0.3.2",
     "@material-ui/core": "^4.11.2",
     "@material-ui/icons": "^4.9.1",
     "@material-ui/lab": "^4.0.0-alpha.56",
     "@reduxjs/toolkit": "^1.4.0",
+    "clsx": "^1.1.1",
+    "focus-visible": "^5.2.0",
     "isomorphic-unfetch": "^3.1.0",
     "ky": "^0.25.1",
     "ky-universal": "^0.8.2",
-    "next": "^9.5.4",
+    "next": "^10.1.3",
     "next-redux-wrapper": "^6.0.2",
     "react": "^16.14.0",
     "react-dom": "^16.13.1",
     "react-redux": "^7.2.2",
-    "redux": "^4.0.5"
+    "redux": "^4.0.5",
+    "sanitize.css": "^12.0.1",
+    "tailwindcss": "^2.1.1"
   }
 }
