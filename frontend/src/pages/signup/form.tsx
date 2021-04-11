@@ -6,7 +6,7 @@ import { Alert } from "@material-ui/lab";
 import { useDispatch } from "react-redux";
 import { signup } from "features/auth";
 
-const Page: NextPage<{}> = () => {
+const Page: NextPage = () => {
   const dispatch = useDispatch();
   const [email, setEmail] = useState<string>();
   const onSubmit = async (user: ConfigurableProfile): Promise<SubmitResult> => {

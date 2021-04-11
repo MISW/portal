@@ -1,4 +1,4 @@
-import React, { useState, useCallback, ReactNode } from "react";
+import React, { useState, useCallback, ReactNode, useMemo } from "react";
 import RegisterFormStepper from "./RegistrationFormStepper";
 import UniversityInfo from "./UniversityInfo";
 import CircleInfo from "./CircleInfo";
@@ -53,18 +53,35 @@ const RegisterForm: React.FC<{
     discordId,
   } = userHooks;
 
-  const fundamentalInfo = { name, kana, email, sex, emergencyPhoneNumber };
-  const universityInfo = { univName, department, subject, studentId };
-  const circleInfo = {
+  const contentHooks = useMemo(() => {
+    const fundamentalInfo = { name, kana, email, sex, emergencyPhoneNumber };
+    const universityInfo = { univName, department, subject, studentId };
+    const circleInfo = {
+      generation,
+      handle,
+      otherCircles,
+      workshops,
+      squads,
+      discordId,
+    };
+    return [fundamentalInfo, universityInfo, circleInfo] as const;
+  }, [
+    name,
+    kana,
+    email,
+    sex,
+    emergencyPhoneNumber,
+    univName,
+    department,
+    subject,
+    studentId,
     generation,
     handle,
     otherCircles,
     workshops,
     squads,
     discordId,
-  };
-
-  const contentHooks = [fundamentalInfo, universityInfo, circleInfo];
+  ]);
 
   const [submitResult, setSubmitResult] = useState<SubmitResult>(null);
 
