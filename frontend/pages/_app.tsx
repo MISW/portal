@@ -1,5 +1,7 @@
 // https://github.com/mui-org/material-ui/blob/master/examples/nextjs/pages/_app.js 参照
 
+import "tailwindcss/tailwind.css";
+import "focus-visible";
 import React, { useEffect } from "react";
 import { AppProps } from "next/app";
 import { ThemeProvider } from "@material-ui/styles";
