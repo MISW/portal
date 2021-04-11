@@ -2,10 +2,10 @@ import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { NextPage } from "next";
 import Router from "next/router";
-import Profile from "../src/components/layout/Profile";
-import PaymentStatuses from "../src/components/layout/PaymentStatuses";
+import Profile from "components/layout/Profile";
+import PaymentStatuses from "components/layout/PaymentStatuses";
 import { Box } from "@material-ui/core";
-import { withLogin } from "../src/middlewares/withLogin";
+import { withLogin } from "middlewares/withLogin";
 import {
   selectCurrentUser,
   selectCurrentPaymentStatuses,

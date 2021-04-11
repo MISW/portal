@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { NextPage } from "next";
-import { Config } from "../../src/components/layout/Config";
-import Period from "../../src/components/layout/config/Period";
-import EmailTemplate from "../../src/components/layout/config/EmailTemplate";
+import { Config } from "components/layout/Config";
+import Period from "components/layout/config/Period";
+import EmailTemplate from "components/layout/config/EmailTemplate";
 import {
   usePaymentPeriodConfig,
   useCurrentPeriodConfig,
   useEmailTemplateConfig,
   EmailTemplate as EmailTemplateType,
-} from "../../src/hooks/appConfig";
-import { calcPeriod } from "../../src/utils";
-import { withLogin } from "../../src/middlewares/withLogin";
+} from "hooks/appConfig";
+import { calcPeriod } from "utils";
+import { withLogin } from "middlewares/withLogin";
 
 const usePaymentPeriodNode = (
   paymentPeriod: number | undefined,

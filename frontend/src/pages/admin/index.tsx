@@ -2,8 +2,8 @@ import React from "react";
 import Container from "@material-ui/core/Container";
 import { NextPage } from "next";
 import { Typography, Grid, Box } from "@material-ui/core";
-import LinkContentCard from "../../src/components/design/LinkContentCard";
-import { withLogin } from "../../src/middlewares/withLogin";
+import LinkContentCard from "components/design/LinkContentCard";
+import { withLogin } from "middlewares/withLogin";
 
 const links = [
   {
