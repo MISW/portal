@@ -45,6 +45,10 @@ export type AppActions =
 
 const isAppContext = (ctx: Context): ctx is AppContext => "Component" in ctx;
 
+if (!process.browser && process.env.BACKEND_HOST == null) {
+  console.warn("BACKEND_HOST is required");
+}
+
 const makeStore: MakeStore<RootState> = (ctx) => {
   const req = isAppContext(ctx)
     ? ctx.ctx.req
@@ -52,9 +56,12 @@ const makeStore: MakeStore<RootState> = (ctx) => {
     ? ctx.req
     : undefined;
   const cookie = req?.headers.cookie;
-  const baseUrl = process.browser
-    ? "/"
-    : nonNullOrThrow(process.env.BACKEND_HOST);
+  /**
+   * TODO:
+   * preprender時に参照されてしまうので、何もないとき空文字列にしてしまっている。
+   * そもそも500エラーの可能性があるprerenderでstoreが初期化されるのはおかしいわけだが、DefaultLayoutが_app.tsxで配置されてしまっている以上、_app.tsxでstoreを構築する必要があり、回避策としてこうなっている
+   */
+  const baseUrl = process.browser ? "/" : process.env.BACKEND_HOST ?? "";
   const api = createApiClient(baseUrl, cookie ? { headers: { cookie } } : {});
   return createStore({ api });
 };
