@@ -5,4 +5,12 @@ module.exports = {
   async rewrites() {
     return [{ source: "/card-image/:path*", destination: "/api/card/:path*" }];
   },
+  webpack: (config, { isServer }) => {
+    config.module.rules.push({
+      test: /\.png$/,
+      // サーバーなら Data URL として、クライアントならよしなに
+      type: isServer ? "asset/inline" : "asset",
+    });
+    return config;
+  },
 };
