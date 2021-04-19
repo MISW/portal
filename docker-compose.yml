@@ -31,7 +31,7 @@ services:
     build:
       dockerfile: frontend.Dockerfile
       context: .
-      target: dev
+      target: development
     env_file: ./dev.env
     volumes:
       - ./frontend:/frontend
@@ -41,7 +41,6 @@ services:
       - "3000"
     environment:
       TZ: "Azia/Tokyo"
-      ENVIRONMENT: dev
       BACKEND_HOST: "http://backend"
 
   mysql:
