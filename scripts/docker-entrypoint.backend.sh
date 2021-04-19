@@ -21,8 +21,9 @@ fi
 eval "$(dbenv -)"
 
 usage() {
-    echo "Usage: $0 [-m] [-q] [-w]" 1>&2
+    echo "Usage: $0 [-d] [-m] [-q] [-w]" 1>&2
     echo "Options: " 1>&2
+    echo "-d: Run as development mode(require go)"
     echo "-m: Run migration" 1>&2
     echo "-q: Quit without running server" 1>&2
     echo "-w: Wait for database to start" 1>&2
@@ -32,11 +33,13 @@ usage() {
 WAIT=0
 QUIT=0
 MIGRATION=0
-ENVIRONMENT=dev
+ENVIRONMENT=prod
 
 while getopts :mqwh OPT
 do
     case $OPT in
+    d)  ENVIRONMENT=dev
+        ;;
     m)  MIGRATION=1
         ;;
     q)  QUIT=1

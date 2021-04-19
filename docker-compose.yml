@@ -16,6 +16,7 @@ services:
     build:
       dockerfile: backend.Dockerfile
       context: .
+      target: development
     env_file: ./dev.env
     volumes:
       - ./backend:/backend
@@ -25,7 +26,6 @@ services:
       - "80"
     environment:
       TZ: "Asia/Tokyo"
-      ENVIRONMENT: dev
 
   frontend:
     build:
