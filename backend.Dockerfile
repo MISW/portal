@@ -1,7 +1,7 @@
 ARG go_version=1.15.0
 
 # ツール類
-FROM golang:${go_version} as tools
+FROM golang:${go_version} AS tools
 ARG dockerize_version=v0.6.1
 ARG sqldef_version=v0.5.12
 ARG dbenv_version=v1.1.0
@@ -20,7 +20,7 @@ RUN wget https://github.com/cs3238-tsuzu/dbenv/releases/download/${dbenv_version
     && rm dbenv_linux_x86_64.tar.gz
 
 # 開発環境
-FROM golang:${go_version} as development
+FROM golang:${go_version} AS development
 
 COPY --from=tools /usr/local/bin/dockerize /bin
 COPY --from=tools /usr/local/bin/mysqldef /bin
@@ -34,7 +34,7 @@ ENTRYPOINT ["/bin/docker-entrypoint.backend.sh"]
 CMD ["-d", "-w", "-m"]
 
 # ビルド
-FROM golang:${go_version} as build-backend
+FROM golang:${go_version} AS build-backend
 
 ADD ./backend /backend
 ENV GO111MODULE=on
@@ -48,7 +48,7 @@ RUN cd /backend && go build \
 
 # 本番環境
 # distrolessのdebugを使っているのは、distrolessにshellが含まれないため
-FROM gcr.io/distroless/base:debug as production
+FROM gcr.io/distroless/base:debug AS production
 
 COPY --from=tools /usr/local/bin/dockerize /bin
 COPY --from=tools /usr/local/bin/mysqldef /bin
