@@ -31,9 +31,11 @@ services:
     build:
       dockerfile: frontend.Dockerfile
       context: .
+      target: dev
     env_file: ./dev.env
     volumes:
       - ./frontend:/frontend
+      - node_modules:/frontend/node_modules
       - ./scripts/docker-entrypoint.frontend.sh:/bin/docker-entrypoint.frontend.sh
     expose:
       - "3000"
@@ -57,3 +59,5 @@ services:
 
 volumes:
   mysql:
+  node_modules:
+    driver: local
