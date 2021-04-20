@@ -3,7 +3,7 @@
 set -eu
 
 if [ -z "${DATABASE_URL:-}" ]; then
-  if [[ -n "${JAWSDB_URL}" ]]; then
+  if [ -n "${JAWSDB_URL:-}" ]; then
     export DATABASE_URL="${JAWSDB_URL}"
   else
     export DATABASE_URL="${CLEARDB_DATABASE_URL}"
