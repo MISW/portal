@@ -16,6 +16,7 @@ services:
     build:
       dockerfile: backend.Dockerfile
       context: .
+      target: development
     env_file: ./dev.env
     volumes:
       - ./backend:/backend
@@ -25,21 +26,21 @@ services:
       - "80"
     environment:
       TZ: "Asia/Tokyo"
-      ENVIRONMENT: dev
 
   frontend:
     build:
       dockerfile: frontend.Dockerfile
       context: .
+      target: development
     env_file: ./dev.env
     volumes:
       - ./frontend:/frontend
+      - node_modules:/frontend/node_modules
       - ./scripts/docker-entrypoint.frontend.sh:/bin/docker-entrypoint.frontend.sh
     expose:
       - "3000"
     environment:
       TZ: "Azia/Tokyo"
-      ENVIRONMENT: dev
       BACKEND_HOST: "http://backend"
 
   mysql:
@@ -57,3 +58,5 @@ services:
 
 volumes:
   mysql:
+  node_modules:
+    driver: local
