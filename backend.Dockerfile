@@ -59,5 +59,5 @@ COPY --from=build-backend /backend/schema /schema
 COPY ./scripts/docker-entrypoint.backend.sh /bin/
 ADD ./config /config
 
-ENTRYPOINT [ "/bin/docker-entrypoint.backend.sh" ]
+ENTRYPOINT [ "sh", "/bin/docker-entrypoint.backend.sh" ]
 CMD [ "-w", "-m" ]
