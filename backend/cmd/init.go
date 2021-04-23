@@ -126,6 +126,8 @@ func initDig(cfg *config.Config, addr string) *dig.Container {
 
 	must(c.Provide(usecase.NewProfileUsecase))
 
+	must(c.Provide(usecase.NewCardUsecase))
+
 	must(c.Provide(usecase.NewManagementUsecase))
 
 	must(c.Provide(usecase.NewWebhookUsecase))
@@ -141,6 +143,8 @@ func initDig(cfg *config.Config, addr string) *dig.Container {
 	must(c.Provide(external.NewExternalHandler))
 
 	must(c.Provide(public.NewSessionHandler))
+
+	must(c.Provide(public.NewCardHandler))
 
 	must(c.Provide(func(wu usecase.WebhookUsecase) public.WebhookHandler {
 		return public.NewWebhookHandler(cfg.SlackSigningSecret, wu)
@@ -245,6 +249,15 @@ func initHandler(cfg *config.Config, addr string, digc *dig.Container) *echo.Ech
 			g := g.Group("/webhook")
 
 			g.POST("/slack", wu.Slack)
+		}); err != nil {
+			return err
+		}
+
+		if err := digc.Invoke(func(ch public.CardHandler) {
+			g.GET("/card/:id", func(c echo.Context) error {
+				id := c.Param("id")
+				return ch.Get(c, id)
+			})
 		}); err != nil {
 			return err
 		}
