@@ -1,6 +1,7 @@
 import ky from "ky-universal";
 import { Options } from "ky";
 import { toCamelCase, toSnakeCase } from "./converter";
+import { decodeCard } from "./decode";
 import { User, UpdateUserProfileInput, PaymentStatus } from "models/user";
 import { Period, EmailKind, EmailTemplate } from "models/appconfig";
 import { UpdateAppConfigInput } from "./type";
@@ -31,6 +32,11 @@ export const createApiClient = (baseUrl: string, options?: Options) => {
 
     async processCallback(code: string, state: string) {
       await http.post("api/public/callback", { json: { code, state } });
+    },
+
+    async fetchCard(id: number) {
+      const json = await http.get(`api/public/card/${id}`).json();
+      return decodeCard(json);
     },
 
     // Private Endpoints

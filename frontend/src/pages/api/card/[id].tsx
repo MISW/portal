@@ -1,10 +1,12 @@
 import type { NextApiHandler } from "next";
+import type { Card } from "models/card";
 import React from "react";
 import ReactDOM from "react-dom/server";
 import sharp from "sharp";
 import { CardSvg } from "components/CardSvg";
+import { createApiClient } from "infra/api";
 
-const avatar = "https://example.com/avatar.png";
+const client = createApiClient(process.env.BACKEND_HOST ?? "");
 
 const getIdAndExtFromRawId = (rawId: string) => {
   const matched = /\.([a-z]+)$/.exec(rawId);
@@ -28,17 +30,36 @@ const cardImageHandler: NextApiHandler = async (req, res) => {
   const { id: rawId } = req.query;
   if (Array.isArray(rawId)) throw new Error('"id" must be string');
 
-  const { id, ext } = getIdAndExtFromRawId(rawId);
+  const { id: idStr, ext } = getIdAndExtFromRawId(rawId);
 
-  const avatarUrl = await fetchAsDataURL(avatar).catch(() => undefined);
+  const id = parseInt(idStr, 10);
+  if (Number.isNaN(id)) {
+    res.status(400).end("Invalid ID");
+    return;
+  }
+
+  let card: Card;
+  try {
+    card = await client.fetchCard(id);
+  } catch (e) {
+    res.status(404).end("card not found");
+    return;
+  }
+
+  const avatarUrl =
+    card.avatar != null
+      ? await fetchAsDataURL(card.avatar.url).catch(() => undefined)
+      : undefined;
 
   const svg = ReactDOM.renderToStaticMarkup(
     <CardSvg
       avatarUrl={avatarUrl}
-      generation={99}
-      handle="tosuke"
-      workshops={[]}
-      squads={[]}
+      generation={card.generation}
+      handle={card.handle}
+      workshops={card.workshops}
+      squads={card.squads}
+      twitterScreenName={card.twitterScreenName}
+      discordId={card.discordID}
     />
   );
 

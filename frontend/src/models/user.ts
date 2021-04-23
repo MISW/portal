@@ -1,4 +1,4 @@
-import { SexType, University, RoleType, Avatar } from "infra/type";
+import { SexType, University, RoleType } from "infra/type";
 
 export type PaymentStatus = {
   userId: number;
@@ -6,6 +6,11 @@ export type PaymentStatus = {
   period: number;
   createdAt: string;
   updatedAt: string;
+};
+
+export type Avatar = {
+  readonly thumbnailUrl: string;
+  readonly url: string;
 };
 
 export type User = {
