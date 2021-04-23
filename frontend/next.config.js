@@ -1,3 +1,4 @@
+/** @type {import('next/dist/next-server/server/config-shared')} */
 module.exports = {
   future: {
     webpack5: true,
