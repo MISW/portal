@@ -2,7 +2,12 @@ import ky from "ky-universal";
 import { Options } from "ky";
 import { toCamelCase, toSnakeCase } from "./converter";
 import { decodeCard } from "./decode";
-import { User, UpdateUserProfileInput, PaymentStatus } from "models/user";
+import {
+  User,
+  UpdateUserProfileInput,
+  SignupInput,
+  PaymentStatus,
+} from "models/user";
 import { Period, EmailKind, EmailTemplate } from "models/appconfig";
 import { UpdateAppConfigInput } from "./type";
 
@@ -13,7 +18,7 @@ export const createApiClient = (baseUrl: string, options?: Options) => {
   });
   return Object.freeze({
     // Public Endpoints
-    async signup(input: Readonly<UpdateUserProfileInput>): Promise<void> {
+    async signup(input: Readonly<SignupInput>): Promise<void> {
       await http.post("api/public/signup", { json: toSnakeCase(input) });
     },
 

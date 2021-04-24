@@ -1,19 +1,12 @@
+import { SignupInput } from "models/user";
 import { AppThunk } from "store/helpers";
-import { ConfigurableProfile } from "user";
 
-export const signup = (signupInput: ConfigurableProfile): AppThunk => async (
+export const signup = (signupInput: SignupInput): AppThunk => async (
   _dispatch,
   _,
   { api }
 ) => {
-  await api.signup({
-    ...signupInput,
-    university: {
-      name: signupInput.univName,
-      department: signupInput.department,
-      subject: signupInput.subject,
-    },
-  });
+  await api.signup(signupInput);
 };
 
 export const verifyEmail = (token: string): AppThunk => async (

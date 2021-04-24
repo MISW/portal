@@ -53,3 +53,5 @@ export type UpdateUserProfileInput = Omit<
   | "emailVerified"
   | "id"
 >;
+
+export type SignupInput = Omit<UpdateUserProfileInput, "cardPublished">;
