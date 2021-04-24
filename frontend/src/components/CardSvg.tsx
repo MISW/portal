@@ -99,6 +99,8 @@ const CheckBox: React.VFC<{ readonly checked: boolean }> = ({ checked }) => (
 );
 
 export const CardSvg: React.VFC<{
+  readonly width?: string;
+  readonly height?: string;
   readonly avatarUrl?: string;
   readonly generation: number;
   readonly handle: string;
@@ -107,6 +109,8 @@ export const CardSvg: React.VFC<{
   readonly twitterScreenName?: string;
   readonly discordId?: string;
 }> = ({
+  width,
+  height,
   avatarUrl,
   generation,
   handle,
@@ -118,8 +122,9 @@ export const CardSvg: React.VFC<{
   <svg
     version="1.1"
     baseProfile="full"
-    width="1200"
-    height="630"
+    width={width}
+    height={height}
+    viewBox="0 0 1200 630"
     xmlns="http://www.w3.org/2000/svg"
   >
     <rect width="100%" height="100%" fill="white" />

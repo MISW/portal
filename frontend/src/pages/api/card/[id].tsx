@@ -53,6 +53,8 @@ const cardImageHandler: NextApiHandler = async (req, res) => {
 
   const svg = ReactDOM.renderToStaticMarkup(
     <CardSvg
+      width="1200"
+      height="630"
       avatarUrl={avatarUrl}
       generation={card.generation}
       handle={card.handle}

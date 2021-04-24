@@ -1,7 +1,9 @@
 /** @type{ import('tailwindcss/tailwind-config').TailwindConfig */
 module.exports = {
-  purge: ["src/components/**/*.{ts,tsx}", "pages/**/*.{ts,tsx}"],
+  mode: "jit",
+  purge: ["src/components/**/*.{ts,tsx}", "src/pages/**/*.{ts,tsx}"],
   darkMode: "media",
+  /*
   variants: {
     extend: {
       opacity: ["disabled"],
@@ -13,4 +15,5 @@ module.exports = {
       cursor: ["disabled"],
     },
   },
+  */
 };

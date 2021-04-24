@@ -14,7 +14,16 @@ const Page: NextPage = () => {
   const currentUser = nonNullOrThrow(useSelector(selectCurrentUser));
   const onSubmit = async (user: ConfigurableProfile): Promise<SubmitResult> => {
     try {
-      await dispatch(updateCurrentUser(user)).then(unwrapResult);
+      await dispatch(
+        updateCurrentUser({
+          ...user,
+          university: {
+            name: user.univName,
+            department: user.department,
+            subject: user.subject,
+          },
+        })
+      ).then(unwrapResult);
       return { status: "success" as const };
     } catch (e) {
       console.error(e);
