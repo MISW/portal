@@ -38,6 +38,7 @@ export type User = {
   createdAt: string;
   updatedAt: string;
   emailVerified: boolean;
+  cardPublished: boolean;
 
   paymentStatus?: PaymentStatus;
 };

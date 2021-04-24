@@ -1,7 +1,8 @@
 import { createAppAsyncThunk, AppThunk } from "store/helpers";
 import { userUpserted } from "features/users/slice";
-import { ConfigurableProfile } from "user";
 import { paymentStatusesFetched } from "./slice";
+import { selectCurrentUser } from "./selectors";
+import { UpdateUserProfileInput } from "models/user";
 
 export const fetchCurrentUser = createAppAsyncThunk(
   "currentUser/fetch",
@@ -14,14 +15,16 @@ export const fetchCurrentUser = createAppAsyncThunk(
 
 export const updateCurrentUser = createAppAsyncThunk(
   "currentUser/update",
-  async (updateInput: ConfigurableProfile, { dispatch, extra: { api } }) => {
+  async (
+    updateInput: Partial<UpdateUserProfileInput>,
+    { dispatch, getState, extra: { api } }
+  ) => {
+    const currentUser = selectCurrentUser(getState());
+    if (currentUser == null) return;
+    api.updateCurrentProfile(currentUser);
     const user = await api.updateCurrentProfile({
+      ...currentUser,
       ...updateInput,
-      university: {
-        name: updateInput.univName,
-        department: updateInput.department,
-        subject: updateInput.subject,
-      },
     });
     dispatch(userUpserted(user));
     return user.id;
