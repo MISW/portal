@@ -1,6 +1,8 @@
 import React from "react";
 import { NextPage } from "next";
-import { withLogin } from "../../src/middlewares/withLogin";
+import { withLogin } from "middlewares/withLogin";
+
+// TODO: よくわからんページ。何もないなら消す
 
 const Page: NextPage = () => {
   return (

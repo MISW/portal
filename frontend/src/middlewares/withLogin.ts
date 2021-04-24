@@ -8,7 +8,10 @@ import { User } from "models/user";
 
 type WithCurrentUser<T> = Merge<T, { readonly currentUser: User }>;
 
-export type NextPageWithUserInfo<P = {}, IP = P> = NextComponentType<
+export type NextPageWithUserInfo<
+  P = Record<string, never>,
+  IP = P
+> = NextComponentType<
   WithCurrentUser<NextPageContext<RootState>>,
   IP,
   WithCurrentUser<P>

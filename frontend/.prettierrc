@@ -1,0 +1,12 @@
+{
+  "semi": true,
+  "singleQuote": false,
+  "overrides": [
+    {
+      "files": ["*.ts", "*.tsx"],
+      "options": {
+        "parser": "babel-ts"
+      }
+    }
+  ]
+}

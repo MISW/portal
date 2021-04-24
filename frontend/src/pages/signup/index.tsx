@@ -3,7 +3,7 @@ import { NextPage } from "next";
 import Link from "next/link";
 import { Button } from "@material-ui/core";
 
-const Page: NextPage<{}> = () => {
+const Page: NextPage = () => {
   return (
     <>
       <p>会員登録方法</p>

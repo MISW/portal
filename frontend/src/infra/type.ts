@@ -16,6 +16,11 @@ export interface University {
   subject: string;
 }
 
+export interface Avatar {
+  url: string;
+  thumbnailUrl: string;
+}
+
 export type UpdateAppConfigInput = Readonly<
   | {
       kind: "payment_period";

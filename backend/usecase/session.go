@@ -167,6 +167,31 @@ func (us *sessionUsecase) Callback(ctx context.Context, expectedState, actualSta
 		return "", xerrors.Errorf("sub is invalid: %s", res.IDToken.Subject)
 	}
 
+	// TODO: 雑すぎるンで何とかする
+	var avatarURL, avatarThumbnailURL string
+
+	v, ok := res.Profile["picture"]
+	if ok {
+		s, ok := v.(string)
+		if ok {
+			avatarURL = s
+		}
+	}
+	v, ok = res.Profile["https://misw.jp/thumbnail"]
+	if ok {
+		s, ok := v.(string)
+		if ok {
+			avatarThumbnailURL = s
+		}
+	}
+	var avatar *domain.Avatar
+	if avatarURL != "" && avatarThumbnailURL != "" {
+		avatar = &domain.Avatar{
+			URL:          avatarURL,
+			ThumbnailURL: avatarThumbnailURL,
+		}
+	}
+
 	slackID := strings.TrimPrefix(res.IDToken.Subject, auth0Prefix)
 
 	user, err := us.userRepository.GetBySlackID(ctx, slackID)
@@ -185,6 +210,14 @@ func (us *sessionUsecase) Callback(ctx context.Context, expectedState, actualSta
 
 	if err != nil {
 		return "", xerrors.Errorf("failed to insert new token: %w", err)
+	}
+
+	if avatar != nil {
+		user.Avatar = avatar
+		err = us.userRepository.Update(ctx, user)
+		if err != nil {
+			return "", xerrors.Errorf("failed to update avatar: %w", err)
+		}
 	}
 
 	return token, nil
