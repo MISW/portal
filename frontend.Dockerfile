@@ -47,5 +47,6 @@ ENV NODE_ENV=production
 WORKDIR /frontend
 COPY --from=prune-modules /frontend/node_modules ./node_modules
 COPY --from=build-frontend /frontend/.next ./.next
+COPY --from=build-frontend /frontend/next.config.js ./next.config.js
 
 ENTRYPOINT ["npm", "start"]
