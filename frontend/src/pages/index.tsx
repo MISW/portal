@@ -11,9 +11,9 @@ import {
   TableCell,
   Typography,
 } from "@material-ui/core";
-import LinkContentCard from "../src/components/design/LinkContentCard";
+import LinkContentCard from "components/design/LinkContentCard";
 import { Alert, AlertTitle } from "@material-ui/lab";
-import { withLogin } from "../src/middlewares/withLogin";
+import { withLogin } from "middlewares/withLogin";
 import { nonNullOrThrow } from "utils";
 import { useSelector } from "react-redux";
 import { selectCurrentUser } from "features/currentUser";

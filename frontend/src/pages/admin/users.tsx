@@ -4,14 +4,14 @@ import AdminUsersTable, {
   HeadCell,
   Data,
   handleClickMenuParam,
-} from "../../src/components/layout/AdminUsersTable";
-import { UserTableData, labelsInJapanese } from "../../src/user";
-import { usersCSV, saveFile, nonNullOrThrow } from "../../src/utils";
+} from "components/layout/AdminUsersTable";
+import { UserTableData, labelsInJapanese } from "user";
+import { usersCSV, saveFile, nonNullOrThrow } from "utils";
 import { Typography } from "@material-ui/core";
 import Toolbar from "@material-ui/core/Toolbar";
-import SlackInvitationDialog from "../../src/components/layout/SlackInvitationDialog";
-import RemindPaymentDialog from "../../src/components/layout/RemindPaymentDialog";
-import { withLogin } from "../../src/middlewares/withLogin";
+import SlackInvitationDialog from "components/layout/SlackInvitationDialog";
+import RemindPaymentDialog from "components/layout/RemindPaymentDialog";
+import { withLogin } from "middlewares/withLogin";
 import { User } from "models/user";
 import { useDispatch, useSelector, useStore } from "react-redux";
 import {
@@ -28,6 +28,7 @@ const headCells: HeadCell[] = labelsInJapanese.map(
 );
 
 const toTableData = (u: User): UserTableData => ({
+  discordId: "",
   ...u,
   univName: u.university.name,
   department: u.university.department,

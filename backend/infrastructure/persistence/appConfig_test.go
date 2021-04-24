@@ -73,7 +73,7 @@ func TestAppConfig_EmailTemplate(t *testing.T) {
 	s, b, err := acp.GetEmailTemplate(domain.EmailVerification)
 
 	if err != nil {
-		t.Fatalf("failed to save email template for %s: %w", domain.EmailVerification, err)
+		t.Fatalf("failed to save email template for %s: %v", domain.EmailVerification, err)
 	}
 
 	if s != subject {

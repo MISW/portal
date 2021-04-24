@@ -8,6 +8,11 @@ export type PaymentStatus = {
   updatedAt: string;
 };
 
+export type Avatar = {
+  readonly thumbnailUrl: string;
+  readonly url: string;
+};
+
 export type User = {
   id: number;
   email: string;
@@ -16,6 +21,7 @@ export type User = {
   kana: string;
   handle: string;
   sex: SexType;
+  avatar?: Avatar;
   university: University;
   studentId: string;
   emergencyPhoneNumber: string;
@@ -25,12 +31,14 @@ export type User = {
   role: RoleType;
 
   slackId: string;
-  discordId: string;
+  discordId?: string;
+  twitterScreenName?: string;
   slackInvitationStatus: string;
 
   createdAt: string;
   updatedAt: string;
   emailVerified: boolean;
+  cardPublished: boolean;
 
   paymentStatus?: PaymentStatus;
 };
@@ -45,3 +53,5 @@ export type UpdateUserProfileInput = Omit<
   | "emailVerified"
   | "id"
 >;
+
+export type SignupInput = Omit<UpdateUserProfileInput, "cardPublished">;

@@ -1,30 +1,19 @@
 // https://github.com/zeit/next.js/issues/7322#issuecomment-574009086 参照
 
 import React from "react";
-import Document, { Head, Main, NextScript } from "next/document";
+import Document, { Html, Head, Main, NextScript } from "next/document";
 import { ServerStyleSheets } from "@material-ui/core/styles";
 
 export default class MyDocument extends Document {
   render() {
     return (
-      <html lang="ja">
-        <Head>
-          {/* PWA primary color */}
-          <title>MISW Portal</title>
-          <meta
-            name="viewport"
-            content="initial-scale=1.0, width=device-width"
-          />
-          <link
-            rel="stylesheet"
-            href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
-          />
-        </Head>
+      <Html lang="ja" prefix="og: http://ogp.me/ns#">
+        <Head />
         <body>
           <Main />
           <NextScript />
         </body>
-      </html>
+      </Html>
     );
   }
 }

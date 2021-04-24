@@ -1,8 +1,10 @@
-FROM node:12.16.1-stretch-slim AS base
+FROM node:12.22.1-buster-slim AS base
 
 ENV DEBIAN_FRONTEND=noninteractive
-RUN apt-get update \
-    && apt-get install -y ca-certificates tzdata \
+
+RUN echo "deb http://deb.debian.org/debian testing main\ndeb-src http://deb.debian.org/debian testing main" >> /etc/apt/sources.list \
+    && apt-get update \
+    && apt-get -t testing install -y ca-certificates tzdata libc6 libstdc++6 fonts-noto-cjk \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 WORKDIR /frontend
