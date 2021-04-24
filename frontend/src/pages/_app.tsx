@@ -3,10 +3,11 @@
 import "tailwindcss/tailwind.css";
 import "focus-visible";
 import React, { useEffect } from "react";
-import { AppProps, AppContext } from "next/app";
+import type { NextPageContext } from "next";
+import type { AppProps, AppContext } from "next/app";
+import Head from "next/head";
 import { ThemeProvider } from "@material-ui/styles";
 import { CssBaseline, createMuiTheme } from "@material-ui/core";
-import { NextPageContext } from "next";
 import { DefaultLayout } from "components/layout/DefaultLayout";
 import { wrapper, RootState } from "store";
 import { fetchCurrentUser, selectCurrentUser } from "features/currentUser";
@@ -25,6 +26,14 @@ const App = (props: AppProps) => {
 
   return (
     <ThemeProvider theme={createMuiTheme({})}>
+      <Head>
+        <title>MISW Portal</title>
+        <meta name="viewport" content="initial-scale=1.0,width=device-width" />
+        <link
+          rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
+        />
+      </Head>
       <CssBaseline />
       <DefaultLayout onLogout={handleLogout}>
         <Component {...pageProps} />
