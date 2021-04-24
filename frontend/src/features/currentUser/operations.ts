@@ -20,7 +20,7 @@ export const updateCurrentUser = createAppAsyncThunk(
     { dispatch, getState, extra: { api } }
   ) => {
     const currentUser = selectCurrentUser(getState());
-    if (currentUser == null) return;
+    if (currentUser == null) throw new Error("not logged in");
     api.updateCurrentProfile(currentUser);
     const user = await api.updateCurrentProfile({
       ...currentUser,
