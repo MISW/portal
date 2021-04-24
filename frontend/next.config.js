@@ -10,7 +10,14 @@ module.exports = {
     config.module.rules.push({
       test: /\.png$/,
       // サーバーなら Data URL として、クライアントならよしなに
-      type: isServer ? "asset/inline" : "asset",
+      ...(isServer
+        ? { type: "asset/inline" }
+        : {
+            type: "asset/resource",
+            generator: {
+              filename: "static/images/[hash][ext][query]",
+            },
+          }),
     });
     return config;
   },
