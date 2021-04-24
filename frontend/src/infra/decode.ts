@@ -78,10 +78,10 @@ export function decodeCard(o: unknown): Card {
     id,
     generation,
     handle,
-    avatar,
+    ...(avatar != null ? { avatar } : {}),
     workshops,
     squads,
-    twitterScreenName,
-    discordID,
+    ...(twitterScreenName != null ? { twitterScreenName } : {}),
+    ...(discordID != null ? { discordID } : {}),
   };
 }
