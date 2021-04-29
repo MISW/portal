@@ -5,6 +5,7 @@ on: [push]
 jobs:
   frontend:
     runs-on: ubuntu-latest
+    if: github.actor != 'dependabot[bot]'
 
     steps:
       - uses: actions/checkout@v2
@@ -50,6 +51,7 @@ jobs:
           mv /tmp/.buildx-cache-new /tmp/.buildx-cache
   backend:
     runs-on: ubuntu-latest
+    if: github.actor != 'dependabot[bot]'
 
     steps:
       - uses: actions/checkout@v2
