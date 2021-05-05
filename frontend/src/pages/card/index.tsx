@@ -10,10 +10,17 @@ const EditCardPage: NextPage = () => {
   const dispatch = useDispatch();
   const user = useSelector(selectCurrentUser);
   const handlePublish = useCallback(
-    (twitterScreenName?: string) => {
+    ({
+      twitterScreenName,
+      discordID,
+    }: {
+      twitterScreenName?: string;
+      discordID?: string;
+    }) => {
       dispatch(
         updateCurrentUser({
           twitterScreenName,
+          discordId: discordID,
           cardPublished: true,
         })
       );
