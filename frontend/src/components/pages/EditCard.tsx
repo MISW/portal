@@ -1,8 +1,8 @@
 import React, { useCallback, useMemo, useState } from "react";
-import clsx from "clsx";
 import type { User } from "models/user";
 import { CardSvg } from "components/CardSvg";
 import { TextInput } from "components/design/TextInput";
+import { Button, LinkButton } from "components/design/Button";
 
 export const EditCard: React.VFC<{
   readonly user?: User;
@@ -117,31 +117,25 @@ export const EditCard: React.VFC<{
             />
           </div>
           <div className="grid auto-cols-fr auto-rows-fr gap-4 md:grid-flow-col">
-            <button
-              className={clsx(
-                "rounded px-4 py-2 text-white bg-blue-500 hover:bg-blue-400 active:bg-blue-600",
-                "disabled:cursor-not-allowed disabled:opacity-50 disabled:text-gray-900 dark:disabled:text-white disabled:bg-gray-300 dark:disabled:bg-gray-700"
-              )}
+            <Button
+              color="blue"
               disabled={user.cardPublished}
               onClick={handlePublish}
             >
               公開する
-            </button>
-            <button
-              className={clsx(
-                "rounded px-4 py-2 text-white bg-red-500 hover:bg-red-400 active:bg-red-600",
-                "disabled:cursor-not-allowed disabled:opacity-50 disabled:text-gray-900 dark:disabled:text-white disabled:bg-gray-300 dark:disabled:bg-gray-700"
-              )}
+            </Button>
+            <Button
+              color="red"
               disabled={!user.cardPublished}
               onClick={onUnpublish}
             >
               非公開にする
-            </button>
+            </Button>
           </div>
           {user.cardPublished && (
             <div className="border-t-2 border-gray-500 pt-4 grid auto-cols-fr auto-rows-fr gap-4 md:grid-flow-col">
-              <a
-                className="w-full block text-center rounded px-4 py-2 text-white bg-blue-500 hover:bg-blue-400 active:bg-blue-600"
+              <LinkButton
+                color="blue"
                 target="_blank"
                 rel="noreferrer"
                 href={`https://twitter.com/share?url=${encodeURIComponent(
@@ -149,16 +143,10 @@ export const EditCard: React.VFC<{
                 )}`}
               >
                 Twitterでシェアする
-              </a>
-              <button
-                className={clsx(
-                  "w-full rounded px-4 py-2 text-white bg-green-500 hover:bg-green-400 active:bg-green-600",
-                  "disabled:cursor-not-allowed disabled:opacity-50 disabled:text-gray-900 dark:disabled:text-white disabled:bg-gray-300 dark:disabled:bg-gray-700"
-                )}
-                onClick={handleCopy}
-              >
+              </LinkButton>
+              <Button color="green" onClick={handleCopy}>
                 画像のリンクをコピー
-              </button>
+              </Button>
             </div>
           )}
         </div>
