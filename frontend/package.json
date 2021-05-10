@@ -23,7 +23,7 @@
     "@types/sharp": "^0.28.0",
     "@types/styled-jsx": "^2.2.8",
     "@types/tailwindcss": "^2.0.2",
-    "@typescript-eslint/eslint-plugin": "^4.21.0",
+    "@typescript-eslint/eslint-plugin": "^4.23.0",
     "@typescript-eslint/parser": "^4.22.1",
     "cross-env": "^7.0.3",
     "eslint": "^7.25.0",
