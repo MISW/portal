@@ -37,4 +37,3 @@ jobs:
     - name: Install npm packages 
       run: npm ci
     - run: npm run ci
-    - run: npm run build
