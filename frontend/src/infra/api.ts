@@ -72,9 +72,11 @@ export const createApiClient = (baseUrl: string, options?: Options) => {
 
     // Management Endpoints
     async fetchAllUsers(): Promise<User[]> {
-      return (toCamelCase(
-        await http.get("api/private/management/users").json()
-      ) as { users: User[] }).users;
+      return (
+        toCamelCase(await http.get("api/private/management/users").json()) as {
+          users: User[];
+        }
+      ).users;
     },
 
     async fetchUserById(id: number): Promise<User | undefined> {

@@ -106,13 +106,10 @@ const useEmailTemplateNode = () => {
   const [expanded, setExpanded] = useState(false);
   const [kind, setKind] = useState<KindType>("email_verification");
 
-  const {
-    emailTemplate: remoteEmailTemplate,
-    updateEmailTemplate,
-  } = useEmailTemplateConfig(kind);
-  const [emailTemplate, setEmailTemplate] = useState<
-    EmailTemplateType | undefined
-  >(remoteEmailTemplate);
+  const { emailTemplate: remoteEmailTemplate, updateEmailTemplate } =
+    useEmailTemplateConfig(kind);
+  const [emailTemplate, setEmailTemplate] =
+    useState<EmailTemplateType | undefined>(remoteEmailTemplate);
 
   useEffect(() => {
     setEmailTemplate(remoteEmailTemplate);

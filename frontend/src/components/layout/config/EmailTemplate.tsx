@@ -36,15 +36,8 @@ function EmailTemplate<T extends string>(param: {
   onClose: () => void;
   onSave: () => void;
 }) {
-  const {
-    selected,
-    options,
-    values,
-    setSelected,
-    setValues,
-    onClose,
-    onSave,
-  } = param;
+  const { selected, options, values, setSelected, setValues, onClose, onSave } =
+    param;
 
   const classes = useStyles();
 

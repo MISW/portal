@@ -8,14 +8,12 @@ import { User } from "models/user";
 
 type WithCurrentUser<T> = Merge<T, { readonly currentUser: User }>;
 
-export type NextPageWithUserInfo<
-  P = Record<string, never>,
-  IP = P
-> = NextComponentType<
-  WithCurrentUser<NextPageContext<RootState>>,
-  IP,
-  WithCurrentUser<P>
->;
+export type NextPageWithUserInfo<P = Record<string, never>, IP = P> =
+  NextComponentType<
+    WithCurrentUser<NextPageContext<RootState>>,
+    IP,
+    WithCurrentUser<P>
+  >;
 
 /**
  * ログインしていることを強制する．ログインしてなかったら/loginに飛ばす

@@ -24,24 +24,24 @@ type AddPaymentStatusParams = Readonly<{
   targetUserId: number;
 }>;
 
-export const addPaymentStatus = ({
-  targetUserId,
-}: AddPaymentStatusParams): AppThunk => async (dispatch, _, { api }) => {
-  try {
-    await api.addPaymentStatus(targetUserId);
-  } finally {
-    await dispatch(fetchUserById({ id: targetUserId }));
-  }
-};
+export const addPaymentStatus =
+  ({ targetUserId }: AddPaymentStatusParams): AppThunk =>
+  async (dispatch, _, { api }) => {
+    try {
+      await api.addPaymentStatus(targetUserId);
+    } finally {
+      await dispatch(fetchUserById({ id: targetUserId }));
+    }
+  };
 
 type DeletePaymentStatusParams = AddPaymentStatusParams;
 
-export const deletePaymentStatus = ({
-  targetUserId,
-}: DeletePaymentStatusParams): AppThunk => async (dispatch, _, { api }) => {
-  try {
-    await api.deletePaymentStatus(targetUserId);
-  } finally {
-    await dispatch(fetchUserById({ id: targetUserId }));
-  }
-};
+export const deletePaymentStatus =
+  ({ targetUserId }: DeletePaymentStatusParams): AppThunk =>
+  async (dispatch, _, { api }) => {
+    try {
+      await api.deletePaymentStatus(targetUserId);
+    } finally {
+      await dispatch(fetchUserById({ id: targetUserId }));
+    }
+  };
