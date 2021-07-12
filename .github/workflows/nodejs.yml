@@ -26,6 +26,8 @@ jobs:
         uses: bahmutov/npm-install@v1
         with:
           working-directory: frontend
+      - name: Prettier
+        run: npm run format:check
       - name: ESLint
         run: npm run lint -- --quiet
       - name: Typecheck
