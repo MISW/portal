@@ -8,9 +8,11 @@
     "docker": "next --hostname 0.0.0.0",
     "build": "next build",
     "start": "next start --hostname 0.0.0.0",
-    "lint": "eslint \"src/**/*.{ts,tsx}\"",
-    "format": "eslint --fix \"src/**/*.{ts,tsx}\"",
-    "ci": "eslint \"src/**/*.{ts,tsx}\""
+    "lint": "eslint \"src/**/*.{js,jsx,ts,tsx}\"",
+    "lint:fix": "eslint --fix \"src/**/*.{js,jsx,ts,tsx}\"",
+    "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx}\"",
+    "format:check": "prettier --check \"src/**/*.{js,jsx,ts,tsx}\"",
+    "typecheck": "tsc --noEmit"
   },
   "keywords": [],
   "author": "",
