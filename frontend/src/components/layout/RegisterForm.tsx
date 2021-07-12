@@ -100,9 +100,10 @@ const RegisterForm: React.FC<{
     setActiveStep(activeStep + 1);
   }, [activeStep, contentHooks]);
 
-  const handleBack = useCallback(() => setActiveStep(activeStep - 1), [
-    activeStep,
-  ]);
+  const handleBack = useCallback(
+    () => setActiveStep(activeStep - 1),
+    [activeStep]
+  );
 
   if (nextButtonDisabled) {
     const hook = contentHooks[activeStep];

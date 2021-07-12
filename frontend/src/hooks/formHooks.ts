@@ -22,10 +22,10 @@ export const useStateWithValidate = <T>(
     },
     [setEdited, setValue]
   );
-  const valid = useMemo(() => (validate ? validate(value) : true), [
-    value,
-    validate,
-  ]);
+  const valid = useMemo(
+    () => (validate ? validate(value) : true),
+    [value, validate]
+  );
   const check = useCallback(() => {
     setEdited(true);
     return valid;

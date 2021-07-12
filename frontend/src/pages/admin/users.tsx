@@ -47,12 +47,10 @@ const Page: NextPage = () => {
     const thunkAction = dispatch(fetchAllUsers());
     return () => thunkAction.abort();
   }, [dispatch]);
-  const [slackInvitationDialog, setSlackInvitationDialog] = useState<boolean>(
-    false
-  );
-  const [remindPaymentDialog, setRemindPaymentDialog] = useState<boolean>(
-    false
-  );
+  const [slackInvitationDialog, setSlackInvitationDialog] =
+    useState<boolean>(false);
+  const [remindPaymentDialog, setRemindPaymentDialog] =
+    useState<boolean>(false);
 
   const handleClickMenu = (param: handleClickMenuParam) => {
     switch (param.kind) {
