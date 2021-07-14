@@ -57,7 +57,7 @@ jobs:
           path: frontend/.next/build-stats.json
   compare-stats:
     runs-on: ubuntu-latest
-    # needs: ["build"]
+    needs: ["build"]
     if: github.event_name == 'pull_request'
 
     steps:
@@ -65,10 +65,10 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: 14.x
-      # - uses: actions/download-artifact@v2
-      #  with:
-      #    name: build-stats
-      #    path: frontend/build-stats
+      - uses: actions/download-artifact@v2
+        with:
+          name: build-stats
+          path: frontend/build-stats
       - name: Download Stats from master
         uses: dawidd6/action-download-artifact@v2
         with:
@@ -80,7 +80,7 @@ jobs:
       - name: Get comment body
         id: get-comment-body
         run: |
-          node tools/compare-stats.js master-stats/build-stats.json master-stats/build-stats.json > body
+          node tools/compare-stats.js master-stats/build-stats.json build-stats/build-stats.json > body
           body=$(cat body)
           body="${body//'%'/'%25'}"
           body="${body//$'\n'/'%0A'}"
