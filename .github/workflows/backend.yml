@@ -3,9 +3,11 @@ name: Go Backend
 on:
   push:
     paths:
+      - ".github/**"
       - "backend/**"
   pull_request:
     paths:
+      - ".github/**"
       - "backend/**"
 
 jobs:
