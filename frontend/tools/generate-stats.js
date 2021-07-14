@@ -55,10 +55,7 @@ const pageSizes = async () => {
 
 pageSizes()
   .then((stats) => {
-    fs.writeFileSync(
-      path.join(process.cwd(), nextOutdir, "build-stats.json"),
-      JSON.stringify(stats, null, 2)
-    );
+    process.stdout.write(JSON.stringify(stats, null, 2));
   })
   .catch((err) => {
     console.error(err);
