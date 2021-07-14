@@ -49,3 +49,10 @@ jobs:
           working-directory: frontend
       - name: Build
         run: npm run build
+      - name: Generate Stats
+        run: node tools/generate-stats.js
+      - name: Upload Stats
+        uses: actions/upload-artifact@v2
+        with:
+          name: build-stats
+          path: frontend/.next/build-stats.json
