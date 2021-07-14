@@ -39,7 +39,7 @@
     "postcss-flexbugs-fixes": "^5.0.2",
     "postcss-nested": "^5.0.5",
     "postcss-preset-env": "^6.7.0",
-    "prettier": "^2.3.0",
+    "prettier": "^2.3.2",
     "source-map-js": "^0.6.2",
     "tailwind-variant.macro": "^0.0.2",
     "type-fest": "^1.1.1",
