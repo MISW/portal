@@ -5,7 +5,5 @@ const adapterSelectors = userAdapter.getSelectors(
   (state: RootState) => state.users
 );
 
-export const {
-  selectById: selectUserById,
-  selectAll: selectAllUsers,
-} = adapterSelectors;
+export const { selectById: selectUserById, selectAll: selectAllUsers } =
+  adapterSelectors;

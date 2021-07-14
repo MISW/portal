@@ -1,0 +1,51 @@
+# This workflow will do a clean install of node dependencies, build the source code and run tests across different versions of node
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
+
+name: Browser Frontend
+
+on:
+  push:
+    paths:
+      - ".github/**"
+      - "frontend/**"
+  pull_request:
+    paths:
+      - ".github/**"
+      - "frontend/**"
+
+defaults:
+  run:
+    working-directory: frontend
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 14.x
+      - uses: bahmutov/npm-install@v1
+        with:
+          working-directory: frontend
+      - name: Prettier
+        run: npm run format:check
+      - name: ESLint
+        run: npm run lint -- --quiet
+      - name: Typecheck
+        run: npm run typecheck
+
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 12.x
+      - uses: bahmutov/npm-install@v1
+        with:
+          working-directory: frontend
+      - name: Build
+        run: npm run build

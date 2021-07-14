@@ -31,11 +31,9 @@ export const updateCurrentUser = createAppAsyncThunk(
   }
 );
 
-export const fetchCurrentPaymentStatuses = (): AppThunk => async (
-  dispatch,
-  _,
-  { api }
-) => {
-  const paymentStatuses = await api.fetchCurrentPaymentStatuses();
-  dispatch(paymentStatusesFetched(paymentStatuses));
-};
+export const fetchCurrentPaymentStatuses =
+  (): AppThunk =>
+  async (dispatch, _, { api }) => {
+    const paymentStatuses = await api.fetchCurrentPaymentStatuses();
+    dispatch(paymentStatusesFetched(paymentStatuses));
+  };
