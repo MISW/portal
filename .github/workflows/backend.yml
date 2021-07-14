@@ -2,9 +2,8 @@ name: Go Backend
 
 on:
   push:
-    paths:
-      - ".github/**"
-      - "backend/**"
+    branches:
+      - master
   pull_request:
     paths:
       - ".github/**"
