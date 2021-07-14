@@ -1,5 +1,7 @@
+const withTM = require("next-transpile-modules")(["ky"]);
+
 /** @type {import('next/dist/next-server/server/config-shared')} */
-module.exports = {
+const config = {
   future: {
     webpack5: true,
   },
@@ -22,3 +24,5 @@ module.exports = {
     return config;
   },
 };
+
+module.exports = withTM(config);
