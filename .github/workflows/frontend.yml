@@ -68,29 +68,3 @@ jobs:
         with:
           name: compared-stats
           path: frontend/compared-stats.md
-
-      #- name: Get comment body
-      #id: get-comment-body
-      #run: |
-      #node tools/compare-stats.js master-stats/build-stats.json build-stats/build-stats.json > body
-      #body=$(cat body)
-      #body="${body//'%'/'%25'}"
-      #body="${body//$'\n'/'%0A'}"
-      #body="${body//$'\r'/'%0D'}"
-      #echo ::set-output name=body::$body
-      #- name: Find comment
-      #uses: peter-evans/find-comment@v1
-      #id: find-comment
-      #with:
-      #issue-number: ${{ github.event.pull_request.number }}
-      #comment-author: "github-actions[bot]"
-      #body-includes: "<!-- Build Stats -->"
-      #- name: Create or update comment
-      #uses: peter-evans/create-or-update-comment@v1
-      #with:
-      #comment-id: ${{ steps.find-comment.outputs.comment-id }}
-      #issue-number: ${{ github.event.pull_request.number }}
-      #body: |
-      #<!-- Build Stats -->
-      #${{ steps.get-comment-body.outputs.body }}
-      #edit-mode: replace
