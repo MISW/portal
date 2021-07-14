@@ -137,11 +137,10 @@ function EnhancedTableHead(props: EnhancedTableProps) {
     headCells,
     disabledCheckbox,
   } = props;
-  const createSortHandler = (property: keyof Data) => (
-    event: React.MouseEvent<unknown>
-  ) => {
-    onRequestSort(event, property);
-  };
+  const createSortHandler =
+    (property: keyof Data) => (event: React.MouseEvent<unknown>) => {
+      onRequestSort(event, property);
+    };
 
   return (
     <TableHead>
@@ -212,35 +211,30 @@ interface EnhancedTableToolbarProps {
 
 const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
   const classes = useToolbarStyles();
-  const {
-    numSelected,
-    editMode,
-    handleClickOnEditMode,
-    handleClickMenu,
-  } = props;
+  const { numSelected, editMode, handleClickOnEditMode, handleClickMenu } =
+    props;
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
 
-  const handleClose = (
-    name: "slack" | "export" | "remind_payment" | null
-  ) => () => {
-    setAnchorEl(null);
+  const handleClose =
+    (name: "slack" | "export" | "remind_payment" | null) => () => {
+      setAnchorEl(null);
 
-    switch (name) {
-      case "slack":
-        handleClickMenu({ kind: "slack" });
-        break;
-      case "export":
-        handleClickMenu({ kind: "export" });
-        break;
-      case "remind_payment":
-        handleClickMenu({ kind: "remind_payment" });
-        break;
-    }
-  };
+      switch (name) {
+        case "slack":
+          handleClickMenu({ kind: "slack" });
+          break;
+        case "export":
+          handleClickMenu({ kind: "export" });
+          break;
+        case "remind_payment":
+          handleClickMenu({ kind: "remind_payment" });
+          break;
+      }
+    };
 
   return (
     <Toolbar
@@ -354,9 +348,8 @@ export const EnhancedTable: React.FC<{
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(1e9);
-  const [editPaymentStatusMode, setEditPaymentStatusMode] = React.useState(
-    false
-  );
+  const [editPaymentStatusMode, setEditPaymentStatusMode] =
+    React.useState(false);
 
   const handleRequestSort = (
     event: React.MouseEvent<unknown>,
