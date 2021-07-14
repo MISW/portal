@@ -5,9 +5,8 @@ name: Browser Frontend
 
 on:
   push:
-    paths:
-      - ".github/**"
-      - "frontend/**"
+    branches:
+      - master
   pull_request:
     paths:
       - ".github/**"
@@ -56,3 +55,13 @@ jobs:
         with:
           name: build-stats
           path: frontend/.next/build-stats.json
+      - name: Download Stats from master
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          workflow: frontend.yml
+          branch: master
+          event: push
+          name: build-stats
+          path: frontend/master-stats
+      - run: ls .
+      - run: ls master-stats
