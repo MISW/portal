@@ -19,13 +19,14 @@ jobs:
           workflow: frontend.yml
           run_id: ${{ github.event.workflow_run.id }}
           name: compared-stats
+      - run: ls -R .
       - name: Set pullrequest number
         id: pr
         run: echo "::set-output name=number::${{ github.event.workflow_run.pull_requests[0].number }}"
       - name: Set comment body
         id: body
         run: |
-          body=$(cat compared-stats/compared-stats.md)
+          body=$(cat compared-stats.md)
           body="${body//'%'/'%25'}"
           body="${body//$'\n'/'%0A'}"
           body="${body//$'\r'/'%0D'}"
