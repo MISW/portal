@@ -1,5 +1,4 @@
-import ky from "ky-universal";
-import { Options } from "ky";
+import ky, { Options, HTTPError } from "ky";
 import { toCamelCase, toSnakeCase } from "./converter";
 import { decodeCard } from "./decode";
 import {
@@ -88,7 +87,7 @@ export const createApiClient = (baseUrl: string, options?: Options) => {
           .json<{ user: unknown }>();
         return toCamelCase(res.user) as User;
       } catch (e) {
-        if (e instanceof ky.HTTPError) {
+        if (e instanceof HTTPError) {
           if (e.response.status === 404) return undefined;
         }
         throw e;
@@ -139,7 +138,7 @@ export const createApiClient = (baseUrl: string, options?: Options) => {
           })
           .json();
       } catch (e) {
-        if (e instanceof ky.HTTPError) {
+        if (e instanceof HTTPError) {
           if (e.response.status === 409) return;
         }
         throw e;
