@@ -43,3 +43,25 @@ func (h *ExternalHandler) GetUserRoleFromSlackID(e echo.Context) error {
 		"role": role,
 	})
 }
+
+func (h *ExternalHandler) GetAllMemberRolesBySlackID(e echo.Context) error {
+	roles, err := h.eu.GetAllMemberRolesBySlackID(e.Request().Context())
+
+	if err != nil {
+		return xerrors.Errorf("failed to retrieve users' roles: %w", err);
+	}
+	
+	type ResponceItem struct {
+		Role string `json:"role"`
+	}
+
+	responce := map[string]ResponceItem{}
+
+	for id, role := range roles {
+		responce[id] = ResponceItem{
+			Role: role,
+		}
+	}
+
+	return e.JSON(http.StatusOK, responce)
+}
