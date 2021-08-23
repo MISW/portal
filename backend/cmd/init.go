@@ -271,6 +271,8 @@ func initHandler(cfg *config.Config, addr string, digc *dig.Container) *echo.Ech
 
 		g.GET("/find_role", eh.GetUserRoleFromSlackID)
 
+		g.GET("/all_member_roles", eh.GetAllMemberRolesBySlackID)
+
 		return nil
 	}))
 
