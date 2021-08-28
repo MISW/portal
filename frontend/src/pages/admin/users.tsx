@@ -22,6 +22,7 @@ import {
   selectUserById,
 } from "features/users";
 import { inviteToSlack, remindPayment } from "features/admin";
+import { NoSSR } from "components/utils/NoSSR";
 
 const headCells: HeadCell[] = labelsInJapanese.map(
   ({ id, label }) => ({ id, label } as HeadCell)
@@ -104,7 +105,7 @@ const Page: NextPage = () => {
       })) ?? [];
 
   return (
-    <>
+    <NoSSR>
       <Toolbar>
         <Typography variant="h3">ユーザ一覧</Typography>
       </Toolbar>
@@ -142,7 +143,7 @@ const Page: NextPage = () => {
         onClose={handleRemindPaymentDialogClose}
         targetUsers={targetUsers}
       />
-    </>
+    </NoSSR>
   );
 };
 
