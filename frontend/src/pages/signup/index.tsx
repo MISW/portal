@@ -2,10 +2,11 @@ import React from "react";
 import { NextPage } from "next";
 import Link from "next/link";
 import { Button } from "@material-ui/core";
+import { NoSSR } from "components/utils/NoSSR";
 
 const Page: NextPage = () => {
   return (
-    <>
+    <NoSSR>
       <p>会員登録方法</p>
       <ol>
         <li>フォームを埋める</li>
@@ -19,7 +20,7 @@ const Page: NextPage = () => {
           会員登録フォームへ
         </Button>
       </Link>
-    </>
+    </NoSSR>
   );
 };
 

@@ -8,6 +8,7 @@ import { selectCurrentUser, updateCurrentUser } from "features/currentUser";
 import { nonNullOrThrow } from "utils";
 import { unwrapResult } from "@reduxjs/toolkit";
 import { useSelector, useDispatch } from "react-redux";
+import { NoSSR } from "components/utils/NoSSR";
 
 const Page: NextPage = () => {
   const dispatch = useDispatch();
@@ -31,15 +32,17 @@ const Page: NextPage = () => {
     }
   };
   return (
-    <RegisterForm
-      formName="会員情報設定"
-      formType="setting"
-      user={currentUser}
-      onSubmit={onSubmit}
-      successMessage={
-        <Alert severity="success">プロフィールが変更されました!</Alert>
-      }
-    />
+    <NoSSR>
+      <RegisterForm
+        formName="会員情報設定"
+        formType="setting"
+        user={currentUser}
+        onSubmit={onSubmit}
+        successMessage={
+          <Alert severity="success">プロフィールが変更されました!</Alert>
+        }
+      />
+    </NoSSR>
   );
 };
 

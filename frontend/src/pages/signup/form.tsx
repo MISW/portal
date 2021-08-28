@@ -5,6 +5,7 @@ import { ConfigurableProfile } from "user";
 import { Alert } from "@material-ui/lab";
 import { useDispatch } from "react-redux";
 import { signup } from "features/auth";
+import { NoSSR } from "components/utils/NoSSR";
 
 const Page: NextPage = () => {
   const dispatch = useDispatch();
@@ -30,20 +31,22 @@ const Page: NextPage = () => {
   };
 
   return (
-    <RegisterForm
-      formName="会員登録"
-      formType="new"
-      onSubmit={onSubmit}
-      successMessage={
-        <>
-          {email && (
-            <Alert severity="info">
-              {email} 宛に確認メールがが送信されました! ✈
-            </Alert>
-          )}
-        </>
-      }
-    />
+    <NoSSR>
+      <RegisterForm
+        formName="会員登録"
+        formType="new"
+        onSubmit={onSubmit}
+        successMessage={
+          <>
+            {email && (
+              <Alert severity="info">
+                {email} 宛に確認メールがが送信されました! ✈
+              </Alert>
+            )}
+          </>
+        }
+      />
+    </NoSSR>
   );
 };
 

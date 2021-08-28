@@ -11,6 +11,7 @@ import {
 } from "hooks/appConfig";
 import { calcPeriod } from "utils";
 import { withLogin } from "middlewares/withLogin";
+import { NoSSR } from "components/utils/NoSSR";
 
 const usePaymentPeriodNode = (
   paymentPeriod: number | undefined,
@@ -167,9 +168,11 @@ const Page: NextPage = () => {
   const emailTemplateNode = useEmailTemplateNode();
 
   return (
-    <Config
-      configs={[currentPeriodNode, PaymentPeriodNode, emailTemplateNode]}
-    ></Config>
+    <NoSSR>
+      <Config
+        configs={[currentPeriodNode, PaymentPeriodNode, emailTemplateNode]}
+      ></Config>
+    </NoSSR>
   );
 };
 
