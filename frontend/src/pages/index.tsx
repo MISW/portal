@@ -17,6 +17,7 @@ import { withLogin } from "middlewares/withLogin";
 import { nonNullOrThrow } from "utils";
 import { useSelector } from "react-redux";
 import { selectCurrentUser } from "features/currentUser";
+import { NoSSR } from "components/utils/NoSSR";
 
 interface LinkData {
   title: string;
@@ -96,55 +97,57 @@ const Page: NextPage = () => {
 
   if (currentUser.role === "not_member" && currentUser.emailVerified) {
     return (
-      <div>
-        <Paper className={classes.paper}>
-          <Alert severity="warning">
-            <AlertTitle>まだ会員登録は終わっていません！</AlertTitle>
-            会費を払うことで会員として各種サービスを利用出来ます。
-          </Alert>
-          <div>
-            <p>
-              新入会希望者は<strong>入会費1000円</strong>
-              を以下の口座へ振り込んでください。
-            </p>
-            <p>
-              振込が確認され次第, メール {currentUser.email}
-              宛にサークル内の連絡ツール
-              <strong>Slack</strong>の招待が届きます!
-            </p>
-          </div>
-          <TableContainer component={Paper}>
-            <Table aria-label="simple table">
-              <TableBody>
-                {paymentData.map((row) => (
-                  <TableRow key={row[0]}>
-                    <TableCell component="th" scope="row">
-                      {row[0]}
-                    </TableCell>
-                    <TableCell>{row[1]}</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
+      <NoSSR>
+        <div>
+          <Paper className={classes.paper}>
+            <Alert severity="warning">
+              <AlertTitle>まだ会員登録は終わっていません！</AlertTitle>
+              会費を払うことで会員として各種サービスを利用出来ます。
+            </Alert>
+            <div>
+              <p>
+                新入会希望者は<strong>入会費1000円</strong>
+                を以下の口座へ振り込んでください。
+              </p>
+              <p>
+                振込が確認され次第, メール {currentUser.email}
+                宛にサークル内の連絡ツール
+                <strong>Slack</strong>の招待が届きます!
+              </p>
+            </div>
+            <TableContainer component={Paper}>
+              <Table aria-label="simple table">
+                <TableBody>
+                  {paymentData.map((row) => (
+                    <TableRow key={row[0]}>
+                      <TableCell component="th" scope="row">
+                        {row[0]}
+                      </TableCell>
+                      <TableCell>{row[1]}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
 
-          <Alert severity="error">
-            もし振込から1週間以上経ってもSlack招待が確認出来ない場合は
-            <ul>
-              <li>メール info@misw.jp</li>
-              <li>Twitter @misw_info</li>
-            </ul>
-            のいずれかへその由を伝えてください。
-          </Alert>
-          <Alert severity="info">
-            会費は部室の備品購入やコミケなどへの参加費用等に使われます。
-          </Alert>
-        </Paper>
-      </div>
+            <Alert severity="error">
+              もし振込から1週間以上経ってもSlack招待が確認出来ない場合は
+              <ul>
+                <li>メール info@misw.jp</li>
+                <li>Twitter @misw_info</li>
+              </ul>
+              のいずれかへその由を伝えてください。
+            </Alert>
+            <Alert severity="info">
+              会費は部室の備品購入やコミケなどへの参加費用等に使われます。
+            </Alert>
+          </Paper>
+        </div>
+      </NoSSR>
     );
   }
   return (
-    <>
+    <NoSSR>
       <Typography variant="h2">
         Create MISW <br /> with your own hand.
       </Typography>
@@ -167,7 +170,7 @@ const Page: NextPage = () => {
           <LinkContentCard {...data} key={i} />
         ))}
       </Grid>
-    </>
+    </NoSSR>
   );
 };
 

@@ -12,6 +12,7 @@ import {
   fetchCurrentPaymentStatuses,
 } from "features/currentUser";
 import { nonNullOrThrow } from "utils";
+import { NoSSR } from "components/utils/NoSSR";
 
 const Page: NextPage = () => {
   const dispatch = useDispatch();
@@ -22,7 +23,7 @@ const Page: NextPage = () => {
   }, [dispatch]);
 
   return (
-    <>
+    <NoSSR>
       <Profile
         user={currentUser}
         editButton={true}
@@ -36,7 +37,7 @@ const Page: NextPage = () => {
           />
         )}
       </Box>
-    </>
+    </NoSSR>
   );
 };
 

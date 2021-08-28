@@ -4,6 +4,7 @@ import { NextPage } from "next";
 import { Typography, Grid, Box } from "@material-ui/core";
 import LinkContentCard from "components/design/LinkContentCard";
 import { withLogin } from "middlewares/withLogin";
+import { NoSSR } from "components/utils/NoSSR";
 
 const links = [
   {
@@ -20,16 +21,18 @@ const links = [
 
 const Page: NextPage = () => {
   return (
-    <Container fixed>
-      <Box mb={4}>
-        <Typography variant="h3">管理者画面</Typography>
-      </Box>
-      <Grid container spacing={4}>
-        {links.map((data, i) => (
-          <LinkContentCard {...data} key={i} />
-        ))}
-      </Grid>
-    </Container>
+    <NoSSR>
+      <Container fixed>
+        <Box mb={4}>
+          <Typography variant="h3">管理者画面</Typography>
+        </Box>
+        <Grid container spacing={4}>
+          {links.map((data, i) => (
+            <LinkContentCard {...data} key={i} />
+          ))}
+        </Grid>
+      </Container>
+    </NoSSR>
   );
 };
 
