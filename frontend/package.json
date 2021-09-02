@@ -18,7 +18,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@babel/core": "^7.14.8",
+    "@babel/core": "^7.15.0",
     "@types/node": "^16.3.3",
     "@types/react": "^17.0.19",
     "@types/react-dom": "^17.0.9",
