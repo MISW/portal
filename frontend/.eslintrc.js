@@ -9,7 +9,7 @@ module.exports = {
     "plugin:react/recommended",
     "plugin:@typescript-eslint/recommended",
     "plugin:@typescript-eslint/eslint-recommended",
-    "prettier",
+    "eslint-config-prettier",
   ],
   parser: "@typescript-eslint/parser",
   parserOptions: {
@@ -19,7 +19,11 @@ module.exports = {
     ecmaVersion: 2018,
     sourceType: "module",
   },
-  plugins: ["react", "@typescript-eslint", "react-hooks"],
+  plugins: [
+    "eslint-plugin-react",
+    "@typescript-eslint/eslint-plugin",
+    "eslint-plugin-react-hooks",
+  ],
   settings: {
     react: {
       version: "detect",
