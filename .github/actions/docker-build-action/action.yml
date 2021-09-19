@@ -1,0 +1,70 @@
+name: Build docker
+description: build docker image with opinionated config
+
+inputs:
+  build_only:
+    description: "only for build, not push"
+    required: false
+    default: "false"
+  registry:
+    description: "private registry to push"
+    required: false
+    default: "registry.misw.jp"
+  registry_username:
+    description: "username for registry"
+    required: false
+  registry_password:
+    description: "password for registry"
+    required: false
+  name:
+    description: "image name: registry.misw.jp/portal/{name}"
+    required: true
+  file:
+    description: "path to Dockerfile"
+    required: false
+    default: "Dockerfile"
+  target:
+    description: "target stage"
+    required: false
+    default: "production"
+
+runs:
+  using: composite
+  steps:
+    - uses: docker/setup-buildx-action@v1
+
+    - name: Login to private registry
+      shell: bash
+      run: |
+        echo ::group::Docker login
+        if [[ "$BUILD_ONLY" == "false" ]]; then
+          docker login "$REGISTRY" --username "$USERNAME" --password "$PASSWORD"
+        fi
+        echo ::endgroup::
+      env:
+        BUILD_ONLY: ${{ inputs.build_only }}
+        REGISTRY: ${{ inputs.registry }}
+        USERNAME: ${{ inputs.registry_username }}
+        PASSWORD: ${{ inputs.registry_password }}
+
+    - name: Docker metadata
+      id: meta
+      uses: docker/metadata-action@v3
+      with:
+        images: |
+          ${{ inputs.registry }}/portal/${{ inputs.name }}
+        tags: |
+          type=ref,event=branch
+          type=sha
+
+    - name: Build and push image
+      uses: docker/build-push-action@v2
+      with:
+        push: ${{ inputs.build_only == 'false' }}
+        context: .
+        file: ${{ inputs.file }}
+        target: ${{ inputs.target }}
+        tags: ${{ steps.meta.outputs.tags }}
+        labels: ${{ steps.meta.outputs.labels }}
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
