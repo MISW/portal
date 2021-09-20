@@ -47,6 +47,11 @@ jobs:
         run: npm run build
       - name: Generate stats
         run: node tools/generate-stats.js > build-stats.json
+      - name: Upload stats
+        uses: actions/upload-artifact@v2
+        with:
+          name: build-stats
+          path: frontend/build-stats.json
       - name: Download Stats from master
         uses: dawidd6/action-download-artifact@v2
         with:
@@ -58,11 +63,6 @@ jobs:
       - name: Compare stats
         id: compare-stats
         run: node tools/compare-stats.js master-stats/build-stats.json build-stats.json > compared-stats.md
-      - name: Upload stats
-        uses: actions/upload-artifact@v2
-        with:
-          name: build-stats
-          path: frontend/build-stats.json
       - name: Upload compared stats
         uses: actions/upload-artifact@v2
         with:
