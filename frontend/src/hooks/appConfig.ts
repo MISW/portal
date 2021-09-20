@@ -31,7 +31,11 @@ export const usePaymentPeriodConfig: PeriodConfigState = () => {
         await dispatch(updatePaymentPeriod(newPaymentPeriod));
       } catch (e) {
         console.error(e);
-        throw new Error("支払い期間の更新に失敗しました: " + e.message);
+        if (e instanceof Error) {
+          throw new Error("支払い期間の更新に失敗しました: " + e.message);
+        } else {
+          throw new Error();
+        }
       }
     },
     [dispatch]
@@ -52,7 +56,11 @@ export const useCurrentPeriodConfig: PeriodConfigState = () => {
       try {
         await dispatch(updateCurrentPeriod(newCurrentPeriod));
       } catch (e) {
-        throw new Error("現在の期間の更新に失敗しました: " + e.message);
+        if (e instanceof Error) {
+          throw new Error("現在の期間の更新に失敗しました: " + e.message);
+        } else {
+          throw e;
+        }
       }
     },
     [dispatch]
@@ -77,9 +85,13 @@ export function useEmailTemplateConfig(emailKind: EmailKind) {
       try {
         await dispatch(updateEmailTemplateThunk({ kind: emailKind, template }));
       } catch (e) {
-        throw new Error(
-          "Eメールテンプレートの更新に失敗しました: " + e.message
-        );
+        if (e instanceof Error) {
+          throw new Error(
+            "Eメールテンプレートの更新に失敗しました: " + e.message
+          );
+        } else {
+          throw e;
+        }
       }
     },
     [emailKind, dispatch]
