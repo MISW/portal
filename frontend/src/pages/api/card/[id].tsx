@@ -1,10 +1,13 @@
 import type { NextApiHandler } from "next";
+import fs from "fs";
+import utils from "util";
 import type { Card } from "models/card";
 import React from "react";
 import ReactDOM from "react-dom/server";
 import sharp from "sharp";
 import { CardSvg } from "components/CardSvg";
 import { createApiClient } from "infra/api";
+import miswlogo from "assets/mislogo.png";
 
 const client = createApiClient(process.env.BACKEND_HOST ?? "");
 
@@ -23,6 +26,15 @@ const fetchAsDataURL = async (input: RequestInfo) => {
   const res = await fetch(input);
   const contentType = res.headers.get("content-type") ?? "text/html";
   const buf = await res.arrayBuffer().then((ab) => Buffer.from(ab));
+  return `data:${contentType};base64,${buf.toString("base64")}`;
+};
+
+const loadAssetAsDataURL = async (assetPath: string, contentType: string) => {
+  if (!assetPath.startsWith("/_next")) {
+    throw new Error(`"${assetPath}" is not asset path of Next.js`);
+  }
+  const path = assetPath.replace(/^\/_next/, ".next");
+  const buf = await utils.promisify(fs.readFile)(path);
   return `data:${contentType};base64,${buf.toString("base64")}`;
 };
 
@@ -46,16 +58,24 @@ const cardImageHandler: NextApiHandler = async (req, res) => {
     return;
   }
 
-  const avatarUrl =
+  const avatarUrlPromise =
     card.avatar != null
-      ? await fetchAsDataURL(card.avatar.url).catch(() => undefined)
-      : undefined;
+      ? fetchAsDataURL(card.avatar.url).catch(() => undefined)
+      : Promise.resolve(undefined);
+
+  const miswLogoUrlPromise = loadAssetAsDataURL(miswlogo.src, "image/png");
+
+  const [avatarUrl, miswLogoUrl] = await Promise.all([
+    avatarUrlPromise,
+    miswLogoUrlPromise,
+  ]);
 
   const svg = ReactDOM.renderToStaticMarkup(
     <CardSvg
       width="1200"
       height="630"
       avatarUrl={avatarUrl}
+      miswLogoUrl={miswLogoUrl}
       generation={card.generation}
       handle={card.handle}
       workshops={card.workshops}
