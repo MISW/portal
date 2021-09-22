@@ -50,7 +50,7 @@ if (!process.browser && process.env.BACKEND_HOST == null) {
   console.warn("BACKEND_HOST is required");
 }
 
-const makeStore: MakeStore<RootState> = (ctx) => {
+const makeStore: MakeStore<Store> = (ctx) => {
   const req = isAppContext(ctx)
     ? ctx.ctx.req
     : "req" in ctx
