@@ -3,6 +3,7 @@ import type { User } from "models/user";
 import { CardSvg } from "components/CardSvg";
 import { TextInput } from "components/design/TextInput";
 import { Button, LinkButton } from "components/design/Button";
+import miswlogo from "assets/mislogo.png";
 
 export const EditCard: React.VFC<{
   readonly user?: User;
@@ -108,6 +109,7 @@ export const EditCard: React.VFC<{
             <CardSvg
               width="100%"
               avatarUrl={user.avatar?.url}
+              miswLogoUrl={miswlogo.src}
               generation={user.generation}
               handle={user.handle}
               workshops={user.workshops}
