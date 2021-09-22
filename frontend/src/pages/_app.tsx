@@ -3,13 +3,12 @@
 import "tailwindcss/tailwind.css";
 import "focus-visible";
 import React, { useEffect } from "react";
-import type { NextPageContext } from "next";
-import type { AppProps, AppContext } from "next/app";
+import type { AppProps } from "next/app";
 import Head from "next/head";
 import { ThemeProvider } from "@material-ui/styles";
 import { CssBaseline, createMuiTheme } from "@material-ui/core";
 import { DefaultLayout } from "components/layout/DefaultLayout";
-import { wrapper, RootState } from "store";
+import { wrapper } from "store";
 import { fetchCurrentUser, selectCurrentUser } from "features/currentUser";
 import { useLogout } from "features/auth";
 
@@ -42,21 +41,19 @@ const App = (props: AppProps) => {
   );
 };
 
-App.getInitialProps = async ({
-  Component,
-  ctx,
-}: {
-  ctx: NextPageContext<RootState, any>;
-} & AppContext) => {
-  const userInfo = selectCurrentUser(ctx.store.getState());
-  if (userInfo == null) await ctx.store.dispatch(fetchCurrentUser());
+App.getInitialProps = wrapper.getInitialAppProps(
+  (store) =>
+    async ({ Component, ctx }) => {
+      const userInfo = selectCurrentUser(store.getState());
+      if (userInfo == null) await store.dispatch(fetchCurrentUser());
 
-  const pageProps = Component.getInitialProps
-    ? await Component.getInitialProps({ ...ctx })
-    : {};
+      const pageProps = Component.getInitialProps
+        ? await Component.getInitialProps({ ...ctx })
+        : {};
 
-  const ret = { pageProps };
-  return ret;
-};
+      const ret = { pageProps };
+      return ret;
+    }
+);
 
 export default wrapper.withRedux(App);
