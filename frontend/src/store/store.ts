@@ -1,9 +1,4 @@
-import {
-  configureStore,
-  getDefaultMiddleware,
-  AnyAction,
-  ThunkAction,
-} from "@reduxjs/toolkit";
+import { configureStore, AnyAction, ThunkAction } from "@reduxjs/toolkit";
 import { Context, MakeStore, createWrapper } from "next-redux-wrapper";
 import { AppContext } from "next/app";
 import rootReducer from "./reducer";
@@ -14,17 +9,17 @@ export type ExtraArgument = Readonly<{
 }>;
 
 export const createStore = (props: ExtraArgument) => {
-  const middleware = getDefaultMiddleware({
-    thunk: {
-      extraArgument: {
-        api: props.api,
-      },
-    },
-  });
   const store = configureStore({
     reducer: rootReducer,
     devTools: process.env.NODE_ENV !== "production",
-    middleware,
+    middleware: (getDefaultMiddleware) =>
+      getDefaultMiddleware({
+        thunk: {
+          extraArgument: {
+            api: props.api,
+          },
+        },
+      }),
   });
   if (process.env.NODE_ENV === "development" && (module as any).hot) {
     (module as any).hot.accept("./reducer", () => {
