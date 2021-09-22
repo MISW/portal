@@ -7,6 +7,7 @@ import type { Card } from "models/card";
 import { createApiClient } from "infra/api";
 import { selectCurrentUser } from "features/currentUser";
 import { CardSvg } from "components/CardSvg";
+import miswlogo from "assets/mislogo.png";
 
 const numberPostfix = (num: number) => {
   if (num % 10 === 1) return "st";
@@ -57,6 +58,7 @@ const CardPage: NextPage<CardPageProps> = ({ card, baseURL }) => {
           <CardSvg
             width="100%"
             avatarUrl={card.avatar?.url}
+            miswLogoUrl={miswlogo.src}
             generation={card.generation}
             handle={card.handle}
             workshops={card.workshops}

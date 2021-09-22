@@ -1,7 +1,6 @@
 import React from "react";
 import type { IconDefinition } from "@fortawesome/fontawesome-common-types";
 import { faTwitter, faDiscord } from "@fortawesome/free-brands-svg-icons";
-import miswLogo from "assets/mislogo.png";
 
 type SvgPosition = {
   readonly x: number;
@@ -102,6 +101,7 @@ export const CardSvg: React.VFC<{
   readonly width?: string;
   readonly height?: string;
   readonly avatarUrl?: string;
+  readonly miswLogoUrl: string;
   readonly generation: number;
   readonly handle: string;
   readonly workshops: readonly string[];
@@ -112,6 +112,7 @@ export const CardSvg: React.VFC<{
   width,
   height,
   avatarUrl,
+  miswLogoUrl,
   generation,
   handle,
   workshops,
@@ -243,7 +244,7 @@ export const CardSvg: React.VFC<{
     </g>
 
     <image
-      href={miswLogo}
+      href={miswLogoUrl}
       x={1200 - 600 / 3 - 30}
       y={630 - 243 / 3 - 15}
       width={600 / 3}
