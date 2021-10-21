@@ -41,7 +41,7 @@
     "source-map-js": "^0.6.2",
     "tailwind-variant.macro": "^0.0.2",
     "type-fest": "^2.5.0",
-    "typescript": "^4.4.3"
+    "typescript": "^4.4.4"
   },
   "dependencies": {
     "@fortawesome/free-brands-svg-icons": "^5.15.4",
