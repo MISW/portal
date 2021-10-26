@@ -1,4 +1,4 @@
-FROM node:12-bullseye-slim AS base
+FROM node:16-bullseye-slim AS base
 
 ENV DEBIAN_FRONTEND=noninteractive
 
