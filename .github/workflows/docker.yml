@@ -3,30 +3,47 @@ name: Docker
 on: [push]
 
 jobs:
-  frontend:
+  docker:
     runs-on: ubuntu-latest
 
+    strategy:
+      matrix:
+        include:
+          - name: frontend
+            file: frontend.Dockerfile
+            target: production
+          - name: backend
+            file: backend.Dockerfile
+            target: production
+    
     steps:
       - uses: actions/checkout@v2
-      - uses: ./.github/actions/docker-build-action
-        with:
-          build_only: ${{ github.actor == 'dependabot[bot]' }}
-          registry_username: ${{ secrets.DOCKER_USERNAME }}
-          registry_password: ${{ secrets.DOCKER_PASSWORD }}
-          name: frontend
-          file: frontend.Dockerfile
-          target: production
+      - uses: docker/setup-buildx-action@v1
 
-  backend:
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v2
-      - uses: ./.github/actions/docker-build-action
+      - name: Login to GHCR
+        uses: docker/login-action@v1
         with:
-          build_only: ${{ github.actor == 'dependabot[bot]' }}
-          registry_username: ${{ secrets.DOCKER_USERNAME }}
-          registry_password: ${{ secrets.DOCKER_PASSWORD }}
-          name: backend
-          file: backend.Dockerfile
-          target: production
+          registry: https://ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Docker metadata
+        id: meta
+        uses: docker/metadata-action@v3
+        with:
+          images: |
+            ghcr.io/${{ github.repository_owner }}/portal/${{ matrix.name }}
+          tags: |
+            type=ref,event=branch
+            type=sha
+      
+      - name: Build and push image
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: ${{ matrix.file }}
+          target: ${{ matrix.target }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=registry,ref=ghcr.io/${{ github.repository_owner }}/portal/${{ matrix.name }}:build-cache
+          cache-to: type=registry,ref=ghcr.io/${{ github.repository_owner }}/portal/${{ matrix.name }}:build-cache,mode=max
