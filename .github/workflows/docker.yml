@@ -52,4 +52,8 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: ${{ format('type=registry,ref=ghcr.io/{0}/{1}:build-cache', env.DOCKER_REPO, matrix.name) }}
-          cache-to: ${{ github.actor != 'dependabot[bot]' && format('type=registry,ref=ghcr.io/{0}/{1}:build-cache,mode=max', env.DOCKER_REPO, matrix.name) }}
+          cache-to: |
+            ${{
+               (github.actor != 'dependabot[bot]' && format('type=registry,ref=ghcr.io/{0}/{1}:build-cache,mode=max', env.DOCKER_REPO, matrix.name))
+            || (github.actor == 'dependabot[bot]' && 'type=inline')
+            }}
