@@ -27,17 +27,17 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
       
-      - name: Downcase OWNER
+      - name: Downcase DOCKER_REPO
         run: |
-          repo_owner="${{ github.repository_owner }}"
-          echo "OWNER=${repo_owner,,}" >> "${GITHUB_ENV}"
+          github_repo="${{ github.repository }}"
+          echo "DOCKER_REPO=${github_repo,,}" >> "${GITHUB_ENV}"
       
       - name: Generate docker metadata
         id: meta
         uses: docker/metadata-action@v3
         with:
           images: |
-            ghcr.io/${{ env.OWNER }}/portal/${{ matrix.name }}
+            ghcr.io/${{ env.DOCKER_REPO }}/${{ matrix.name }}
           tags: |
             type=ref,event=branch
             type=sha
@@ -51,5 +51,5 @@ jobs:
           target: ${{ matrix.target }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=registry,ref=ghcr.io/${{ env.OWNER }}/portal/${{ matrix.name }}:build-cache
-          cache-to: type=registry,ref=ghcr.io/${{ env.OWNER }}/portal/${{ matrix.name }}:build-cache,mode=max
+          cache-from: ${{ format('type=registry,ref=ghcr.io/{0}/{1}:build-cache', env.DOCKER_REPO, matrix.name) }}
+          cache-to: ${{ github.actor != 'dependabot[bot]' && format('type=registry,ref=ghcr.io/{0}/{1}:build-cache,mode=max', env.DOCKER_REPO, matrix.name) }}
