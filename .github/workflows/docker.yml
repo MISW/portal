@@ -30,7 +30,7 @@ jobs:
       - name: Downcase OWNER
         run: |
           repo_owner="${{ github.repository_owner }}"
-          echo "OWNER=${repo_owner,,}" >>${GITHUB_ENV}
+          echo "OWNER=${repo_owner,,}" >> "${GITHUB_ENV}"
       
       - name: Generate docker metadata
         id: meta
@@ -45,6 +45,7 @@ jobs:
       - name: Build and push image
         uses: docker/build-push-action@v2
         with:
+          push: true
           context: .
           file: ${{ matrix.file }}
           target: ${{ matrix.target }}
