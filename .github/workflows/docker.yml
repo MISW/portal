@@ -27,12 +27,17 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
       
-      - name: Docker metadata
+      - name: Downcase OWNER
+        run: |
+          repo_owner="${{ github.repository_owner }}"
+          echo "OWNER=${repo_owner,,}" >>${GITHUB_ENV}
+      
+      - name: Generate docker metadata
         id: meta
         uses: docker/metadata-action@v3
         with:
           images: |
-            ghcr.io/${{ github.repository_owner }}/portal/${{ matrix.name }}
+            ghcr.io/${{ env.OWNER }}/portal/${{ matrix.name }}
           tags: |
             type=ref,event=branch
             type=sha
@@ -45,5 +50,5 @@ jobs:
           target: ${{ matrix.target }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=registry,ref=ghcr.io/${{ github.repository_owner }}/portal/${{ matrix.name }}:build-cache
-          cache-to: type=registry,ref=ghcr.io/${{ github.repository_owner }}/portal/${{ matrix.name }}:build-cache,mode=max
+          cache-from: type=registry,ref=ghcr.io/${{ env.OWNER }}/portal/${{ matrix.name }}:build-cache
+          cache-to: type=registry,ref=ghcr.io/${{ env.OWNER }}/portal/${{ matrix.name }}:build-cache,mode=max
