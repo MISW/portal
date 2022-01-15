@@ -35,7 +35,7 @@ const linkData: Array<LinkData> = [
   {
     title: "Discord",
     description: "ボイスチャット",
-    link: "https://discord.com/invite/bEtrsRX",
+    link: "https://discord.com/invite/2UGRSbhkRY",
   },
   {
     title: "Twitter",
