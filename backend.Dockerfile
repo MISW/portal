@@ -1,4 +1,4 @@
-ARG go_version=1.17.0
+ARG go_version=1.17
 
 # ツール類
 FROM golang:${go_version} AS tools

@@ -1,5 +1,5 @@
 module github.com/MISW/Portal/tools/batch_insert
 
-go 1.14
+go 1.17
 
-require github.com/go-sql-driver/mysql v1.5.0 // indirect
+require github.com/go-sql-driver/mysql v1.6.0
