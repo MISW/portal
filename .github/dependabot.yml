@@ -5,33 +5,39 @@ updates:
     schedule:
       interval: daily
       time: "20:00"
+    open-pull-requests-limit: 20
 
   - package-ecosystem: npm
     directory: "/frontend"
     schedule:
       interval: daily
       time: "20:00"
+    open-pull-requests-limit: 20
 
   - package-ecosystem: github-actions
     directory: "/"
     schedule:
       interval: daily
       time: "20:00"
+    open-pull-requests-limit: 20
 
   - package-ecosystem: docker
     directory: "/"
     schedule:
       interval: daily
       time: "20:00"
+    open-pull-requests-limit: 20
 
   - package-ecosystem: gomod
     directory: "/tools/batch_insert"
     schedule:
       interval: daily
       time: "20:00"
+    open-pull-requests-limit: 20
 
   - package-ecosystem: gomod
     directory: "/tools/slack_matching"
     schedule:
       interval: daily
       time: "20:00"
+    open-pull-requests-limit: 20
