@@ -36,4 +36,7 @@ INSERT INTO users (
 ),
 (
     "hebi@example.com", 55, "HEBI", "ヘビ", "hebi", "male", "Foo大学", "Bar学部", "Hoge学科", "35782161", "0123456789", "", "プログラミング", "Web", "admin", "invited", "U014KLTG3CZ", NULL, 1
+),
+(
+    "caffeeren@example.com", 56, "CAFFEEREN", "カフィレン", "caffeeren", "male", "Foo大学", "Bar学部", "Hoge学科", "35782161", "0123456789", "", "プログラミング", "Web", "admin", "invited", "U0203QJ9683", NULL, 1
 );
