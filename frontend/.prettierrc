@@ -4,9 +4,7 @@
   "overrides": [
     {
       "files": ["*.ts", "*.tsx"],
-      "options": {
-        "parser": "babel-ts"
-      }
+      "options": {"parser": "babel-ts"}
     }
   ]
 }

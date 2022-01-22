@@ -2,10 +2,8 @@ module.exports = {
   plugins: [
     "tailwindcss",
     "postcss-flexbugs-fixes",
-    "postcss-nested",
-    [
-      "postcss-preset-env",
-      {
+    "postcss-nested",[
+      "postcss-preset-env",{
         autoprefixer: {
           flexbox: "no-2009",
           grid: "autoplace",
