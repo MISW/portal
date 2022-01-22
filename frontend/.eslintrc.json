@@ -39,8 +39,7 @@
     {
       "files": ["*.js"],
       "parserOptions": {"sourceType": "script"},
-      "rules": 
-      {
+      "rules": {
         "no-undef": "off",
         "@typescript-eslint/no-var-requires": "off"
       }
