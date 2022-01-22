@@ -3,14 +3,14 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
+    "build": "next build",
     "dev": "next",
     "docker": "next --hostname 0.0.0.0",
-    "build": "next build",
     "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx}\"",
     "format:check": "prettier --check \"src/**/*.{js,jsx,ts,tsx}\"",
-    "start": "next start --hostname 0.0.0.0",
     "lint": "next lint --dir src --ext .js,jsx,.ts,.tsx",
     "lint:fix": "next lint --fix --dir src --ext .js,jsx,.ts,.tsx",
+    "start": "next start --hostname 0.0.0.0",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
@@ -36,7 +36,7 @@
     "tailwindcss": "^2.2.2"
   },
   "devDependencies": {
-    "@babel/core": "^7.16.10",
+    "@babel/core": "^7.16.12",
     "@types/node": "^17.0.10",
     "@types/react": "^17.0.38",
     "@types/react-dom": "^17.0.11",
