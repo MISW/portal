@@ -121,7 +121,7 @@ export const DefaultLayout: React.FC<{ onLogout: () => void }> = ({
                       : role;
                   return (
                     <>
-                      <Typography variant="h6" color="inherit">
+                      <Typography variant="h6" color="inherit" align="right">
                         {`<${status}> ${handle}`}
                       </Typography>
                       <div>
