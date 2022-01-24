@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { styled } from "@mui/material/styles";
 import clsx from "clsx";
-import { lighten, Theme } from "@mui/material/styles";
+import { lighten } from "@mui/material/styles";
 import { Box } from "@mui/material";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
