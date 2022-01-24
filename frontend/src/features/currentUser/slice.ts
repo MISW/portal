@@ -6,39 +6,36 @@ import { PaymentStatus } from 'models/user';
 type UserId = number;
 
 type CurrentUserState = {
-    id: UserId | undefined;
-    paymentStatuses: PaymentStatus[] | undefined;
+  id: UserId | undefined;
+  paymentStatuses: PaymentStatus[] | undefined;
 };
 
 const initialState: CurrentUserState = {
-    id: undefined,
-    paymentStatuses: undefined,
+  id: undefined,
+  paymentStatuses: undefined,
 };
 
 const updateUserId = (
-    state: CurrentUserState,
-    action: PayloadAction<UserId>,
+  state: CurrentUserState,
+  action: PayloadAction<UserId>,
 ) => {
-    state.id = action.payload;
+  state.id = action.payload;
 };
 
 const currentUserSlice = createSlice({
-    name: 'currentUser',
-    initialState,
-    reducers: {
-        paymentStatusesFetched: (
-            state,
-            action: PayloadAction<PaymentStatus[]>,
-        ) => {
-            state.paymentStatuses = action.payload;
-        },
+  name: 'currentUser',
+  initialState,
+  reducers: {
+    paymentStatusesFetched: (state, action: PayloadAction<PaymentStatus[]>) => {
+      state.paymentStatuses = action.payload;
     },
-    extraReducers: (builder) => {
-        builder
-            .addCase(hydrated, (_, action) => action.payload.currentUser)
-            .addCase(fetchCurrentUser.fulfilled, updateUserId)
-            .addCase(updateCurrentUser.fulfilled, updateUserId);
-    },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(hydrated, (_, action) => action.payload.currentUser)
+      .addCase(fetchCurrentUser.fulfilled, updateUserId)
+      .addCase(updateCurrentUser.fulfilled, updateUserId);
+  },
 });
 
 export const { paymentStatusesFetched } = currentUserSlice.actions;
