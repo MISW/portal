@@ -66,10 +66,10 @@ const Copyright: React.FC = () => {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
       {"Copyright © "}
-      <MUILink color="inherit" href="https://misw.jp" underline="hover">
+      <MUILink color="inherit" href="https://misw.jp/" underline="hover">
         MISW
       </MUILink>{" "}
-      2020-2022
+        2020-2022
       {"."}
     </Typography>
   );
@@ -122,9 +122,9 @@ export const DefaultLayout: React.FC<{ onLogout: () => void }> = ({
                   return (
                     <>
                       <Typography variant="h6" color="inherit">
-                        {`<${status}> ${handle}`}
+                        {`${handle} (${status})`}
                       </Typography>
-                      <div>
+                      <div className="right">
                         {role === "admin" && (
                           <NextLink href="/admin" passHref>
                             <Tooltip title="管理者">
@@ -141,7 +141,7 @@ export const DefaultLayout: React.FC<{ onLogout: () => void }> = ({
                             </Tooltip>
                           </NextLink>
                         )}
-                        <Tooltip title="各種設定" placement="right-end">
+                        <Tooltip title="各種設定">
                           <IconButton
                             title={handle}
                             aria-label={handle}
