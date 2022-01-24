@@ -49,7 +49,7 @@ const StyledStyledEngineProvider = styled(StyledEngineProvider)(
       marginBottom: theme.spacing(6),
       marginLeft: theme.spacing(2),
       marginRight: theme.spacing(2),
-      [theme.breakpoints.up(600)]: {
+      [theme.breakpoints.up("sm")]: {
         // width: 600,
         marginLeft: "auto",
         marginRight: "auto",
@@ -107,8 +107,8 @@ export const DefaultLayout: React.FC<{ onLogout: () => void }> = ({
             <Toolbar>
               <div className={classes.title}>
                 <NextLink href="/" passHref>
-                  <MUILink variant="h6" color="inherit" underline="hover">
-                    MISW Portal
+                  <MUILink variant="h6" color="inherit" underline="hover" align="center">
+                    みすポータル  
                   </MUILink>
                 </NextLink>
               </div>
@@ -121,13 +121,13 @@ export const DefaultLayout: React.FC<{ onLogout: () => void }> = ({
                       : role;
                   return (
                     <>
-                      <Typography variant="h6" color="inherit">
-                        {`${handle} (${status})`}
+                      <Typography variant="h6" color="inherit" align="right">
+                        {` ${handle} (${status}) `}
                       </Typography>
-                      <div className="right">
+                      <div>
                         {role === "admin" && (
                           <NextLink href="/admin" passHref>
-                            <Tooltip title="管理者">
+                            <Tooltip title="管理者" placement="right-end">
                               <IconButton
                                 component="a"
                                 aria-label="admin"
@@ -141,7 +141,7 @@ export const DefaultLayout: React.FC<{ onLogout: () => void }> = ({
                             </Tooltip>
                           </NextLink>
                         )}
-                        <Tooltip title="各種設定">
+                        <Tooltip title="各種設定" placement="right-end">
                           <IconButton
                             title={handle}
                             aria-label={handle}
@@ -192,7 +192,7 @@ export const DefaultLayout: React.FC<{ onLogout: () => void }> = ({
             </Toolbar>
           </AppBar>
           <main className={classes.layout}>
-            <Container maxWidth="lg">
+            <Container maxWidth="xl">
               <>{children}</>
             </Container>
           </main>
