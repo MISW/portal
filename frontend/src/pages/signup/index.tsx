@@ -15,7 +15,7 @@ const Page: NextPage = () => {
         <li>振込が確認され次第, 会員登録完了! </li>
         <li>MISWの連絡ツール Slack への招待リンクがメアド宛に送られます!</li>
       </ol>
-      <Link href="/signup/form">
+      <Link href="/signup/form" passHref>
         <Button color="primary" variant="contained">
           会員登録フォームへ
         </Button>
