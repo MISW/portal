@@ -1,4 +1,5 @@
 import { Period, EmailTemplate, EmailKind } from "models/appconfig";
+
 export type SexType = "male" | "female" | "other";
 export type RoleType =
   // 管理者(会員資格あり)

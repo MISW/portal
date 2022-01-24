@@ -1,23 +1,42 @@
 import React from "react";
+import { styled } from "@mui/material/styles";
 import { NextPage } from "next";
 import {
   Grid,
   Paper,
-  makeStyles,
   TableContainer,
   Table,
   TableBody,
   TableRow,
   TableCell,
   Typography,
-} from "@material-ui/core";
+} from "@mui/material";
 import LinkContentCard from "components/design/LinkContentCard";
-import { Alert, AlertTitle } from "@material-ui/lab";
+import { Alert, AlertTitle } from "@mui/material";
 import { withLogin } from "middlewares/withLogin";
 import { nonNullOrThrow } from "utils";
 import { useSelector } from "react-redux";
 import { selectCurrentUser } from "features/currentUser";
 import { NoSSR } from "components/utils/NoSSR";
+
+const PREFIX = "index";
+
+const classes = {
+  paper: `${PREFIX}-paper`,
+};
+
+const StyledNoSSR = styled(NoSSR)(({ theme }) => ({
+  [`& .${classes.paper}`]: {
+    marginTop: theme.spacing(1),
+    marginBottom: theme.spacing(3),
+    padding: theme.spacing(2),
+    [theme.breakpoints.up(600 + theme.spacing(3).length * 2)]: {
+      marginTop: theme.spacing(6),
+      marginBottom: theme.spacing(6),
+      padding: theme.spacing(2),
+    },
+  },
+}));
 
 interface LinkData {
   title: string;
@@ -78,26 +97,12 @@ const paymentData = [
   ["振込依頼人名", "自分の名前"],
 ];
 
-const useStyles = makeStyles((theme) => ({
-  paper: {
-    marginTop: theme.spacing(1),
-    marginBottom: theme.spacing(3),
-    padding: theme.spacing(2),
-    [theme.breakpoints.up(600 + theme.spacing(3) * 2)]: {
-      marginTop: theme.spacing(6),
-      marginBottom: theme.spacing(6),
-      padding: theme.spacing(2),
-    },
-  },
-}));
-
 const Page: NextPage = () => {
-  const classes = useStyles();
   const currentUser = nonNullOrThrow(useSelector(selectCurrentUser));
 
   if (currentUser.role === "not_member" && currentUser.emailVerified) {
     return (
-      <NoSSR>
+      <StyledNoSSR>
         <div>
           <Paper className={classes.paper}>
             <Alert severity="warning">
@@ -143,7 +148,7 @@ const Page: NextPage = () => {
             </Alert>
           </Paper>
         </div>
-      </NoSSR>
+      </StyledNoSSR>
     );
   }
   return (

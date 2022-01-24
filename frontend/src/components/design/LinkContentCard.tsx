@@ -1,19 +1,27 @@
 import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import Typography from "@material-ui/core/Typography";
-import Grid from "@material-ui/core/Grid";
-import Card from "@material-ui/core/Card";
-import CardActionArea from "@material-ui/core/CardActionArea";
-import CardContent from "@material-ui/core/CardContent";
+import { styled } from "@mui/material/styles";
+import Typography from "@mui/material/Typography";
+import Grid from "@mui/material/Grid";
+import Card from "@mui/material/Card";
+import CardActionArea from "@mui/material/CardActionArea";
+import CardContent from "@mui/material/CardContent";
 
-const useStyles = makeStyles({
-  card: {
+const PREFIX = "LinkContentCard";
+
+const classes = {
+  card: `${PREFIX}-card`,
+  cardDetails: `${PREFIX}-cardDetails`,
+  cardMedia: `${PREFIX}-cardMedia`,
+};
+
+const StyledGrid = styled(Grid)({
+  [`& .${classes.card}`]: {
     display: "flex",
   },
-  cardDetails: {
+  [`& .${classes.cardDetails}`]: {
     flex: 1,
   },
-  cardMedia: {
+  [`& .${classes.cardMedia}`]: {
     width: 160,
   },
 });
@@ -24,10 +32,8 @@ export const LinkContentCard: React.FC<{
   link: string;
   image?: string;
 }> = ({ title, description, link }) => {
-  const classes = useStyles();
-
   return (
-    <Grid item xs={12} md={6}>
+    <StyledGrid item xs={12} md={6}>
       <CardActionArea component="a" href={link}>
         <Card className={classes.card}>
           <div className={classes.cardDetails}>
@@ -48,7 +54,7 @@ export const LinkContentCard: React.FC<{
           </Hidden> */}
         </Card>
       </CardActionArea>
-    </Grid>
+    </StyledGrid>
   );
 };
 

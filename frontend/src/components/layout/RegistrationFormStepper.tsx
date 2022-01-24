@@ -1,34 +1,48 @@
 import React, { ReactNode, useCallback } from "react";
-import Typography from "@material-ui/core/Typography";
-import { makeStyles } from "@material-ui/core/styles";
-import Paper from "@material-ui/core/Paper";
-import { Stepper, Step, StepLabel } from "@material-ui/core";
-import Button from "@material-ui/core/Button";
+import { styled } from "@mui/material/styles";
+import Typography from "@mui/material/Typography";
+import Paper from "@mui/material/Paper";
+import { Stepper, Step, StepLabel } from "@mui/material";
+import Button from "@mui/material/Button";
 import { useRouter } from "next/router";
 
-export const useStyles = makeStyles((theme) => ({
-  paper: {
+const PREFIX = "RegisterFormStepper";
+
+const classes = {
+  paper: `${PREFIX}-paper`,
+  stepper: `${PREFIX}-stepper`,
+  buttons: `${PREFIX}-buttons`,
+  button: `${PREFIX}-button`,
+};
+
+const StyledPaper = styled(Paper)(({ theme }) => ({
+  [`&.${classes.paper}`]: {
     marginTop: theme.spacing(3),
     marginBottom: theme.spacing(3),
     padding: theme.spacing(2),
-    [theme.breakpoints.up(600 + theme.spacing(3) * 2)]: {
+    [theme.breakpoints.up(600 + theme.spacing(3).length * 2)]: {
       marginTop: theme.spacing(6),
       marginBottom: theme.spacing(6),
       padding: theme.spacing(2),
     },
   },
-  stepper: {
+
+  [`& .${classes.stepper}`]: {
     padding: theme.spacing(3, 0, 5),
   },
-  buttons: {
+
+  [`& .${classes.buttons}`]: {
     display: "flex",
     justifyContent: "flex-end",
   },
-  button: {
+
+  [`& .${classes.button}`]: {
     marginTop: theme.spacing(3),
     marginLeft: theme.spacing(1),
   },
 }));
+
+export {};
 
 const RegisterFormStepper: React.FC<{
   formName: string;
@@ -40,13 +54,12 @@ const RegisterFormStepper: React.FC<{
   handleBack: () => void;
   nextDisabled?: boolean;
 }> = (props) => {
-  const classes = useStyles();
   const router = useRouter();
   const handleHome = useCallback(() => {
     router.push("/");
   }, [router]);
   return (
-    <Paper className={classes.paper}>
+    <StyledPaper className={classes.paper}>
       <Typography component="h1" variant="h4" align="center">
         {props.formName}
       </Typography>
@@ -89,7 +102,7 @@ const RegisterFormStepper: React.FC<{
           </Button>
         )}
       </div>
-    </Paper>
+    </StyledPaper>
   );
 };
 

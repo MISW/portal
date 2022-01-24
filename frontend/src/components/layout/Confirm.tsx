@@ -1,10 +1,10 @@
 import React, { ReactNode } from "react";
-import { Box, Button, FormHelperText } from "@material-ui/core";
+import { Box, Button, FormHelperText } from "@mui/material";
 import { ConfigurableProfile, toUserInfoJSON } from "../../user";
 import { UserValidation } from "../../hooks/formHooks";
 import Profile from "./Profile";
 import { SubmitResult } from "./RegisterForm";
-import { Alert } from "@material-ui/lab";
+import { Alert } from "@mui/material";
 import { toCamelCase } from "infra/converter";
 import { User } from "models/user";
 

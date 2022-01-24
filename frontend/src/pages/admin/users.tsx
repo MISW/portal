@@ -7,8 +7,8 @@ import AdminUsersTable, {
 } from "components/layout/AdminUsersTable";
 import { UserTableData, labelsInJapanese } from "user";
 import { usersCSV, saveFile, nonNullOrThrow } from "utils";
-import { Typography } from "@material-ui/core";
-import Toolbar from "@material-ui/core/Toolbar";
+import { Typography } from "@mui/material";
+import Toolbar from "@mui/material/Toolbar";
 import SlackInvitationDialog from "components/layout/SlackInvitationDialog";
 import RemindPaymentDialog from "components/layout/RemindPaymentDialog";
 import { withLogin } from "middlewares/withLogin";

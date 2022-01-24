@@ -1,25 +1,40 @@
 import React from "react";
+import { styled } from "@mui/material/styles";
 import clsx from "clsx";
-import { createStyles, makeStyles } from "@material-ui/core/styles";
-import { Typography } from "@material-ui/core";
-import Toolbar from "@material-ui/core/Toolbar";
-import Table from "@material-ui/core/Table";
-import TableContainer from "@material-ui/core/TableContainer";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableHead from "@material-ui/core/TableHead";
-import TableRow from "@material-ui/core/TableRow";
+import { Typography } from "@mui/material";
+import Toolbar from "@mui/material/Toolbar";
+import Table from "@mui/material/Table";
+import TableContainer from "@mui/material/TableContainer";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
 import { periodsInJapanese } from "../../user";
 import { PaymentStatus } from "models/user";
+import { makeStyles, createStyles } from "@mui/styles";
 
-const useToolbarStyle = makeStyles(() =>
-  createStyles({
-    root: {},
-    title: {
-      flex: "1 1 100%",
-    },
-  })
-);
+const PREFIX = "PaymentStatuses";
+
+const classes = {
+  root: `${PREFIX}-root`,
+  title: `${PREFIX}-title`,
+};
+
+const StyledTableContainer = styled(TableContainer)(() => ({
+  [`& .${classes.root}`]: {},
+
+  [`& .${classes.title}`]: {
+    flex: "1 1 100%",
+  },
+}));
+
+const useToolbarStyle = makeStyles(() => ({
+  [`& .${classes.root}`]: {},
+
+  [`& .${classes.title}`]: {
+    flex: "1 1 100%",
+  },
+}));
 
 const paymentStatusesStyle = makeStyles(() =>
   createStyles({
@@ -38,7 +53,7 @@ const PaymentStatuses: React.FC<{
   const paymentStatusesClasses = paymentStatusesStyle();
 
   return (
-    <TableContainer>
+    <StyledTableContainer>
       <Toolbar className={toolbarClasses.root}>
         <Typography className={toolbarClasses.title} variant="h3">
           支払い履歴
@@ -78,7 +93,7 @@ const PaymentStatuses: React.FC<{
           )}
         </TableBody>
       </Table>
-    </TableContainer>
+    </StyledTableContainer>
   );
 };
 

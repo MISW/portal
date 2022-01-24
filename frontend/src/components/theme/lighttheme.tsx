@@ -1,12 +1,14 @@
-import { createMuiTheme } from "@material-ui/core/styles";
+import { createTheme, adaptV4Theme } from "@mui/material/styles";
 
-const theme = createMuiTheme({
-  palette: {
-    type: "light", // ベースのテーマ lightかdarkか
-    primary: {
-      main: "#00479c",
+const theme = createTheme(
+  adaptV4Theme({
+    palette: {
+      mode: "light", // ベースのテーマ lightかdarkか
+      primary: {
+        main: "#00479c",
+      },
     },
-  },
-});
+  })
+);
 
 export default theme;

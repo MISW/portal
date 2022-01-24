@@ -1,36 +1,75 @@
 import React, { useEffect } from "react";
+import { styled } from "@mui/material/styles";
 import clsx from "clsx";
-import {
-  createStyles,
-  lighten,
-  makeStyles,
-  withStyles,
-  Theme,
-} from "@material-ui/core/styles";
-import { Box } from "@material-ui/core";
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableContainer from "@material-ui/core/TableContainer";
-import TableHead from "@material-ui/core/TableHead";
-import TablePagination from "@material-ui/core/TablePagination";
-import TableRow from "@material-ui/core/TableRow";
-import TableSortLabel from "@material-ui/core/TableSortLabel";
-import Toolbar from "@material-ui/core/Toolbar";
-import Typography from "@material-ui/core/Typography";
-import Paper from "@material-ui/core/Paper";
-import Checkbox from "@material-ui/core/Checkbox";
-import IconButton from "@material-ui/core/IconButton";
-import Tooltip from "@material-ui/core/Tooltip";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Switch from "@material-ui/core/Switch";
-import DeleteIcon from "@material-ui/icons/Delete";
-import FilterListIcon from "@material-ui/icons/FilterList";
-import MoreVertIcon from "@material-ui/icons/MoreVert";
+import { lighten, Theme } from "@mui/material/styles";
+import { Box } from "@mui/material";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TablePagination from "@mui/material/TablePagination";
+import TableRow from "@mui/material/TableRow";
+import TableSortLabel from "@mui/material/TableSortLabel";
+import Toolbar from "@mui/material/Toolbar";
+import Typography from "@mui/material/Typography";
+import Paper from "@mui/material/Paper";
+import Checkbox from "@mui/material/Checkbox";
+import IconButton from "@mui/material/IconButton";
+import Tooltip from "@mui/material/Tooltip";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Switch from "@mui/material/Switch";
+import DeleteIcon from "@mui/icons-material/Delete";
+import FilterListIcon from "@mui/icons-material/FilterList";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
 import NoWrapButton from "./NoWrapButton";
-import Menu from "@material-ui/core/Menu";
-import MenuItem from "@material-ui/core/MenuItem";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
 import { UserTableData } from "../../user";
+import { makeStyles, createStyles } from "@mui/styles";
+
+const PREFIX = "EnhancedTable";
+
+const classes = {
+  root: `${PREFIX}-root`,
+  root2: `${PREFIX}-root2`,
+  paper: `${PREFIX}-paper`,
+  table: `${PREFIX}-table`,
+  visuallyHidden: `${PREFIX}-visuallyHidden`,
+  tableWrapper: `${PREFIX}-tableWrapper`,
+};
+
+const Root = styled("div")(({ theme: Theme }) => ({
+  [`& .${classes.root2}`]: {
+    width: "100%",
+  },
+
+  [`& .${classes.paper}`]: {
+    width: "100%",
+    marginBottom: Theme.spacing(2),
+  },
+
+  [`& .${classes.table}`]: {
+    minWidth: 3000,
+  },
+
+  [`& .${classes.visuallyHidden}`]: {
+    border: 0,
+    clip: "rect(0 0 0 0)",
+    height: 1,
+    margin: -1,
+    overflow: "hidden",
+    padding: 0,
+    position: "absolute",
+    top: 20,
+    width: 1,
+  },
+
+  [`& .${classes.tableWrapper}`]: {
+    maxHeight: 1080,
+    overflow: "auto",
+  },
+}));
 
 export type handleClickMenuParam =
   | { kind: "slack" }
@@ -80,38 +119,7 @@ export interface HeadCell {
   label: string;
 }
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      width: "100%",
-    },
-    paper: {
-      width: "100%",
-      marginBottom: theme.spacing(2),
-    },
-    table: {
-      minWidth: 3000,
-    },
-    visuallyHidden: {
-      border: 0,
-      clip: "rect(0 0 0 0)",
-      height: 1,
-      margin: -1,
-      overflow: "hidden",
-      padding: 0,
-      position: "absolute",
-      top: 20,
-      width: 1,
-    },
-    tableWrapper: {
-      maxHeight: 1080,
-      overflow: "auto",
-    },
-  })
-);
-
 interface EnhancedTableProps {
-  classes: ReturnType<typeof useStyles>;
   numSelected: number;
   onRequestSort: (
     event: React.MouseEvent<unknown>,
@@ -127,7 +135,6 @@ interface EnhancedTableProps {
 
 function EnhancedTableHead(props: EnhancedTableProps) {
   const {
-    classes,
     onSelectAllClick,
     order,
     orderBy,
@@ -187,7 +194,7 @@ const useToolbarStyles = makeStyles((theme: Theme) =>
       paddingRight: theme.spacing(1),
     },
     highlight:
-      theme.palette.type === "light"
+      theme.palette.mode === "light"
         ? {
             color: theme.palette.secondary.main,
             backgroundColor: lighten(theme.palette.secondary.light, 0.85),
@@ -254,7 +261,7 @@ const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
           </Typography>
 
           <Tooltip title="Delete">
-            <IconButton aria-label="delete">
+            <IconButton aria-label="delete" size="large">
               <DeleteIcon />
             </IconButton>
           </Tooltip>
@@ -262,16 +269,12 @@ const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
       ) : (
         <>
           <Tooltip title="Filter list">
-            <IconButton aria-label="filter list">
+            <IconButton aria-label="filter list" size="large">
               <FilterListIcon />
             </IconButton>
           </Tooltip>
-          <div className={classes.title}></div>
-          <NoWrapButton
-            variant="contained"
-            color={editMode ? "primary" : "default"}
-            onClick={handleClickOnEditMode}
-          >
+          <Root className={classes.title}></Root>
+          <NoWrapButton variant="contained" onClick={handleClickOnEditMode}>
             {editMode ? "終了" : "支払い登録モード"}
           </NoWrapButton>
 
@@ -281,14 +284,13 @@ const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
               aria-controls="long-menu"
               aria-haspopup="true"
               onClick={handleClick}
+              size="large"
             >
               <MoreVertIcon />
             </IconButton>
             <Menu
               id="other-operations"
               elevation={0}
-              getContentAnchorEl={null}
-              anchorEl={anchorEl}
               keepMounted
               open={Boolean(anchorEl)}
               onClose={handleClose(null)}
@@ -316,12 +318,7 @@ const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
   );
 };
 
-const NoTopBottomPaddingCheckbox = withStyles({
-  root: {
-    paddingTop: 0,
-    paddingBottom: 0,
-  },
-})(Checkbox);
+const NoTopBottomPaddingCheckbox = Checkbox;
 
 export const EnhancedTable: React.FC<{
   rows: Array<Data>;
@@ -341,7 +338,7 @@ export const EnhancedTable: React.FC<{
   useEffect(() => {
     setRows(rowsBase);
   }, [rowsBase]);
-  const classes = useStyles();
+
   const [order, setOrder] = React.useState<Order>("asc");
   const [orderBy, setOrderBy] = React.useState<keyof Data>(defaultSortedBy);
   const [selected, setSelected] = React.useState<number[]>([]);
@@ -460,7 +457,6 @@ export const EnhancedTable: React.FC<{
             aria-label="enhanced table"
           >
             <EnhancedTableHead
-              classes={classes}
               numSelected={selected.length}
               disabledCheckbox={editPaymentStatusMode}
               order={order}
@@ -513,6 +509,9 @@ export const EnhancedTable: React.FC<{
                                 onClick={() =>
                                   handleClickOnEditPaymentStatus(row.id)
                                 }
+                                classes={{
+                                  root: classes.root,
+                                }}
                               />
                             </TableCell>
                           ) : (

@@ -4,7 +4,7 @@ import { NextPage } from "next";
 import Router from "next/router";
 import Profile from "components/layout/Profile";
 import PaymentStatuses from "components/layout/PaymentStatuses";
-import { Box } from "@material-ui/core";
+import { Box } from "@mui/material";
 import { withLogin } from "middlewares/withLogin";
 import {
   selectCurrentUser,

@@ -6,7 +6,7 @@ import FundamentalInfo from "./FundamentalInfo";
 import { ConfigurableProfile } from "../../user";
 import Confirm from "./Confirm";
 import { useUser, UserProfileHooks } from "../../hooks/formHooks";
-import { Container } from "@material-ui/core";
+import { Container } from "@mui/material";
 
 const steps = ["基本情報", "学籍情報", "サークル内情報", "確認"];
 
