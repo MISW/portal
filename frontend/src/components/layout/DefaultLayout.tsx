@@ -121,7 +121,7 @@ export const DefaultLayout: React.FC<{ onLogout: () => void }> = ({
                       : role;
                   return (
                     <>
-                      <Typography variant="h6" color="inherit" align="right">
+                      <Typography variant="h6" color="inherit" align="right" sx={{ flexGrow: 1 }}>
                         {` ${handle} (${status}) `}
                       </Typography>
                       <div>
@@ -183,7 +183,9 @@ export const DefaultLayout: React.FC<{ onLogout: () => void }> = ({
                               Card
                             </MenuItem>
                           </NextLink>
-                          <MenuItem onClick={handleLogout}>Log out</MenuItem>
+                          <MenuItem onClick={handleLogout}>
+                            Log out
+                          </MenuItem>
                         </Menu>
                       </div>
                     </>
