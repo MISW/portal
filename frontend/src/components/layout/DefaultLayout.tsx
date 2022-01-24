@@ -69,7 +69,7 @@ const Copyright: React.FC = () => {
       <MUILink color="inherit" href="https://misw.jp" underline="hover">
         MISW
       </MUILink>{" "}
-      2020-2021
+      2020-2022
       {"."}
     </Typography>
   );
