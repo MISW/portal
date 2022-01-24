@@ -121,7 +121,7 @@ export const DefaultLayout: React.FC<{ onLogout: () => void }> = ({
                       : role;
                   return (
                     <>
-                      <Typography variant="h6" color="inherit" align="right">
+                      <Typography variant="h6" color="inherit">
                         {`<${status}> ${handle}`}
                       </Typography>
                       <div>
@@ -141,7 +141,7 @@ export const DefaultLayout: React.FC<{ onLogout: () => void }> = ({
                             </Tooltip>
                           </NextLink>
                         )}
-                        <Tooltip title="各種設定">
+                        <Tooltip title="各種設定" placement="right-end">
                           <IconButton
                             title={handle}
                             aria-label={handle}
