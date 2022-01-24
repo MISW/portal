@@ -33,23 +33,23 @@ const classes = {
 };
 
 const StyledStyledEngineProvider = styled(StyledEngineProvider)(
-  ({ theme: Theme }) => ({
+  ({ theme }) => ({
     [`& .${classes.appBar}`]: {
       position: "relative",
       flexGrow: 1,
     },
 
     [`& .${classes.menuButton}`]: {
-      marginRight: Theme.spacing(2),
+      marginRight: theme.spacing(2),
     },
 
     [`& .${classes.layout}`]: {
       width: "auto",
-      marginTop: Theme.spacing(6),
-      marginBottom: Theme.spacing(6),
-      marginLeft: Theme.spacing(2),
-      marginRight: Theme.spacing(2),
-      [Theme.breakpoints.up(632)]: {
+      marginTop: theme.spacing(6),
+      marginBottom: theme.spacing(6),
+      marginLeft: theme.spacing(2),
+      marginRight: theme.spacing(2),
+      [theme.breakpoints.up(600)]: {
         // width: 600,
         marginLeft: "auto",
         marginRight: "auto",

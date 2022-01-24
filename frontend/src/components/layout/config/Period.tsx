@@ -16,14 +16,14 @@ const classes = {
 };
 
 // TODO jss-to-styled codemod: The Fragment root was replaced by div. Change the tag if needed.
-const Root = styled("div")(({ theme: Theme }) => ({
+const Root = styled("div")(({ theme }) => ({
   [`& .${classes.formControl}`]: {
-    margin: Theme.spacing(1),
+    margin: theme.spacing(1),
     minWidth: 120,
   },
 
   [`& .${classes.selectEmpty}`]: {
-    marginTop: Theme.spacing(2),
+    marginTop: theme.spacing(2),
   },
 }));
 
