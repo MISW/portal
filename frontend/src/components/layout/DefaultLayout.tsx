@@ -49,7 +49,7 @@ const StyledStyledEngineProvider = styled(StyledEngineProvider)(
       marginBottom: Theme.spacing(6),
       marginLeft: Theme.spacing(2),
       marginRight: Theme.spacing(2),
-      [Theme.breakpoints.up(600 + Theme.spacing(2).length * 2)]: {
+      [Theme.breakpoints.up(632)]: {
         // width: 600,
         marginLeft: "auto",
         marginRight: "auto",
