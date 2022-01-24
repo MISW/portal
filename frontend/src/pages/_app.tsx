@@ -5,12 +5,21 @@ import "focus-visible";
 import React, { useEffect } from "react";
 import type { AppProps } from "next/app";
 import Head from "next/head";
-import { ThemeProvider } from "@material-ui/styles";
-import { CssBaseline, createMuiTheme } from "@material-ui/core";
+import {
+  ThemeProvider,
+  Theme,
+  StyledEngineProvider,
+} from "@mui/material/styles";
+import { CssBaseline, createTheme, adaptV4Theme } from "@mui/material";
 import { DefaultLayout } from "components/layout/DefaultLayout";
 import { wrapper } from "store";
 import { fetchCurrentUser, selectCurrentUser } from "features/currentUser";
 import { useLogout } from "features/auth";
+
+declare module "@mui/styles/defaultTheme" {
+  // eslint-disable-next-line @typescript-eslint/no-empty-interface
+  interface DefaultTheme extends Theme {}
+}
 
 const App = (props: AppProps) => {
   const { Component, pageProps } = props;
@@ -24,20 +33,25 @@ const App = (props: AppProps) => {
   const { handleLogout } = useLogout();
 
   return (
-    <ThemeProvider theme={createMuiTheme({})}>
-      <Head>
-        <title>MISW Portal</title>
-        <meta name="viewport" content="initial-scale=1.0,width=device-width" />
-        <link
-          rel="stylesheet"
-          href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
-        />
-      </Head>
-      <CssBaseline />
-      <DefaultLayout onLogout={handleLogout}>
-        <Component {...pageProps} />
-      </DefaultLayout>
-    </ThemeProvider>
+    <StyledEngineProvider injectFirst>
+      <ThemeProvider theme={createTheme(adaptV4Theme({}))}>
+        <Head>
+          <title>MISW Portal</title>
+          <meta
+            name="viewport"
+            content="initial-scale=1.0,width=device-width"
+          />
+          <link
+            rel="stylesheet"
+            href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
+          />
+        </Head>
+        <CssBaseline />
+        <DefaultLayout onLogout={handleLogout}>
+          <Component {...pageProps} />
+        </DefaultLayout>
+      </ThemeProvider>
+    </StyledEngineProvider>
   );
 };
 

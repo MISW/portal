@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { NextPage } from "next";
-import { Alert, AlertTitle } from "@material-ui/lab";
+import { Alert, AlertTitle } from "@mui/material";
 import { useVerifyEmail } from "features/auth";
 
 const Page: NextPage = () => {

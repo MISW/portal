@@ -1,7 +1,7 @@
 import React from "react";
-import Grid from "@material-ui/core/Grid";
-import TextField from "@material-ui/core/TextField";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Grid from "@mui/material/Grid";
+import TextField from "@mui/material/TextField";
+import FormControlLabel from "@mui/material/FormControlLabel";
 import {
   FormControl,
   FormLabel,
@@ -14,9 +14,9 @@ import {
   ListItemText,
   Input,
   FormHelperText,
-} from "@material-ui/core";
+} from "@mui/material";
 import { UserProfileHooks, FormContentProps } from "../../hooks/formHooks";
-import { Alert } from "@material-ui/lab";
+import { Alert } from "@mui/material";
 
 export const GenerationSelector: React.FC<
   FormContentProps<number> & {

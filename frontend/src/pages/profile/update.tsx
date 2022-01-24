@@ -1,6 +1,6 @@
 import React from "react";
 import { NextPage } from "next";
-import { Alert } from "@material-ui/lab";
+import { Alert } from "@mui/material";
 import RegisterForm, { SubmitResult } from "components/layout/RegisterForm";
 import { ConfigurableProfile } from "user";
 import { withLogin } from "middlewares/withLogin";

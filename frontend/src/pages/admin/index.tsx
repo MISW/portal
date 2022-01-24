@@ -1,7 +1,7 @@
 import React from "react";
-import Container from "@material-ui/core/Container";
+import Container from "@mui/material/Container";
 import { NextPage } from "next";
-import { Typography, Grid, Box } from "@material-ui/core";
+import { Typography, Grid, Box } from "@mui/material";
 import LinkContentCard from "components/design/LinkContentCard";
 import { withLogin } from "middlewares/withLogin";
 import { NoSSR } from "components/utils/NoSSR";

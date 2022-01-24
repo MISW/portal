@@ -1,24 +1,31 @@
 import React from "react";
-import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
-import InputLabel from "@material-ui/core/InputLabel";
-import MenuItem from "@material-ui/core/MenuItem";
-import FormControl from "@material-ui/core/FormControl";
-import Select from "@material-ui/core/Select";
-import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
-import ExpansionPanelActions from "@material-ui/core/ExpansionPanelActions";
-import { Box, Button, Divider, Typography } from "@material-ui/core";
+import { styled } from "@mui/material/styles";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
+import AccordionDetails from "@mui/material/AccordionDetails";
+import AccordionActions from "@mui/material/AccordionActions";
+import { Box, Button, Divider, Typography } from "@mui/material";
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    formControl: {
-      margin: theme.spacing(1),
-      minWidth: 120,
-    },
-    selectEmpty: {
-      marginTop: theme.spacing(2),
-    },
-  })
-);
+const PREFIX = "Period";
+
+const classes = {
+  formControl: `${PREFIX}-formControl`,
+  selectEmpty: `${PREFIX}-selectEmpty`,
+};
+
+// TODO jss-to-styled codemod: The Fragment root was replaced by div. Change the tag if needed.
+const Root = styled("div")(({ theme: Theme }) => ({
+  [`& .${classes.formControl}`]: {
+    margin: Theme.spacing(1),
+    minWidth: 120,
+  },
+
+  [`& .${classes.selectEmpty}`]: {
+    marginTop: Theme.spacing(2),
+  },
+}));
 
 const Period: React.FC<{
   title: string;
@@ -37,8 +44,6 @@ const Period: React.FC<{
   onClose,
   onSave,
 }) => {
-  const classes = useStyles();
-
   const formatPeriod = (period: number) => {
     return `${Math.floor(period / 100)}年${period % 100}月`;
   };
@@ -48,8 +53,8 @@ const Period: React.FC<{
   };
 
   return (
-    <>
-      <ExpansionPanelDetails>
+    <Root>
+      <AccordionDetails>
         <Box display="block">
           <Typography>{description ?? ""}</Typography>
           <FormControl
@@ -61,7 +66,7 @@ const Period: React.FC<{
               labelId="period-select-label"
               id="period-select-label"
               value={selected && options.length !== 0 ? selected : ""}
-              onChange={handleChange}
+              onChange={(event) => handleChange}
             >
               {options.map((p) => (
                 <MenuItem key={p} value={p}>
@@ -71,17 +76,17 @@ const Period: React.FC<{
             </Select>
           </FormControl>
         </Box>
-      </ExpansionPanelDetails>
+      </AccordionDetails>
       <Divider />
-      <ExpansionPanelActions>
+      <AccordionActions>
         <Button size="small" onClick={onClose}>
           Cancel
         </Button>
         <Button size="small" color="primary" onClick={onSave}>
           Save
         </Button>
-      </ExpansionPanelActions>
-    </>
+      </AccordionActions>
+    </Root>
   );
 };
 

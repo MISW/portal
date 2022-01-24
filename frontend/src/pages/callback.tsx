@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { NextPage } from "next";
-import { Typography } from "@material-ui/core";
+import { Typography } from "@mui/material";
 import { useAuthCallback } from "features/auth";
 
 const Page: NextPage = () => {

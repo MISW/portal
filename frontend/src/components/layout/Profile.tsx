@@ -1,25 +1,39 @@
 import React from "react";
-
-import { createStyles, makeStyles } from "@material-ui/core/styles";
-import { Typography, Box } from "@material-ui/core";
-import Toolbar from "@material-ui/core/Toolbar";
-import Table from "@material-ui/core/Table";
-import TableContainer from "@material-ui/core/TableContainer";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableHead from "@material-ui/core/TableHead";
-import TableRow from "@material-ui/core/TableRow";
+import { styled } from "@mui/material/styles";
+import { Typography, Box } from "@mui/material";
+import Toolbar from "@mui/material/Toolbar";
+import Table from "@mui/material/Table";
+import TableContainer from "@mui/material/TableContainer";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
 import NoWrapButton from "./NoWrapButton";
 import { User } from "models/user";
+import { makeStyles } from "@mui/styles";
 
-const useToolbarStyle = makeStyles(() =>
-  createStyles({
-    root: {},
-    title: {
-      flex: "1 1 100%",
-    },
-  })
-);
+const PREFIX = "Profile";
+
+const classes = {
+  root: `${PREFIX}-root`,
+  title: `${PREFIX}-title`,
+};
+
+const StyledTableContainer = styled(TableContainer)(() => ({
+  [`& .${classes.root}`]: {},
+
+  [`& .${classes.title}`]: {
+    flex: "1 1 100%",
+  },
+}));
+
+const useToolbarStyle = makeStyles(() => ({
+  [`& .${classes.root}`]: {},
+
+  [`& .${classes.title}`]: {
+    flex: "1 1 100%",
+  },
+}));
 
 const RowItem: React.FC<{ label: string; value: string | number }> = ({
   label,
@@ -46,7 +60,7 @@ const Profile: React.FC<{
   size = size ?? "medium";
 
   return (
-    <TableContainer>
+    <StyledTableContainer>
       {title ? (
         <Toolbar className={toolbarClasses.root}>
           <Typography className={toolbarClasses.title} variant="h3">
@@ -97,7 +111,7 @@ const Profile: React.FC<{
           <RowItem label="Discord ID" value={user.discordId ?? "未設定"} />
         </TableBody>
       </Table>
-    </TableContainer>
+    </StyledTableContainer>
   );
 };
 

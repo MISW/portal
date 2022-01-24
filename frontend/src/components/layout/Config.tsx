@@ -1,21 +1,27 @@
 import React from "react";
-import { Box } from "@material-ui/core";
-import { Theme, createStyles, makeStyles } from "@material-ui/core/styles";
-import ExpansionPanel from "@material-ui/core/ExpansionPanel";
-import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
-import Typography from "@material-ui/core/Typography";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import { styled } from "@mui/material/styles";
+import { Box } from "@mui/material";
+import Accordion from "@mui/material/Accordion";
+import AccordionSummary from "@mui/material/AccordionSummary";
+import Typography from "@mui/material/Typography";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      width: "100%",
-    },
-    heading: {
-      fontSize: theme.typography.pxToRem(15),
-    },
-  })
-);
+const PREFIX = "Config";
+
+const classes = {
+  root: `${PREFIX}-root`,
+  heading: `${PREFIX}-heading`,
+};
+
+const Root = styled("div")(({ theme: Theme }) => ({
+  [`&.${classes.root}`]: {
+    width: "100%",
+  },
+
+  [`& .${classes.heading}`]: {
+    fontSize: Theme.typography.pxToRem(15),
+  },
+}));
 
 interface ConfigProps {
   title: string;
@@ -27,14 +33,12 @@ interface ConfigProps {
 export const Config: React.FC<{
   configs: ConfigProps[];
 }> = ({ configs }) => {
-  const classes = useStyles();
-
   return (
-    <div className={classes.root}>
+    <Root className={classes.root}>
       {configs.map((config) => (
         <Box mb={3} key={config.title}>
-          <ExpansionPanel key={config.title} expanded={config.expanded}>
-            <ExpansionPanelSummary
+          <Accordion key={config.title} expanded={config.expanded}>
+            <AccordionSummary
               expandIcon={<ExpandMoreIcon />}
               aria-controls="panel1a-content"
               id="panel1a-header"
@@ -43,11 +47,11 @@ export const Config: React.FC<{
               <Typography className={classes.heading}>
                 {config.title}
               </Typography>
-            </ExpansionPanelSummary>
+            </AccordionSummary>
             {config.node}
-          </ExpansionPanel>
+          </Accordion>
         </Box>
       ))}
-    </div>
+    </Root>
   );
 };

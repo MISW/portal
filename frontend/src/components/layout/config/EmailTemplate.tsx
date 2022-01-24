@@ -1,11 +1,11 @@
 import React from "react";
-import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
-import InputLabel from "@material-ui/core/InputLabel";
-import MenuItem from "@material-ui/core/MenuItem";
-import FormControl from "@material-ui/core/FormControl";
-import Select from "@material-ui/core/Select";
-import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
-import ExpansionPanelActions from "@material-ui/core/ExpansionPanelActions";
+import { styled } from "@mui/material/styles";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
+import AccordionDetails from "@mui/material/AccordionDetails";
+import AccordionActions from "@mui/material/AccordionActions";
 import {
   Box,
   Button,
@@ -13,19 +13,26 @@ import {
   Typography,
   TextField,
   Grid,
-} from "@material-ui/core";
+} from "@mui/material";
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    formControl: {
-      margin: theme.spacing(1),
-      minWidth: 120,
-    },
-    box: {
-      width: "100%",
-    },
-  })
-);
+const PREFIX = "EmailTemplate";
+
+const classes = {
+  formControl: `${PREFIX}-formControl`,
+  box: `${PREFIX}-box`,
+};
+
+// TODO jss-to-styled codemod: The Fragment root was replaced by div. Change the tag if needed.
+const Root = styled("div")(({ theme: Theme }) => ({
+  [`& .${classes.formControl}`]: {
+    margin: Theme.spacing(1),
+    minWidth: 120,
+  },
+
+  [`& .${classes.box}`]: {
+    width: "100%",
+  },
+}));
 
 function EmailTemplate<T extends string>(param: {
   selected: string | undefined;
@@ -39,8 +46,6 @@ function EmailTemplate<T extends string>(param: {
   const { selected, options, values, setSelected, setValues, onClose, onSave } =
     param;
 
-  const classes = useStyles();
-
   const handleSelected = (event: React.ChangeEvent<{ value: unknown }>) => {
     setSelected(event.target.value as T);
   };
@@ -53,8 +58,8 @@ function EmailTemplate<T extends string>(param: {
   };
 
   return (
-    <>
-      <ExpansionPanelDetails>
+    <Root>
+      <AccordionDetails>
         <Box display="block" className={classes.box} ml={1} mr={1}>
           <Grid container spacing={1}>
             <Grid item xs={12}>
@@ -69,7 +74,7 @@ function EmailTemplate<T extends string>(param: {
                   labelId="period-select-label"
                   id="period-select-label"
                   value={selected ?? ""}
-                  onChange={handleSelected}
+                  onChange={(event) => handleSelected}
                 >
                   {options.map((p) => (
                     <MenuItem key={p.key} value={p.key}>
@@ -108,7 +113,7 @@ function EmailTemplate<T extends string>(param: {
                 }}
                 multiline={true}
                 rows={1}
-                rowsMax={10}
+                maxRows={10}
                 disabled={values === undefined}
                 value={values?.body ?? ""}
                 onChange={(event) => handleChange("body", event)}
@@ -116,17 +121,17 @@ function EmailTemplate<T extends string>(param: {
             </Grid>
           </Grid>
         </Box>
-      </ExpansionPanelDetails>
+      </AccordionDetails>
       <Divider />
-      <ExpansionPanelActions>
+      <AccordionActions>
         <Button size="small" onClick={onClose}>
           Cancel
         </Button>
         <Button size="small" color="primary" onClick={onSave}>
           Save
         </Button>
-      </ExpansionPanelActions>
-    </>
+      </AccordionActions>
+    </Root>
   );
 }
 
