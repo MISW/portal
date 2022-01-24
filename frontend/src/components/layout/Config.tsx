@@ -13,13 +13,13 @@ const classes = {
   heading: `${PREFIX}-heading`,
 };
 
-const Root = styled("div")(({ theme: Theme }) => ({
+const Root = styled("div")(({ theme }) => ({
   [`&.${classes.root}`]: {
     width: "100%",
   },
 
   [`& .${classes.heading}`]: {
-    fontSize: Theme.typography.pxToRem(15),
+    fontSize: theme.typography.pxToRem(15),
   },
 }));
 

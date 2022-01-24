@@ -30,7 +30,7 @@ const StyledNoSSR = styled(NoSSR)(({ theme }) => ({
     marginTop: theme.spacing(1),
     marginBottom: theme.spacing(3),
     padding: theme.spacing(2),
-    [theme.breakpoints.up(648)]: {
+    [theme.breakpoints.up(600)]: {
       marginTop: theme.spacing(6),
       marginBottom: theme.spacing(6),
       padding: theme.spacing(2),

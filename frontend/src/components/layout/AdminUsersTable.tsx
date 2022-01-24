@@ -39,14 +39,14 @@ const classes = {
   tableWrapper: `${PREFIX}-tableWrapper`,
 };
 
-const Root = styled("div")(({ theme: Theme }) => ({
+const Root = styled("div")(({ theme }) => ({
   [`& .${classes.root2}`]: {
     width: "100%",
   },
 
   [`& .${classes.paper}`]: {
     width: "100%",
-    marginBottom: Theme.spacing(2),
+    marginBottom: theme.spacing(2),
   },
 
   [`& .${classes.table}`]: {
@@ -187,7 +187,7 @@ function EnhancedTableHead(props: EnhancedTableProps) {
   );
 }
 
-const useToolbarStyles = makeStyles((theme: Theme) =>
+const useToolbarStyles = makeStyles((theme) =>
   createStyles({
     root: {
       paddingLeft: theme.spacing(2),
