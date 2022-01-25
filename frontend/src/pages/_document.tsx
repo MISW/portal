@@ -5,10 +5,15 @@ import Document, { Html, Head, Main, NextScript } from 'next/document';
 import ServerStyleSheets from '@mui/styles/ServerStyleSheets';
 
 export default class MyDocument extends Document {
-  render() {
+  render(): JSX.Element {
     return (
       <Html lang="ja" prefix="og: http://ogp.me/ns#">
-        <Head />
+        <Head>
+          <link
+            rel="stylesheet"
+            href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
+          />
+        </Head>
         <body>
           <Main />
           <NextScript />

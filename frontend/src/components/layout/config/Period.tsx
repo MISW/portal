@@ -66,7 +66,7 @@ const Period: React.FC<{
               labelId="period-select-label"
               id="period-select-label"
               value={selected && options.length !== 0 ? selected : ''}
-              onChange={(event) => handleChange}
+              onChange={() => handleChange}
             >
               {options.map((p) => (
                 <MenuItem key={p} value={p}>

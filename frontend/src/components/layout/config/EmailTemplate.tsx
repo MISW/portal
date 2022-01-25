@@ -42,7 +42,7 @@ function EmailTemplate<T extends string>(param: {
   setValues: (v: { subject: string; body: string } | undefined) => void;
   onClose: () => void;
   onSave: () => void;
-}) {
+}): JSX.Element {
   const { selected, options, values, setSelected, setValues, onClose, onSave } =
     param;
 
@@ -74,7 +74,7 @@ function EmailTemplate<T extends string>(param: {
                   labelId="period-select-label"
                   id="period-select-label"
                   value={selected ?? ''}
-                  onChange={(event) => handleSelected}
+                  onChange={() => handleSelected}
                 >
                   {options.map((p) => (
                     <MenuItem key={p.key} value={p.key}>
