@@ -13,6 +13,7 @@ import {
 import { CssBaseline, createTheme, adaptV4Theme } from '@mui/material';
 import { DefaultLayout } from 'components/layout/DefaultLayout';
 import { wrapper } from 'store';
+import { fetchCurrentUser, selectCurrentUser } from 'features/currentUser';
 import { useLogout } from 'features/auth';
 
 declare module '@mui/styles/defaultTheme' {
@@ -49,5 +50,19 @@ const App = (props: AppProps) => {
     </StyledEngineProvider>
   );
 };
+
+App.getInitialProps = wrapper.getInitialAppProps(
+  (store) =>
+    async ({ Component, ctx }) => {
+      const userInfo = selectCurrentUser(store.getState());
+      if (userInfo == null) await store.dispatch(fetchCurrentUser());
+
+      const pageProps = Component.getInitialProps
+        ? await Component.getInitialProps({ ...ctx })
+        : {};
+
+      return { pageProps };
+    },
+);
 
 export default wrapper.withRedux(App);
