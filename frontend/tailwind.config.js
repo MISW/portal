@@ -14,5 +14,4 @@ module.exports = {
       tsx: transformer("tsx"),
     },
   },
-  darkMode: "media",
 };

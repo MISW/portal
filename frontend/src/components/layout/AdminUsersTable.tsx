@@ -92,10 +92,13 @@ function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
 
 type Order = 'asc' | 'desc';
 
-function getComparator<Key extends keyof any>(
-  order: Order,
-  orderBy: Key,
-): (
+function getComparator<Key extends keyof never>({
+  order,
+  orderBy,
+}: {
+  order: Order;
+  orderBy: Key;
+}): (
   a: { [key in Key]: number | string },
   b: { [key in Key]: number | string },
 ) => number {
@@ -467,7 +470,7 @@ export const EnhancedTable: React.FC<{
               rowCount={rows.length}
             />
             <TableBody>
-              {stableSort(rows, getComparator(order, orderBy))
+              {stableSort(rows, getComparator({ order, orderBy }))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
                   const isItemSelected = isSelected(row.id);

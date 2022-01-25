@@ -16,7 +16,7 @@
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "ecmaFeatures": {"jsx": true},
-    "ecmaVersion": 2018,
+    "ecmaVersion": "latest",
     "sourceType": "module"
   },
   "plugins": [
@@ -29,8 +29,8 @@
   },
   "rules": {
     "linebreak-style": ["error", "unix"],
-    "@typescript-eslint/explicit-module-boundary-types": "off",
-    "@typescript-eslint/no-explicit-any": "off",
+    "@typescript-eslint/explicit-module-boundary-types": "warn",
+    "@typescript-eslint/no-explicit-any": "warn",
     "react/prop-types": "off",
     "react-hooks/rules-of-hooks": "error",
     "react-hooks/exhaustive-deps": "warn",
@@ -41,8 +41,8 @@
       "files": ["*.js"],
       "parserOptions": {"sourceType": "script"},
       "rules": {
-        "no-undef": "off",
-        "@typescript-eslint/no-var-requires": "off"
+        "no-undef": "warn",
+        "@typescript-eslint/no-var-requires": "warn"
       }
     }
   ]
