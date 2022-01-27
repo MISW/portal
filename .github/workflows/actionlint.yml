@@ -1,0 +1,13 @@
+name: actionlint
+
+on:
+  pull_request:
+    paths:
+      - .github/workflows/*
+
+jobs:
+  actionlint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: reviewdog/action-actionlint@v1

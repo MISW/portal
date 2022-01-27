@@ -1,0 +1,48 @@
+name: Add stats comment
+
+on:
+  workflow_run:
+    workflows:
+      - frontend
+    types:
+      - completed
+
+jobs:
+  add-stats-comment:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'pull_request' }}
+
+    steps:
+      - name: Download compared stats
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          workflow: frontend.yml
+          run_id: ${{ github.event.workflow_run.id }}
+          name: compared-stats
+      - name: Set pullrequest number
+        id: pr
+        run: echo "::set-output name=number::${{ github.event.workflow_run.pull_requests[0].number }}"
+      - name: Set comment body
+        id: body
+        run: |
+          body=$(cat compared-stats.md)
+          body="${body//'%'/'%25'}"
+          body="${body//$'\n'/'%0A'}"
+          body="${body//$'\r'/'%0D'}"
+          echo ::set-output name=body::$body
+      - name: Find comment
+        id: comment
+        uses: peter-evans/find-comment@v1
+        with:
+          issue-number: ${{ steps.pr.outputs.number }}
+          comment-author: "github-actions[bot]"
+          body-includes: "<!-- Build stats -->"
+      - name: Create or update comment
+        uses: peter-evans/create-or-update-comment@v1
+        with:
+          comment-id: ${{ steps.comment.outputs.comment-id }}
+          issue-number: ${{ steps.pr.outputs.number }}
+          body: |
+            <!-- Build stats -->
+            ${{ steps.body.outputs.body }}
+          edit-mode: replace
