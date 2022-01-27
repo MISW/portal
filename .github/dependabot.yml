@@ -5,6 +5,7 @@ updates:
     schedule:
       interval: daily
       time: "20:00"
+      timezone: "Asia/Tokyo"
     open-pull-requests-limit: 20
 
   - package-ecosystem: npm
@@ -12,6 +13,7 @@ updates:
     schedule:
       interval: daily
       time: "20:00"
+      timezone: "Asia/Tokyo"
     open-pull-requests-limit: 20
 
   - package-ecosystem: github-actions
@@ -19,6 +21,7 @@ updates:
     schedule:
       interval: daily
       time: "20:00"
+      timezone: "Asia/Tokyo"
     open-pull-requests-limit: 20
 
   - package-ecosystem: docker
@@ -26,6 +29,7 @@ updates:
     schedule:
       interval: daily
       time: "20:00"
+      timezone: "Asia/Tokyo"
     open-pull-requests-limit: 20
 
   - package-ecosystem: gomod
@@ -33,6 +37,7 @@ updates:
     schedule:
       interval: daily
       time: "20:00"
+      timezone: "Asia/Tokyo"
     open-pull-requests-limit: 20
 
   - package-ecosystem: gomod
@@ -40,4 +45,5 @@ updates:
     schedule:
       interval: daily
       time: "20:00"
+      timezone: "Asia/Tokyo"
     open-pull-requests-limit: 20
