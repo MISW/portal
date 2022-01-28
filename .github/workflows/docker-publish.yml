@@ -53,13 +53,18 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Downcase DOCKER_REPO
+        run: |
+          github_repo="${{ github.repository }}"
+          echo "DOCKER_REPO=${github_repo,,}" >> "${GITHUB_ENV}"
+
       # Extract metadata (tags, labels) for Docker
       # https://github.com/docker/metadata-action
       - name: Extract Docker metadata
         id: meta
         uses: docker/metadata-action@v3
         with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/${{ matrix.name }}
+          images: ${{ env.REGISTRY }}/${{ env.DOCKER_REPO }}/${{ matrix.name }}
           tags: |
             type=ref,event=branch
             type=sha
@@ -76,9 +81,9 @@ jobs:
           target: ${{ matrix.target }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          cache-from: ${{ format('type=registry,ref=ghcr.io/{0}/{1}:build-cache', env.IMAGE_NAME, matrix.name) }}
+          cache-from: ${{ format('type=registry,ref=ghcr.io/{0}/{1}:build-cache', env.DOCKER_REPO, matrix.name) }}
           cache-to: |
             ${{
-               (github.actor != 'dependabot[bot]' && format('type=registry,ref=ghcr.io/{0}/{1}:build-cache,mode=max', env.IMAGE_NAME, matrix.name))
+               (github.actor != 'dependabot[bot]' && format('type=registry,ref=ghcr.io/{0}/{1}:build-cache,mode=max', env.DOCKER_REPO, matrix.name))
             || (github.actor == 'dependabot[bot]' && 'type=inline')
             }}1
