@@ -1,4 +1,4 @@
-name: Go Backend
+name: backend
 
 on:
   push:
@@ -28,12 +28,14 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+
       - name: Install mysqldef
         run: |
           wget https://github.com/k0kubun/sqldef/releases/download/v0.11.30/mysqldef_linux_amd64.tar.gz
-          tar zxf mysqldef_linux_amd64.tar.gz
+          tar xvf mysqldef_linux_amd64.tar.gz
           chmod +x mysqldef
           mv mysqldef /usr/local/bin
+
       - name: Run backend tests
         working-directory: backend
         run: |
