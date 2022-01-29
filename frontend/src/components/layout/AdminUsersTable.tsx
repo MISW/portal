@@ -295,6 +295,7 @@ const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
               id="other-operations"
               elevation={0}
               keepMounted
+              anchorEl={anchorEl}
               open={Boolean(anchorEl)}
               onClose={handleClose(null)}
               anchorOrigin={{
