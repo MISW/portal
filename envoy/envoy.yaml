@@ -32,7 +32,7 @@ static_resources:
                           route:
                             cluster: next_backend
                 http_filters:
-                  - name: envoy.filters.http.router
+                  - name: envoy.router
                 upgrade_configs: 
                 - upgrade_type: websocket 
 
