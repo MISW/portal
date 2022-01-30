@@ -106,7 +106,7 @@ export const DefaultLayout: React.FC<{ onLogout: () => void }> = ({
           <AppBar
             position="fixed"
             color="primary"
-            enableColorOnDark="true"
+            enableColorOnDark
             className={classes.appBar}
           >
             <Toolbar>
