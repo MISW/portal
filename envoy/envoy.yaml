@@ -4,6 +4,7 @@ admin:
     socket_address:
       address: 127.0.0.1
       port_value: 9000
+
 static_resources:
   listeners:
     - name: listener_0
@@ -24,34 +25,21 @@ static_resources:
                       domains: ["*"]
                       routes:
                         - match:
-                            prefix: "/api/"
-                          route:
-                            cluster: apiserver_backend
-                        - match:
                             prefix: "/"
                           route:
                             cluster: next_backend
+                        - match:
+                            prefix: "/api/"
+                          route:
+                            cluster: apiserver_backend
                 http_filters:
                   - name: envoy.router
-                upgrade_configs: 
-                - upgrade_type: websocket 
-
+                upgrade_configs:
+                  - upgrade_type: websocket
   clusters:
-    - name: apiserver_backend
-      type: STRICT_DNS
-      connect_timeout: 0.25s
-      load_assignment:
-        cluster_name: apiserver_backend
-        endpoints:
-          - lb_endpoints:
-              - endpoint:
-                  address:
-                    socket_address:
-                      address: backend
-                      port_value: 80
     - name: next_backend
       type: STRICT_DNS
-      connect_timeout: 10s
+      connect_timeout: 20s
       load_assignment:
         cluster_name: next_backend
         endpoints:
@@ -61,3 +49,15 @@ static_resources:
                     socket_address:
                       address: frontend
                       port_value: 3000
+    - name: apiserver_backend
+      type: STRICT_DNS
+      connect_timeout: 0.5s
+      load_assignment:
+        cluster_name: apiserver_backend
+        endpoints:
+          - lb_endpoints:
+              - endpoint:
+                  address:
+                    socket_address:
+                      address: backend
+                      port_value: 8
