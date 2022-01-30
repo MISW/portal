@@ -201,7 +201,8 @@ export const DefaultLayout: React.FC<{ onLogout: () => void }> = ({
                 })()}
             </Toolbar>
           </AppBar>
-          <Toolbar /*このToolBarがないと、header(AppBarタグ(中のToolBar))がmainタグの上に覆い被さる。参考: https://mui.com/components/app-bar/*/ />
+          <Toolbar /*このToolBarがないと、header(AppBarタグ(中のToolBar))がmainタグの上に覆い被さる。参考: https://mui.com/components/app-bar/*/
+          />
           <main className={classes.layout}>
             <Container className="mt-2" maxWidth="xl">
               <>{children}</>
