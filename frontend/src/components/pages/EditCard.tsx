@@ -67,7 +67,7 @@ export const EditCard: React.VFC<{
   }, [imageURL]);
 
   return (
-    <div className="mx-auto mt-8 w-full max-w-screen-lg flex flex-col space-y-4">
+    <div className="mx-auto w-full max-w-screen-lg flex flex-col space-y-4">
       <h2 className="mx-4 text-4xl">会員証</h2>
       {user != null && (
         <div className="flex flex-col space-y-4">
