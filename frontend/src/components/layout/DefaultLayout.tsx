@@ -103,7 +103,12 @@ export const DefaultLayout: React.FC<{ onLogout: () => void }> = ({
       <ThemeProvider theme={scheme === 'dark' ? darktheme : lighttheme}>
         <CssBaseline />
         <div>
-          <AppBar position="fixed" color="primary" enableColorOnDark="true" className={classes.appBar}>
+          <AppBar
+            position="fixed"
+            color="primary"
+            enableColorOnDark="true"
+            className={classes.appBar}
+          >
             <Toolbar>
               <div className={classes.title}>
                 <NextLink href="/" passHref>
