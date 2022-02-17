@@ -9,7 +9,10 @@
   "singleQuote": true,
   "semi": true,
   "useTabs": false,
-  "importOrder": ["^@core/(.*)$", "^@server/(.*)$", "^@ui/(.*)$", "^[./]"],
+  "importOrder": ["^@core/(.*)$", "^@emotion/(.*)$", "^@fortawesome/(.*)$", "^@mui/(.*)$", "^@reduxjs/(.*)$", "^@server/(.*)$", "^@ui/(.*)$", "^[./]"],
   "importOrderSeparation": true,
-  "importOrderSortSpecifiers": true
+  "importOrderSortSpecifiers": true,
+  "importOrderGroupNamespaceSpecifiers": true,
+  "importOrderCaseInsensitive": false,
+  "importOrderParserPlugins" : ["typescript", "jsx"]
 }
