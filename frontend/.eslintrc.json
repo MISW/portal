@@ -34,7 +34,8 @@
     "react/prop-types": "warn",
     "react-hooks/rules-of-hooks": "error",
     "react-hooks/exhaustive-deps": "warn",
-    "no-irregular-whitespace": "warn"
+    "no-irregular-whitespace": "warn",
+    "react/jsx-key": ["warn", { "checkFragmentShorthand": true }]
   },
   "overrides":[
     {
