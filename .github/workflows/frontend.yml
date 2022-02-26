@@ -3,10 +3,10 @@ name: frontend
 on:
   push:
     branches:
-      - master
+      - main
   pull_request:
     paths:
-      - "frontend/**"
+      - frontend/**
 
 defaults:
   run:
