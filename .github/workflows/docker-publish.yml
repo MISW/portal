@@ -6,14 +6,15 @@ name: Docker
 # documentation.
 
 on:
-  push
+  push:
+    branches:
+      - master
 
 env:
   # Use docker.io for Docker Hub if empty
   REGISTRY: ghcr.io
   # github.repository as <account>/<repo>
   IMAGE_NAME: ${{ github.repository }}
-
 
 jobs:
   build:
@@ -68,7 +69,6 @@ jobs:
           tags: |
             type=raw,value=latest,enable=${{ github.ref == format('refs/heads/{0}', github.event.repository.default_branch) }}
             type=ref,event=branch
-            type=ref,event=tag
             type=sha,format=long
 
       # Build and push Docker image with Buildx (don't push on PR)
