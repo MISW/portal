@@ -3,10 +3,10 @@ name: backend
 on:
   push:
     branches:
-      - master
+      - main
   pull_request:
     paths:
-      - "backend/**"
+      - backend/**
 
 jobs:
   build:
