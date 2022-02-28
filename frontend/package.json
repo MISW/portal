@@ -23,7 +23,7 @@
     "@mui/icons-material": "^5.4.2",
     "@mui/material": "^5.4.3",
     "@mui/styles": "^5.4.2",
-    "@reduxjs/toolkit": "^1.7.2",
+    "@reduxjs/toolkit": "^1.8.0",
     "clsx": "^1.1.1",
     "focus-visible": "^5.2.0",
     "ky": "^0.29.0",
