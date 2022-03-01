@@ -60,6 +60,6 @@
     "prettier": "^2.5.1",
     "tailwind-variant.macro": "^0.0.2",
     "type-fest": "^2.12.0",
-    "typescript": "^4.5.5"
+    "typescript": "^4.6.2"
   }
 }
