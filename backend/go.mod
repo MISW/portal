@@ -14,7 +14,7 @@ require (
 	github.com/labstack/echo/v4 v4.6.3
 	github.com/labstack/gommon v0.3.1
 	github.com/slack-go/slack v0.10.2
-	go.uber.org/dig v1.13.0
+	go.uber.org/dig v1.14.0
 	golang.org/x/crypto v0.0.0-20220214200702-86341886e292
 	golang.org/x/net v0.0.0-20220127200216-cd36cc0744dd
 	golang.org/x/oauth2 v0.0.0-20220223155221-ee480838109b
