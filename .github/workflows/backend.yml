@@ -26,7 +26,7 @@ jobs:
         DATABASE_URL: "root:password@tcp(mysql)/?parseTime=true&multiStatements=true"
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Install mysqldef
         run: |
