@@ -60,28 +60,14 @@ export type UserWithPaymentJSON = UserAllInfoJSON & {
   payment_status?: PaymentStatus;
 };
 
-export type UserInfoJSON = Omit<
-  UserAllInfoJSON,
-  | 'slack_id'
-  | 'role'
-  | 'slack_invitation_status'
-  | 'created_at'
-  | 'email_verified'
-  | 'updated_at'
-  | 'id'
-> & {
+export type UserInfoJSON = Omit<UserAllInfoJSON, 'slack_id' | 'role' | 'slack_invitation_status' | 'created_at' | 'email_verified' | 'updated_at' | 'id'> & {
   id?: number;
   role?: RoleType;
 };
 
 export type ConfigurableProfile = Omit<
   UserInfoJSON,
-  | 'other_circles'
-  | 'emergency_phone_number'
-  | 'student_id'
-  | 'university'
-  | 'discord_id'
-  | 'slack_invitation_status'
+  'other_circles' | 'emergency_phone_number' | 'student_id' | 'university' | 'discord_id' | 'slack_invitation_status'
 > & {
   otherCircles: UserAllInfoJSON['other_circles'];
   emergencyPhoneNumber: UserAllInfoJSON['emergency_phone_number'];
@@ -165,24 +151,84 @@ export const toUserTableData = (j: UserWithPaymentJSON) => ({
 export type UserTableData = ReturnType<typeof toUserTableData>;
 
 export const labelsInJapanese = [
-  { id: 'id', label: 'ID' },
-  { id: 'generation', label: '代' },
-  { id: 'handle', label: 'ハンドル' },
-  { id: 'paid', label: '支払済' },
-  { id: 'authorizer', label: '納入確認者' },
-  { id: 'role', label: '権限' },
-  { id: 'name', label: '氏名' },
-  { id: 'kana', label: 'カナ' },
-  { id: 'sex', label: '性別' },
-  { id: 'univName', label: '大学名' },
-  { id: 'department', label: '学部' },
-  { id: 'subject', label: '学科' },
-  { id: 'studentId', label: '学籍番号' },
-  { id: 'email', label: 'Email' },
-  { id: 'emergencyPhoneNumber', label: '緊急連絡先' },
-  { id: 'workshops', label: '研究会' },
-  { id: 'squads', label: '班' },
-  { id: 'otherCircles', label: '他サークル' },
-  { id: 'slackId', label: 'Slack ID' },
-  { id: 'discordId', label: 'Discord ID' },
+  {
+    id: 'id',
+    label: 'ID',
+  },
+  {
+    id: 'generation',
+    label: '代',
+  },
+  {
+    id: 'handle',
+    label: 'ハンドル',
+  },
+  {
+    id: 'paid',
+    label: '支払済',
+  },
+  {
+    id: 'authorizer',
+    label: '納入確認者',
+  },
+  {
+    id: 'role',
+    label: '権限',
+  },
+  {
+    id: 'name',
+    label: '氏名',
+  },
+  {
+    id: 'kana',
+    label: 'カナ',
+  },
+  {
+    id: 'sex',
+    label: '性別',
+  },
+  {
+    id: 'univName',
+    label: '大学名',
+  },
+  {
+    id: 'department',
+    label: '学部',
+  },
+  {
+    id: 'subject',
+    label: '学科',
+  },
+  {
+    id: 'studentId',
+    label: '学籍番号',
+  },
+  {
+    id: 'email',
+    label: 'Email',
+  },
+  {
+    id: 'emergencyPhoneNumber',
+    label: '緊急連絡先',
+  },
+  {
+    id: 'workshops',
+    label: '研究会',
+  },
+  {
+    id: 'squads',
+    label: '班',
+  },
+  {
+    id: 'otherCircles',
+    label: '他サークル',
+  },
+  {
+    id: 'slackId',
+    label: 'Slack ID',
+  },
+  {
+    id: 'discordId',
+    label: 'Discord ID',
+  },
 ];

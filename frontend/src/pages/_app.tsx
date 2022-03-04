@@ -5,11 +5,7 @@ import 'focus-visible';
 import React, { useEffect } from 'react';
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
-import {
-  ThemeProvider,
-  Theme,
-  StyledEngineProvider,
-} from '@mui/material/styles';
+import { ThemeProvider, Theme, StyledEngineProvider } from '@mui/material/styles';
 import { CssBaseline, createTheme, adaptV4Theme } from '@mui/material';
 import { DefaultLayout } from 'components/layout/DefaultLayout';
 import { wrapper } from 'store';
@@ -37,10 +33,7 @@ const App = (props: AppProps) => {
       <ThemeProvider theme={createTheme(adaptV4Theme({}))}>
         <Head>
           <title>MISW Portal</title>
-          <meta
-            name="viewport"
-            content="initial-scale=1.0,width=device-width"
-          />
+          <meta name="viewport" content="initial-scale=1.0,width=device-width" />
         </Head>
         <CssBaseline />
         <DefaultLayout onLogout={handleLogout}>
@@ -51,18 +44,19 @@ const App = (props: AppProps) => {
   );
 };
 
-App.getInitialProps = wrapper.getInitialAppProps(
-  (store) =>
-    async ({ Component, ctx }) => {
-      const userInfo = selectCurrentUser(store.getState());
-      if (userInfo == null) await store.dispatch(fetchCurrentUser());
+App.getInitialProps = wrapper.getInitialAppProps((store) => async ({ Component, ctx }) => {
+  const userInfo = selectCurrentUser(store.getState());
+  if (userInfo == null) await store.dispatch(fetchCurrentUser());
 
-      const pageProps = Component.getInitialProps
-        ? await Component.getInitialProps({ ...ctx })
-        : {};
+  const pageProps = Component.getInitialProps
+    ? await Component.getInitialProps({
+        ...ctx,
+      })
+    : {};
 
-      return { pageProps };
-    },
-);
+  return {
+    pageProps,
+  };
+});
 
 export default wrapper.withRedux(App);

@@ -1,11 +1,4 @@
-import {
-  createAction,
-  createAsyncThunk,
-  AsyncThunk,
-  AsyncThunkPayloadCreator,
-  ThunkAction,
-  AnyAction,
-} from '@reduxjs/toolkit';
+import { createAction, createAsyncThunk, AsyncThunk, AsyncThunkPayloadCreator, ThunkAction, AnyAction } from '@reduxjs/toolkit';
 import { HYDRATE } from 'next-redux-wrapper';
 import { RootState, AppDispatch, ExtraArgument } from './store';
 
@@ -18,17 +11,16 @@ type DefaultThunkApiConfig = Readonly<{
   rejectValue?: unknown;
 }>;
 
-type CreateAppAsyncThunk = <
-  Returned,
-  ThunkArg = void,
-  ThunkApiConfig = DefaultThunkApiConfig,
->(
+type CreateAppAsyncThunk = <Returned, ThunkArg = void, ThunkApiConfig = DefaultThunkApiConfig>(
   typePrefix: string,
   payloadCreator: AsyncThunkPayloadCreator<Returned, ThunkArg, ThunkApiConfig>,
   options?: Readonly<{
     condition?: (
       arg: ThunkArg,
-      api: Readonly<{ getState: () => RootState; extra: ExtraArgument }>,
+      api: Readonly<{
+        getState: () => RootState;
+        extra: ExtraArgument;
+      }>,
     ) => boolean | undefined;
     dispatchConditionRejection?: boolean;
   }>,
@@ -36,11 +28,6 @@ type CreateAppAsyncThunk = <
 
 export const createAppAsyncThunk = createAsyncThunk as CreateAppAsyncThunk;
 
-export type AppThunk<R = void> = ThunkAction<
-  Promise<R>,
-  RootState,
-  ExtraArgument,
-  AnyAction
->;
+export type AppThunk<R = void> = ThunkAction<Promise<R>, RootState, ExtraArgument, AnyAction>;
 
 export type Selector<A> = (state: RootState) => A;

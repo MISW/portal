@@ -20,16 +20,11 @@ const Page: NextPage = () => {
   }
 
   if (error != null || httpError != null) {
-    const message = error
-      ? 'tokenがありません'
-      : httpError instanceof Error
-      ? `${httpError.name}: ${httpError.message}`
-      : '不明なエラー';
+    const message = error ? 'tokenがありません' : httpError instanceof Error ? `${httpError.name}: ${httpError.message}` : '不明なエラー';
     return (
       <Alert severity="error">
         <AlertTitle>エラーが発生しました: {message}</AlertTitle>
-        info@misw.jp や Twitter @misw_info または
-        Discordへ問題を報告してください....
+        info@misw.jp や Twitter @misw_info または Discordへ問題を報告してください....
       </Alert>
     );
   }

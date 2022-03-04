@@ -4,15 +4,7 @@ import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles';
-import {
-  IconButton,
-  MenuItem,
-  Menu,
-  Container,
-  Tooltip,
-  CssBaseline,
-  Avatar,
-} from '@mui/material';
+import { IconButton, MenuItem, Menu, Container, Tooltip, CssBaseline, Avatar } from '@mui/material';
 import { AccountCircle, Lock } from '@mui/icons-material';
 import MUILink from '@mui/material/Link';
 import lighttheme from '../theme/lighttheme';
@@ -32,35 +24,33 @@ const classes = {
   title: `${PREFIX}-title`,
 };
 
-const StyledStyledEngineProvider = styled(StyledEngineProvider)(
-  ({ theme }) => ({
-    [`& .${classes.appBar}`]: {
-      position: 'relative',
-      flexGrow: 1,
-    },
+const StyledStyledEngineProvider = styled(StyledEngineProvider)(({ theme }) => ({
+  [`& .${classes.appBar}`]: {
+    position: 'relative',
+    flexGrow: 1,
+  },
 
-    [`& .${classes.menuButton}`]: {
-      marginRight: theme.spacing(2),
-    },
+  [`& .${classes.menuButton}`]: {
+    marginRight: theme.spacing(2),
+  },
 
-    [`& .${classes.layout}`]: {
-      width: 'auto',
-      marginTop: theme.spacing(6),
-      marginBottom: theme.spacing(6),
-      marginLeft: theme.spacing(2),
-      marginRight: theme.spacing(2),
-      [theme.breakpoints.up('sm')]: {
-        // width: 600,
-        marginLeft: 'auto',
-        marginRight: 'auto',
-      },
+  [`& .${classes.layout}`]: {
+    width: 'auto',
+    marginTop: theme.spacing(6),
+    marginBottom: theme.spacing(6),
+    marginLeft: theme.spacing(2),
+    marginRight: theme.spacing(2),
+    [theme.breakpoints.up('sm')]: {
+      // width: 600,
+      marginLeft: 'auto',
+      marginRight: 'auto',
     },
+  },
 
-    [`& .${classes.title}`]: {
-      flexGrow: 1,
-    },
-  }),
-);
+  [`& .${classes.title}`]: {
+    flexGrow: 1,
+  },
+}));
 
 const Copyright: React.FC = () => {
   return (
@@ -75,10 +65,9 @@ const Copyright: React.FC = () => {
   );
 };
 
-export const DefaultLayout: React.FC<{ onLogout: () => void }> = ({
-  children,
-  onLogout,
-}) => {
+export const DefaultLayout: React.FC<{
+  onLogout: () => void;
+}> = ({ children, onLogout }) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const currentUser = useSelector(selectCurrentUser);
@@ -103,21 +92,11 @@ export const DefaultLayout: React.FC<{ onLogout: () => void }> = ({
       <ThemeProvider theme={scheme === 'dark' ? darktheme : lighttheme}>
         <CssBaseline />
         <div>
-          <AppBar
-            position="fixed"
-            color="primary"
-            enableColorOnDark
-            className={classes.appBar}
-          >
+          <AppBar position="fixed" color="primary" enableColorOnDark className={classes.appBar}>
             <Toolbar>
               <div className={classes.title}>
                 <NextLink href="/" passHref>
-                  <MUILink
-                    variant="h6"
-                    color="inherit"
-                    underline="hover"
-                    align="center"
-                  >
+                  <MUILink variant="h6" color="inherit" underline="hover" align="center">
                     みすポータル
                   </MUILink>
                 </NextLink>
@@ -125,17 +104,16 @@ export const DefaultLayout: React.FC<{ onLogout: () => void }> = ({
               {currentUser &&
                 (() => {
                   const { generation, role, handle, avatar } = currentUser;
-                  const status =
-                    role === 'member' || role === 'retired'
-                      ? `${generation}${getSuffix(generation)}`
-                      : role;
+                  const status = role === 'member' || role === 'retired' ? `${generation}${getSuffix(generation)}` : role;
                   return (
                     <>
                       <Typography
                         variant="h6"
                         color="inherit"
                         align="right"
-                        sx={{ flexGrow: 1 }}
+                        sx={{
+                          flexGrow: 1,
+                        }}
                       >
                         {` ${handle} (${status}) `}
                       </Typography>
@@ -143,14 +121,7 @@ export const DefaultLayout: React.FC<{ onLogout: () => void }> = ({
                         {role === 'admin' && (
                           <NextLink href="/admin" passHref>
                             <Tooltip title="管理者" placement="right-end">
-                              <IconButton
-                                component="a"
-                                aria-label="admin"
-                                aria-controls="menu-appbar"
-                                aria-haspopup="true"
-                                color="secondary"
-                                size="large"
-                              >
+                              <IconButton component="a" aria-label="admin" aria-controls="menu-appbar" aria-haspopup="true" color="secondary" size="large">
                                 <Lock />
                               </IconButton>
                             </Tooltip>
@@ -166,11 +137,7 @@ export const DefaultLayout: React.FC<{ onLogout: () => void }> = ({
                             color="inherit"
                             size="large"
                           >
-                            {avatar != null ? (
-                              <Avatar alt={handle} src={avatar.thumbnailUrl} />
-                            ) : (
-                              <AccountCircle />
-                            )}
+                            {avatar != null ? <Avatar alt={handle} src={avatar.thumbnailUrl} /> : <AccountCircle />}
                           </IconButton>
                         </Tooltip>
                         <Menu
@@ -206,8 +173,7 @@ export const DefaultLayout: React.FC<{ onLogout: () => void }> = ({
                 })()}
             </Toolbar>
           </AppBar>
-          <Toolbar /*このToolBarがないと、header(AppBarタグ(中のToolBar))がmainタグの上に覆い被さる。参考: https://mui.com/components/app-bar/*/
-          />
+          <Toolbar /*このToolBarがないと、header(AppBarタグ(中のToolBar))がmainタグの上に覆い被さる。参考: https://mui.com/components/app-bar/*/ />
           <main className={classes.layout}>
             <Container className="mt-2" maxWidth="xl">
               <>{children}</>

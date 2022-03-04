@@ -7,11 +7,7 @@ import { SexType } from '../../user';
 import { UserProfileHooks, FormContentProps } from '../../hooks/formHooks';
 import { Alert } from '@mui/material';
 
-const NameField: React.FC<FormContentProps<string>> = ({
-  value,
-  onChange,
-  error,
-}) => {
+const NameField: React.FC<FormContentProps<string>> = ({ value, onChange, error }) => {
   const nameArray = value.split(/\s+/);
   const lastName = nameArray[0] ?? '';
   const firstName = nameArray[1] ?? '';
@@ -54,11 +50,7 @@ const NameField: React.FC<FormContentProps<string>> = ({
   );
 };
 
-const KanaNameField: React.FC<FormContentProps<string>> = ({
-  value,
-  onChange,
-  error,
-}) => {
+const KanaNameField: React.FC<FormContentProps<string>> = ({ value, onChange, error }) => {
   const nameArray = value.split(/\s+/);
   const lastName = nameArray[0] ?? '';
   const firstName = nameArray[1] ?? '';
@@ -102,10 +94,7 @@ const KanaNameField: React.FC<FormContentProps<string>> = ({
   );
 };
 
-const GenderField: React.FC<FormContentProps<SexType>> = ({
-  value,
-  onChange,
-}) => {
+const GenderField: React.FC<FormContentProps<SexType>> = ({ value, onChange }) => {
   return (
     <Grid item xs={12} sm={6}>
       <FormControl component="fieldset">
@@ -121,18 +110,8 @@ const GenderField: React.FC<FormContentProps<SexType>> = ({
           }}
         >
           <Grid container>
-            <FormControlLabel
-              value="female"
-              control={<Radio color="primary" />}
-              label="女"
-              labelPlacement="end"
-            />
-            <FormControlLabel
-              value="male"
-              control={<Radio color="primary" />}
-              label="男"
-              labelPlacement="end"
-            />
+            <FormControlLabel value="female" control={<Radio color="primary" />} label="女" labelPlacement="end" />
+            <FormControlLabel value="male" control={<Radio color="primary" />} label="男" labelPlacement="end" />
           </Grid>
         </RadioGroup>
       </FormControl>
@@ -140,11 +119,7 @@ const GenderField: React.FC<FormContentProps<SexType>> = ({
   );
 };
 
-const PhoneNumberField: React.FC<FormContentProps<string>> = ({
-  value,
-  onChange,
-  error,
-}) => {
+const PhoneNumberField: React.FC<FormContentProps<string>> = ({ value, onChange, error }) => {
   return (
     <Grid item xs={12} sm={6}>
       <TextField
@@ -165,11 +140,7 @@ const PhoneNumberField: React.FC<FormContentProps<string>> = ({
   );
 };
 
-const EmailField: React.FC<FormContentProps<string>> = ({
-  value,
-  onChange,
-  error,
-}) => {
+const EmailField: React.FC<FormContentProps<string>> = ({ value, onChange, error }) => {
   return (
     <Grid item xs={12}>
       <TextField
@@ -202,7 +173,12 @@ const FundamentalInfo: React.FC<{
           <PhoneNumberField {...emergencyPhoneNumber} />
           <EmailField {...email} />
         </Grid>
-        <Alert severity="info" style={{ width: '100%' }}>
+        <Alert
+          severity="info"
+          style={{
+            width: '100%',
+          }}
+        >
           大学に提出する資料に必要な情報です。
           <br />
           それ以外の目的で了承なく情報を使うことはありません。

@@ -2,19 +2,7 @@ import React from 'react';
 import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import {
-  FormControl,
-  FormLabel,
-  RadioGroup,
-  Radio,
-  InputLabel,
-  Select,
-  MenuItem,
-  Checkbox,
-  ListItemText,
-  Input,
-  FormHelperText,
-} from '@mui/material';
+import { FormControl, FormLabel, RadioGroup, Radio, InputLabel, Select, MenuItem, Checkbox, ListItemText, Input, FormHelperText } from '@mui/material';
 import { UserProfileHooks, FormContentProps } from '../../hooks/formHooks';
 import { Alert } from '@mui/material';
 
@@ -26,11 +14,7 @@ export const GenerationSelector: React.FC<
 > = ({ value, onChange, genFirstYear, formType }) => {
   return (
     <Grid item xs={12}>
-      <FormControl
-        component="fieldset"
-        required
-        disabled={formType === 'setting'}
-      >
+      <FormControl component="fieldset" required disabled={formType === 'setting'}>
         <FormLabel component="legend">代</FormLabel>
         <RadioGroup
           aria-label="gender"
@@ -41,17 +25,9 @@ export const GenerationSelector: React.FC<
           }}
         >
           <Grid container>
-            {[genFirstYear, genFirstYear - 1, genFirstYear - 2].map(
-              (y: number, i: number) => (
-                <FormControlLabel
-                  value={y}
-                  key={y}
-                  control={<Radio color="primary" />}
-                  label={`${y}代 (学部${i + 1}年)`}
-                  labelPlacement="end"
-                />
-              ),
-            )}
+            {[genFirstYear, genFirstYear - 1, genFirstYear - 2].map((y: number, i: number) => (
+              <FormControlLabel value={y} key={y} control={<Radio color="primary" />} label={`${y}代 (学部${i + 1}年)`} labelPlacement="end" />
+            ))}
           </Grid>
         </RadioGroup>
       </FormControl>
@@ -59,11 +35,7 @@ export const GenerationSelector: React.FC<
   );
 };
 
-export const HandleNameForm: React.FC<FormContentProps<string>> = ({
-  value,
-  error,
-  onChange,
-}) => {
+export const HandleNameForm: React.FC<FormContentProps<string>> = ({ value, error, onChange }) => {
   return (
     <Grid item xs={12} sm={6}>
       <TextField
@@ -82,15 +54,9 @@ export const HandleNameForm: React.FC<FormContentProps<string>> = ({
     </Grid>
   );
 };
-export const WorkshopsForm: React.FC<FormContentProps<Array<string>>> = ({
-  value,
-  error,
-  onChange,
-}) => {
+export const WorkshopsForm: React.FC<FormContentProps<Array<string>>> = ({ value, error, onChange }) => {
   const allWorkshops = ['プログラミング', 'CG', 'MIDI'];
-  const workshops = new Set(
-    value.filter((s: string) => allWorkshops.includes(s)),
-  );
+  const workshops = new Set(value.filter((s: string) => allWorkshops.includes(s)));
 
   return (
     <Grid item xs={12}>
@@ -118,20 +84,13 @@ export const WorkshopsForm: React.FC<FormContentProps<Array<string>>> = ({
             </MenuItem>
           ))}
         </Select>
-        {error && (
-          <FormHelperText>
-            少なくとも１つの研究会を選択してください
-          </FormHelperText>
-        )}
+        {error && <FormHelperText>少なくとも１つの研究会を選択してください</FormHelperText>}
       </FormControl>
     </Grid>
   );
 };
 
-export const SquadsForm: React.FC<FormContentProps<Array<string>>> = ({
-  value,
-  onChange,
-}) => (
+export const SquadsForm: React.FC<FormContentProps<Array<string>>> = ({ value, onChange }) => (
   <Grid item xs={12}>
     <TextField
       id="squads"
@@ -146,27 +105,13 @@ export const SquadsForm: React.FC<FormContentProps<Array<string>>> = ({
   </Grid>
 );
 
-export const OtherCircleForm: React.FC<FormContentProps<string>> = ({
-  value,
-  onChange,
-}) => (
+export const OtherCircleForm: React.FC<FormContentProps<string>> = ({ value, onChange }) => (
   <Grid item xs={12}>
-    <TextField
-      id="otherCircle"
-      name="otherCircle`"
-      label="ほか所属サークル"
-      fullWidth
-      defaultValue={value}
-      onChange={(e) => onChange(e.target.value)}
-    />
+    <TextField id="otherCircle" name="otherCircle`" label="ほか所属サークル" fullWidth defaultValue={value} onChange={(e) => onChange(e.target.value)} />
   </Grid>
 );
 
-export const DiscordIdForm: React.FC<FormContentProps<string>> = ({
-  value,
-  onChange,
-  error,
-}) => (
+export const DiscordIdForm: React.FC<FormContentProps<string>> = ({ value, onChange, error }) => (
   <Grid item xs={12}>
     <TextField
       id="other_id"
@@ -185,25 +130,22 @@ const CircleInfo: React.FC<{
   userHooks: UserProfileHooks;
   genFirstYear: number;
   formType: 'setting' | 'new';
-}> = ({
-  userHooks: { generation, handle, workshops, otherCircles, squads, discordId },
-  genFirstYear,
-  formType,
-}) => {
+}> = ({ userHooks: { generation, handle, workshops, otherCircles, squads, discordId }, genFirstYear, formType }) => {
   return (
     <React.Fragment>
       <Grid container spacing={3}>
-        <GenerationSelector
-          genFirstYear={genFirstYear}
-          {...generation}
-          formType={formType}
-        />
+        <GenerationSelector genFirstYear={genFirstYear} {...generation} formType={formType} />
         <HandleNameForm {...handle} />
         <WorkshopsForm {...workshops} />
         <SquadsForm {...squads} />
         <OtherCircleForm {...otherCircles} />
         <DiscordIdForm {...discordId} />
-        <Alert severity="info" style={{ width: '100%' }}>
+        <Alert
+          severity="info"
+          style={{
+            width: '100%',
+          }}
+        >
           ここで入力した情報は代以外あとで変えることが出来ます。
           <br />
           研究会/班は現在興味のあるものを選択してください。

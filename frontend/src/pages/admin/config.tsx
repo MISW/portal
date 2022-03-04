@@ -3,21 +3,12 @@ import { NextPage } from 'next';
 import { Config } from 'components/layout/Config';
 import Period from 'components/layout/config/Period';
 import EmailTemplate from 'components/layout/config/EmailTemplate';
-import {
-  usePaymentPeriodConfig,
-  useCurrentPeriodConfig,
-  useEmailTemplateConfig,
-  EmailTemplate as EmailTemplateType,
-} from 'hooks/appConfig';
+import { usePaymentPeriodConfig, useCurrentPeriodConfig, useEmailTemplateConfig, EmailTemplate as EmailTemplateType } from 'hooks/appConfig';
 import { calcPeriod } from 'utils';
 import { withLogin } from 'middlewares/withLogin';
 import { NoSSR } from 'components/utils/NoSSR';
 
-const usePaymentPeriodNode = (
-  paymentPeriod: number | undefined,
-  setPaymentPeriod: (period: number) => Promise<void>,
-  optionsForPayment: number[],
-) => {
+const usePaymentPeriodNode = (paymentPeriod: number | undefined, setPaymentPeriod: (period: number) => Promise<void>, optionsForPayment: number[]) => {
   const [expanded, setExpanded] = useState<boolean>(false);
   const [selected, setSelected] = useState<number | undefined>(paymentPeriod);
 
@@ -49,11 +40,7 @@ const usePaymentPeriodNode = (
   };
 };
 
-const useCurrentPeriodNode = (
-  currentPeriod: number | undefined,
-  setCurrentPeriod: (period: number) => Promise<void>,
-  optionsForCurrent: number[],
-) => {
+const useCurrentPeriodNode = (currentPeriod: number | undefined, setCurrentPeriod: (period: number) => Promise<void>, optionsForCurrent: number[]) => {
   const [expanded, setExpanded] = useState<boolean>(false);
   const [selected, setSelected] = useState<number | undefined>(currentPeriod);
 
@@ -86,14 +73,19 @@ const useCurrentPeriodNode = (
 };
 
 const useEmailTemplateNode = () => {
-  type KindType =
-    | 'email_verification'
-    | 'slack_invitation'
-    | 'after_registration'
-    | 'payment_reminder';
-  const options: { key: KindType; label: string }[] = [
-    { key: 'email_verification', label: 'Eメール認証' },
-    { key: 'slack_invitation', label: 'Slack招待時の同時送信メール' },
+  type KindType = 'email_verification' | 'slack_invitation' | 'after_registration' | 'payment_reminder';
+  const options: {
+    key: KindType;
+    label: string;
+  }[] = [
+    {
+      key: 'email_verification',
+      label: 'Eメール認証',
+    },
+    {
+      key: 'slack_invitation',
+      label: 'Slack招待時の同時送信メール',
+    },
     {
       key: 'after_registration',
       label: 'メールアドレス確認後の支払い方法案内メール',
@@ -107,11 +99,8 @@ const useEmailTemplateNode = () => {
   const [expanded, setExpanded] = useState(false);
   const [kind, setKind] = useState<KindType>('email_verification');
 
-  const { emailTemplate: remoteEmailTemplate, updateEmailTemplate } =
-    useEmailTemplateConfig(kind);
-  const [emailTemplate, setEmailTemplate] = useState<
-    EmailTemplateType | undefined
-  >(remoteEmailTemplate);
+  const { emailTemplate: remoteEmailTemplate, updateEmailTemplate } = useEmailTemplateConfig(kind);
+  const [emailTemplate, setEmailTemplate] = useState<EmailTemplateType | undefined>(remoteEmailTemplate);
 
   useEffect(() => {
     setEmailTemplate(remoteEmailTemplate);
@@ -123,7 +112,12 @@ const useEmailTemplateNode = () => {
       <EmailTemplate
         selected={kind}
         setSelected={setKind}
-        values={emailTemplate ?? { subject: '', body: '' }}
+        values={
+          emailTemplate ?? {
+            subject: '',
+            body: '',
+          }
+        }
         setValues={setEmailTemplate}
         options={options}
         onClose={() => {
@@ -147,31 +141,17 @@ const Page: NextPage = () => {
   const [paymentPeriod, setPaymentPeriod] = usePaymentPeriodConfig();
   const [currentPeriod, setCurrentPeriod] = useCurrentPeriodConfig();
 
-  const optionsForPayment = currentPeriod
-    ? [currentPeriod, calcPeriod(currentPeriod, 1)]
-    : [];
+  const optionsForPayment = currentPeriod ? [currentPeriod, calcPeriod(currentPeriod, 1)] : [];
 
-  const optionsForCurrent = paymentPeriod
-    ? [calcPeriod(paymentPeriod, -1), paymentPeriod]
-    : [];
+  const optionsForCurrent = paymentPeriod ? [calcPeriod(paymentPeriod, -1), paymentPeriod] : [];
 
-  const currentPeriodNode = useCurrentPeriodNode(
-    currentPeriod,
-    setCurrentPeriod,
-    optionsForCurrent,
-  );
-  const PaymentPeriodNode = usePaymentPeriodNode(
-    paymentPeriod,
-    setPaymentPeriod,
-    optionsForPayment,
-  );
+  const currentPeriodNode = useCurrentPeriodNode(currentPeriod, setCurrentPeriod, optionsForCurrent);
+  const PaymentPeriodNode = usePaymentPeriodNode(paymentPeriod, setPaymentPeriod, optionsForPayment);
   const emailTemplateNode = useEmailTemplateNode();
 
   return (
     <NoSSR>
-      <Config
-        configs={[currentPeriodNode, PaymentPeriodNode, emailTemplateNode]}
-      ></Config>
+      <Config configs={[currentPeriodNode, PaymentPeriodNode, emailTemplateNode]}></Config>
     </NoSSR>
   );
 };

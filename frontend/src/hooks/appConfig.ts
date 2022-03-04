@@ -13,10 +13,7 @@ import {
 } from 'features/appconfig';
 import { EmailKind } from 'models/appconfig';
 
-export type PeriodConfigState = () => [
-  number | undefined,
-  (period: number) => Promise<void>,
-];
+export type PeriodConfigState = () => [number | undefined, (period: number) => Promise<void>];
 
 export const usePaymentPeriodConfig: PeriodConfigState = () => {
   const dispatch = useDispatch();
@@ -69,13 +66,14 @@ export const useCurrentPeriodConfig: PeriodConfigState = () => {
   return [currentPeriod, update];
 };
 
-export type EmailTemplate = { subject: string; body: string };
+export type EmailTemplate = {
+  subject: string;
+  body: string;
+};
 
 export function useEmailTemplateConfig(emailKind: EmailKind) {
   const dispatch = useDispatch();
-  const emailTemplate = useSelector(
-    useMemo(() => selectEmailTemplateOf(emailKind), [emailKind]),
-  );
+  const emailTemplate = useSelector(useMemo(() => selectEmailTemplateOf(emailKind), [emailKind]));
   useEffect(() => {
     if (emailTemplate == null) dispatch(fetchEmailTemplate(emailKind));
   }, [emailKind, emailTemplate, dispatch]);
@@ -83,12 +81,15 @@ export function useEmailTemplateConfig(emailKind: EmailKind) {
   const updateEmailTemplate = useCallback(
     async (template: Readonly<EmailTemplate>) => {
       try {
-        await dispatch(updateEmailTemplateThunk({ kind: emailKind, template }));
+        await dispatch(
+          updateEmailTemplateThunk({
+            kind: emailKind,
+            template,
+          }),
+        );
       } catch (e) {
         if (e instanceof Error) {
-          throw new Error(
-            'Eメールテンプレートの更新に失敗しました: ' + e.message,
-          );
+          throw new Error('Eメールテンプレートの更新に失敗しました: ' + e.message);
         } else {
           throw e;
         }

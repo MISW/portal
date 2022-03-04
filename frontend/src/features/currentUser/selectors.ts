@@ -8,6 +8,4 @@ export const selectCurrentUser: Selector<User | undefined> = (state) => {
   return selectUserById(state, currentUserId);
 };
 
-export const selectCurrentPaymentStatuses: Selector<
-  readonly PaymentStatus[] | undefined
-> = (state) => state.currentUser.paymentStatuses;
+export const selectCurrentPaymentStatuses: Selector<readonly PaymentStatus[] | undefined> = (state) => state.currentUser.paymentStatuses;

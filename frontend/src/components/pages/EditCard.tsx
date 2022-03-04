@@ -7,16 +7,11 @@ import miswlogo from 'assets/mislogo.png';
 
 export const EditCard: React.VFC<{
   readonly user?: User;
-  readonly onPublish?: (props: {
-    readonly twitterScreenName?: string;
-    readonly discordID?: string;
-  }) => void;
+  readonly onPublish?: (props: { readonly twitterScreenName?: string; readonly discordID?: string }) => void;
   readonly onUnpublish?: () => void;
 }> = ({ user, onPublish, onUnpublish }) => {
   const [screenName, setScreenName] = useState(user?.twitterScreenName ?? '');
-  const handleScreenNameChange = useCallback<
-    React.ChangeEventHandler<HTMLInputElement>
-  >((ev) => {
+  const handleScreenNameChange = useCallback<React.ChangeEventHandler<HTMLInputElement>>((ev) => {
     setScreenName(ev.target.value);
   }, []);
   const canonicalScreenName = useMemo(() => {
@@ -27,9 +22,7 @@ export const EditCard: React.VFC<{
 
   const [discordID, setDiscordID] = useState(user?.discordId ?? '');
   const [discordIDModified, setDidcordIDModified] = useState(false);
-  const handleDiscordIDChange = useCallback<
-    React.ChangeEventHandler<HTMLInputElement>
-  >((ev) => {
+  const handleDiscordIDChange = useCallback<React.ChangeEventHandler<HTMLInputElement>>((ev) => {
     setDiscordID(ev.target.value);
   }, []);
   const handleDiscordIDBlur = useCallback(() => setDidcordIDModified(true), []);
@@ -39,8 +32,7 @@ export const EditCard: React.VFC<{
   }, [discordID]);
   const discordIDError = useMemo(() => {
     if (!discordIDModified) return;
-    if (!/.*#\d{4}/.test(canonicalDiscordID ?? ''))
-      return 'discord idの形式が不正です';
+    if (!/.*#\d{4}/.test(canonicalDiscordID ?? '')) return 'discord idの形式が不正です';
   }, [discordIDModified, canonicalDiscordID]);
 
   const handlePublish = useCallback(() => {
@@ -50,15 +42,9 @@ export const EditCard: React.VFC<{
     });
   }, [onPublish, canonicalScreenName, canonicalDiscordID]);
 
-  const shareURL = new URL(
-    `/card/${user?.id}`,
-    globalThis?.location?.href ?? 'https://example.com',
-  ).href;
+  const shareURL = new URL(`/card/${user?.id}`, globalThis?.location?.href ?? 'https://example.com').href;
 
-  const imageURL = new URL(
-    `/card-image/${user?.id}`,
-    globalThis?.location?.href ?? 'https://example.com',
-  ).href;
+  const imageURL = new URL(`/card-image/${user?.id}`, globalThis?.location?.href ?? 'https://example.com').href;
 
   const handleCopy = useCallback(() => {
     if (window && navigator.clipboard) {
@@ -72,10 +58,7 @@ export const EditCard: React.VFC<{
       {user != null && (
         <div className="flex flex-col space-y-4">
           <div className="flex flex-col">
-            <label
-              htmlFor="edit-card-twitter-screen-name"
-              className="ml-4 text-gray-600 dark:text-gray-300"
-            >
+            <label htmlFor="edit-card-twitter-screen-name" className="ml-4 text-gray-600 dark:text-gray-300">
               TwitterのID(スクリーンネーム)
             </label>
             <TextInput
@@ -87,10 +70,7 @@ export const EditCard: React.VFC<{
             />
           </div>
           <div className="flex flex-col">
-            <label
-              htmlFor="edit-card-discord-id"
-              className="ml-4 text-gray-600 dark:text-gray-300"
-            >
+            <label htmlFor="edit-card-discord-id" className="ml-4 text-gray-600 dark:text-gray-300">
               Discord ID
             </label>
             <TextInput
@@ -101,9 +81,7 @@ export const EditCard: React.VFC<{
               onChange={handleDiscordIDChange}
               onBlur={handleDiscordIDBlur}
             />
-            {discordIDError && (
-              <p className="ml-4 text-red-500">{discordIDError}</p>
-            )}
+            {discordIDError && <p className="ml-4 text-red-500">{discordIDError}</p>}
           </div>
           <div className="border-2 border-gray-600">
             <CardSvg
@@ -119,31 +97,16 @@ export const EditCard: React.VFC<{
             />
           </div>
           <div className="grid auto-cols-fr auto-rows-fr gap-4 md:grid-flow-col">
-            <Button
-              color="blue"
-              disabled={user.cardPublished}
-              onClick={handlePublish}
-            >
+            <Button color="blue" disabled={user.cardPublished} onClick={handlePublish}>
               公開する
             </Button>
-            <Button
-              color="red"
-              disabled={!user.cardPublished}
-              onClick={onUnpublish}
-            >
+            <Button color="red" disabled={!user.cardPublished} onClick={onUnpublish}>
               非公開にする
             </Button>
           </div>
           {user.cardPublished && (
             <div className="border-t-2 border-gray-500 pt-4 grid auto-cols-fr auto-rows-fr gap-4 md:grid-flow-col">
-              <LinkButton
-                color="blue"
-                target="_blank"
-                rel="noreferrer"
-                href={`https://twitter.com/share?url=${encodeURIComponent(
-                  shareURL,
-                )}`}
-              >
+              <LinkButton color="blue" target="_blank" rel="noreferrer" href={`https://twitter.com/share?url=${encodeURIComponent(shareURL)}`}>
                 Twitterでシェアする
               </LinkButton>
               <Button color="green" onClick={handleCopy}>

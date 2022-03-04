@@ -14,24 +14,11 @@ const Confirm: React.FC<{
   submitResult: SubmitResult;
   successMessage: ReactNode;
   onSubmit: () => Promise<void>;
-}> = ({
-  user,
-  valid,
-  onSubmit,
-  successMessage,
-  submitResult: submitResult,
-}) => {
-  const filledCorrectly = Object.values(valid).reduce(
-    (prev, cur) => prev && cur,
-    true,
-  );
+}> = ({ user, valid, onSubmit, successMessage, submitResult: submitResult }) => {
+  const filledCorrectly = Object.values(valid).reduce((prev, cur) => prev && cur, true);
   return (
     <>
-      <Profile
-        user={toCamelCase(toUserInfoJSON(user)) as User}
-        title={false}
-        size="small"
-      ></Profile>
+      <Profile user={toCamelCase(toUserInfoJSON(user)) as User} title={false} size="small"></Profile>
 
       <Box mt={4}>
         {(!submitResult || submitResult.status !== 'success') && (
@@ -48,15 +35,9 @@ const Confirm: React.FC<{
             提出
           </Button>
         )}
-        {!filledCorrectly && (
-          <FormHelperText error>
-            フォームが正しく記入されていません
-          </FormHelperText>
-        )}
+        {!filledCorrectly && <FormHelperText error>フォームが正しく記入されていません</FormHelperText>}
         {submitResult?.status === 'success' && successMessage}
-        {submitResult?.status === 'error' && (
-          <Alert severity="error">{submitResult.message}</Alert>
-        )}
+        {submitResult?.status === 'error' && <Alert severity="error">{submitResult.message}</Alert>}
       </Box>
     </>
   );

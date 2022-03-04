@@ -6,14 +6,7 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionActions from '@mui/material/AccordionActions';
-import {
-  Box,
-  Button,
-  Divider,
-  Typography,
-  TextField,
-  Grid,
-} from '@mui/material';
+import { Box, Button, Divider, Typography, TextField, Grid } from '@mui/material';
 
 const PREFIX = 'EmailTemplate';
 
@@ -36,25 +29,49 @@ const Root = styled('div')(({ theme }) => ({
 
 function EmailTemplate<T extends string>(param: {
   selected: string | undefined;
-  options: { key: T; label: string }[];
-  values: { subject: string; body: string } | undefined;
+  options: {
+    key: T;
+    label: string;
+  }[];
+  values:
+    | {
+        subject: string;
+        body: string;
+      }
+    | undefined;
   setSelected: (s: T) => void;
-  setValues: (v: { subject: string; body: string } | undefined) => void;
+  setValues: (
+    v:
+      | {
+          subject: string;
+          body: string;
+        }
+      | undefined,
+  ) => void;
   onClose: () => void;
   onSave: () => void;
 }): JSX.Element {
-  const { selected, options, values, setSelected, setValues, onClose, onSave } =
-    param;
+  const { selected, options, values, setSelected, setValues, onClose, onSave } = param;
 
-  const handleSelected = (event: React.ChangeEvent<{ value: unknown }>) => {
+  const handleSelected = (
+    event: React.ChangeEvent<{
+      value: unknown;
+    }>,
+  ) => {
     setSelected(event.target.value as T);
   };
 
   const handleChange = (
     kind: 'subject' | 'body',
-    event: React.ChangeEvent<{ value: unknown }>,
+    event: React.ChangeEvent<{
+      value: unknown;
+    }>,
   ) => {
-    if (values) setValues({ ...values, [kind]: event.target.value as string });
+    if (values)
+      setValues({
+        ...values,
+        [kind]: event.target.value as string,
+      });
   };
 
   return (
@@ -63,19 +80,12 @@ function EmailTemplate<T extends string>(param: {
         <Box display="block" className={classes.box} ml={1} mr={1}>
           <Grid container spacing={1}>
             <Grid item xs={12}>
-              <Typography>
-                各種メールの送信用テンプレートの設定です。
-              </Typography>
+              <Typography>各種メールの送信用テンプレートの設定です。</Typography>
             </Grid>
             <Grid item xs={6}>
               <FormControl disabled={selected === undefined}>
                 <InputLabel id="period-input-label">種類</InputLabel>
-                <Select
-                  labelId="period-select-label"
-                  id="period-select-label"
-                  value={selected ?? ''}
-                  onChange={() => handleSelected}
-                >
+                <Select labelId="period-select-label" id="period-select-label" value={selected ?? ''} onChange={() => handleSelected}>
                   {options.map((p) => (
                     <MenuItem key={p.key} value={p.key}>
                       {p.label}

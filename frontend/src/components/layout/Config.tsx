@@ -44,9 +44,7 @@ export const Config: React.FC<{
               id="panel1a-header"
               onClick={() => config.setExpanded(!config.expanded)}
             >
-              <Typography className={classes.heading}>
-                {config.title}
-              </Typography>
+              <Typography className={classes.heading}>{config.title}</Typography>
             </AccordionSummary>
             {config.node}
           </Accordion>

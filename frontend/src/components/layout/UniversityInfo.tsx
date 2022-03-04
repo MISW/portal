@@ -3,11 +3,7 @@ import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
 import { UserProfileHooks, FormContentProps } from '../../hooks/formHooks';
 
-const SchoolNameField: React.FC<FormContentProps<string>> = ({
-  value,
-  error,
-  onChange,
-}) => {
+const SchoolNameField: React.FC<FormContentProps<string>> = ({ value, error, onChange }) => {
   return (
     <Grid item xs={12}>
       <TextField
@@ -26,11 +22,7 @@ const SchoolNameField: React.FC<FormContentProps<string>> = ({
   );
 };
 
-const DepartmentField: React.FC<FormContentProps<string>> = ({
-  value,
-  error,
-  onChange,
-}) => {
+const DepartmentField: React.FC<FormContentProps<string>> = ({ value, error, onChange }) => {
   return (
     <Grid item xs={12} sm={6}>
       <TextField
@@ -49,11 +41,7 @@ const DepartmentField: React.FC<FormContentProps<string>> = ({
   );
 };
 
-const SubjectField: React.FC<FormContentProps<string>> = ({
-  value,
-  error,
-  onChange,
-}) => {
+const SubjectField: React.FC<FormContentProps<string>> = ({ value, error, onChange }) => {
   return (
     <Grid item xs={12} sm={6}>
       <TextField
@@ -71,11 +59,7 @@ const SubjectField: React.FC<FormContentProps<string>> = ({
   );
 };
 
-const StudentIDField: React.FC<FormContentProps<string>> = ({
-  value,
-  error,
-  onChange,
-}) => {
+const StudentIDField: React.FC<FormContentProps<string>> = ({ value, error, onChange }) => {
   return (
     <Grid item xs={12}>
       <TextField

@@ -1,17 +1,21 @@
 import { createAppAsyncThunk, AppThunk } from 'store/helpers';
 import { userUpserted } from './slice';
 
-export const fetchAllUsers = createAppAsyncThunk(
-  'users/fetchAll',
-  async (_, { extra: { api } }) => {
-    const users = await api.fetchAllUsers();
-    return users;
-  },
-);
+export const fetchAllUsers = createAppAsyncThunk('users/fetchAll', async (_, { extra: { api } }) => {
+  const users = await api.fetchAllUsers();
+  return users;
+});
 
 export const fetchUserById = createAppAsyncThunk(
   'users/fetchById',
-  async ({ id }: { id: number }, { dispatch, extra: { api } }) => {
+  async (
+    {
+      id,
+    }: {
+      id: number;
+    },
+    { dispatch, extra: { api } },
+  ) => {
     const user = await api.fetchUserById(id);
     if (user != null) {
       dispatch(userUpserted(user));
@@ -30,7 +34,11 @@ export const addPaymentStatus =
     try {
       await api.addPaymentStatus(targetUserId);
     } finally {
-      await dispatch(fetchUserById({ id: targetUserId }));
+      await dispatch(
+        fetchUserById({
+          id: targetUserId,
+        }),
+      );
     }
   };
 
@@ -42,6 +50,10 @@ export const deletePaymentStatus =
     try {
       await api.deletePaymentStatus(targetUserId);
     } finally {
-      await dispatch(fetchUserById({ id: targetUserId }));
+      await dispatch(
+        fetchUserById({
+          id: targetUserId,
+        }),
+      );
     }
   };

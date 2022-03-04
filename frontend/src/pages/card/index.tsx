@@ -10,13 +10,7 @@ const EditCardPage: NextPage = () => {
   const dispatch = useDispatch();
   const user = useSelector(selectCurrentUser);
   const handlePublish = useCallback(
-    ({
-      twitterScreenName,
-      discordID,
-    }: {
-      twitterScreenName?: string;
-      discordID?: string;
-    }) => {
+    ({ twitterScreenName, discordID }: { twitterScreenName?: string; discordID?: string }) => {
       dispatch(
         updateCurrentUser({
           twitterScreenName,
@@ -28,7 +22,11 @@ const EditCardPage: NextPage = () => {
     [dispatch],
   );
   const handleUnpublish = useCallback(() => {
-    dispatch(updateCurrentUser({ cardPublished: false }));
+    dispatch(
+      updateCurrentUser({
+        cardPublished: false,
+      }),
+    );
   }, [dispatch]);
 
   return (
@@ -36,11 +34,7 @@ const EditCardPage: NextPage = () => {
       <Head>
         <title>会員証 | MISW Portal</title>
       </Head>
-      <EditCard
-        user={user}
-        onPublish={handlePublish}
-        onUnpublish={handleUnpublish}
-      />
+      <EditCard user={user} onPublish={handlePublish} onUnpublish={handleUnpublish} />
     </>
   );
 };

@@ -2,10 +2,7 @@ import React, { forwardRef } from 'react';
 import clsx from 'clsx';
 import { tw } from 'tailwind-variant.macro';
 
-export const TextInput = forwardRef<
-  HTMLInputElement,
-  JSX.IntrinsicElements['input']
->(function TextInput({ className, ...rest }, ref) {
+export const TextInput = forwardRef<HTMLInputElement, JSX.IntrinsicElements['input']>(function TextInput({ className, ...rest }, ref) {
   return (
     <input
       ref={ref}

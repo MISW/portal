@@ -34,9 +34,7 @@ const CardPage: NextPage<CardPageProps> = ({ card, baseURL }) => {
   const gen = card.generation;
 
   const title = `${gen}${numberPostfix(gen)} ${card.handle}`;
-  const description = `研究会: ${card.workshops.join(
-    ',',
-  )} 班: ${card.squads.join(',')}`;
+  const description = `研究会: ${card.workshops.join(',')} 班: ${card.squads.join(',')}`;
   const pageURL = new URL(`/card/${card.id}`, baseURL).href;
   const imageURL = new URL(`/card-image/${card.id}.png`, baseURL).href;
 
@@ -74,13 +72,13 @@ const CardPage: NextPage<CardPageProps> = ({ card, baseURL }) => {
 
 export default CardPage;
 
-export const getServerSideProps: GetServerSideProps<CardPageProps> = async (
-  ctx,
-) => {
+export const getServerSideProps: GetServerSideProps<CardPageProps> = async (ctx) => {
   const idRaw = ctx.params?.id;
 
   if (idRaw == null || Array.isArray(idRaw) || !/^\d{1,10}$/.test(idRaw)) {
-    return { notFound: true };
+    return {
+      notFound: true,
+    };
   }
 
   const id = Number.parseInt(idRaw, 10);
@@ -93,10 +91,15 @@ export const getServerSideProps: GetServerSideProps<CardPageProps> = async (
     });
 
   if (card == null) {
-    return { notFound: true };
+    return {
+      notFound: true,
+    };
   }
 
   return {
-    props: { card, baseURL: process.env.BASE_URL ?? '' },
+    props: {
+      card,
+      baseURL: process.env.BASE_URL ?? '',
+    },
   };
 };
