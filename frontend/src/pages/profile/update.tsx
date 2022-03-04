@@ -25,10 +25,15 @@ const Page: NextPage = () => {
           },
         }),
       ).then(unwrapResult);
-      return { status: 'success' as const };
+      return {
+        status: 'success' as const,
+      };
     } catch (e) {
       console.error(e);
-      return { status: 'error', message: 'エラーが発生しました' };
+      return {
+        status: 'error',
+        message: 'エラーが発生しました',
+      };
     }
   };
   return (
@@ -38,9 +43,7 @@ const Page: NextPage = () => {
         formType="setting"
         user={currentUser}
         onSubmit={onSubmit}
-        successMessage={
-          <Alert severity="success">プロフィールが変更されました!</Alert>
-        }
+        successMessage={<Alert severity="success">プロフィールが変更されました!</Alert>}
       />
     </NoSSR>
   );

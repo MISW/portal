@@ -14,7 +14,9 @@ export const verifyEmail =
   };
 
 export const login =
-  (): AppThunk<{ redirectUrl: string }> =>
+  (): AppThunk<{
+    redirectUrl: string;
+  }> =>
   async (_dispatch, _, { api }) => {
     return await api.login();
   };

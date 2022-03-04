@@ -15,10 +15,7 @@ const initialState: CurrentUserState = {
   paymentStatuses: undefined,
 };
 
-const updateUserId = (
-  state: CurrentUserState,
-  action: PayloadAction<UserId>,
-) => {
+const updateUserId = (state: CurrentUserState, action: PayloadAction<UserId>) => {
   state.id = action.payload;
 };
 

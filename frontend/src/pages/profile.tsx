@@ -6,11 +6,7 @@ import Profile from 'components/layout/Profile';
 import PaymentStatuses from 'components/layout/PaymentStatuses';
 import { Box } from '@mui/material';
 import { withLogin } from 'middlewares/withLogin';
-import {
-  selectCurrentUser,
-  selectCurrentPaymentStatuses,
-  fetchCurrentPaymentStatuses,
-} from 'features/currentUser';
+import { selectCurrentUser, selectCurrentPaymentStatuses, fetchCurrentPaymentStatuses } from 'features/currentUser';
 import { nonNullOrThrow } from 'utils';
 import { NoSSR } from 'components/utils/NoSSR';
 
@@ -24,19 +20,8 @@ const Page: NextPage = () => {
 
   return (
     <NoSSR>
-      <Profile
-        user={currentUser}
-        editButton={true}
-        handleEditButton={() => Router.push('/profile/update')}
-      />
-      <Box mt={6}>
-        {paymentStatuses != null && (
-          <PaymentStatuses
-            paymentStatuses={paymentStatuses}
-            editButton={false}
-          />
-        )}
-      </Box>
+      <Profile user={currentUser} editButton={true} handleEditButton={() => Router.push('/profile/update')} />
+      <Box mt={6}>{paymentStatuses != null && <PaymentStatuses paymentStatuses={paymentStatuses} editButton={false} />}</Box>
     </NoSSR>
   );
 };

@@ -13,15 +13,16 @@ type SvgSize = {
 };
 
 const SvgIcon: React.VFC<
-  { readonly icon: IconDefinition; readonly size: number } & SvgPosition
+  {
+    readonly icon: IconDefinition;
+    readonly size: number;
+  } & SvgPosition
 > = ({ x, y, size, icon }) => {
   const [width, height, , , paths] = icon.icon;
   const normalizedPaths = [paths].flat();
 
   return (
-    <g
-      transform={`translate(${x},${y}) scale(${size / width},${size / height})`}
-    >
+    <g transform={`translate(${x},${y}) scale(${size / width},${size / height})`}>
       {normalizedPaths.map((path, i) => (
         <path key={i} d={path} />
       ))}
@@ -39,49 +40,19 @@ const Avatar: React.VFC<
   avatarUrl != null ? (
     <>
       <clipPath id="avatar">
-        <rect
-          x={x}
-          y={y}
-          width={width}
-          height={height}
-          rx={radius}
-          ry={radius}
-        />
+        <rect x={x} y={y} width={width} height={height} rx={radius} ry={radius} />
       </clipPath>
-      <image
-        clipPath="url(#avatar)"
-        href={avatarUrl}
-        x={x}
-        y={y}
-        width={width}
-        height={height}
-      />
+      <image clipPath="url(#avatar)" href={avatarUrl} x={x} y={y} width={width} height={height} />
     </>
   ) : (
-    <rect
-      fill="#9ca3af"
-      x={x}
-      y={y}
-      width={width}
-      height={height}
-      rx={radius}
-      ry={radius}
-    />
+    <rect fill="#9ca3af" x={x} y={y} width={width} height={height} rx={radius} ry={radius} />
   );
 
-const CheckBox: React.VFC<{ readonly checked: boolean }> = ({ checked }) => (
+const CheckBox: React.VFC<{
+  readonly checked: boolean;
+}> = ({ checked }) => (
   <>
-    <rect
-      stroke="#4B5563"
-      strokeWidth={2}
-      fill="transparent"
-      x={0}
-      y={-20}
-      width={20}
-      height={20}
-      rx={2}
-      ry={2}
-    />
+    <rect stroke="#4B5563" strokeWidth={2} fill="transparent" x={0} y={-20} width={20} height={20} rx={2} ry={2} />
     {checked && (
       <path
         stroke="blue"
@@ -108,26 +79,8 @@ export const CardSvg: React.VFC<{
   readonly squads: readonly string[];
   readonly twitterScreenName?: string;
   readonly discordId?: string;
-}> = ({
-  width,
-  height,
-  avatarUrl,
-  miswLogoUrl,
-  generation,
-  handle,
-  workshops,
-  squads,
-  twitterScreenName,
-  discordId,
-}) => (
-  <svg
-    version="1.1"
-    baseProfile="full"
-    width={width}
-    height={height}
-    viewBox="0 0 1200 630"
-    xmlns="http://www.w3.org/2000/svg"
-  >
+}> = ({ width, height, avatarUrl, miswLogoUrl, generation, handle, workshops, squads, twitterScreenName, discordId }) => (
+  <svg version="1.1" baseProfile="full" width={width} height={height} viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
     <rect width="100%" height="100%" fill="white" />
 
     <Avatar avatarUrl={avatarUrl} x={30} y={30} width={150} height={150} />
@@ -139,24 +92,10 @@ export const CardSvg: React.VFC<{
           代
         </tspan>
       </text>
-      <text
-        x={785}
-        y={150}
-        fontSize={80}
-        fill="currentcolor"
-        textAnchor="middle"
-      >
+      <text x={785} y={150} fontSize={80} fill="currentcolor" textAnchor="middle">
         {handle}
       </text>
-      <line
-        x1={210}
-        y1={175}
-        x2={1200 - 30}
-        y2={175}
-        stroke="black"
-        strokeWidth={5}
-        strokeLinecap="round"
-      />
+      <line x1={210} y1={175} x2={1200 - 30} y2={175} stroke="black" strokeWidth={5} strokeLinecap="round" />
     </g>
 
     <g color="#111827" transform="translate(210,300)">
@@ -192,15 +131,7 @@ export const CardSvg: React.VFC<{
         <text x={40} fill="currentcolor" fontSize={30}>
           班
         </text>
-        <line
-          stroke="currentcolor"
-          strokeWidth={2}
-          strokeLinecap="round"
-          x1={140}
-          y1={5}
-          x2={690}
-          y2={5}
-        />
+        <line stroke="currentcolor" strokeWidth={2} strokeLinecap="round" x1={140} y1={5} x2={690} y2={5} />
         <text x={150} width={690 - 140 - 40} fill="currentcolor" fontSize={30}>
           {squads.map((squad, i) =>
             i === 0 ? (
@@ -243,12 +174,6 @@ export const CardSvg: React.VFC<{
         ))}
     </g>
 
-    <image
-      href={miswLogoUrl}
-      x={1200 - 600 / 3 - 30}
-      y={630 - 243 / 3 - 15}
-      width={600 / 3}
-      height={243 / 3}
-    />
+    <image href={miswLogoUrl} x={1200 - 600 / 3 - 30} y={630 - 243 / 3 - 15} width={600 / 3} height={243 / 3} />
   </svg>
 );

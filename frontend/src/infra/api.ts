@@ -1,12 +1,7 @@
 import ky, { Options, HTTPError } from 'ky';
 import { toCamelCase, toSnakeCase } from './converter';
 import { decodeCard } from './decode';
-import {
-  User,
-  UpdateUserProfileInput,
-  SignupInput,
-  PaymentStatus,
-} from 'models/user';
+import { User, UpdateUserProfileInput, SignupInput, PaymentStatus } from 'models/user';
 import { Period, EmailKind, EmailTemplate } from 'models/appconfig';
 import { UpdateAppConfigInput } from './type';
 
@@ -18,24 +13,41 @@ export const createApiClient = (baseUrl: string, options?: Options) => {
   return Object.freeze({
     // Public Endpoints
     async signup(input: Readonly<SignupInput>): Promise<void> {
-      await http.post('api/public/signup', { json: toSnakeCase(input) });
+      await http.post('api/public/signup', {
+        json: toSnakeCase(input),
+      });
     },
 
     async verifyEmail(token: string): Promise<void> {
-      await http.post('api/public/verify_email', { json: { token } });
+      await http.post('api/public/verify_email', {
+        json: {
+          token,
+        },
+      });
     },
 
-    async login(): Promise<{ redirectUrl: string }> {
+    async login(): Promise<{
+      redirectUrl: string;
+    }> {
       const res = await http
-        .post('api/public/login', { json: {} })
-        .json<{ redirect_url: string }>();
+        .post('api/public/login', {
+          json: {},
+        })
+        .json<{
+          redirect_url: string;
+        }>();
       return {
         redirectUrl: res.redirect_url,
       };
     },
 
     async processCallback(code: string, state: string) {
-      await http.post('api/public/callback', { json: { code, state } });
+      await http.post('api/public/callback', {
+        json: {
+          code,
+          state,
+        },
+      });
     },
 
     async fetchCard(id: number) {
@@ -45,27 +57,31 @@ export const createApiClient = (baseUrl: string, options?: Options) => {
 
     // Private Endpoints
     async logout(): Promise<void> {
-      await http.post('api/private/logout', { json: {} }).json();
+      await http
+        .post('api/private/logout', {
+          json: {},
+        })
+        .json();
     },
 
     async fetchCurrentProfile(): Promise<User> {
       return toCamelCase(await http.get('api/private/profile').json()) as User;
     },
 
-    async updateCurrentProfile(
-      input: Readonly<UpdateUserProfileInput>,
-    ): Promise<User> {
+    async updateCurrentProfile(input: Readonly<UpdateUserProfileInput>): Promise<User> {
       return toCamelCase(
         await http
-          .post('api/private/profile', { json: toSnakeCase(input) })
+          .post('api/private/profile', {
+            json: toSnakeCase(input),
+          })
           .json(),
       ) as User;
     },
 
     async fetchCurrentPaymentStatuses(): Promise<PaymentStatus[]> {
-      const res = await http
-        .get('api/private/profile/payment_statuses')
-        .json<{ payment_statuses: unknown[] }>();
+      const res = await http.get('api/private/profile/payment_statuses').json<{
+        payment_statuses: unknown[];
+      }>();
       return toCamelCase(res.payment_statuses) as PaymentStatus[];
     },
 
@@ -82,9 +98,13 @@ export const createApiClient = (baseUrl: string, options?: Options) => {
       try {
         const res = await http
           .get('api/private/management/user', {
-            searchParams: { user_id: `${id}` },
+            searchParams: {
+              user_id: `${id}`,
+            },
           })
-          .json<{ user: unknown }>();
+          .json<{
+            user: unknown;
+          }>();
         return toCamelCase(res.user) as User;
       } catch (e) {
         if (e instanceof HTTPError) {
@@ -97,25 +117,36 @@ export const createApiClient = (baseUrl: string, options?: Options) => {
     async fetchPaymentPeriodConfig(): Promise<Period> {
       const res = await http
         .get('api/private/management/config', {
-          searchParams: { kind: 'payment_period' },
+          searchParams: {
+            kind: 'payment_period',
+          },
         })
-        .json<{ payment_period: Period }>();
+        .json<{
+          payment_period: Period;
+        }>();
       return res.payment_period;
     },
 
     async fetchCurrentPeriodConfig(): Promise<Period> {
       const res = await http
         .get('api/private/management/config', {
-          searchParams: { kind: 'current_period' },
+          searchParams: {
+            kind: 'current_period',
+          },
         })
-        .json<{ current_period: Period }>();
+        .json<{
+          current_period: Period;
+        }>();
       return res.current_period;
     },
 
     async fetchEmailTemplateConfig(kind: EmailKind): Promise<EmailTemplate> {
       const res = await http
         .get('api/private/management/config', {
-          searchParams: { kind: 'email_template', email_kind: kind },
+          searchParams: {
+            kind: 'email_template',
+            email_kind: kind,
+          },
         })
         .json<EmailTemplate>();
       return {
@@ -136,7 +167,9 @@ export const createApiClient = (baseUrl: string, options?: Options) => {
       try {
         await http
           .put('api/private/management/payment_status', {
-            json: { user_id: targetUserId },
+            json: {
+              user_id: targetUserId,
+            },
           })
           .json();
       } catch (e) {
@@ -149,7 +182,9 @@ export const createApiClient = (baseUrl: string, options?: Options) => {
 
     async deletePaymentStatus(targetUserId: number): Promise<void> {
       await http.delete('api/private/management/payment_status', {
-        json: { user_id: targetUserId },
+        json: {
+          user_id: targetUserId,
+        },
       });
     },
 

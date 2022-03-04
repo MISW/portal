@@ -23,7 +23,9 @@ const Page: NextPage = () => {
         }),
       );
       setEmail(user.email);
-      return { status: 'success' as const };
+      return {
+        status: 'success' as const,
+      };
     } catch (err) {
       console.error(err);
       return {
@@ -39,15 +41,7 @@ const Page: NextPage = () => {
         formName="会員登録"
         formType="new"
         onSubmit={onSubmit}
-        successMessage={
-          <>
-            {email && (
-              <Alert severity="info">
-                {email} 宛に確認メールがが送信されました! ✈
-              </Alert>
-            )}
-          </>
-        }
+        successMessage={<>{email && <Alert severity="info">{email} 宛に確認メールがが送信されました! ✈</Alert>}</>}
       />
     </NoSSR>
   );

@@ -1,9 +1,5 @@
 import { AppThunk } from 'store/helpers';
-import {
-  paymentPeriodUpdated,
-  currentPeriodUpdated,
-  emailTemplateUpdated,
-} from './slice';
+import { paymentPeriodUpdated, currentPeriodUpdated, emailTemplateUpdated } from './slice';
 import { EmailKind, Period, EmailTemplate } from 'models/appconfig';
 
 export const fetchPaymentPeriod =
@@ -24,7 +20,12 @@ export const fetchEmailTemplate =
   (kind: EmailKind): AppThunk =>
   async (dispatch, _, { api }) => {
     const template = await api.fetchEmailTemplateConfig(kind);
-    dispatch(emailTemplateUpdated({ kind, template }));
+    dispatch(
+      emailTemplateUpdated({
+        kind,
+        template,
+      }),
+    );
   };
 
 export const updatePaymentPeriod =
@@ -32,7 +33,9 @@ export const updatePaymentPeriod =
   async (dispatch, _, { api }) => {
     await api.updateAppConfig({
       kind: 'payment_period',
-      payload: { paymentPeriod },
+      payload: {
+        paymentPeriod,
+      },
     });
     dispatch(fetchPaymentPeriod());
   };
@@ -42,19 +45,15 @@ export const updateCurrentPeriod =
   async (dispatch, _, { api }) => {
     await api.updateAppConfig({
       kind: 'current_period',
-      payload: { currentPeriod },
+      payload: {
+        currentPeriod,
+      },
     });
     dispatch(fetchCurrentPeriod());
   };
 
 export const updateEmailTemplate =
-  ({
-    kind,
-    template,
-  }: {
-    kind: EmailKind;
-    template: EmailTemplate;
-  }): AppThunk =>
+  ({ kind, template }: { kind: EmailKind; template: EmailTemplate }): AppThunk =>
   async (dispatch, _, { api }) => {
     await api.updateAppConfig({
       kind: 'email_template',

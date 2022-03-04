@@ -72,9 +72,15 @@ const Root = styled('div')(({ theme }) => ({
 }));
 
 export type handleClickMenuParam =
-  | { kind: 'slack' }
-  | { kind: 'export' }
-  | { kind: 'remind_payment' };
+  | {
+      kind: 'slack';
+    }
+  | {
+      kind: 'export';
+    }
+  | {
+      kind: 'remind_payment';
+    };
 
 export type handleClickMenuType = (param: handleClickMenuParam) => void;
 
@@ -99,12 +105,14 @@ function getComparator<Key extends keyof never>({
   order: Order;
   orderBy: Key;
 }): (
-  a: { [key in Key]: number | string },
-  b: { [key in Key]: number | string },
+  a: {
+    [key in Key]: number | string;
+  },
+  b: {
+    [key in Key]: number | string;
+  },
 ) => number {
-  return order === 'desc'
-    ? (a, b) => descendingComparator(a, b, orderBy)
-    : (a, b) => -descendingComparator(a, b, orderBy);
+  return order === 'desc' ? (a, b) => descendingComparator(a, b, orderBy) : (a, b) => -descendingComparator(a, b, orderBy);
 }
 
 function stableSort<T>(array: T[], comparator: (a: T, b: T) => number) {
@@ -124,10 +132,7 @@ export interface HeadCell {
 
 interface EnhancedTableProps {
   numSelected: number;
-  onRequestSort: (
-    event: React.MouseEvent<unknown>,
-    property: keyof Data,
-  ) => void;
+  onRequestSort: (event: React.MouseEvent<unknown>, property: keyof Data) => void;
   onSelectAllClick: (event: React.ChangeEvent<HTMLInputElement>) => void;
   order: Order;
   orderBy: string;
@@ -137,20 +142,10 @@ interface EnhancedTableProps {
 }
 
 function EnhancedTableHead(props: EnhancedTableProps) {
-  const {
-    onSelectAllClick,
-    order,
-    orderBy,
-    numSelected,
-    rowCount,
-    onRequestSort,
-    headCells,
-    disabledCheckbox,
-  } = props;
-  const createSortHandler =
-    (property: keyof Data) => (event: React.MouseEvent<unknown>) => {
-      onRequestSort(event, property);
-    };
+  const { onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort, headCells, disabledCheckbox } = props;
+  const createSortHandler = (property: keyof Data) => (event: React.MouseEvent<unknown>) => {
+    onRequestSort(event, property);
+  };
 
   return (
     <TableHead>
@@ -161,27 +156,16 @@ function EnhancedTableHead(props: EnhancedTableProps) {
             checked={rowCount > 0 && numSelected === rowCount}
             disabled={disabledCheckbox}
             onChange={onSelectAllClick}
-            inputProps={{ 'aria-label': 'select all desserts' }}
+            inputProps={{
+              'aria-label': 'select all desserts',
+            }}
           />
         </TableCell>
         {headCells.map((headCell) => (
-          <TableCell
-            key={headCell.id}
-            align={'left'}
-            padding={'none'}
-            sortDirection={orderBy === headCell.id ? order : false}
-          >
-            <TableSortLabel
-              active={orderBy === headCell.id}
-              direction={orderBy === headCell.id ? order : 'asc'}
-              onClick={createSortHandler(headCell.id)}
-            >
+          <TableCell key={headCell.id} align={'left'} padding={'none'} sortDirection={orderBy === headCell.id ? order : false}>
+            <TableSortLabel active={orderBy === headCell.id} direction={orderBy === headCell.id ? order : 'asc'} onClick={createSortHandler(headCell.id)}>
               {headCell.label}
-              {orderBy === headCell.id ? (
-                <span className={classes.visuallyHidden}>
-                  {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
-                </span>
-              ) : null}
+              {orderBy === headCell.id ? <span className={classes.visuallyHidden}>{order === 'desc' ? 'sorted descending' : 'sorted ascending'}</span> : null}
             </TableSortLabel>
           </TableCell>
         ))}
@@ -221,30 +205,34 @@ interface EnhancedTableToolbarProps {
 
 const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
   const classes = useToolbarStyles();
-  const { numSelected, editMode, handleClickOnEditMode, handleClickMenu } =
-    props;
+  const { numSelected, editMode, handleClickOnEditMode, handleClickMenu } = props;
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
 
-  const handleClose =
-    (name: 'slack' | 'export' | 'remind_payment' | null) => () => {
-      setAnchorEl(null);
+  const handleClose = (name: 'slack' | 'export' | 'remind_payment' | null) => () => {
+    setAnchorEl(null);
 
-      switch (name) {
-        case 'slack':
-          handleClickMenu({ kind: 'slack' });
-          break;
-        case 'export':
-          handleClickMenu({ kind: 'export' });
-          break;
-        case 'remind_payment':
-          handleClickMenu({ kind: 'remind_payment' });
-          break;
-      }
-    };
+    switch (name) {
+      case 'slack':
+        handleClickMenu({
+          kind: 'slack',
+        });
+        break;
+      case 'export':
+        handleClickMenu({
+          kind: 'export',
+        });
+        break;
+      case 'remind_payment':
+        handleClickMenu({
+          kind: 'remind_payment',
+        });
+        break;
+    }
+  };
 
   return (
     <Toolbar
@@ -254,12 +242,7 @@ const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
     >
       {numSelected > 0 ? (
         <>
-          <Typography
-            className={classes.title}
-            color="inherit"
-            variant="subtitle1"
-            component="div"
-          >
+          <Typography className={classes.title} color="inherit" variant="subtitle1" component="div">
             {numSelected} selected
           </Typography>
 
@@ -282,13 +265,7 @@ const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
           </NoWrapButton>
 
           <Box ml={1}>
-            <IconButton
-              aria-label="more"
-              aria-controls="long-menu"
-              aria-haspopup="true"
-              onClick={handleClick}
-              size="large"
-            >
+            <IconButton aria-label="more" aria-controls="long-menu" aria-haspopup="true" onClick={handleClick} size="large">
               <MoreVertIcon />
             </IconButton>
             <Menu
@@ -308,12 +285,8 @@ const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
               }}
             >
               <MenuItem onClick={handleClose('slack')}>Slackに招待</MenuItem>
-              <MenuItem onClick={handleClose('export')}>
-                CSVエクスポート
-              </MenuItem>
-              <MenuItem onClick={handleClose('remind_payment')}>
-                会費未払い通知メール
-              </MenuItem>
+              <MenuItem onClick={handleClose('export')}>CSVエクスポート</MenuItem>
+              <MenuItem onClick={handleClose('remind_payment')}>会費未払い通知メール</MenuItem>
             </Menu>
           </Box>
         </>
@@ -330,13 +303,7 @@ export const EnhancedTable: React.FC<{
   headCells: Array<HeadCell>;
   handleEditPaymnetStatus?: (id: number, status: boolean) => Promise<Data>;
   handleClickMenu: handleClickMenuType;
-}> = ({
-  rows: rowsBase,
-  defaultSortedBy,
-  headCells,
-  handleEditPaymnetStatus,
-  handleClickMenu,
-}) => {
+}> = ({ rows: rowsBase, defaultSortedBy, headCells, handleEditPaymnetStatus, handleClickMenu }) => {
   const [rows, setRows] = React.useState<Array<Data>>(rowsBase);
   // workaround
   useEffect(() => {
@@ -349,13 +316,9 @@ export const EnhancedTable: React.FC<{
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(1e9);
-  const [editPaymentStatusMode, setEditPaymentStatusMode] =
-    React.useState(false);
+  const [editPaymentStatusMode, setEditPaymentStatusMode] = React.useState(false);
 
-  const handleRequestSort = (
-    event: React.MouseEvent<unknown>,
-    property: keyof Data,
-  ) => {
+  const handleRequestSort = (event: React.MouseEvent<unknown>, property: keyof Data) => {
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
     setOrderBy(property);
@@ -389,25 +352,17 @@ export const EnhancedTable: React.FC<{
     } else if (selectedIndex === selected.length - 1) {
       newSelected = newSelected.concat(selected.slice(0, -1));
     } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1),
-      );
+      newSelected = newSelected.concat(selected.slice(0, selectedIndex), selected.slice(selectedIndex + 1));
     }
 
     setSelected(newSelected);
   };
 
-  const handleChangePage = (
-    _event: React.MouseEvent<HTMLButtonElement> | null,
-    newPage: number,
-  ) => {
+  const handleChangePage = (_event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
     setPage(newPage);
   };
 
-  const handleChangeRowsPerPage = (
-    event: React.ChangeEvent<HTMLInputElement>,
-  ) => {
+  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
@@ -422,7 +377,10 @@ export const EnhancedTable: React.FC<{
       rows.map((x) =>
         x.id !== id
           ? x
-          : { ...x, paid: x.paid === 'YES' ? 'NO(WIP)' : 'YES(WIP)' },
+          : {
+              ...x,
+              paid: x.paid === 'YES' ? 'NO(WIP)' : 'YES(WIP)',
+            },
       ),
     );
 
@@ -437,8 +395,7 @@ export const EnhancedTable: React.FC<{
 
   const isSelected = (id: number) => selected.indexOf(id) !== -1;
 
-  const emptyRows =
-    rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
+  const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
 
   return (
     <div className={classes.root}>
@@ -453,13 +410,7 @@ export const EnhancedTable: React.FC<{
         />
 
         <TableContainer className={classes.tableWrapper}>
-          <Table
-            stickyHeader
-            className={classes.table}
-            aria-labelledby="tableTitle"
-            size={dense ? 'small' : 'medium'}
-            aria-label="enhanced table"
-          >
+          <Table stickyHeader className={classes.table} aria-labelledby="tableTitle" size={dense ? 'small' : 'medium'} aria-label="enhanced table">
             <EnhancedTableHead
               numSelected={selected.length}
               disabledCheckbox={editPaymentStatusMode}
@@ -471,7 +422,13 @@ export const EnhancedTable: React.FC<{
               rowCount={rows.length}
             />
             <TableBody>
-              {stableSort(rows, getComparator({ order, orderBy }))
+              {stableSort(
+                rows,
+                getComparator({
+                  order,
+                  orderBy,
+                }),
+              )
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
                   const isItemSelected = isSelected(row.id);
@@ -496,12 +453,7 @@ export const EnhancedTable: React.FC<{
                           disabled={editPaymentStatusMode}
                         />
                       </TableCell>
-                      <TableCell
-                        component="th"
-                        id={labelId}
-                        scope="row"
-                        padding="none"
-                      >
+                      <TableCell component="th" id={labelId} scope="row" padding="none">
                         {row.id}
                       </TableCell>
                       {headCells
@@ -512,9 +464,7 @@ export const EnhancedTable: React.FC<{
                               <NoTopBottomPaddingCheckbox
                                 checked={row[propertyName].startsWith('YES')}
                                 disabled={row[propertyName].includes('(WIP)')}
-                                onClick={() =>
-                                  handleClickOnEditPaymentStatus(row.id)
-                                }
+                                onClick={() => handleClickOnEditPaymentStatus(row.id)}
                                 classes={{
                                   root: classes.root,
                                 }}
@@ -551,10 +501,7 @@ export const EnhancedTable: React.FC<{
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Paper>
-      <FormControlLabel
-        control={<Switch checked={dense} onChange={handleChangeDense} />}
-        label="Dense padding"
-      />
+      <FormControlLabel control={<Switch checked={dense} onChange={handleChangeDense} />} label="Dense padding" />
     </div>
   );
 };

@@ -35,9 +35,7 @@ export const createStore = (props: ExtraArgument) => {
 export type Store = ReturnType<typeof createStore>;
 export type RootState = ReturnType<typeof rootReducer>;
 export type AppDispatch = Store['dispatch'];
-export type AppActions =
-  | AnyAction
-  | ThunkAction<unknown, RootState, ExtraArgument, AnyAction>;
+export type AppActions = AnyAction | ThunkAction<unknown, RootState, ExtraArgument, AnyAction>;
 
 const isAppContext = (ctx: Context): ctx is AppContext => 'Component' in ctx;
 
@@ -46,11 +44,7 @@ if (!process.browser && process.env.BACKEND_HOST == null) {
 }
 
 const makeStore: MakeStore<Store> = (ctx) => {
-  const req = isAppContext(ctx)
-    ? ctx.ctx.req
-    : 'req' in ctx
-    ? ctx.req
-    : undefined;
+  const req = isAppContext(ctx) ? ctx.ctx.req : 'req' in ctx ? ctx.req : undefined;
   const cookie = req?.headers.cookie;
   /**
    * TODO:
@@ -58,8 +52,19 @@ const makeStore: MakeStore<Store> = (ctx) => {
    * そもそも500エラーの可能性があるprerenderでstoreが初期化されるのはおかしいわけだが、DefaultLayoutが_app.tsxで配置されてしまっている以上、_app.tsxでstoreを構築する必要があり、回避策としてこうなっている
    */
   const baseUrl = process.browser ? '/' : process.env.BACKEND_HOST ?? '';
-  const api = createApiClient(baseUrl, cookie ? { headers: { cookie } } : {});
-  return createStore({ api });
+  const api = createApiClient(
+    baseUrl,
+    cookie
+      ? {
+          headers: {
+            cookie,
+          },
+        }
+      : {},
+  );
+  return createStore({
+    api,
+  });
 };
 
 /**

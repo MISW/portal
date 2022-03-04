@@ -43,15 +43,6 @@ export type User = {
   paymentStatus?: PaymentStatus;
 };
 
-export type UpdateUserProfileInput = Omit<
-  User,
-  | 'slackId'
-  | 'role'
-  | 'slackInvitationStatus'
-  | 'createdAt'
-  | 'updatedAt'
-  | 'emailVerified'
-  | 'id'
->;
+export type UpdateUserProfileInput = Omit<User, 'slackId' | 'role' | 'slackInvitationStatus' | 'createdAt' | 'updatedAt' | 'emailVerified' | 'id'>;
 
 export type SignupInput = Omit<UpdateUserProfileInput, 'cardPublished'>;

@@ -35,20 +35,16 @@ const Period: React.FC<{
   options: number[];
   onClose: () => void;
   onSave: () => void;
-}> = ({
-  title,
-  description,
-  selected,
-  setSelected,
-  options,
-  onClose,
-  onSave,
-}) => {
+}> = ({ title, description, selected, setSelected, options, onClose, onSave }) => {
   const formatPeriod = (period: number) => {
     return `${Math.floor(period / 100)}年${period % 100}月`;
   };
 
-  const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+  const handleChange = (
+    event: React.ChangeEvent<{
+      value: unknown;
+    }>,
+  ) => {
     setSelected(event.target.value as number);
   };
 
@@ -57,10 +53,7 @@ const Period: React.FC<{
       <AccordionDetails>
         <Box display="block">
           <Typography>{description ?? ''}</Typography>
-          <FormControl
-            className={classes.formControl}
-            disabled={selected === undefined}
-          >
+          <FormControl className={classes.formControl} disabled={selected === undefined}>
             <InputLabel id="period-input-label">{title}</InputLabel>
             <Select
               labelId="period-select-label"

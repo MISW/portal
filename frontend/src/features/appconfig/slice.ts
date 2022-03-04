@@ -41,8 +41,4 @@ const appconfigSlice = createSlice({
 });
 
 export const appconfigReducer = appconfigSlice.reducer;
-export const {
-  paymentPeriodUpdated,
-  currentPeriodUpdated,
-  emailTemplateUpdated,
-} = appconfigSlice.actions;
+export const { paymentPeriodUpdated, currentPeriodUpdated, emailTemplateUpdated } = appconfigSlice.actions;

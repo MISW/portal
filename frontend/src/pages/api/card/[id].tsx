@@ -13,7 +13,11 @@ const client = createApiClient(process.env.BACKEND_HOST ?? '');
 
 const getIdAndExtFromRawId = (rawId: string) => {
   const matched = /\.([a-z]+)$/.exec(rawId);
-  if (matched == null) return { id: rawId, ext: 'png' } as const;
+  if (matched == null)
+    return {
+      id: rawId,
+      ext: 'png',
+    } as const;
 
   const [, ext] = matched;
   return {
@@ -58,17 +62,11 @@ const cardImageHandler: NextApiHandler = async (req, res) => {
     return;
   }
 
-  const avatarUrlPromise =
-    card.avatar != null
-      ? fetchAsDataURL(card.avatar.url).catch(() => undefined)
-      : Promise.resolve(undefined);
+  const avatarUrlPromise = card.avatar != null ? fetchAsDataURL(card.avatar.url).catch(() => undefined) : Promise.resolve(undefined);
 
   const miswLogoUrlPromise = loadAssetAsDataURL(miswlogo.src, 'image/png');
 
-  const [avatarUrl, miswLogoUrl] = await Promise.all([
-    avatarUrlPromise,
-    miswLogoUrlPromise,
-  ]);
+  const [avatarUrl, miswLogoUrl] = await Promise.all([avatarUrlPromise, miswLogoUrlPromise]);
 
   const svg = ReactDOM.renderToStaticMarkup(
     <CardSvg

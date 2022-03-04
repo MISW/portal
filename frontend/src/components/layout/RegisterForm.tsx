@@ -16,8 +16,13 @@ const validateFormContents = (obj: Partial<UserProfileHooks>): boolean => {
 };
 
 export type SubmitResult =
-  | { status: 'success' }
-  | { status: 'error'; message: string }
+  | {
+      status: 'success';
+    }
+  | {
+      status: 'error';
+      message: string;
+    }
   | null;
 
 const RegisterForm: React.FC<{
@@ -61,7 +66,12 @@ const RegisterForm: React.FC<{
       sex,
       emergencyPhoneNumber,
     };
-    const universityInfo = { univName, department, subject, studentId };
+    const universityInfo = {
+      univName,
+      department,
+      subject,
+      studentId,
+    };
     const circleInfo = {
       generation,
       handle,
@@ -71,23 +81,7 @@ const RegisterForm: React.FC<{
       discordId,
     };
     return [fundamentalInfo, universityInfo, circleInfo] as const;
-  }, [
-    name,
-    kana,
-    email,
-    sex,
-    emergencyPhoneNumber,
-    univName,
-    department,
-    subject,
-    studentId,
-    generation,
-    handle,
-    otherCircles,
-    workshops,
-    squads,
-    discordId,
-  ]);
+  }, [name, kana, email, sex, emergencyPhoneNumber, univName, department, subject, studentId, generation, handle, otherCircles, workshops, squads, discordId]);
 
   const [submitResult, setSubmitResult] = useState<SubmitResult>(null);
 
@@ -106,16 +100,11 @@ const RegisterForm: React.FC<{
     setActiveStep(activeStep + 1);
   }, [activeStep, contentHooks]);
 
-  const handleBack = useCallback(
-    () => setActiveStep(activeStep - 1),
-    [activeStep],
-  );
+  const handleBack = useCallback(() => setActiveStep(activeStep - 1), [activeStep]);
 
   if (nextButtonDisabled) {
     const hook = contentHooks[activeStep];
-    const valid = Object.values(hook as Partial<UserProfileHooks>).every((v) =>
-      v ? v.valid : true,
-    );
+    const valid = Object.values(hook as Partial<UserProfileHooks>).every((v) => (v ? v.valid : true));
     if (valid) setNextButtonDisabled(false);
   }
 
@@ -137,23 +126,9 @@ const RegisterForm: React.FC<{
             case 1:
               return <UniversityInfo userHooks={userHooks} />;
             case 2:
-              return (
-                <CircleInfo
-                  userHooks={userHooks}
-                  genFirstYear={genFirstYear}
-                  formType={formType}
-                />
-              );
+              return <CircleInfo userHooks={userHooks} genFirstYear={genFirstYear} formType={formType} />;
             case 3:
-              return (
-                <Confirm
-                  user={userData}
-                  valid={valid}
-                  onSubmit={handleSubmit}
-                  successMessage={successMessage}
-                  submitResult={submitResult}
-                />
-              );
+              return <Confirm user={userData} valid={valid} onSubmit={handleSubmit} successMessage={successMessage} submitResult={submitResult} />;
             default:
               throw new Error('Unknown Step');
           }

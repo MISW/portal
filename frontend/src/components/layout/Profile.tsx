@@ -35,10 +35,10 @@ const useToolbarStyle = makeStyles(() => ({
   },
 }));
 
-const RowItem: React.FC<{ label: string; value: string | number }> = ({
-  label,
-  value,
-}) => (
+const RowItem: React.FC<{
+  label: string;
+  value: string | number;
+}> = ({ label, value }) => (
   <TableRow>
     <TableCell component="th" scope="row" align="center">
       <Box fontWeight="fontWeightBold">{label}</Box>

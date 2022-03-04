@@ -1,16 +1,7 @@
 import React from 'react';
 import { styled } from '@mui/material/styles';
 import { NextPage } from 'next';
-import {
-  Grid,
-  Paper,
-  TableContainer,
-  Table,
-  TableBody,
-  TableRow,
-  TableCell,
-  Typography,
-} from '@mui/material';
+import { Grid, Paper, TableContainer, Table, TableBody, TableRow, TableCell, Typography } from '@mui/material';
 import LinkContentCard from 'components/design/LinkContentCard';
 import { Alert, AlertTitle } from '@mui/material';
 import { withLogin } from 'middlewares/withLogin';
@@ -111,13 +102,15 @@ const Page: NextPage = () => {
             </Alert>
             <div>
               <p>
-                新入会希望者は<strong>入会費1000円</strong>
+                新入会希望者は
+                <strong>入会費1000円</strong>
                 を以下の口座へ振り込んでください。
               </p>
               <p>
                 振込が確認され次第, メール {currentUser.email}
                 宛にサークル内の連絡ツール
-                <strong>Slack</strong>の招待が届きます!
+                <strong>Slack</strong>
+                の招待が届きます!
               </p>
             </div>
             <TableContainer component={Paper}>
@@ -143,9 +136,7 @@ const Page: NextPage = () => {
               </ul>
               のいずれかへその由を伝えてください。
             </Alert>
-            <Alert severity="info">
-              会費は部室の備品購入やコミケなどへの参加費用等に使われます。
-            </Alert>
+            <Alert severity="info">会費は部室の備品購入やコミケなどへの参加費用等に使われます。</Alert>
           </Paper>
         </div>
       </StyledNoSSR>

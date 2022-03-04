@@ -15,21 +15,20 @@ export const useSystemColorScheme = () => {
   );
 
   useEffect(() => {
-    const matches =
-      window?.matchMedia('(prefers-color-scheme: dark)')?.matches ?? undefined;
+    const matches = window?.matchMedia('(prefers-color-scheme: dark)')?.matches ?? undefined;
 
     if (matches === undefined) {
       return;
     }
 
-    callback({ matches });
+    callback({
+      matches,
+    });
 
     window.matchMedia('(prefers-color-scheme: dark)').addListener(callback);
 
     return () => {
-      window
-        .matchMedia('(prefers-color-scheme: dark)')
-        .removeListener(callback);
+      window.matchMedia('(prefers-color-scheme: dark)').removeListener(callback);
     };
   }, [callback]);
 

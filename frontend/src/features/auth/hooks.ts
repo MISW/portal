@@ -1,12 +1,7 @@
 import { useCallback, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useRouter } from 'next/router';
-import {
-  verifyEmail as verifyEmailRequest,
-  login as loginRequest,
-  logout,
-  processCallback,
-} from './operations';
+import { verifyEmail as verifyEmailRequest, login as loginRequest, logout, processCallback } from './operations';
 
 export const useVerifyEmail = () => {
   const dispatch = useDispatch();
