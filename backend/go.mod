@@ -11,13 +11,13 @@ require (
 	github.com/google/go-cmp v0.5.7
 	github.com/heetch/confita v0.10.0
 	github.com/jmoiron/sqlx v1.3.4
-	github.com/labstack/echo/v4 v4.7.0
+	github.com/labstack/echo/v4 v4.7.1
 	github.com/labstack/gommon v0.3.1
 	github.com/slack-go/slack v0.10.2
 	go.uber.org/dig v1.14.0
-	golang.org/x/crypto v0.0.0-20220214200702-86341886e292
+	golang.org/x/crypto v0.0.0-20220313003712-b769efc7c000
 	golang.org/x/net v0.0.0-20220225172249-27dd8689420f
-	golang.org/x/oauth2 v0.0.0-20220223155221-ee480838109b
+	golang.org/x/oauth2 v0.0.0-20220309155454-6242fa91716a
 	golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1
 	gopkg.in/yaml.v2 v2.4.0
 )

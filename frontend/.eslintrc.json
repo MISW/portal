@@ -29,22 +29,13 @@
   },
   "rules": {
     "linebreak-style": ["error", "unix"],
-    "@typescript-eslint/explicit-module-boundary-types": "warn",
-    "@typescript-eslint/no-explicit-any": "warn",
     "react/prop-types": "warn",
-    "react-hooks/rules-of-hooks": "error",
-    "react-hooks/exhaustive-deps": "warn",
-    "no-irregular-whitespace": "warn",
-    "react/jsx-key": ["warn", { "checkFragmentShorthand": true }]
+    "react-hooks/rules-of-hooks": "error"
   },
   "overrides":[
     {
       "files": ["*.js"],
-      "parserOptions": {"sourceType": "script"},
-      "rules": {
-        "no-undef": "warn",
-        "@typescript-eslint/no-var-requires": "warn"
-      }
+      "parserOptions": {"sourceType": "script"}
     }
   ]
 }
