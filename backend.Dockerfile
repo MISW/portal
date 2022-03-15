@@ -1,9 +1,9 @@
-ARG go_version=1.17
+ARG go_version=1.18
 
 # ツール類
 FROM golang:${go_version} AS tools
 ARG dockerize_version=v0.6.1
-ARG sqldef_version=v0.11.44
+ARG sqldef_version=v0.11.45
 ARG dbenv_version=v1.1.0
 
 RUN wget https://github.com/jwilder/dockerize/releases/download/${dockerize_version}/dockerize-linux-amd64-${dockerize_version}.tar.gz \

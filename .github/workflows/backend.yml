@@ -21,7 +21,7 @@ jobs:
           MYSQL_DATABASE: database
 
     container:
-      image: golang:1.17
+      image: golang:1.18
       env:
         DATABASE_URL: "root:password@tcp(mysql)/?parseTime=true&multiStatements=true"
 
@@ -30,7 +30,7 @@ jobs:
 
       - name: Install mysqldef
         run: |
-          wget https://github.com/k0kubun/sqldef/releases/download/v0.11.44/mysqldef_linux_amd64.tar.gz
+          wget https://github.com/k0kubun/sqldef/releases/download/v0.11.45/mysqldef_linux_amd64.tar.gz
           tar xvf mysqldef_linux_amd64.tar.gz
           chmod +x mysqldef
           mv mysqldef /usr/local/bin
