@@ -1,6 +1,6 @@
 module github.com/MISW/Portal/tools/slack_matching
 
-go 1.17
+go 1.18
 
 require github.com/slack-go/slack v0.10.2
 

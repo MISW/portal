@@ -1,6 +1,6 @@
 module github.com/MISW/Portal/backend
 
-go 1.17
+go 1.18
 
 require (
 	github.com/DATA-DOG/go-sqlmock v1.5.0
@@ -15,7 +15,7 @@ require (
 	github.com/labstack/gommon v0.3.1
 	github.com/slack-go/slack v0.10.2
 	go.uber.org/dig v1.14.0
-	golang.org/x/crypto v0.0.0-20220313003712-b769efc7c000
+	golang.org/x/crypto v0.0.0-20220315160706-3147a52a75dd
 	golang.org/x/net v0.0.0-20220225172249-27dd8689420f
 	golang.org/x/oauth2 v0.0.0-20220309155454-6242fa91716a
 	golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1
