@@ -53,11 +53,11 @@
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-react": "^7.29.4",
     "eslint-plugin-react-hooks": "^4.3.0",
-    "postcss": "^8.4.9",
+    "postcss": "^8.4.12",
     "postcss-flexbugs-fixes": "^5.0.2",
     "postcss-nested": "^5.0.6",
     "postcss-preset-env": "^7.4.2",
-    "prettier": "^2.5.1",
+    "prettier": "^2.6.0",
     "tailwind-variant.macro": "^0.0.2",
     "type-fest": "^2.12.0",
     "typescript": "^4.6.2"
