@@ -21,7 +21,7 @@
     "@fortawesome/fontawesome-common-types": "^6.1.0",
     "@fortawesome/free-brands-svg-icons": "^6.1.0",
     "@mui/icons-material": "^5.5.1",
-    "@mui/material": "^5.5.1",
+    "@mui/material": "^5.5.2",
     "@mui/styles": "^5.5.1",
     "@reduxjs/toolkit": "^1.8.0",
     "clsx": "^1.1.1",
