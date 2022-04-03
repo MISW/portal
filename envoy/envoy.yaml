@@ -1,4 +1,4 @@
-admin:
+admin: # will soon be deprecated
   access_log_path: /dev/stdout
   address:
     socket_address:
@@ -23,17 +23,17 @@ static_resources:
                   virtual_hosts:
                     - name: portal
                       domains: ["*"]
-                      routes:
-                        - match:
-                            prefix: "/"
-                          route:
-                            cluster: next_backend
+                      routes: #matchしたものからルーティングされるため、/api/を先に書く必要がある。
                         - match:
                             prefix: "/api/"
                           route:
                             cluster: apiserver_backend
+                        - match:
+                            prefix: "/"
+                          route:
+                            cluster: next_backend
                 http_filters:
-                  - name: envoy.router
+                  - name: envoy.filters.http.router
                 upgrade_configs:
                   - upgrade_type: websocket
   clusters:
@@ -60,4 +60,4 @@ static_resources:
                   address:
                     socket_address:
                       address: backend
-                      port_value: 8
+                      port_value: 80
