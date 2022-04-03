@@ -53,9 +53,7 @@ function EmailTemplate<T extends string>(param: {
 }): JSX.Element {
   const { selected, options, values, setSelected, setValues, onClose, onSave } = param;
 
-  const handleSelected = (
-    event: SelectChangeEvent<unknown>,
-  ) => {
+  const handleSelected = (event: SelectChangeEvent<unknown>) => {
     setSelected(event.target.value as T);
   };
 
