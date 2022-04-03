@@ -3,7 +3,7 @@ import { styled } from '@mui/material/styles';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionActions from '@mui/material/AccordionActions';
 import { Box, Button, Divider, Typography, TextField, Grid } from '@mui/material';
@@ -54,9 +54,7 @@ function EmailTemplate<T extends string>(param: {
   const { selected, options, values, setSelected, setValues, onClose, onSave } = param;
 
   const handleSelected = (
-    event: React.ChangeEvent<{
-      value: unknown;
-    }>,
+    event: SelectChangeEvent<unknown>,
   ) => {
     setSelected(event.target.value as T);
   };
@@ -85,7 +83,7 @@ function EmailTemplate<T extends string>(param: {
             <Grid item xs={6}>
               <FormControl disabled={selected === undefined}>
                 <InputLabel id="period-input-label">種類</InputLabel>
-                <Select labelId="period-select-label" id="period-select-label" value={selected ?? ''} onChange={() => handleSelected}>
+                <Select labelId="period-select-label" id="period-select-label" value={selected ?? ''} onChange={handleSelected}>
                   {options.map((p) => (
                     <MenuItem key={p.key} value={p.key}>
                       {p.label}
