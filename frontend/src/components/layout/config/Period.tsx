@@ -3,7 +3,7 @@ import { styled } from '@mui/material/styles';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionActions from '@mui/material/AccordionActions';
 import { Box, Button, Divider, Typography } from '@mui/material';
@@ -40,11 +40,7 @@ const Period: React.FC<{
     return `${Math.floor(period / 100)}年${period % 100}月`;
   };
 
-  const handleChange = (
-    event: React.ChangeEvent<{
-      value: unknown;
-    }>,
-  ) => {
+  const handleChange = (event: SelectChangeEvent<unknown>) => {
     setSelected(event.target.value as number);
   };
 
@@ -55,12 +51,7 @@ const Period: React.FC<{
           <Typography>{description ?? ''}</Typography>
           <FormControl className={classes.formControl} disabled={selected === undefined}>
             <InputLabel id="period-input-label">{title}</InputLabel>
-            <Select
-              labelId="period-select-label"
-              id="period-select-label"
-              value={selected && options.length !== 0 ? selected : ''}
-              onChange={() => handleChange}
-            >
+            <Select labelId="period-select-label" id="period-select-label" value={selected ?? ''} onChange={handleChange}>
               {options.map((p) => (
                 <MenuItem key={p} value={p}>
                   {formatPeriod(p)}
