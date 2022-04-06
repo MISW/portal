@@ -83,6 +83,10 @@ func (wh *webhookHandler) Slack(e echo.Context) error {
 		switch ev := innerEvent.Data.(type) {
 
 		case *slackevents.TeamJoinEvent:
+			if ev.Type != slackevents.TeamJoin {
+				return xerrors.Errorf("inappropriate type for data: %s", innerEvent.Data)
+			}
+
 			err = wh.wu.NewUser(
 				e.Request().Context(),
 				ev.User.Profile.Email,
