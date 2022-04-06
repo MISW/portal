@@ -79,23 +79,25 @@ func (wh *webhookHandler) Slack(e echo.Context) error {
 		return e.String(http.StatusOK, res.Challenge)
 
 	case slackevents.CallbackEvent:
-		switch event.InnerEvent.Type {
-		case "team_join":
-			res, ok := event.InnerEvent.Data.(*slack.TeamJoinEvent)
+		innerEvent := event.InnerEvent
+		switch ev := innerEvent.Data.(type) {
 
-			if !ok {
-				return xerrors.Errorf("failed to convert %v into *slack.TeamJoinEvent", event.InnerEvent.Data)
+		case *slackevents.TeamJoinEvent:
+			if ev.Type != slackevents.TeamJoin {
+				return xerrors.Errorf("inappropriate type for data: %s", innerEvent.Data)
 			}
 
 			err = wh.wu.NewUser(
 				e.Request().Context(),
-				res.User.Profile.Email,
-				res.User.ID,
+				ev.User.Profile.Email,
+				ev.User.ID,
 			)
-
 			if err != nil {
 				return xerrors.Errorf("failed to unmarshal body: %w", err)
 			}
+
+		default:
+			return xerrors.Errorf("Unknown callback event, Data: %s", innerEvent.Data)
 		}
 	}
 
