@@ -37,7 +37,7 @@
     "tailwindcss": "^2.2.2"
   },
   "devDependencies": {
-    "@babel/core": "^7.17.8",
+    "@babel/core": "^7.17.9",
     "@trivago/prettier-plugin-sort-imports": "^3.2.0",
     "@types/node": "^17.0.23",
     "@types/react": "^17.0.43",
