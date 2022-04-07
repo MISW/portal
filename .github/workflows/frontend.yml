@@ -21,9 +21,8 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 16.x
-      - uses: bahmutov/npm-install@v1
-        with:
-          working-directory: frontend
+      - name: npm-install
+        run: npm install --force
       - name: Prettier
         run: npm run format:check
       - name: ESLint
@@ -39,8 +38,7 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 16.x
-      - uses: bahmutov/npm-install@v1
-        with:
-          working-directory: frontend
+      - name: npm-install
+        run: npm install --force
       - name: Build
         run: npm run build

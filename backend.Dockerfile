@@ -3,20 +3,20 @@ ARG go_version=1.18
 # ツール類
 FROM golang:${go_version} AS tools
 ARG dockerize_version=v0.6.1
-ARG sqldef_version=v0.11.45
+ARG sqldef_version=v0.11.49
 ARG dbenv_version=v1.1.0
 
 RUN wget https://github.com/jwilder/dockerize/releases/download/${dockerize_version}/dockerize-linux-amd64-${dockerize_version}.tar.gz \
-    && tar -C /usr/local/bin -xzvf dockerize-linux-amd64-${dockerize_version}.tar.gz \
+    && tar -C /usr/local/bin xf dockerize-linux-amd64-${dockerize_version}.tar.gz \
     && rm dockerize-linux-amd64-${dockerize_version}.tar.gz
 
 RUN wget https://github.com/k0kubun/sqldef/releases/download/${sqldef_version}/mysqldef_linux_amd64.tar.gz \
-    && tar -C /usr/local/bin -xzvf mysqldef_linux_amd64.tar.gz \
+    && tar -C /usr/local/bin xf mysqldef_linux_amd64.tar.gz \
     && rm mysqldef_linux_amd64.tar.gz
 
 ENV DBENV_VERSION v1.1.0
 RUN wget https://github.com/cs3238-tsuzu/dbenv/releases/download/${dbenv_version}/dbenv_linux_x86_64.tar.gz \
-    && tar -C /usr/local/bin -xzvf dbenv_linux_x86_64.tar.gz \
+    && tar -C /usr/local/bin xf dbenv_linux_x86_64.tar.gz \
     && rm dbenv_linux_x86_64.tar.gz
 
 # 開発環境
@@ -40,7 +40,8 @@ ADD ./backend /backend
 ENV GO111MODULE=on
 
 # https://github.com/golang/go/issues/26492
-RUN cd /backend && go build \
+RUN cd /backend && go mod tidy
+RUN go build \
     -ldflags '-extldflags "-fno-PIC -static"' \
     -buildmode pie \
     -tags 'osusergo netgo static_build' \

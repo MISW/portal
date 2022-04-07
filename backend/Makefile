@@ -1,6 +1,6 @@
 .PHONY: ci-test
 ci-test:
-	go test -race -tags use_external_db -v ./...
+	go mod tidy || go test -race -tags use_external_db -v ./...
 
 init:
 	(cd $(mktemp -d); GO111MODULE=on \

@@ -30,6 +30,7 @@ FROM install-modules AS build-frontend
 
 WORKDIR /frontend
 COPY ./frontend /frontend
+RUN npm install --force
 RUN npm run build
 
 # node_modulesから本番で使わないものを取り除く

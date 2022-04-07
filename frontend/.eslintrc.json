@@ -21,7 +21,6 @@
   },
   "plugins": [
     "eslint-plugin-react",
-    "eslint-plugin-react-hooks",
     "@typescript-eslint/eslint-plugin"
   ],
   "settings": {
