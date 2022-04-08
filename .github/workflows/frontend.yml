@@ -13,34 +13,20 @@ defaults:
     working-directory: frontend
 
 jobs:
-  lint:
+  build:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
           node-version: 16.x
-      - uses: bahmutov/npm-install@v1
-        with:
-          working-directory: frontend
+      - name: npm-install
+        run: npm install --force
       - name: Prettier
         run: npm run format:check
       - name: ESLint
         run: npm run lint
       - name: Typecheck
         run: npm run typecheck
-
-  build:
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 16.x
-      - uses: bahmutov/npm-install@v1
-        with:
-          working-directory: frontend
       - name: Build
         run: npm run build

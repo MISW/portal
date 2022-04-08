@@ -1,5 +1,6 @@
 .PHONY: ci-test
 ci-test:
+	go install && \
 	go test -race -tags use_external_db -v ./...
 
 init:

@@ -23,7 +23,7 @@ ENTRYPOINT [ "/bin/docker-entrypoint.frontend.sh" ]
 FROM base AS install-modules
 
 WORKDIR /frontend
-RUN npm ci
+RUN npm install --force
 
 # ビルド
 FROM install-modules AS build-frontend

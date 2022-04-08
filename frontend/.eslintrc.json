@@ -9,7 +9,6 @@
     "next",
     "next/core-web-vitals",
     "eslint:recommended",
-    "plugin:react/recommended",
     "plugin:@typescript-eslint/recommended",
     "plugin:@typescript-eslint/eslint-recommended"
   ],
@@ -20,17 +19,14 @@
     "sourceType": "module"
   },
   "plugins": [
-    "eslint-plugin-react",
-    "eslint-plugin-react-hooks",
-    "@typescript-eslint/eslint-plugin"
+    "@typescript-eslint"
   ],
   "settings": {
     "react": {"version": "detect"}
   },
   "rules": {
     "linebreak-style": ["error", "unix"],
-    "react/prop-types": "warn",
-    "react-hooks/rules-of-hooks": "error"
+    "react/prop-types": "warn"
   },
   "overrides":[
     {
