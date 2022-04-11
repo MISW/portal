@@ -25,13 +25,15 @@ export type SubmitResult =
     }
   | null;
 
-const RegisterForm: React.FC<{
-  formName: string;
-  user?: Partial<ConfigurableProfile>;
-  onSubmit: (user: ConfigurableProfile) => Promise<SubmitResult>;
-  successMessage: ReactNode;
-  formType: 'setting' | 'new';
-}> = ({ formName, user, onSubmit, successMessage, formType }) => {
+const RegisterForm: React.FC<
+  React.PropsWithChildren<{
+    formName: string;
+    user?: Partial<ConfigurableProfile>;
+    onSubmit: (user: ConfigurableProfile) => Promise<SubmitResult>;
+    successMessage: ReactNode;
+    formType: 'setting' | 'new';
+  }>
+> = ({ formName, user, onSubmit, successMessage, formType }) => {
   const now = new Date();
   const businessYear = now.getFullYear() - (now.getMonth() + 1 >= 4 ? 0 : 1);
   const genFirstYear = businessYear - 1969 + 4;

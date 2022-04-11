@@ -44,16 +44,18 @@ const StyledPaper = styled(Paper)(({ theme }) => ({
 
 export {};
 
-const RegisterFormStepper: React.FC<{
-  formName: string;
-  children: ReactNode;
-  activeStep: number;
-  success: boolean;
-  steps: string[];
-  handleNext: () => void;
-  handleBack: () => void;
-  nextDisabled?: boolean;
-}> = (props) => {
+const RegisterFormStepper: React.FC<
+  React.PropsWithChildren<{
+    formName: string;
+    children: ReactNode;
+    activeStep: number;
+    success: boolean;
+    steps: string[];
+    handleNext: () => void;
+    handleBack: () => void;
+    nextDisabled?: boolean;
+  }>
+> = (props) => {
   const router = useRouter();
   const handleHome = useCallback(() => {
     router.push('/');

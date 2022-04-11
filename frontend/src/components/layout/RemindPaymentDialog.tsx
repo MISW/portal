@@ -17,7 +17,7 @@ type Props = {
   onClose: (value: 'OK' | 'Cancel') => void;
 };
 
-const RemindPaymentDialog: React.FC<Props> = (props) => {
+const RemindPaymentDialog: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const { onClose, targetUsers, open } = props;
 
   return (

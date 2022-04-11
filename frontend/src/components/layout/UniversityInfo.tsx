@@ -3,7 +3,7 @@ import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
 import { UserProfileHooks, FormContentProps } from '../../hooks/formHooks';
 
-const SchoolNameField: React.FC<FormContentProps<string>> = ({ value, error, onChange }) => {
+const SchoolNameField: React.FC<React.PropsWithChildren<FormContentProps<string>>> = ({ value, error, onChange }) => {
   return (
     <Grid item xs={12}>
       <TextField
@@ -22,7 +22,7 @@ const SchoolNameField: React.FC<FormContentProps<string>> = ({ value, error, onC
   );
 };
 
-const DepartmentField: React.FC<FormContentProps<string>> = ({ value, error, onChange }) => {
+const DepartmentField: React.FC<React.PropsWithChildren<FormContentProps<string>>> = ({ value, error, onChange }) => {
   return (
     <Grid item xs={12} sm={6}>
       <TextField
@@ -41,7 +41,7 @@ const DepartmentField: React.FC<FormContentProps<string>> = ({ value, error, onC
   );
 };
 
-const SubjectField: React.FC<FormContentProps<string>> = ({ value, error, onChange }) => {
+const SubjectField: React.FC<React.PropsWithChildren<FormContentProps<string>>> = ({ value, error, onChange }) => {
   return (
     <Grid item xs={12} sm={6}>
       <TextField
@@ -59,7 +59,7 @@ const SubjectField: React.FC<FormContentProps<string>> = ({ value, error, onChan
   );
 };
 
-const StudentIDField: React.FC<FormContentProps<string>> = ({ value, error, onChange }) => {
+const StudentIDField: React.FC<React.PropsWithChildren<FormContentProps<string>>> = ({ value, error, onChange }) => {
   return (
     <Grid item xs={12}>
       <TextField
@@ -78,9 +78,11 @@ const StudentIDField: React.FC<FormContentProps<string>> = ({ value, error, onCh
   );
 };
 
-const UniversityInfo: React.FC<{
-  userHooks: UserProfileHooks;
-}> = ({ userHooks: { univName, department, subject, studentId } }) => {
+const UniversityInfo: React.FC<
+  React.PropsWithChildren<{
+    userHooks: UserProfileHooks;
+  }>
+> = ({ userHooks: { univName, department, subject, studentId } }) => {
   return (
     <Grid container spacing={3}>
       <SchoolNameField {...univName} />

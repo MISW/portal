@@ -44,11 +44,13 @@ const paymentStatusesStyle = makeStyles(() =>
   }),
 );
 
-const PaymentStatuses: React.FC<{
-  paymentStatuses: readonly PaymentStatus[];
-  editButton?: boolean;
-  handleEditButton?: () => void;
-}> = ({ paymentStatuses }) => {
+const PaymentStatuses: React.FC<
+  React.PropsWithChildren<{
+    paymentStatuses: readonly PaymentStatus[];
+    editButton?: boolean;
+    handleEditButton?: () => void;
+  }>
+> = ({ paymentStatuses }) => {
   const toolbarClasses = useToolbarStyle();
   const paymentStatusesClasses = paymentStatusesStyle();
 

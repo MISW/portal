@@ -26,12 +26,14 @@ const StyledGrid = styled(Grid)({
   },
 });
 
-export const LinkContentCard: React.FC<{
-  title: string;
-  description: string;
-  link: string;
-  image?: string;
-}> = ({ title, description, link }) => {
+export const LinkContentCard: React.FC<
+  React.PropsWithChildren<{
+    title: string;
+    description: string;
+    link: string;
+    image?: string;
+  }>
+> = ({ title, description, link }) => {
   return (
     <StyledGrid item xs={12} md={6}>
       <CardActionArea component="a" href={link}>

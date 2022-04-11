@@ -8,13 +8,15 @@ import { Alert } from '@mui/material';
 import { toCamelCase } from 'infra/converter';
 import { User } from 'models/user';
 
-const Confirm: React.FC<{
-  user: ConfigurableProfile;
-  valid: UserValidation;
-  submitResult: SubmitResult;
-  successMessage: ReactNode;
-  onSubmit: () => Promise<void>;
-}> = ({ user, valid, onSubmit, successMessage, submitResult: submitResult }) => {
+const Confirm: React.FC<
+  React.PropsWithChildren<{
+    user: ConfigurableProfile;
+    valid: UserValidation;
+    submitResult: SubmitResult;
+    successMessage: ReactNode;
+    onSubmit: () => Promise<void>;
+  }>
+> = ({ user, valid, onSubmit, successMessage, submitResult: submitResult }) => {
   const filledCorrectly = Object.values(valid).reduce((prev, cur) => prev && cur, true);
   return (
     <>

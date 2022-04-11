@@ -52,7 +52,7 @@ const StyledStyledEngineProvider = styled(StyledEngineProvider)(({ theme }) => (
   },
 }));
 
-const Copyright: React.FC = () => {
+const Copyright: React.FC<React.PropsWithChildren<unknown>> = () => {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
       {'Copyright © '}
@@ -65,9 +65,11 @@ const Copyright: React.FC = () => {
   );
 };
 
-export const DefaultLayout: React.FC<{
-  onLogout: () => void;
-}> = ({ children, onLogout }) => {
+export const DefaultLayout: React.FC<
+  React.PropsWithChildren<{
+    onLogout: () => void;
+  }>
+> = ({ children, onLogout }) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const currentUser = useSelector(selectCurrentUser);

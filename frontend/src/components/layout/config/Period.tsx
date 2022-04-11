@@ -27,15 +27,17 @@ const Root = styled('div')(({ theme }) => ({
   },
 }));
 
-const Period: React.FC<{
-  title: string;
-  description?: string;
-  selected: number | undefined;
-  setSelected: (period: number | undefined) => void;
-  options: number[];
-  onClose: () => void;
-  onSave: () => void;
-}> = ({ title, description, selected, setSelected, options, onClose, onSave }) => {
+const Period: React.FC<
+  React.PropsWithChildren<{
+    title: string;
+    description?: string;
+    selected: number | undefined;
+    setSelected: (period: number | undefined) => void;
+    options: number[];
+    onClose: () => void;
+    onSave: () => void;
+  }>
+> = ({ title, description, selected, setSelected, options, onClose, onSave }) => {
   const formatPeriod = (period: number) => {
     return `${Math.floor(period / 100)}年${period % 100}月`;
   };

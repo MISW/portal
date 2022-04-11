@@ -7,10 +7,12 @@ import { UserProfileHooks, FormContentProps } from '../../hooks/formHooks';
 import { Alert } from '@mui/material';
 
 export const GenerationSelector: React.FC<
-  FormContentProps<number> & {
-    genFirstYear: number;
-    formType: 'setting' | 'new';
-  }
+  React.PropsWithChildren<
+    FormContentProps<number> & {
+      genFirstYear: number;
+      formType: 'setting' | 'new';
+    }
+  >
 > = ({ value, onChange, genFirstYear, formType }) => {
   return (
     <Grid item xs={12}>
@@ -35,7 +37,7 @@ export const GenerationSelector: React.FC<
   );
 };
 
-export const HandleNameForm: React.FC<FormContentProps<string>> = ({ value, error, onChange }) => {
+export const HandleNameForm: React.FC<React.PropsWithChildren<FormContentProps<string>>> = ({ value, error, onChange }) => {
   return (
     <Grid item xs={12} sm={6}>
       <TextField
@@ -54,7 +56,7 @@ export const HandleNameForm: React.FC<FormContentProps<string>> = ({ value, erro
     </Grid>
   );
 };
-export const WorkshopsForm: React.FC<FormContentProps<Array<string>>> = ({ value, error, onChange }) => {
+export const WorkshopsForm: React.FC<React.PropsWithChildren<FormContentProps<Array<string>>>> = ({ value, error, onChange }) => {
   const allWorkshops = ['プログラミング', 'CG', 'MIDI'];
   const workshops = new Set(value.filter((s: string) => allWorkshops.includes(s)));
 
@@ -90,7 +92,7 @@ export const WorkshopsForm: React.FC<FormContentProps<Array<string>>> = ({ value
   );
 };
 
-export const SquadsForm: React.FC<FormContentProps<Array<string>>> = ({ value, onChange }) => (
+export const SquadsForm: React.FC<React.PropsWithChildren<FormContentProps<Array<string>>>> = ({ value, onChange }) => (
   <Grid item xs={12}>
     <TextField
       id="squads"
@@ -105,13 +107,13 @@ export const SquadsForm: React.FC<FormContentProps<Array<string>>> = ({ value, o
   </Grid>
 );
 
-export const OtherCircleForm: React.FC<FormContentProps<string>> = ({ value, onChange }) => (
+export const OtherCircleForm: React.FC<React.PropsWithChildren<FormContentProps<string>>> = ({ value, onChange }) => (
   <Grid item xs={12}>
     <TextField id="otherCircle" name="otherCircle`" label="ほか所属サークル" fullWidth defaultValue={value} onChange={(e) => onChange(e.target.value)} />
   </Grid>
 );
 
-export const DiscordIdForm: React.FC<FormContentProps<string>> = ({ value, onChange, error }) => (
+export const DiscordIdForm: React.FC<React.PropsWithChildren<FormContentProps<string>>> = ({ value, onChange, error }) => (
   <Grid item xs={12}>
     <TextField
       id="other_id"
@@ -126,11 +128,13 @@ export const DiscordIdForm: React.FC<FormContentProps<string>> = ({ value, onCha
   </Grid>
 );
 
-const CircleInfo: React.FC<{
-  userHooks: UserProfileHooks;
-  genFirstYear: number;
-  formType: 'setting' | 'new';
-}> = ({ userHooks: { generation, handle, workshops, otherCircles, squads, discordId }, genFirstYear, formType }) => {
+const CircleInfo: React.FC<
+  React.PropsWithChildren<{
+    userHooks: UserProfileHooks;
+    genFirstYear: number;
+    formType: 'setting' | 'new';
+  }>
+> = ({ userHooks: { generation, handle, workshops, otherCircles, squads, discordId }, genFirstYear, formType }) => {
   return (
     <React.Fragment>
       <Grid container spacing={3}>

@@ -30,9 +30,11 @@ interface ConfigProps {
   setExpanded: (expanded: boolean) => void;
 }
 
-export const Config: React.FC<{
-  configs: ConfigProps[];
-}> = ({ configs }) => {
+export const Config: React.FC<
+  React.PropsWithChildren<{
+    configs: ConfigProps[];
+  }>
+> = ({ configs }) => {
   return (
     <Root className={classes.root}>
       {configs.map((config) => (

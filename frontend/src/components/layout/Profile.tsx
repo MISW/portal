@@ -35,10 +35,12 @@ const useToolbarStyle = makeStyles(() => ({
   },
 }));
 
-const RowItem: React.FC<{
-  label: string;
-  value: string | number;
-}> = ({ label, value }) => (
+const RowItem: React.FC<
+  React.PropsWithChildren<{
+    label: string;
+    value: string | number;
+  }>
+> = ({ label, value }) => (
   <TableRow>
     <TableCell component="th" scope="row" align="center">
       <Box fontWeight="fontWeightBold">{label}</Box>
@@ -47,13 +49,15 @@ const RowItem: React.FC<{
   </TableRow>
 );
 
-const Profile: React.FC<{
-  user: User;
-  editButton?: boolean;
-  handleEditButton?: () => void;
-  title?: boolean;
-  size?: 'small' | 'medium';
-}> = ({ user, editButton, handleEditButton, title, size }) => {
+const Profile: React.FC<
+  React.PropsWithChildren<{
+    user: User;
+    editButton?: boolean;
+    handleEditButton?: () => void;
+    title?: boolean;
+    size?: 'small' | 'medium';
+  }>
+> = ({ user, editButton, handleEditButton, title, size }) => {
   const toolbarClasses = useToolbarStyle();
 
   title = title ?? true;

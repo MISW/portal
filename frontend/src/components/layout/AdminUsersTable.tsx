@@ -297,13 +297,15 @@ const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
 
 const NoTopBottomPaddingCheckbox = Checkbox;
 
-export const EnhancedTable: React.FC<{
-  rows: Array<Data>;
-  defaultSortedBy: keyof Data;
-  headCells: Array<HeadCell>;
-  handleEditPaymnetStatus?: (id: number, status: boolean) => Promise<Data>;
-  handleClickMenu: handleClickMenuType;
-}> = ({ rows: rowsBase, defaultSortedBy, headCells, handleEditPaymnetStatus, handleClickMenu }) => {
+export const EnhancedTable: React.FC<
+  React.PropsWithChildren<{
+    rows: Array<Data>;
+    defaultSortedBy: keyof Data;
+    headCells: Array<HeadCell>;
+    handleEditPaymnetStatus?: (id: number, status: boolean) => Promise<Data>;
+    handleClickMenu: handleClickMenuType;
+  }>
+> = ({ rows: rowsBase, defaultSortedBy, headCells, handleEditPaymnetStatus, handleClickMenu }) => {
   const [rows, setRows] = React.useState<Array<Data>>(rowsBase);
   // workaround
   useEffect(() => {

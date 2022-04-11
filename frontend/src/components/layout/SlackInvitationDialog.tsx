@@ -17,7 +17,7 @@ type Props = {
   onClose: (value: 'OK' | 'Cancel') => void;
 };
 
-const SlackInvitationDialog: React.FC<Props> = (props) => {
+const SlackInvitationDialog: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const { onClose, invitedUsers, open } = props;
 
   return (

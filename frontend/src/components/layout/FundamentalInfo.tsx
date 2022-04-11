@@ -7,7 +7,7 @@ import { SexType } from '../../user';
 import { UserProfileHooks, FormContentProps } from '../../hooks/formHooks';
 import { Alert } from '@mui/material';
 
-const NameField: React.FC<FormContentProps<string>> = ({ value, onChange, error }) => {
+const NameField: React.FC<React.PropsWithChildren<FormContentProps<string>>> = ({ value, onChange, error }) => {
   const nameArray = value.split(/\s+/);
   const lastName = nameArray[0] ?? '';
   const firstName = nameArray[1] ?? '';
@@ -50,7 +50,7 @@ const NameField: React.FC<FormContentProps<string>> = ({ value, onChange, error 
   );
 };
 
-const KanaNameField: React.FC<FormContentProps<string>> = ({ value, onChange, error }) => {
+const KanaNameField: React.FC<React.PropsWithChildren<FormContentProps<string>>> = ({ value, onChange, error }) => {
   const nameArray = value.split(/\s+/);
   const lastName = nameArray[0] ?? '';
   const firstName = nameArray[1] ?? '';
@@ -94,7 +94,7 @@ const KanaNameField: React.FC<FormContentProps<string>> = ({ value, onChange, er
   );
 };
 
-const GenderField: React.FC<FormContentProps<SexType>> = ({ value, onChange }) => {
+const GenderField: React.FC<React.PropsWithChildren<FormContentProps<SexType>>> = ({ value, onChange }) => {
   return (
     <Grid item xs={12} sm={6}>
       <FormControl component="fieldset">
@@ -119,7 +119,7 @@ const GenderField: React.FC<FormContentProps<SexType>> = ({ value, onChange }) =
   );
 };
 
-const PhoneNumberField: React.FC<FormContentProps<string>> = ({ value, onChange, error }) => {
+const PhoneNumberField: React.FC<React.PropsWithChildren<FormContentProps<string>>> = ({ value, onChange, error }) => {
   return (
     <Grid item xs={12} sm={6}>
       <TextField
@@ -140,7 +140,7 @@ const PhoneNumberField: React.FC<FormContentProps<string>> = ({ value, onChange,
   );
 };
 
-const EmailField: React.FC<FormContentProps<string>> = ({ value, onChange, error }) => {
+const EmailField: React.FC<React.PropsWithChildren<FormContentProps<string>>> = ({ value, onChange, error }) => {
   return (
     <Grid item xs={12}>
       <TextField
@@ -160,9 +160,11 @@ const EmailField: React.FC<FormContentProps<string>> = ({ value, onChange, error
   );
 };
 
-const FundamentalInfo: React.FC<{
-  userHooks: UserProfileHooks;
-}> = ({ userHooks: { name, kana, sex, emergencyPhoneNumber, email } }) => {
+const FundamentalInfo: React.FC<
+  React.PropsWithChildren<{
+    userHooks: UserProfileHooks;
+  }>
+> = ({ userHooks: { name, kana, sex, emergencyPhoneNumber, email } }) => {
   return (
     <>
       <Grid container spacing={3}>
