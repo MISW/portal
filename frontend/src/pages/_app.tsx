@@ -2,7 +2,7 @@
 
 import 'tailwindcss/tailwind.css';
 import 'focus-visible';
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
 import { ThemeProvider, Theme, StyledEngineProvider } from '@mui/material/styles';

@@ -1,4 +1,4 @@
-import React from 'react';
+import { createElement } from 'react';
 import { NextPage, NextComponentType, NextPageContext } from 'next';
 import Router from 'next/router';
 import { wrapper } from 'store';
@@ -19,7 +19,7 @@ export type NextPageWithUserInfo<P = Record<string, never>, IP = P> = NextCompon
  * ログインしていることを強制する．ログインしてなかったら/loginに飛ばす
  */
 export const withLogin = <P, IP>(page: NextPage<P, IP>) => {
-  const wrapped: NextPage<P, IP | undefined> = (props) => React.createElement(page, props);
+  const wrapped: NextPage<P, IP | undefined> = (props) => createElement(page, props);
   wrapped.getInitialProps = wrapper.getInitialPageProps((store) => async (ctx) => {
     const currentUser = selectCurrentUser(store.getState());
     if (currentUser == null) {

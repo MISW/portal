@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import { useCallback } from 'react';
 import type { NextPage } from 'next';
 import Head from 'next/head';
 import { useDispatch, useSelector } from 'react-redux';

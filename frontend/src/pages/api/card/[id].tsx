@@ -2,7 +2,6 @@ import type { NextApiHandler } from 'next';
 import fs from 'fs';
 import utils from 'util';
 import type { Card } from 'models/card';
-import React from 'react';
 import ReactDOM from 'react-dom/server';
 import sharp from 'sharp';
 import { CardSvg } from 'components/CardSvg';

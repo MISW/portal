@@ -1,6 +1,6 @@
 // https://github.com/zeit/next.js/issues/7322#issuecomment-574009086 参照
 
-import React from 'react';
+import { Children } from 'react';
 import Document, { Html, Head, Main, NextScript } from 'next/document';
 import ServerStyleSheets from '@mui/styles/ServerStyleSheets';
 
@@ -57,6 +57,6 @@ MyDocument.getInitialProps = async (ctx) => {
   return {
     ...initialProps,
     // Styles fragment is rendered after the app and page rendering finish.
-    styles: [...React.Children.toArray(initialProps.styles), sheets.getStyleElement()],
+    styles: [...Children.toArray(initialProps.styles), sheets.getStyleElement()],
   };
 };

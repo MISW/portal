@@ -4,7 +4,10 @@ const withTM = require("next-transpile-modules")(["ky"]);
 const config = {
   reactStrictMode: true,
   async rewrites() {
-    return [{ source: "/card-image/:path*", destination: "/api/card/:path*" }];
+    return [{
+      source: "/card-image/:path*",
+      destination: "/api/card/:path*",
+    }];
   },
 };
 

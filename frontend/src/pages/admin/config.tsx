@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { NextPage } from 'next';
 import { Config } from 'components/layout/Config';
 import Period from 'components/layout/config/Period';

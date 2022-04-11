@@ -1,4 +1,5 @@
-import React, { useState, useCallback, ReactNode, useMemo } from 'react';
+import { useState, useCallback, ReactNode, useMemo } from 'react';
+import * as React from 'react';
 import RegisterFormStepper from './RegistrationFormStepper';
 import UniversityInfo from './UniversityInfo';
 import CircleInfo from './CircleInfo';

@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import type { IconDefinition } from '@fortawesome/fontawesome-common-types';
 import { faTwitter, faDiscord } from '@fortawesome/free-brands-svg-icons';
 

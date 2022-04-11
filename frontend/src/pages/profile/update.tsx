@@ -1,4 +1,3 @@
-import React from 'react';
 import { NextPage } from 'next';
 import { Alert } from '@mui/material';
 import RegisterForm, { SubmitResult } from 'components/layout/RegisterForm';

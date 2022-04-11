@@ -1,4 +1,4 @@
-import React, { forwardRef } from 'react';
+import { forwardRef } from 'react';
 import clsx from 'clsx';
 import { tw } from 'tailwind-variant.macro';
 import { colors } from './colors';

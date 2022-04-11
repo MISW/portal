@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { NextPage } from 'next';
 import RegisterForm, { SubmitResult } from 'components/layout/RegisterForm';
 import { ConfigurableProfile } from 'user';

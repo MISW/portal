@@ -1,4 +1,3 @@
-import React from 'react';
 import Container from '@mui/material/Container';
 import { NextPage } from 'next';
 import { Typography, Grid, Box } from '@mui/material';

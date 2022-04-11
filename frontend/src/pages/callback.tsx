@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { NextPage } from 'next';
 import { Typography } from '@mui/material';
 import { useAuthCallback } from 'features/auth';
