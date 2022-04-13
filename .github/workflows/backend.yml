@@ -30,7 +30,7 @@ jobs:
 
       - name: Install mysqldef
         run: |
-          wget https://github.com/k0kubun/sqldef/releases/download/v0.11.49/mysqldef_linux_amd64.tar.gz
+          wget https://github.com/k0kubun/sqldef/releases/download/v0.11.50/mysqldef_linux_amd64.tar.gz
           tar xvf mysqldef_linux_amd64.tar.gz
           chmod +x mysqldef
           mv mysqldef /usr/local/bin
