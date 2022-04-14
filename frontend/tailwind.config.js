@@ -2,11 +2,10 @@ const transformer = (ext) => (content) =>
   require('@babel/core').transformSync(content, { filename: `content.${ext}` })
     .code;
 
-/** @type{ import('tailwindcss/tailwind-config').TailwindConfig */
 module.exports = {
   content: [
-    'src/components/**/*.{ts,tsx}',
-    'src/pages/**/*.{ts,tsx}',
+    'src/pages/**/*.{js,ts,jsx,tsx}',
+    'src/components/**/*.{js,ts,jsx,tsx}',
   ],
   transform: {
     '.ts': transformer('ts'),

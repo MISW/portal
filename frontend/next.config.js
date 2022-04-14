@@ -1,14 +1,21 @@
-const withTM = require("next-transpile-modules")(["ky"]);
-
-/** @type {import('next/dist/next-server/server/config-shared')} */
-const config = {
+/**
+ * @type {import('next').NextConfig}
+ **/
+const nextConfig = {
   reactStrictMode: true,
+  compiler: {
+  },
+  swcMinify: true,
+  swcLoader: true,
+  cpus: 8,
   async rewrites() {
-    return [{
-      source: "/card-image/:path*",
-      destination: "/api/card/:path*",
-    }];
+    return [
+      {
+        source: '/card-image/:path*',
+        destination: '/api/card/:path*',
+      },
+    ]
   },
 };
 
-module.exports = withTM(config);
+module.exports = nextConfig;
