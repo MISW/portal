@@ -23,7 +23,7 @@ ENTRYPOINT [ "/bin/docker-entrypoint.frontend.sh" ]
 FROM base AS install-modules
 
 WORKDIR /frontend
-RUN curl -f https://get.pnpm.io/v6.16.js | node - add --global pnpm
+RUN npm install -g pnpm@next-7
 RUN pnpm i
 
 # ビルド
