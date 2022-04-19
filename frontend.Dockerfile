@@ -31,7 +31,7 @@ FROM install-modules AS build-frontend
 
 WORKDIR /frontend
 COPY ./frontend /frontend
-RUN npm run build
+RUN pnpm run build
 
 # node_modulesから本番で使わないものを取り除く
 FROM install-modules AS prune-modules
