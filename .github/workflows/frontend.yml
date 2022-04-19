@@ -20,7 +20,8 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 16.x
-      - uses: pnpm/action-setup@v2
+      - name: pnpm-setup
+        run: npm install -g pnpm@next-7
       - name: pnpm-install
         run: pnpm i
       - name: Prettier
