@@ -43,7 +43,7 @@
     "@types/react-redux": "^7.1.24",
     "@types/sharp": "^0.30.2",
     "@types/tailwindcss": "^3.0.10",
-    "@typescript-eslint/eslint-plugin": "^5.19.0",
+    "@typescript-eslint/eslint-plugin": "^5.20.0",
     "@typescript-eslint/parser": "^5.19.0",
     "autoprefixer": "^10.4.4",
     "babel-plugin-macros": "^3.1.0",
