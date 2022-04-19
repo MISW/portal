@@ -2,5 +2,5 @@
 
 set -eu
 
-npm install
-npm run docker
+pnpm i
+pnpm run docker

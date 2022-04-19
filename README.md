@@ -17,6 +17,9 @@ MIS.Wのポータルサイトです。
 ### Prerequirements
 - Install docker
 - Install docker-compose
+- Use LF line break style  
+    example: `git config --global core.autocrlf input`
+
 
 ### Install / Start dev server
 

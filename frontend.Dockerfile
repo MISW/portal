@@ -7,7 +7,7 @@ RUN apt update && \
     apt clean && \
     rm -rf /var/lib/apt/lists/*
 WORKDIR /frontend
-COPY ./frontend/package.json ./frontend/package-lock.json /frontend/
+COPY ./frontend/package.json ./frontend/pnpm-lock.yaml /frontend/
 
 # 開発環境
 FROM base AS development
@@ -23,7 +23,8 @@ ENTRYPOINT [ "/bin/docker-entrypoint.frontend.sh" ]
 FROM base AS install-modules
 
 WORKDIR /frontend
-RUN npm install --force
+RUN npm install -g pnpm@next-7
+RUN pnpm i
 
 # ビルド
 FROM install-modules AS build-frontend
@@ -36,7 +37,7 @@ RUN npm run build
 FROM install-modules AS prune-modules
 
 WORKDIR /frontend
-RUN npm prune --production
+RUN pnpm prune --prod
 
 # 本番環境
 FROM base AS production
@@ -48,4 +49,4 @@ COPY --from=prune-modules /frontend/node_modules ./node_modules
 COPY --from=build-frontend /frontend/.next ./.next
 COPY --from=build-frontend /frontend/next.config.js ./next.config.js
 
-ENTRYPOINT ["npm", "start"]
+ENTRYPOINT ["pnpm", "start"]

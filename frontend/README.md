@@ -5,8 +5,9 @@
 
 単独で動かす場合は以下
 ```
-npm install
-npm run dev
+pnpm i
+pnpm run format
+pnpm run build
 ```
 して`localhost:3000`にアクセス
 
