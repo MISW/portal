@@ -1,4 +1,4 @@
-FROM node:gallium-bullseye-slim AS base
+FROM node:lts-bullseye-slim AS base
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -23,7 +23,7 @@ ENTRYPOINT [ "/bin/docker-entrypoint.frontend.sh" ]
 FROM base AS install-modules
 
 WORKDIR /frontend
-RUN npm install -g pnpm@next-7
+RUN npm install -g pnpm
 RUN pnpm i
 
 # ビルド

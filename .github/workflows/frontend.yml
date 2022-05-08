@@ -21,7 +21,7 @@ jobs:
         with:
           node-version: 16.x
       - name: pnpm-setup
-        run: npm install -g pnpm@next-7
+        run: npm install -g pnpm
       - name: pnpm-install
         run: pnpm i
       - name: Prettier

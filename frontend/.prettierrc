@@ -8,11 +8,5 @@
   "trailingComma": "all",
   "singleQuote": true,
   "semi": true,
-  "useTabs": false,
-  "importOrder": ["^@core/(.*)$", "^@emotion/(.*)$", "^@fortawesome/(.*)$", "^@mui/(.*)$", "^@reduxjs/(.*)$", "^@server/(.*)$", "^@ui/(.*)$", "^[./]"],
-  "importOrderSeparation": true,
-  "importOrderSortSpecifiers": true,
-  "importOrderGroupNamespaceSpecifiers": true,
-  "importOrderCaseInsensitive": false,
-  "importOrderParserPlugins" : ["typescript", "jsx"]
+  "useTabs": false
 }

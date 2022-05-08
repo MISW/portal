@@ -3,11 +3,7 @@
  **/
 const nextConfig = {
   reactStrictMode: true,
-  compiler: {
-  },
   swcMinify: true,
-  swcLoader: true,
-  cpus: 8,
   async rewrites() {
     return [
       {
