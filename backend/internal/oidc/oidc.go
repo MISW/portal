@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	"github.com/MISW/Portal/backend/internal/tokenutil"
-	"github.com/coreos/go-oidc"
+	"github.com/coreos/go-oidc/v3/oidc"
 	"golang.org/x/crypto/bcrypt"
 	"golang.org/x/oauth2"
 	"golang.org/x/xerrors"

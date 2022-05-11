@@ -27,7 +27,7 @@ import (
 	"github.com/labstack/gommon/log"
 	"go.uber.org/dig"
 	"golang.org/x/xerrors"
-	"gopkg.in/yaml.v2"
+	"gopkg.in/yaml.v3"
 )
 
 func must(err error) {
