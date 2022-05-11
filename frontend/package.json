@@ -54,7 +54,7 @@
     "postcss-focus-visible": "6.0.4",
     "postcss-import": "14.1.0",
     "postcss-nested": "5.0.6",
-    "postcss-nesting": "10.1.4",
+    "postcss-nesting": "10.1.5",
     "postcss-preset-env": "7.5.0",
     "prettier": "2.6.2",
     "tailwind-variant.macro": "0.0.2",
