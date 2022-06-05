@@ -39,7 +39,7 @@ static_resources:
   clusters:
     - name: next_backend
       type: STRICT_DNS
-      connect_timeout: 30s
+      connect_timeout: 60s
       load_assignment:
         cluster_name: next_backend
         endpoints:
@@ -51,7 +51,7 @@ static_resources:
                       port_value: 3000
     - name: apiserver_backend
       type: STRICT_DNS
-      connect_timeout: 1s
+      connect_timeout: 2s
       load_assignment:
         cluster_name: apiserver_backend
         endpoints:
