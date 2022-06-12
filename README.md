@@ -31,6 +31,13 @@ cd Portal
 docker-compose up -d
 ```
 
+<!-- 
+- build frontend image
+    ```
+    docker build -t ${image_name}:${tag_name} -f frontend.Dockerfile .
+    ```
+--> 
+
 ### Show Logs
 ```
 docker-compose logs

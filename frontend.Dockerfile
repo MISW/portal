@@ -39,8 +39,8 @@ FROM install-modules AS prune-modules
 WORKDIR /frontend
 RUN pnpm prune --prod
 
-# 本番環境
-FROM base AS production
+# 本番環境 install-modules
+FROM install-modules AS production
 
 ENV NODE_ENV=production
 
