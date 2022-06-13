@@ -30,7 +30,7 @@ const App = (props: AppProps) => {
 
   return (
     <StyledEngineProvider injectFirst>
-      <ThemeProvider theme={createTheme(({}))}>
+      <ThemeProvider theme={createTheme({})}>
         <Head>
           <title>MISW Portal</title>
           <meta name="viewport" content="initial-scale=1.0,width=device-width" />

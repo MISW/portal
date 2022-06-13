@@ -78,17 +78,23 @@ const RegisterFormStepper: React.FC<
       {props.children}
       <div className={classes.buttons}>
         {props.activeStep !== 0 && !props.success && (
-          <Button variant="contained" onClick={props.handleBack} className={ clsx(classes.button, colors.blue) }>
+          <Button variant="contained" onClick={props.handleBack} className={clsx(classes.button, colors.blue)}>
             Back
           </Button>
         )}
         {props.activeStep !== props.steps.length - 1 && (
-          <Button variant="contained" className={ clsx(classes.button, colors.blue) } color="primary" onClick={props.handleNext} disabled={props.nextDisabled ?? false}>
+          <Button
+            variant="contained"
+            className={clsx(classes.button, colors.blue)}
+            color="primary"
+            onClick={props.handleNext}
+            disabled={props.nextDisabled ?? false}
+          >
             Next
           </Button>
         )}
         {props.success && (
-          <Button variant="contained" onClick={handleHome} className={ clsx(classes.button, colors.blue)}>
+          <Button variant="contained" onClick={handleHome} className={clsx(classes.button, colors.blue)}>
             Back to Home
           </Button>
         )}

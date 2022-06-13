@@ -64,7 +64,7 @@ const Profile: React.FC<
   size = size ?? 'medium';
 
   return (
-    <StyledTableContainer >
+    <StyledTableContainer>
       {title ? (
         <Toolbar className={toolbarClasses.root}>
           <Typography className={toolbarClasses.title} variant="h3">
