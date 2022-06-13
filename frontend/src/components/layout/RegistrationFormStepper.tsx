@@ -6,6 +6,8 @@ import Paper from '@mui/material/Paper';
 import { Stepper, Step, StepLabel } from '@mui/material';
 import Button from '@mui/material/Button';
 import { useRouter } from 'next/router';
+import { colors } from 'components/design/Button/colors';
+import clsx from 'clsx';
 
 const PREFIX = 'RegisterFormStepper';
 
@@ -76,17 +78,17 @@ const RegisterFormStepper: React.FC<
       {props.children}
       <div className={classes.buttons}>
         {props.activeStep !== 0 && !props.success && (
-          <Button variant="contained" onClick={props.handleBack} className={classes.button}>
+          <Button variant="contained" onClick={props.handleBack} className={ clsx(classes.button, colors.blue) }>
             Back
           </Button>
         )}
         {props.activeStep !== props.steps.length - 1 && (
-          <Button variant="contained" className={classes.button} color="primary" onClick={props.handleNext} disabled={props.nextDisabled ?? false}>
+          <Button variant="contained" className={ clsx(classes.button, colors.blue) } color="primary" onClick={props.handleNext} disabled={props.nextDisabled ?? false}>
             Next
           </Button>
         )}
         {props.success && (
-          <Button variant="contained" onClick={handleHome} className={classes.button}>
+          <Button variant="contained" onClick={handleHome} className={ clsx(classes.button, colors.blue)}>
             Back to Home
           </Button>
         )}

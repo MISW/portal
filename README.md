@@ -47,3 +47,7 @@ docker-compose logs app # Webサーバのみ(MySQLを無視)
 
 ### For Internal Members
 [dev.env for MISW developers](https://misw.kibe.la/notes/3490)
+
+### 注意
+- auth0のredirect urlに注意
+- アクセスするにはデータベースに存在する(slack_idを持つ)ユーザである必要がある

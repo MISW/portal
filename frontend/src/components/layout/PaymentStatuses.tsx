@@ -63,9 +63,10 @@ const PaymentStatuses: React.FC<
       </Toolbar>
 
       <Table
-        className={clsx({
-          [paymentStatusesClasses.fixedTable]: paymentStatuses.length == 0,
-        })}
+        className={clsx(
+          {[paymentStatusesClasses.fixedTable]: paymentStatuses.length == 0,},
+          "dark:bg-black"
+        )}
         aria-label="user profile"
       >
         <TableHead>

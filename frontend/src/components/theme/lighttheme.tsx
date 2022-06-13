@@ -1,14 +1,12 @@
-import { createTheme, adaptV4Theme } from '@mui/material/styles';
+import { createTheme } from '@mui/material/styles';
 
-const theme = createTheme(
-  adaptV4Theme({
-    palette: {
-      mode: 'light', // ベースのテーマ lightかdarkか
-      primary: {
-        main: '#00479c',
-      },
+const theme = createTheme({
+  palette: {
+    mode: 'light',
+    primary: {
+      main: '#00479c', //"#00479c",
     },
-  }),
-);
+  }
+});
 
 export default theme;
