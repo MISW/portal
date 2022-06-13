@@ -28,6 +28,7 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import { UserTableData } from '../../user';
 import { makeStyles, createStyles } from '@mui/styles';
+import { colors } from 'components/design/Button/colors';
 
 const PREFIX = 'EnhancedTable';
 
@@ -261,7 +262,7 @@ const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
             </IconButton>
           </Tooltip>
           <Root className={classes.title}></Root>
-          <NoWrapButton variant="contained" onClick={handleClickOnEditMode}>
+          <NoWrapButton variant="contained" onClick={handleClickOnEditMode} className={colors.blue}>
             {editMode ? '終了' : '支払い登録モード'}
           </NoWrapButton>
 

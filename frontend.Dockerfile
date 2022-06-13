@@ -9,8 +9,15 @@ RUN apt update && \
 WORKDIR /frontend
 COPY ./frontend/package.json ./frontend/pnpm-lock.yaml /frontend/
 
+# node_modulesのインストール
+FROM base AS install-modules
+
+WORKDIR /frontend
+RUN npm install -g pnpm
+RUN pnpm i
+
 # 開発環境
-FROM base AS development
+FROM install-modules AS development
 
 COPY ./scripts/* /bin/
 
@@ -18,13 +25,6 @@ WORKDIR /frontend
 COPY ./frontend /frontend
 
 ENTRYPOINT [ "/bin/docker-entrypoint.frontend.sh" ]
-
-# node_modulesのインストール
-FROM base AS install-modules
-
-WORKDIR /frontend
-RUN npm install -g pnpm
-RUN pnpm i
 
 # ビルド
 FROM install-modules AS build-frontend

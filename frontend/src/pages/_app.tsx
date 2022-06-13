@@ -6,7 +6,7 @@ import { useEffect } from 'react';
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
 import { ThemeProvider, Theme, StyledEngineProvider } from '@mui/material/styles';
-import { CssBaseline, createTheme, adaptV4Theme } from '@mui/material';
+import { CssBaseline, createTheme } from '@mui/material';
 import { DefaultLayout } from 'components/layout/DefaultLayout';
 import { wrapper } from 'store';
 import { fetchCurrentUser, selectCurrentUser } from 'features/currentUser';
@@ -30,7 +30,7 @@ const App = (props: AppProps) => {
 
   return (
     <StyledEngineProvider injectFirst>
-      <ThemeProvider theme={createTheme(adaptV4Theme({}))}>
+      <ThemeProvider theme={createTheme({})}>
         <Head>
           <title>MISW Portal</title>
           <meta name="viewport" content="initial-scale=1.0,width=device-width" />

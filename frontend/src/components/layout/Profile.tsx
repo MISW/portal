@@ -87,7 +87,7 @@ const Profile: React.FC<
         <></>
       )}
 
-      <Table aria-label="user profile" size={size}>
+      <Table aria-label="user profile" size={size} className="dark:bg-black">
         <TableHead>
           <TableRow>
             <TableCell align="center">Key</TableCell>
