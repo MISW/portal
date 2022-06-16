@@ -13,12 +13,12 @@ require (
 	github.com/jmoiron/sqlx v1.3.5
 	github.com/labstack/echo/v4 v4.7.2
 	github.com/labstack/gommon v0.3.1
-	github.com/slack-go/slack v0.10.3
+	github.com/slack-go/slack v0.11.0
 	go.uber.org/dig v1.14.1
 	golang.org/x/crypto v0.0.0-20220525230936-793ad666bf5e
-	golang.org/x/net v0.0.0-20220531201128-c960675eff93
-	golang.org/x/oauth2 v0.0.0-20220524215830-622c5d57e401
-	golang.org/x/xerrors v0.0.0-20220517211312-f3a8303e98df
+	golang.org/x/net v0.0.0-20220615171555-694bf12d69de
+	golang.org/x/oauth2 v0.0.0-20220608161450-d0670ef3b1eb
+	golang.org/x/xerrors v0.0.0-20220609144429-65e65417b02f
 	gopkg.in/yaml.v3 v3.0.1
 )
 
