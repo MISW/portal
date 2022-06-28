@@ -10,14 +10,6 @@ if [ -z "${DATABASE_URL:-}" ]; then
   fi
 fi
 
-if [ -z "${OIDC_REDIRECT_URL:-}" ]; then
-  export OIDC_REDIRECT_URL="https://${HEROKU_APP_NAME}.herokuapp.com/callback"
-fi
-
-if [ -z "${BASE_URL:-}" ]; then
-  export BASE_URL="https://${HEROKU_APP_NAME}.herokuapp.com/"
-fi
-
 eval "$(dbenv -)"
 
 usage() {
