@@ -26,6 +26,8 @@ jobs:
         with:
           node-version: 16.x
           cache: 'pnpm'
+          cache-dependency-path: |
+            frontend/pnpm-lock.yaml
       - name: Install dependencies
         run: pnpm i --frozen-lockfile
       - name: Prettier
