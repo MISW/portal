@@ -2,5 +2,5 @@
 
 set -eu
 
-pnpm i
+pnpm i --frozen-lockfile
 pnpm run docker

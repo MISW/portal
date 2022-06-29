@@ -14,7 +14,7 @@ FROM base AS install-modules
 
 WORKDIR /frontend
 RUN npm install -g pnpm
-RUN pnpm i
+RUN pnpm i --frozen-lockfile
 
 # 開発環境
 FROM install-modules AS development
