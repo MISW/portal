@@ -22,3 +22,5 @@ go.work
 
 # log file
 telepresense.log
+
+coverage

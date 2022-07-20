@@ -17,10 +17,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+
       - name: Install pnpm
         uses: pnpm/action-setup@v2.2.2
         with:
           version: 7
+
       - name: Install Node.js
         uses: actions/setup-node@v3
         with:
@@ -28,13 +30,31 @@ jobs:
           cache: 'pnpm'
           cache-dependency-path: |
             frontend/pnpm-lock.yaml
+
       - name: Install dependencies
         run: pnpm i --frozen-lockfile
+
       - name: Prettier
         run: pnpm run format:check
+
       - name: ESLint
         run: pnpm run lint
+
       - name: Typecheck
         run: pnpm run typecheck
+
       - name: Build
         run: pnpm run build
+
+      # - name: Coverage
+      #   run: pnpm run coverage
+
+      # - name: Codecov
+      #   uses: codecov/codecov-action@v3
+      #   with:
+      #     token: ${{ secrets.CODECOV_TOKEN }}
+      #     directory: ./frontend/coverage
+      #     flags: frontend
+      #     name: codecov-frontend
+      #     fail_ci_if_error: false
+      #     verbose: true

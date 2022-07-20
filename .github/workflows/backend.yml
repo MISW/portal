@@ -39,3 +39,17 @@ jobs:
         working-directory: backend
         run: |
           make ci-test
+
+      - name: Coverage
+        working-directory: backend
+        run: go test -v -cover -race -coverprofile=coverage ./...
+
+      - name: Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./backend/coverage
+          flags: backend
+          name: codecov-backend
+          fail_ci_if_error: false
+          verbose: true
