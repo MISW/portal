@@ -41,6 +41,11 @@ jobs:
           make ci-test
 
       - name: Coverage
+        env: 
+          TEST_EMAIL_SMTP_SERVER: ${{secrets.TEST_EMAIL_SMTP_SERVER}}
+          TEST_EMAIL_TO: ${{secrets.TEST_EMAIL_TO}}
+          TEST_EMAIL_PASS: ${{secrets.TEST_EMAIL_PASS}}
+          TEST_EMAIL_FROM: ${{secrets.TEST_EMAIL_FROM}}
         working-directory: backend
         run: go test -v -cover -race -coverprofile=coverage ./...
 
