@@ -1,7 +1,6 @@
 package email_test
 
 import (
-	"log"
 	"os"
 	"testing"
 
@@ -17,6 +16,6 @@ func TestSendEmail(t *testing.T) {
 	to := os.Getenv("to")      //email to
 	sender := email.NewSender(s, u, pass, from)
 	if err := sender.Send(to, "test subject", "test body"); err != nil {
-		log.Print(err)
+		t.Fatalf("failed to send email: %+v", err)
 	}
 }

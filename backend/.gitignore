@@ -24,3 +24,5 @@ go.work
 telepresense.log
 
 coverage
+
+.env 
