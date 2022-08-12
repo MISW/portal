@@ -16,7 +16,7 @@ require (
 	github.com/slack-go/slack v0.10.3
 	go.uber.org/dig v1.15.0
 	golang.org/x/crypto v0.0.0-20220622213112-05595931fe9d
-	golang.org/x/net v0.0.0-20220809012201-f428fae20770
+	golang.org/x/net v0.0.0-20220812174116-3211cb980234
 	golang.org/x/oauth2 v0.0.0-20220622183110-fd043fe589d2
 	golang.org/x/xerrors v0.0.0-20220609144429-65e65417b02f
 	gopkg.in/yaml.v3 v3.0.1
