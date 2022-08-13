@@ -1,9 +1,9 @@
-ARG go_version=1.18
+ARG go_version=1.19
 
 # ツール類
 FROM golang:${go_version} AS tools
 ARG dockerize_version=v0.6.1
-ARG sqldef_version=v0.11.61
+ARG sqldef_version=v0.13.5
 ARG dbenv_version=v1.1.0
 
 RUN wget https://github.com/jwilder/dockerize/releases/download/${dockerize_version}/dockerize-linux-amd64-${dockerize_version}.tar.gz \
@@ -55,7 +55,7 @@ FROM gcr.io/distroless/base:debug AS production
 COPY --from=tools /usr/local/bin/dockerize /bin
 COPY --from=tools /usr/local/bin/mysqldef /bin
 COPY --from=tools /usr/local/bin/dbenv /bin
-COPY --from=build-backend /backend/portal /bin/portal 
+COPY --from=build-backend /backend/portal /bin/portal
 COPY --from=build-backend /backend/schema /schema
 
 COPY ./scripts/docker-entrypoint.backend.sh /bin/

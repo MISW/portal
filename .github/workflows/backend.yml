@@ -8,7 +8,7 @@ on:
     paths:
       - backend/**
 
-env: 
+env:
   TEST_EMAIL_SMTP_SERVER: ${{secrets.TEST_EMAIL_SMTP_SERVER}}
   TEST_EMAIL_TO: ${{secrets.TEST_EMAIL_TO}}
   TEST_EMAIL_PASS: ${{secrets.TEST_EMAIL_PASS}}
@@ -27,7 +27,7 @@ jobs:
           MYSQL_DATABASE: database
 
     container:
-      image: golang:1.18
+      image: golang:1.19
       env:
         DATABASE_URL: "root:password@tcp(mysql)/?parseTime=true&multiStatements=true"
 
@@ -36,19 +36,14 @@ jobs:
 
       - name: Install mysqldef
         run: |
-          wget https://github.com/k0kubun/sqldef/releases/download/v0.11.61/mysqldef_linux_amd64.tar.gz
+          wget https://github.com/k0kubun/sqldef/releases/download/v0.13.5/mysqldef_linux_amd64.tar.gz
           tar xvf mysqldef_linux_amd64.tar.gz
           chmod +x mysqldef
           mv mysqldef /usr/local/bin
 
-      - name: Run backend tests
-        working-directory: backend
-        run: |
-          make ci-test
-
       - name: Coverage
         working-directory: backend
-        run: go test -v -cover -race -coverprofile=coverage ./...
+        run: go install && go get github.com/golang/mock/mockgen@v1.6.0 && go test -v -cover -race -tags use_external_db -coverprofile=coverage ./...
 
       - name: Codecov
         uses: codecov/codecov-action@v3
