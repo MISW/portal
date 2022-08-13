@@ -45,7 +45,7 @@ const cardImageHandler: NextApiHandler = async (req, res) => {
   const { id: rawId } = req.query;
   if (Array.isArray(rawId)) throw new Error('"id" must be string');
 
-  const { id: idStr, ext } = getIdAndExtFromRawId(rawId);
+  const { id: idStr, ext } = getIdAndExtFromRawId(rawId as string);
 
   const id = parseInt(idStr, 10);
   if (Number.isNaN(id)) {
