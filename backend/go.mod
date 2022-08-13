@@ -13,7 +13,7 @@ require (
 	github.com/jmoiron/sqlx v1.3.5
 	github.com/labstack/echo/v4 v4.7.2
 	github.com/labstack/gommon v0.3.1
-	github.com/slack-go/slack v0.10.3
+	github.com/slack-go/slack v0.11.2
 	go.uber.org/dig v1.15.0
 	golang.org/x/crypto v0.0.0-20220622213112-05595931fe9d
 	golang.org/x/net v0.0.0-20220809012201-f428fae20770
