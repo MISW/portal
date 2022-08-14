@@ -37,7 +37,7 @@ export const LinkContentCard: React.FC<
   return (
     <StyledGrid item xs={12} md={6}>
       <CardActionArea component="a" href={link}>
-        <Card className={classes.card}>
+        <Card className={classes.card} variant="outlined">
           <div className={classes.cardDetails}>
             <CardContent>
               <Typography component="h2" variant="h5">
