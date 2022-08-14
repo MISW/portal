@@ -27,8 +27,8 @@ const Confirm: React.FC<
         {(!submitResult || submitResult.status !== 'success') && (
           <Button
             className="button"
-            variant="contained"
-            color="primary"
+            variant="outlined"
+            color="error"
             onClick={async (e) => {
               e.preventDefault();
               onSubmit();
