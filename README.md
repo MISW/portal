@@ -3,11 +3,9 @@
 MIS.Wのポータルサイトです。
 
 
-## 初期仕様
-- https://hackmd.io/V5Tm1NUORiuu7qDt53Df6w
-
-## API Spec
-- https://hackmd.io/7WCOBLBfSzCk27oTjbetGA
+## 仕様
+- [初期仕様](./docs/initial-spec.md)
+- [API Spec](./docs/spec.md)
 
 ## Directories
 - backend: Goで書かれたAPIサーバ
@@ -16,38 +14,33 @@ MIS.Wのポータルサイトです。
 ## How to develop
 ### Prerequirements
 - Install docker
-- Install docker-compose
 - Use LF line break style  
     example: `git config --global core.autocrlf input`
 
 
 ### Install / Start dev server
-
 ```shell
 git clone https://github.com/MISW/Portal
 
 cd Portal
 
-docker-compose up -d
+docker compose up -d
 ```
-
-<!-- 
-- build frontend image
-    ```
-    docker build -t ${image_name}:${tag_name} -f frontend.Dockerfile .
-    ```
---> 
 
 ### Show Logs
 ```
-docker-compose logs
-docker-compose logs -f # 流しっぱなしにする
-docker-compose logs app # Webサーバのみ(MySQLを無視)
+docker compose logs
+docker compose logs -f # 流しっぱなしにする
+docker compose logs app # Webサーバのみ(MySQLを無視)
 ```
 
-### For Internal Members
-[dev.env for MISW developers](https://misw.kibe.la/notes/3490)
+### Auth0
+- (slackアカウントをログインに利用する場合、)[auth0 social connection](https://marketplace.auth0.com/features/social-connections)にslackを設定する。 
+- 本サイト用に[auth0 application](https://auth0.com/docs/get-started/applications)を作成する。
+
+
+### Environment variable
+- create dev.env file following [dev.env.template](./dev.env.template)
 
 ### 注意
-- auth0のredirect urlに注意
-- アクセスするにはデータベースに存在する(slack_idを持つ)ユーザである必要がある
+- アクセスするにはデータベースに存在する(slack_idを持つ)ユーザである必要がある 
