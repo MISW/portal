@@ -6,11 +6,14 @@ import { useEffect } from 'react';
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
 import { ThemeProvider, Theme, StyledEngineProvider } from '@mui/material/styles';
-import { CssBaseline, createTheme } from '@mui/material';
+import { CssBaseline } from '@mui/material';
 import { DefaultLayout } from 'components/layout/DefaultLayout';
 import { wrapper } from 'store';
 import { fetchCurrentUser, selectCurrentUser } from 'features/currentUser';
 import { useLogout } from 'features/auth';
+import { useSystemColorScheme } from '../hooks/theme';
+import lighttheme from '../components/theme/lighttheme';
+import darktheme from '../components/theme/darktheme';
 
 declare module '@mui/styles/defaultTheme' {
   // eslint-disable-next-line @typescript-eslint/no-empty-interface
@@ -28,9 +31,11 @@ const App = (props: AppProps) => {
 
   const { handleLogout } = useLogout();
 
+  const scheme = useSystemColorScheme();
+
   return (
     <StyledEngineProvider injectFirst>
-      <ThemeProvider theme={createTheme({})}>
+      <ThemeProvider theme={scheme === 'dark' ? darktheme : lighttheme}>
         <Head>
           <title>MISW Portal</title>
           <meta name="viewport" content="initial-scale=1.0,width=device-width" />

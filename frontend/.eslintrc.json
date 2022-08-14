@@ -27,11 +27,5 @@
   "rules": {
     "linebreak-style": ["error", "unix"],
     "react/prop-types": "warn"
-  },
-  "overrides":[
-    {
-      "files": ["*.js"],
-      "parserOptions": {"sourceType": "script"}
-    }
-  ]
+  }
 }
