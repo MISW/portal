@@ -38,9 +38,12 @@ docker compose logs app # Webサーバのみ(MySQLを無視)
 - (slackアカウントをログインに利用する場合、)[auth0 social connection](https://marketplace.auth0.com/features/social-connections)にslackを設定する。 
 - 本サイト用に[auth0 application](https://auth0.com/docs/get-started/applications)を作成する。
 
+### アカウント 
+- ログインするためにはデータベースに存在するユーザ(slack_idを持つ)である必要がある。
+- 次のいずれかによってデータベースにデータを入れる必要がある。管理ページを見るには```admin```ロールが必要。
+  1. [./tools/batch_insert/](./tools/batch_insert/)を使う
+  2. 直接データベースをいじる
 
 ### Environment variable
 - create dev.env file following [dev.env.template](./dev.env.template)
 
-### 注意
-- アクセスするにはデータベースに存在する(slack_idを持つ)ユーザである必要がある 
