@@ -1,15 +1,13 @@
 import { forwardRef } from 'react';
 import clsx from 'clsx';
-import { tw } from 'tailwind-variant.macro';
 import { colors } from './colors';
 
 type Color = keyof typeof colors;
 
 const buttonStyle = (color: Color) =>
   clsx(
-    'rounded px-4 py-2 text-white',
     colors[color],
-    tw.disabled('cursor-not-allowed', 'opacity-50', 'text-gray-900', 'dark:text-white', 'bg-gray-300', 'dark:bg-gray-700'),
+    'rounded px-4 py-2 text-white disabled:cursor-not-allowed disabled:opacity-50 disabled:text-gray-900 disabled:dark:text-white disabled:bg-gray-300 disabled:dark:bg-gray-700',
   );
 
 type ButtonProps<Props> = Props & {

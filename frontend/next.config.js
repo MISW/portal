@@ -5,6 +5,12 @@
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
+  experimental: {
+    swcTraceProfiling: true,
+  },
+  compiler: {
+    emotion: true,
+  },
   async rewrites() {
     return [
       {
