@@ -46,15 +46,12 @@ jobs:
       - name: Build
         run: pnpm run build
 
-      # - name: Coverage
-      #   run: pnpm run coverage
-
-      # - name: Codecov
-      #   uses: codecov/codecov-action@v3
-      #   with:
-      #     token: ${{ secrets.CODECOV_TOKEN }}
-      #     directory: ./frontend/coverage
-      #     flags: frontend
-      #     name: codecov-frontend
-      #     fail_ci_if_error: false
-      #     verbose: true
+      - name: Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./frontend/.next/trace
+          flags: frontend
+          name: codecov-frontend
+          fail_ci_if_error: false
+          verbose: true
