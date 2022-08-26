@@ -1,4 +1,4 @@
+compose.override.yml
+dev.env
 telepresence.log
 tmp
-/dev.env
-docker-compose.override.yml

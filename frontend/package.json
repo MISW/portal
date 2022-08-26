@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
+    "coverage": "cp -v ./.next/swc-trace-profile-*.json ./coverage",
     "build": "next build",
     "build:css": "tailwindcss -o src/tailwind.css --minify",
     "dev": "next",
