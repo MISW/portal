@@ -15,7 +15,7 @@ require (
 	github.com/labstack/gommon v0.3.1
 	github.com/slack-go/slack v0.11.2
 	go.uber.org/dig v1.15.0
-	golang.org/x/crypto v0.0.0-20220722155217-630584e8d5aa
+	golang.org/x/crypto v0.0.0-20220829220503-c86fa9a7ed90
 	golang.org/x/net v0.0.0-20220812174116-3211cb980234
 	golang.org/x/oauth2 v0.0.0-20220808172628-8227340efae7
 	golang.org/x/xerrors v0.0.0-20220609144429-65e65417b02f
