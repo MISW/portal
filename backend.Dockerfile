@@ -32,9 +32,9 @@ COPY --from=tools /usr/local/bin/mysqldef /bin
 COPY --from=tools /usr/local/bin/dbenv /bin
 COPY ./backend /backend
 COPY ./backend/schema /schema
-COPY ./scripts/docker-entrypoint.backend.sh /bin
+COPY ./backend/docker-entrypoint.sh /bin
 
-ENTRYPOINT ["/bin/docker-entrypoint.backend.sh"]
+ENTRYPOINT ["/bin/docker-entrypoint.sh"]
 CMD ["-d", "-w", "-m", "-s"]
 
 # ビルド
@@ -61,8 +61,8 @@ COPY --from=tools /usr/local/bin/mysqldef /bin
 COPY --from=tools /usr/local/bin/dbenv /bin
 COPY --from=build-backend /backend/portal /bin/portal
 COPY --from=build-backend /backend/schema /schema
-COPY ./scripts/docker-entrypoint.backend.sh /bin/
+COPY ./backend/docker-entrypoint.sh /bin/
 ADD ./config /config
 
-ENTRYPOINT [ "sh", "/bin/docker-entrypoint.backend.sh" ]
+ENTRYPOINT [ "sh", "/bin/docker-entrypoint.sh" ]
 CMD [ "-w", "-m" ]

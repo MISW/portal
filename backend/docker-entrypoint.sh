@@ -51,7 +51,7 @@ done
 
 if [ "$WAIT" = "1" ]; then
     echo "Waiting for db"
-    dockerize -wait tcp://$DATABASE_HOST:$DATABASE_PORT -timeout 600s
+    dockerize -wait tcp://$DATABASE_HOST:$DATABASE_PORT -timeout 480s
 fi
 
 if [ "$MIGRATION" = "1" ]; then
@@ -64,12 +64,12 @@ if [ "$SEED" = "1" ]; then
     cat /seeds/*.sql | mariadb --host=$DATABASE_HOST --port=$DATABASE_PORT --user=$DATABASE_USER --password=$DATABASE_PASSWORD $DATABASE_DB
 fi
 
-if [ "$QUIT" = "1" ]; then
-    exit 0
-fi
-
 if [ "${ENVIRONMENT:-}" = "dev" ]; then
     cd /backend && GO111MODULE=on go build -o /bin/portal
+fi
+
+if [ "$QUIT" = "1" ]; then
+    exit 0
 fi
 
 export DATABASE_URL="$DATABASE_USER:$DATABASE_PASSWORD@tcp($DATABASE_HOST:$DATABASE_PORT)/$DATABASE_DB?parseTime=true&loc=Asia%2FTokyo"

@@ -12,11 +12,13 @@ COPY ./frontend/package.json ./frontend/pnpm-lock.yaml /frontend/
 # 開発環境
 FROM base AS development
 
-COPY ./scripts/* /bin/
+ENV NODE_ENV=development
+
 WORKDIR /frontend
 COPY ./frontend /frontend
+COPY ./frontend/docker-entrypoint.sh /bin
 
-ENTRYPOINT [ "/bin/docker-entrypoint.frontend.sh" ]
+ENTRYPOINT [ "/bin/docker-entrypoint.sh" ]
 
 # ビルド
 FROM base AS build-frontend
@@ -44,4 +46,5 @@ COPY --from=build-frontend /frontend/.next ./.next
 COPY --from=build-frontend /frontend/next.config.js ./next.config.js
 
 RUN npm install -g pnpm
+
 ENTRYPOINT ["pnpm", "start"]

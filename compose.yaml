@@ -18,7 +18,6 @@ services:
       - "3306:3306"
     volumes:
       - mysql:/var/lib/mysql
-      - ./seeds:/seeds
 
   backend:
     build:
@@ -32,7 +31,7 @@ services:
     volumes:
       - ./backend:/backend
       - ./backend/schema:/schema
-      - ./scripts/docker-entrypoint.backend.sh:/bin/docker-entrypoint.backend.sh
+      - ./backend/docker-entrypoint.sh:/bin/docker-entrypoint.sh
       - ./seeds:/seeds
 
   frontend:
@@ -46,7 +45,7 @@ services:
       - "3000:3000"
     volumes:
       - ./frontend:/frontend
-      - ./scripts/docker-entrypoint.frontend.sh:/bin/docker-entrypoint.frontend.sh
+      - ./frontend/docker-entrypoint.sh:/bin/docker-entrypoint.sh
       - pnpm-store:/frontend/.pnpm-store
       - node_modules:/frontend/node_modules
 

@@ -17,22 +17,22 @@ MIS.W のポータルサイトです。
 ### Prerequirements
 
 - Install docker
-- Use LF line break style
-  example: `git config --global core.autocrlf input`
+- Use **LF line break style**
+  - example: `git config --global core.autocrlf input`
 
 ### Install / Start dev server
 
-```shell
+```sh
 git clone https://github.com/MISW/Portal
-
 cd Portal
-
 docker compose up -d --build
 ```
 
+- Open **[localhost:8080](http://localhost:8080/)**
+
 ### Show Logs
 
-```
+```sh
 docker compose logs
 docker compose logs -f # 流しっぱなしにする
 docker compose logs app # Webサーバのみ(MySQLを無視)
@@ -53,3 +53,28 @@ docker compose logs app # Webサーバのみ(MySQLを無視)
 ### Environment variable
 
 - create dev.env file following [dev.env.template](./dev.env.template)
+
+### Frontend Environment
+
+```sh
+sudo dnf module enable nodejs:18
+sudo dnf install nodejs
+sudo npm install -g pnpm
+cd frontend
+pnpm i
+pnpm format
+pnpm lint
+pnpm typecheck
+pnpm build
+pnpm start
+```
+
+### Backend Environment
+
+```sh
+sudo dnf install golang
+cd backend
+go install
+go build
+./backend
+```
