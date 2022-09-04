@@ -2,5 +2,7 @@
 
 set -eu
 
+npm install -g pnpm
 pnpm i --frozen-lockfile
-pnpm run docker
+pnpm build
+pnpm docker

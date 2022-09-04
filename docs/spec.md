@@ -2,19 +2,19 @@
 
 # MISW Portal API Spec
 
-
 - base path: /api
 
 ## Error Message
 
-| Status Code | Status | Description |
-| -------- | -------- | -------- |
-| 400     | Bad Request     | API呼び出しのパラメータがおかしい |
-| 401     | Unauthorized     | ログインしていない |
-| 404     | Forbidden     | 許可されていないリソースへのアクセス |
-| 500     | Internal Server Error | サーバ内部でエラーが発生している |
+| Status Code | Status                | Description                          |
+| ----------- | --------------------- | ------------------------------------ |
+| 400         | Bad Request           | API 呼び出しのパラメータがおかしい   |
+| 401         | Unauthorized          | ログインしていない                   |
+| 404         | Forbidden             | 許可されていないリソースへのアクセス |
+| 500         | Internal Server Error | サーバ内部でエラーが発生している     |
 
-エラー時のResponse Bodyの例(JSON)
+エラー時の Response Body の例(JSON)
+
 ```
 {
     "status": "Bad Request",
@@ -23,7 +23,8 @@
 }
 ```
 
-非エラー時のResponse Bodyの例(Status: OK)
+非エラー時の Response Body の例(Status: OK)
+
 ```
 {
     "status": "OK",
@@ -31,30 +32,37 @@
     "redirect_url": "https://misw.auth0.com/..."
 }
 ```
-### 以下では全てstatusとstatus_codeを省略するが、正常時全てで付与されている
+
+### 以下では全て status と status_code を省略するが、正常時全てで付与されている
 
 ## Endpoint: Public
+
 - path: /public
 
 ### Login
+
 - method: POST
 - path: /login
-- description: Slackログイン時にリダイレクトするURLを返す
+- description: Slack ログイン時にリダイレクトする URL を返す
 - parameter: なし
 - set-cookie: misw-portal-state
-- response: 
+- response:
+
 ```json=
 {
     "redirect_url": "https://misw.auth0.com/..."
 }
 ```
-このridirect_urlに遷移すれば良い
+
+この ridirect_url に遷移すれば良い
 
 ### Callback
+
 - method: POST
 - path: /callback
-- description: Auth0から返ってくるcallbackのURL
+- description: Auth0 から返ってくる callback の URL
 - parameter:
+
 ```json=
 {
     "code": "code in query parameter",
@@ -63,20 +71,22 @@
 ```
 
 - set-cookie: misw-portal-token
-- response: 
+- response:
+
 ```json=
 {}
 ```
 
 ## Signup
+
 - method: POST
 - path: /signup
-- description: 新規アカウント登録用エンドポインt
-- parameter: `Content-Type: application/json` のbodyをPOST
+- description: 新規アカウント登録用エンドポイン t
+- parameter: `Content-Type: application/json` の body を POST
 
 https://github.com/MISW/Portal/blob/master/backend/domain/user.go#L46
 
-JSONフォーマットはここを参照(ただし、ID、SlackID、Role、CreatedAt、UpdatedAtは指定しなくて良い(自動で生成される))
+JSON フォーマットはここを参照(ただし、ID、SlackID、Role、CreatedAt、UpdatedAt は指定しなくて良い(自動で生成される))
 
 - response:
 
@@ -84,12 +94,14 @@ JSONフォーマットはここを参照(ただし、ID、SlackID、Role、Creat
 {}
 ```
 
-Eメールが送信されているのでEメールを確認してください、みたいなメッセージを表示するだけで良い
+E メールが送信されているので E メールを確認してください、みたいなメッセージを表示するだけで良い
 
 ## Verify Email
+
 - method: POST
 - path: /veryfy_email
 - parameter:
+
 ```json=
 {
     "token": "token in query parameter",
@@ -97,84 +109,96 @@ Eメールが送信されているのでEメールを確認してください、
 ```
 
 - set-cookie: misw-portal-token
-- response: 
+- response:
+
 ```json=
 {}
 ```
 
-
-メールに添付のリンクを開くと `/verify_email` が開かれるようになっており、URLのパラメータにtokenが付いているのでこれをこのエンドポイントのbodyに添付してPOSTする
-
+メールに添付のリンクを開くと `/verify_email` が開かれるようになっており、URL のパラメータに token が付いているのでこれをこのエンドポイントの body に添付して POST する
 
 ## Endpoint: Private
+
 - path: /private
 
 ### Logout
+
 - method: POST
 - path: /logout
 - description: アカウントからログアウト
-- response: 
+- response:
+
 ```json=
 {}
 ```
 
 ### Get Profile
+
 - method: GET
 - path: /profile
 - description: 自身の登録情報を取得する
 - response:
-JSONでユーザ型が返る(リクエストと同じ、更新されたもの)
+  JSON でユーザ型が返る(リクエストと同じ、更新されたもの)
 
 ### Update Profile
+
 - method: POST
 - path: /profile
 - description: 自身の登録情報を更新する
-- parameter: `Content-Type: application/json` のbodyをPOST
+- parameter: `Content-Type: application/json` の body を POST
 
 https://github.com/MISW/Portal/blob/master/backend/domain/user.go#L46
 
-JSONフォーマットはここを参照(ただし、ID、SlackID、Role、CreatedAt、UpdatedAtは指定しなくて良い(自動で生成される))
+JSON フォーマットはここを参照(ただし、ID、SlackID、Role、CreatedAt、UpdatedAt は指定しなくて良い(自動で生成される))
 
 一部値に関しては変更が効かないようになっている
 
 - response:
-JSONでユーザ型が返る(リクエストと同じ、更新されたもの)
+  JSON でユーザ型が返る(リクエストと同じ、更新されたもの)
 
 ### Get Payment Statuses
+
 - method: GET
 - path: /profile/payment_statuses
 - description: 自身の支払い履歴を取得する
 - response:
+
 ```json=
 {
     "payment_statuses": [payment statusの配列]
 }
 ```
+
 payment status: https://github.com/MISW/Portal/blob/master/backend/domain/payment.go#L10
 
 ### Get Payment Transaction
+
 - method: POST
 - path: /profile/payment_transaction
 - description: 支払い用トークンを取得する
 - response:
+
 ```json=
 {
     "token": "token"
     "expired_at": "トークン失効時刻(期限は1分)"
 }
 ```
+
 定期的に自動更新する設計が必要
 
 ## Endpoint: Management
+
 - path: /management
 - **required role: admin**
 
 ### List Users
+
 - method: GET
 - path: /list_users
 - description: ユーザ一覧を取得
 - response: ユーザ型の配列+payment_status
-- ない場合はnull
+- ない場合は null
 
 ```json=
 [
@@ -215,8 +239,8 @@ payment status: https://github.com/MISW/Portal/blob/master/backend/domain/paymen
 ]
 ```
 
-
 ### Authorize Transaction
+
 - method: POST
 - path: /authorize_transaction
 - description: ユーザの支払い完了申請を許可
@@ -229,15 +253,18 @@ payment status: https://github.com/MISW/Portal/blob/master/backend/domain/paymen
 ```
 
 - response:
+
 ```json=
 {}
 ```
 
 ### Get Payment Status
+
 - method: GET
 - path: `/payment_status?user_id={{target_user_id}}&period={{target_period}}`
 - description: 特定の支払い情報を取得
 - response:
+
 ```json-with-comment=
 {
     "payment_status": {
@@ -247,19 +274,23 @@ payment status: https://github.com/MISW/Portal/blob/master/backend/domain/paymen
 ```
 
 ### Delete Payment Status
+
 - method: DELETE
 - path: `/payment_status?user_id={{target_user_id}}&period={{target_period}}`
 - description: 特定の支払い情報を削除
 - response:
+
 ```json-with-comment=
 {}
 ```
 
 ### Put Payment Status
+
 - method: GET
 - path: `/payment_status`
 - description: 支払い情報を追加
 - response:
+
 ```json-with-comment=
 {
     "user_id": 10,
@@ -267,13 +298,13 @@ payment status: https://github.com/MISW/Portal/blob/master/backend/domain/paymen
 }
 ```
 
-
 ### Get Payment Statuses
+
 - method: GET
 - path: `/payment_statuses?user_id={{target_user_id}}&period={{target_period}}`
 - description: 支払い情報を一括で取得
-    - GET /payment_statusとは違い、オプションがoptionalになっている
-    - **現在対応しているのはuser_idのみ指定と両方指定のみ**
+  - GET /payment_status とは違い、オプションが optional になっている
+  - **現在対応しているのは user_id のみ指定と両方指定のみ**
 - response:
 
 ```json=
@@ -287,22 +318,25 @@ payment status: https://github.com/MISW/Portal/blob/master/backend/domain/paymen
 ```
 
 ### Get Config
+
 - method: GET
-- query: 
-    - kind: KIND_NAME
+- query:
+
+  - kind: KIND_NAME
 
 - KIND_NAME
-    - payment_period
-    - current_period
-    - email_template
-        - query: email_kind
-        - email_kind
-            - email_verification: 新規登録時のメール認証
-            - slack_invitation: Slackの招待時に同時に送信するメール
+  - payment_period
+  - current_period
+  - email_template
+    - query: email_kind
+    - email_kind
+      - email_verification: 新規登録時のメール認証
+      - slack_invitation: Slack の招待時に同時に送信するメール
 
 ### Set Config
+
 - method: POST
-- body: 
+- body:
 
 ```json=
 {
@@ -310,49 +344,61 @@ payment status: https://github.com/MISW/Portal/blob/master/backend/domain/paymen
     "payload": payload_type
 }
 ```
+
 #### payload
+
 - payment_period
+
 ```json
 {
-    "payment_period": 202004
+  "payment_period": 202004
 }
 ```
+
 - current_period
+
 ```json
 {
-    "payment_period": 202004
+  "payment_period": 202004
 }
 ```
+
 - email_template
+
 ```json
 {
-    "email_kind": "上と同じ",
-    "subject": "メールの件名",
-    "body": "メールの本文テンプレート"
+  "email_kind": "上と同じ",
+  "subject": "メールの件名",
+  "body": "メールの本文テンプレート"
 }
 ```
 
 ## Endpoint: Externam
+
 - path: /external
-- required headers: 
-    - ```"Authorization": "Bearer {EXTERNAL_INTEGRATION_TOKENS}"```  
+- required headers:
+  - `"Authorization": "Bearer {EXTERNAL_INTEGRATION_TOKENS}"`
 
 ### Find Role
+
 - path: /find_role
-- description: slack_idからロールを取得
-- query: 
-    - slack_id
-- response: 
+- description: slack_id からロールを取得
+- query:
+  - slack_id
+- response:
+
 ```json
 {
-    "role": "ロール",
+  "role": "ロール"
 }
 ```
 
 ### All Member Roles
+
 - path: all_member_roles
-- description: 全員のロールを取得 
-- response: 
+- description: 全員のロールを取得
+- response:
+
 ```json
 {
     "slack_id_1": {
@@ -365,27 +411,30 @@ payment status: https://github.com/MISW/Portal/blob/master/backend/domain/paymen
 }
 ```
 
-
 ## Other Tips
+
 ### 新規登録(Sign up)時のフロー
+
 - フロント側で情報を入力する
 - `/api/public/signup` を叩いて登録する
-- not member roleとしてアカウントが作成される
+- not member role としてアカウントが作成される
 - メールが送信され、メールアドレス認証を行う
-    - email_verified flagが立つ
-- QRコード生成APIを叩いて(未定義)QRコードを生成し表示する
+  - email_verified flag が立つ
+- QR コード生成 API を叩いて(未定義)QR コードを生成し表示する
 - 会計が読み取る
-- member roleに変更
-- Slackから招待メールが届く
-- Portal側のデータベースにSlack IDが保存される
+- member role に変更
+- Slack から招待メールが届く
+- Portal 側のデータベースに Slack ID が保存される
 
 ### ログイン時の挙動
-- signupページ以外で非ログイン状態
-- `/api/public/login` を叩いて返ってきたredirect_urlに転送
-- 転送されてAuth0で認証に成功すると `/callback` に返ってくる
-- この時に `/callback?code=XXXX&state=XXXX` みたいな感じでcodeとstateがついてくるのでこれを読み取って `/api/public/callback` を叩く
 
-### Slackの招待APIを叩くために必要な呼び出し
+- signup ページ以外で非ログイン状態
+- `/api/public/login` を叩いて返ってきた redirect_url に転送
+- 転送されて Auth0 で認証に成功すると `/callback` に返ってくる
+- この時に `/callback?code=XXXX&state=XXXX` みたいな感じで code と state がついてくるのでこれを読み取って `/api/public/callback` を叩く
+
+### Slack の招待 API を叩くために必要な呼び出し
+
 https://slack.com/oauth/authorize?&client_id=2591799685.577702399297&team=misw-info&install_redirect=install-on-team&scope=admin+client
 
 https://elements.heroku.com/buttons/outsideris/slack-invite-automation
@@ -398,7 +447,6 @@ Click "Permissions".
 In "OAuth & Permissions" page, select admin scope under "Permission Scopes" menu and save changes.
 
 Click "Install App to Workspace".
-
 
 Visit https://slack.com/oauth/authorize?&client_id=CLIENT_ID&team=TEAM_ID&install_redirect=install-on-team&scope=admin+client in your browser and authorize your app.
 

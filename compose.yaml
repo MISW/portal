@@ -1,25 +1,21 @@
 services:
   envoy:
-    command:
-      - "--config-path /etc/envoy/envoy.yaml"
-      - "--base-id 1"
-    entrypoint: "/usr/local/bin/envoy"
     image: envoyproxy/envoy:v1.23-latest
     ports:
-      - 8080:80
+      - "8080:80"
     volumes:
-      - ./envoy:/etc/envoy
+      - ./envoy.yaml:/etc/envoy/envoy.yaml
 
   mysql:
     command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
     environment:
-      MYSQL_ROOT_HOST: "%"
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: portal
-      TZ: "Asia/Tokyo"
-    expose:
-      - "3306"
-    image: mysql:8
+      - MYSQL_DATABASE=portal
+      - MYSQL_ROOT_HOST=%
+      - MYSQL_ROOT_PASSWORD=root
+      - TZ=Asia/Tokyo
+    image: mariadb:10
+    ports:
+      - "3306:3306"
     volumes:
       - mysql:/var/lib/mysql
       - ./seeds:/seeds
@@ -29,30 +25,32 @@ services:
       dockerfile: backend.Dockerfile
       context: .
       target: development
-    env_file: ./dev.env
-    environment:
-      TZ: "Asia/Tokyo"
-    expose:
-      - "80"
+    env_file:
+      - ./dev.env
+    ports:
+      - "80:80"
     volumes:
       - ./backend:/backend
       - ./backend/schema:/schema
       - ./scripts/docker-entrypoint.backend.sh:/bin/docker-entrypoint.backend.sh
+      - ./seeds:/seeds
 
   frontend:
     build:
       dockerfile: frontend.Dockerfile
       context: .
       target: development
-    env_file: ./dev.env
-    environment:
-      BACKEND_HOST: "http://backend"
-      TZ: "Azia/Tokyo"
-    expose:
-      - "3000"
+    env_file:
+      - ./dev.env
+    ports:
+      - "3000:3000"
     volumes:
       - ./frontend:/frontend
       - ./scripts/docker-entrypoint.frontend.sh:/bin/docker-entrypoint.frontend.sh
+      - pnpm-store:/frontend/.pnpm-store
+      - node_modules:/frontend/node_modules
 
 volumes:
   mysql:
+  pnpm-store:
+  node_modules:
