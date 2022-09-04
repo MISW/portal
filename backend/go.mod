@@ -11,7 +11,7 @@ require (
 	github.com/google/go-cmp v0.5.8
 	github.com/heetch/confita v0.10.0
 	github.com/jmoiron/sqlx v1.3.5
-	github.com/labstack/echo/v4 v4.8.0
+	github.com/labstack/echo/v4 v4.9.0
 	github.com/labstack/gommon v0.3.1
 	github.com/slack-go/slack v0.11.2
 	go.uber.org/dig v1.15.0
