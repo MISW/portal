@@ -1,7 +1,5 @@
 {
   "name": "mis-portal-frontend",
-  "version": "1.0.0",
-  "main": "index.js",
   "scripts": {
     "coverage": "cp -v ./.next/swc-trace-profile-*.json ./coverage",
     "build": "next build",
@@ -9,6 +7,7 @@
     "dev": "next dev",
     "dev:css": "tailwindcss -o src/tailwind.css --watch",
     "docker": "next dev --hostname 0.0.0.0",
+    "export": "next export",
     "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx}\"",
     "format:check": "prettier --check \"src/**/*.{js,jsx,ts,tsx}\"",
     "lint": "next lint --dir src --ext .js,jsx,.ts,.tsx",
@@ -22,7 +21,7 @@
     "@fortawesome/fontawesome-common-types": "^6.2.0",
     "@fortawesome/free-brands-svg-icons": "^6.2.0",
     "@mui/icons-material": "^5.10.3",
-    "@mui/material": "^5.10.3",
+    "@mui/material": "^5.10.4",
     "@mui/styles": "^5.10.3",
     "@reduxjs/toolkit": "^1.8.5",
     "clsx": "^1.2.1",
@@ -33,16 +32,16 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-redux": "^8.0.2",
-    "sharp": "^0.30.7"
+    "sharp": "^0.31.0"
   },
   "devDependencies": {
-    "@types/node": "^18.7.14",
+    "@types/node": "^18.7.15",
     "@types/react": "^18.0.18",
     "@types/react-dom": "^18.0.6",
     "@types/react-redux": "^7.1.24",
     "@types/sharp": "^0.30.5",
-    "@typescript-eslint/eslint-plugin": "^5.36.1",
-    "@typescript-eslint/parser": "^5.36.1",
+    "@typescript-eslint/eslint-plugin": "^5.36.2",
+    "@typescript-eslint/parser": "^5.36.2",
     "autoprefixer": "^10.4.8",
     "eslint": "^8.23.0",
     "eslint-config-next": "^12.2.5",

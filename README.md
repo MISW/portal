@@ -28,7 +28,10 @@ cd Portal
 docker compose up -d --build
 ```
 
-- Open **[localhost:8080](http://localhost:8080/)**
+- Wait for install packages
+- Wait for db wake up
+- Wait for server wake up
+- Open **[localhost:8080](http://localhost:8080/)** in browser
 
 ### Show Logs
 

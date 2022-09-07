@@ -10,19 +10,16 @@
 
 # Test binary, built with `go test -c`
 *.test
+coverage
 
 # Output of the go coverage tool, specifically when used with LiteIDE
 *.out
 
 # Dependency directories (remove the comment below to include it)
-# vendor/
+vendor
 
 # Go workspace file
 go.work
 
-# log file
-telepresense.log
-
-coverage
-
-.env
+# local env files
+*.env

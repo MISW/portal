@@ -30,10 +30,10 @@ jobs:
       matrix:
         include:
           - name: frontend
-            file: frontend.Dockerfile
+            file: frontend.dockerfile
             target: production
           - name: backend
-            file: backend.Dockerfile
+            file: backend.dockerfile
             target: production
 
     steps:

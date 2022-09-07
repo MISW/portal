@@ -6,35 +6,36 @@ package repository
 
 import (
 	context "context"
+	reflect "reflect"
+
 	domain "github.com/MISW/Portal/backend/domain"
 	gomock "github.com/golang/mock/gomock"
-	reflect "reflect"
 )
 
-// MockUserRoleRepository is a mock of UserRoleRepository interface
+// MockUserRoleRepository is a mock of UserRoleRepository interface.
 type MockUserRoleRepository struct {
 	ctrl     *gomock.Controller
 	recorder *MockUserRoleRepositoryMockRecorder
 }
 
-// MockUserRoleRepositoryMockRecorder is the mock recorder for MockUserRoleRepository
+// MockUserRoleRepositoryMockRecorder is the mock recorder for MockUserRoleRepository.
 type MockUserRoleRepositoryMockRecorder struct {
 	mock *MockUserRoleRepository
 }
 
-// NewMockUserRoleRepository creates a new mock instance
+// NewMockUserRoleRepository creates a new mock instance.
 func NewMockUserRoleRepository(ctrl *gomock.Controller) *MockUserRoleRepository {
 	mock := &MockUserRoleRepository{ctrl: ctrl}
 	mock.recorder = &MockUserRoleRepositoryMockRecorder{mock}
 	return mock
 }
 
-// EXPECT returns an object that allows the caller to indicate expected use
+// EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockUserRoleRepository) EXPECT() *MockUserRoleRepositoryMockRecorder {
 	return m.recorder
 }
 
-// Update mocks base method
+// Update mocks base method.
 func (m *MockUserRoleRepository) Update(ctx context.Context, id int, role domain.RoleType) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Update", ctx, id, role)
@@ -42,27 +43,13 @@ func (m *MockUserRoleRepository) Update(ctx context.Context, id int, role domain
 	return ret0
 }
 
-// Update indicates an expected call of Update
+// Update indicates an expected call of Update.
 func (mr *MockUserRoleRepositoryMockRecorder) Update(ctx, id, role interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Update", reflect.TypeOf((*MockUserRoleRepository)(nil).Update), ctx, id, role)
 }
 
-// UpdateWithRule mocks base method
-func (m *MockUserRoleRepository) UpdateWithRule(ctx context.Context, id, currentPeriod, paymentPeriod int) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "UpdateWithRule", ctx, id, currentPeriod, paymentPeriod)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// UpdateWithRule indicates an expected call of UpdateWithRule
-func (mr *MockUserRoleRepositoryMockRecorder) UpdateWithRule(ctx, id, currentPeriod, paymentPeriod interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateWithRule", reflect.TypeOf((*MockUserRoleRepository)(nil).UpdateWithRule), ctx, id, currentPeriod, paymentPeriod)
-}
-
-// UpdateAllWithRule mocks base method
+// UpdateAllWithRule mocks base method.
 func (m *MockUserRoleRepository) UpdateAllWithRule(ctx context.Context, currentPeriod, paymentPeriod int) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UpdateAllWithRule", ctx, currentPeriod, paymentPeriod)
@@ -70,8 +57,22 @@ func (m *MockUserRoleRepository) UpdateAllWithRule(ctx context.Context, currentP
 	return ret0
 }
 
-// UpdateAllWithRule indicates an expected call of UpdateAllWithRule
+// UpdateAllWithRule indicates an expected call of UpdateAllWithRule.
 func (mr *MockUserRoleRepositoryMockRecorder) UpdateAllWithRule(ctx, currentPeriod, paymentPeriod interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateAllWithRule", reflect.TypeOf((*MockUserRoleRepository)(nil).UpdateAllWithRule), ctx, currentPeriod, paymentPeriod)
+}
+
+// UpdateWithRule mocks base method.
+func (m *MockUserRoleRepository) UpdateWithRule(ctx context.Context, id, currentPeriod, paymentPeriod int) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpdateWithRule", ctx, id, currentPeriod, paymentPeriod)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// UpdateWithRule indicates an expected call of UpdateWithRule.
+func (mr *MockUserRoleRepositoryMockRecorder) UpdateWithRule(ctx, id, currentPeriod, paymentPeriod interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateWithRule", reflect.TypeOf((*MockUserRoleRepository)(nil).UpdateWithRule), ctx, id, currentPeriod, paymentPeriod)
 }

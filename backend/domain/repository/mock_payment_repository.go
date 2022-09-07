@@ -6,36 +6,37 @@ package repository
 
 import (
 	context "context"
-	domain "github.com/MISW/Portal/backend/domain"
-	gomock "github.com/golang/mock/gomock"
 	reflect "reflect"
 	time "time"
+
+	domain "github.com/MISW/Portal/backend/domain"
+	gomock "github.com/golang/mock/gomock"
 )
 
-// MockPaymentStatusRepository is a mock of PaymentStatusRepository interface
+// MockPaymentStatusRepository is a mock of PaymentStatusRepository interface.
 type MockPaymentStatusRepository struct {
 	ctrl     *gomock.Controller
 	recorder *MockPaymentStatusRepositoryMockRecorder
 }
 
-// MockPaymentStatusRepositoryMockRecorder is the mock recorder for MockPaymentStatusRepository
+// MockPaymentStatusRepositoryMockRecorder is the mock recorder for MockPaymentStatusRepository.
 type MockPaymentStatusRepositoryMockRecorder struct {
 	mock *MockPaymentStatusRepository
 }
 
-// NewMockPaymentStatusRepository creates a new mock instance
+// NewMockPaymentStatusRepository creates a new mock instance.
 func NewMockPaymentStatusRepository(ctrl *gomock.Controller) *MockPaymentStatusRepository {
 	mock := &MockPaymentStatusRepository{ctrl: ctrl}
 	mock.recorder = &MockPaymentStatusRepositoryMockRecorder{mock}
 	return mock
 }
 
-// EXPECT returns an object that allows the caller to indicate expected use
+// EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockPaymentStatusRepository) EXPECT() *MockPaymentStatusRepositoryMockRecorder {
 	return m.recorder
 }
 
-// Add mocks base method
+// Add mocks base method.
 func (m *MockPaymentStatusRepository) Add(ctx context.Context, userID, period, authorizer int) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Add", ctx, userID, period, authorizer)
@@ -43,28 +44,13 @@ func (m *MockPaymentStatusRepository) Add(ctx context.Context, userID, period, a
 	return ret0
 }
 
-// Add indicates an expected call of Add
+// Add indicates an expected call of Add.
 func (mr *MockPaymentStatusRepositoryMockRecorder) Add(ctx, userID, period, authorizer interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Add", reflect.TypeOf((*MockPaymentStatusRepository)(nil).Add), ctx, userID, period, authorizer)
 }
 
-// Get mocks base method
-func (m *MockPaymentStatusRepository) Get(ctx context.Context, userID, period int) (*domain.PaymentStatus, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Get", ctx, userID, period)
-	ret0, _ := ret[0].(*domain.PaymentStatus)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// Get indicates an expected call of Get
-func (mr *MockPaymentStatusRepositoryMockRecorder) Get(ctx, userID, period interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Get", reflect.TypeOf((*MockPaymentStatusRepository)(nil).Get), ctx, userID, period)
-}
-
-// Delete mocks base method
+// Delete mocks base method.
 func (m *MockPaymentStatusRepository) Delete(ctx context.Context, userID, period int) (bool, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Delete", ctx, userID, period)
@@ -73,13 +59,28 @@ func (m *MockPaymentStatusRepository) Delete(ctx context.Context, userID, period
 	return ret0, ret1
 }
 
-// Delete indicates an expected call of Delete
+// Delete indicates an expected call of Delete.
 func (mr *MockPaymentStatusRepositoryMockRecorder) Delete(ctx, userID, period interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Delete", reflect.TypeOf((*MockPaymentStatusRepository)(nil).Delete), ctx, userID, period)
 }
 
-// GetLatestByUser mocks base method
+// Get mocks base method.
+func (m *MockPaymentStatusRepository) Get(ctx context.Context, userID, period int) (*domain.PaymentStatus, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Get", ctx, userID, period)
+	ret0, _ := ret[0].(*domain.PaymentStatus)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// Get indicates an expected call of Get.
+func (mr *MockPaymentStatusRepositoryMockRecorder) Get(ctx, userID, period interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Get", reflect.TypeOf((*MockPaymentStatusRepository)(nil).Get), ctx, userID, period)
+}
+
+// GetLatestByUser mocks base method.
 func (m *MockPaymentStatusRepository) GetLatestByUser(ctx context.Context, userID int) (*domain.PaymentStatus, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetLatestByUser", ctx, userID)
@@ -88,73 +89,13 @@ func (m *MockPaymentStatusRepository) GetLatestByUser(ctx context.Context, userI
 	return ret0, ret1
 }
 
-// GetLatestByUser indicates an expected call of GetLatestByUser
+// GetLatestByUser indicates an expected call of GetLatestByUser.
 func (mr *MockPaymentStatusRepositoryMockRecorder) GetLatestByUser(ctx, userID interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetLatestByUser", reflect.TypeOf((*MockPaymentStatusRepository)(nil).GetLatestByUser), ctx, userID)
 }
 
-// ListUsersForPeriod mocks base method
-func (m *MockPaymentStatusRepository) ListUsersForPeriod(ctx context.Context, period int) ([]*domain.PaymentStatus, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ListUsersForPeriod", ctx, period)
-	ret0, _ := ret[0].([]*domain.PaymentStatus)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// ListUsersForPeriod indicates an expected call of ListUsersForPeriod
-func (mr *MockPaymentStatusRepositoryMockRecorder) ListUsersForPeriod(ctx, period interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListUsersForPeriod", reflect.TypeOf((*MockPaymentStatusRepository)(nil).ListUsersForPeriod), ctx, period)
-}
-
-// ListPeriodsForUser mocks base method
-func (m *MockPaymentStatusRepository) ListPeriodsForUser(ctx context.Context, userID int) ([]*domain.PaymentStatus, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ListPeriodsForUser", ctx, userID)
-	ret0, _ := ret[0].([]*domain.PaymentStatus)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// ListPeriodsForUser indicates an expected call of ListPeriodsForUser
-func (mr *MockPaymentStatusRepositoryMockRecorder) ListPeriodsForUser(ctx, userID interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListPeriodsForUser", reflect.TypeOf((*MockPaymentStatusRepository)(nil).ListPeriodsForUser), ctx, userID)
-}
-
-// IsLatest mocks base method
-func (m *MockPaymentStatusRepository) IsLatest(ctx context.Context, userID, period int) (bool, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "IsLatest", ctx, userID, period)
-	ret0, _ := ret[0].(bool)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// IsLatest indicates an expected call of IsLatest
-func (mr *MockPaymentStatusRepositoryMockRecorder) IsLatest(ctx, userID, period interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "IsLatest", reflect.TypeOf((*MockPaymentStatusRepository)(nil).IsLatest), ctx, userID, period)
-}
-
-// IsFirst mocks base method
-func (m *MockPaymentStatusRepository) IsFirst(ctx context.Context, userID, period int) (bool, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "IsFirst", ctx, userID, period)
-	ret0, _ := ret[0].(bool)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// IsFirst indicates an expected call of IsFirst
-func (mr *MockPaymentStatusRepositoryMockRecorder) IsFirst(ctx, userID, period interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "IsFirst", reflect.TypeOf((*MockPaymentStatusRepository)(nil).IsFirst), ctx, userID, period)
-}
-
-// HasMatchingPeriod mocks base method
+// HasMatchingPeriod mocks base method.
 func (m *MockPaymentStatusRepository) HasMatchingPeriod(ctx context.Context, userID int, periods []int) (bool, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "HasMatchingPeriod", ctx, userID, periods)
@@ -163,36 +104,111 @@ func (m *MockPaymentStatusRepository) HasMatchingPeriod(ctx context.Context, use
 	return ret0, ret1
 }
 
-// HasMatchingPeriod indicates an expected call of HasMatchingPeriod
+// HasMatchingPeriod indicates an expected call of HasMatchingPeriod.
 func (mr *MockPaymentStatusRepositoryMockRecorder) HasMatchingPeriod(ctx, userID, periods interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "HasMatchingPeriod", reflect.TypeOf((*MockPaymentStatusRepository)(nil).HasMatchingPeriod), ctx, userID, periods)
 }
 
-// MockPaymentTransactionRepository is a mock of PaymentTransactionRepository interface
+// IsFirst mocks base method.
+func (m *MockPaymentStatusRepository) IsFirst(ctx context.Context, userID, period int) (bool, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "IsFirst", ctx, userID, period)
+	ret0, _ := ret[0].(bool)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// IsFirst indicates an expected call of IsFirst.
+func (mr *MockPaymentStatusRepositoryMockRecorder) IsFirst(ctx, userID, period interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "IsFirst", reflect.TypeOf((*MockPaymentStatusRepository)(nil).IsFirst), ctx, userID, period)
+}
+
+// IsLatest mocks base method.
+func (m *MockPaymentStatusRepository) IsLatest(ctx context.Context, userID, period int) (bool, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "IsLatest", ctx, userID, period)
+	ret0, _ := ret[0].(bool)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// IsLatest indicates an expected call of IsLatest.
+func (mr *MockPaymentStatusRepositoryMockRecorder) IsLatest(ctx, userID, period interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "IsLatest", reflect.TypeOf((*MockPaymentStatusRepository)(nil).IsLatest), ctx, userID, period)
+}
+
+// ListPeriodsForUser mocks base method.
+func (m *MockPaymentStatusRepository) ListPeriodsForUser(ctx context.Context, userID int) ([]*domain.PaymentStatus, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListPeriodsForUser", ctx, userID)
+	ret0, _ := ret[0].([]*domain.PaymentStatus)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListPeriodsForUser indicates an expected call of ListPeriodsForUser.
+func (mr *MockPaymentStatusRepositoryMockRecorder) ListPeriodsForUser(ctx, userID interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListPeriodsForUser", reflect.TypeOf((*MockPaymentStatusRepository)(nil).ListPeriodsForUser), ctx, userID)
+}
+
+// ListUnpaidMembers mocks base method.
+func (m *MockPaymentStatusRepository) ListUnpaidMembers(ctx context.Context, paymentPeriod int) ([]*domain.User, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListUnpaidMembers", ctx, paymentPeriod)
+	ret0, _ := ret[0].([]*domain.User)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListUnpaidMembers indicates an expected call of ListUnpaidMembers.
+func (mr *MockPaymentStatusRepositoryMockRecorder) ListUnpaidMembers(ctx, paymentPeriod interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListUnpaidMembers", reflect.TypeOf((*MockPaymentStatusRepository)(nil).ListUnpaidMembers), ctx, paymentPeriod)
+}
+
+// ListUsersForPeriod mocks base method.
+func (m *MockPaymentStatusRepository) ListUsersForPeriod(ctx context.Context, period int) ([]*domain.PaymentStatus, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListUsersForPeriod", ctx, period)
+	ret0, _ := ret[0].([]*domain.PaymentStatus)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListUsersForPeriod indicates an expected call of ListUsersForPeriod.
+func (mr *MockPaymentStatusRepositoryMockRecorder) ListUsersForPeriod(ctx, period interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListUsersForPeriod", reflect.TypeOf((*MockPaymentStatusRepository)(nil).ListUsersForPeriod), ctx, period)
+}
+
+// MockPaymentTransactionRepository is a mock of PaymentTransactionRepository interface.
 type MockPaymentTransactionRepository struct {
 	ctrl     *gomock.Controller
 	recorder *MockPaymentTransactionRepositoryMockRecorder
 }
 
-// MockPaymentTransactionRepositoryMockRecorder is the mock recorder for MockPaymentTransactionRepository
+// MockPaymentTransactionRepositoryMockRecorder is the mock recorder for MockPaymentTransactionRepository.
 type MockPaymentTransactionRepositoryMockRecorder struct {
 	mock *MockPaymentTransactionRepository
 }
 
-// NewMockPaymentTransactionRepository creates a new mock instance
+// NewMockPaymentTransactionRepository creates a new mock instance.
 func NewMockPaymentTransactionRepository(ctrl *gomock.Controller) *MockPaymentTransactionRepository {
 	mock := &MockPaymentTransactionRepository{ctrl: ctrl}
 	mock.recorder = &MockPaymentTransactionRepositoryMockRecorder{mock}
 	return mock
 }
 
-// EXPECT returns an object that allows the caller to indicate expected use
+// EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockPaymentTransactionRepository) EXPECT() *MockPaymentTransactionRepositoryMockRecorder {
 	return m.recorder
 }
 
-// Add mocks base method
+// Add mocks base method.
 func (m *MockPaymentTransactionRepository) Add(ctx context.Context, userID int, token string, expiredAt time.Time) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Add", ctx, userID, token, expiredAt)
@@ -200,13 +216,27 @@ func (m *MockPaymentTransactionRepository) Add(ctx context.Context, userID int, 
 	return ret0
 }
 
-// Add indicates an expected call of Add
+// Add indicates an expected call of Add.
 func (mr *MockPaymentTransactionRepositoryMockRecorder) Add(ctx, userID, token, expiredAt interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Add", reflect.TypeOf((*MockPaymentTransactionRepository)(nil).Add), ctx, userID, token, expiredAt)
 }
 
-// Get mocks base method
+// Delete mocks base method.
+func (m *MockPaymentTransactionRepository) Delete(ctx context.Context, token string) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Delete", ctx, token)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// Delete indicates an expected call of Delete.
+func (mr *MockPaymentTransactionRepositoryMockRecorder) Delete(ctx, token interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Delete", reflect.TypeOf((*MockPaymentTransactionRepository)(nil).Delete), ctx, token)
+}
+
+// Get mocks base method.
 func (m *MockPaymentTransactionRepository) Get(ctx context.Context, token string) (*domain.PaymentTransaction, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Get", ctx, token)
@@ -215,27 +245,13 @@ func (m *MockPaymentTransactionRepository) Get(ctx context.Context, token string
 	return ret0, ret1
 }
 
-// Get indicates an expected call of Get
+// Get indicates an expected call of Get.
 func (mr *MockPaymentTransactionRepositoryMockRecorder) Get(ctx, token interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Get", reflect.TypeOf((*MockPaymentTransactionRepository)(nil).Get), ctx, token)
 }
 
-// Delete mocks base method
-func (m *MockPaymentTransactionRepository) Delete(ctx context.Context, token string) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Delete", ctx, token)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// Delete indicates an expected call of Delete
-func (mr *MockPaymentTransactionRepositoryMockRecorder) Delete(ctx, token interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Delete", reflect.TypeOf((*MockPaymentTransactionRepository)(nil).Delete), ctx, token)
-}
-
-// RevokeExpired mocks base method
+// RevokeExpired mocks base method.
 func (m *MockPaymentTransactionRepository) RevokeExpired(ctx context.Context) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "RevokeExpired", ctx)
@@ -243,7 +259,7 @@ func (m *MockPaymentTransactionRepository) RevokeExpired(ctx context.Context) er
 	return ret0
 }
 
-// RevokeExpired indicates an expected call of RevokeExpired
+// RevokeExpired indicates an expected call of RevokeExpired.
 func (mr *MockPaymentTransactionRepositoryMockRecorder) RevokeExpired(ctx interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RevokeExpired", reflect.TypeOf((*MockPaymentTransactionRepository)(nil).RevokeExpired), ctx)

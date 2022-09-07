@@ -1,4 +1,5 @@
-compose.override.yml
+/.vscode
+/temp
+compose.override.yaml
 dev.env
 telepresence.log
-tmp

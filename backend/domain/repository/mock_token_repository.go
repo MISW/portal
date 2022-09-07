@@ -6,36 +6,37 @@ package repository
 
 import (
 	context "context"
-	domain "github.com/MISW/Portal/backend/domain"
-	gomock "github.com/golang/mock/gomock"
 	reflect "reflect"
 	time "time"
+
+	domain "github.com/MISW/Portal/backend/domain"
+	gomock "github.com/golang/mock/gomock"
 )
 
-// MockTokenRepository is a mock of TokenRepository interface
+// MockTokenRepository is a mock of TokenRepository interface.
 type MockTokenRepository struct {
 	ctrl     *gomock.Controller
 	recorder *MockTokenRepositoryMockRecorder
 }
 
-// MockTokenRepositoryMockRecorder is the mock recorder for MockTokenRepository
+// MockTokenRepositoryMockRecorder is the mock recorder for MockTokenRepository.
 type MockTokenRepositoryMockRecorder struct {
 	mock *MockTokenRepository
 }
 
-// NewMockTokenRepository creates a new mock instance
+// NewMockTokenRepository creates a new mock instance.
 func NewMockTokenRepository(ctrl *gomock.Controller) *MockTokenRepository {
 	mock := &MockTokenRepository{ctrl: ctrl}
 	mock.recorder = &MockTokenRepositoryMockRecorder{mock}
 	return mock
 }
 
-// EXPECT returns an object that allows the caller to indicate expected use
+// EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockTokenRepository) EXPECT() *MockTokenRepositoryMockRecorder {
 	return m.recorder
 }
 
-// Add mocks base method
+// Add mocks base method.
 func (m *MockTokenRepository) Add(ctx context.Context, userID int, token string, expiredAt time.Time) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Add", ctx, userID, token, expiredAt)
@@ -43,13 +44,41 @@ func (m *MockTokenRepository) Add(ctx context.Context, userID int, token string,
 	return ret0
 }
 
-// Add indicates an expected call of Add
+// Add indicates an expected call of Add.
 func (mr *MockTokenRepositoryMockRecorder) Add(ctx, userID, token, expiredAt interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Add", reflect.TypeOf((*MockTokenRepository)(nil).Add), ctx, userID, token, expiredAt)
 }
 
-// GetByToken mocks base method
+// Delete mocks base method.
+func (m *MockTokenRepository) Delete(ctx context.Context, token string) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Delete", ctx, token)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// Delete indicates an expected call of Delete.
+func (mr *MockTokenRepositoryMockRecorder) Delete(ctx, token interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Delete", reflect.TypeOf((*MockTokenRepository)(nil).Delete), ctx, token)
+}
+
+// DeleteAll mocks base method.
+func (m *MockTokenRepository) DeleteAll(ctx context.Context, userID int) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeleteAll", ctx, userID)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// DeleteAll indicates an expected call of DeleteAll.
+func (mr *MockTokenRepositoryMockRecorder) DeleteAll(ctx, userID interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteAll", reflect.TypeOf((*MockTokenRepository)(nil).DeleteAll), ctx, userID)
+}
+
+// GetByToken mocks base method.
 func (m *MockTokenRepository) GetByToken(ctx context.Context, token string) (*domain.Token, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetByToken", ctx, token)
@@ -58,36 +87,8 @@ func (m *MockTokenRepository) GetByToken(ctx context.Context, token string) (*do
 	return ret0, ret1
 }
 
-// GetByToken indicates an expected call of GetByToken
+// GetByToken indicates an expected call of GetByToken.
 func (mr *MockTokenRepositoryMockRecorder) GetByToken(ctx, token interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetByToken", reflect.TypeOf((*MockTokenRepository)(nil).GetByToken), ctx, token)
-}
-
-// Delete mocks base method
-func (m *MockTokenRepository) Delete(ctx context.Context, token string) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Delete", ctx, token)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// Delete indicates an expected call of Delete
-func (mr *MockTokenRepositoryMockRecorder) Delete(ctx, token interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Delete", reflect.TypeOf((*MockTokenRepository)(nil).Delete), ctx, token)
-}
-
-// DeleteAll mocks base method
-func (m *MockTokenRepository) DeleteAll(ctx context.Context, userID int) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DeleteAll", ctx, userID)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// DeleteAll indicates an expected call of DeleteAll
-func (mr *MockTokenRepositoryMockRecorder) DeleteAll(ctx, userID interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteAll", reflect.TypeOf((*MockTokenRepository)(nil).DeleteAll), ctx, userID)
 }

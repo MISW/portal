@@ -6,80 +6,36 @@ package repository
 
 import (
 	context "context"
+	reflect "reflect"
+
 	domain "github.com/MISW/Portal/backend/domain"
 	gomock "github.com/golang/mock/gomock"
-	reflect "reflect"
 )
 
-// MockUserRepository is a mock of UserRepository interface
+// MockUserRepository is a mock of UserRepository interface.
 type MockUserRepository struct {
 	ctrl     *gomock.Controller
 	recorder *MockUserRepositoryMockRecorder
 }
 
-// MockUserRepositoryMockRecorder is the mock recorder for MockUserRepository
+// MockUserRepositoryMockRecorder is the mock recorder for MockUserRepository.
 type MockUserRepositoryMockRecorder struct {
 	mock *MockUserRepository
 }
 
-// NewMockUserRepository creates a new mock instance
+// NewMockUserRepository creates a new mock instance.
 func NewMockUserRepository(ctrl *gomock.Controller) *MockUserRepository {
 	mock := &MockUserRepository{ctrl: ctrl}
 	mock.recorder = &MockUserRepositoryMockRecorder{mock}
 	return mock
 }
 
-// EXPECT returns an object that allows the caller to indicate expected use
+// EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockUserRepository) EXPECT() *MockUserRepositoryMockRecorder {
 	return m.recorder
 }
 
-// Insert mocks base method
-func (m *MockUserRepository) Insert(ctx context.Context, user *domain.User) (int, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Insert", ctx, user)
-	ret0, _ := ret[0].(int)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// Insert indicates an expected call of Insert
-func (mr *MockUserRepositoryMockRecorder) Insert(ctx, user interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Insert", reflect.TypeOf((*MockUserRepository)(nil).Insert), ctx, user)
-}
-
-// GetByID mocks base method
-func (m *MockUserRepository) GetByID(ctx context.Context, id int) (*domain.User, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetByID", ctx, id)
-	ret0, _ := ret[0].(*domain.User)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// GetByID indicates an expected call of GetByID
-func (mr *MockUserRepositoryMockRecorder) GetByID(ctx, id interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetByID", reflect.TypeOf((*MockUserRepository)(nil).GetByID), ctx, id)
-}
-
-// GetBySlackID mocks base method
-func (m *MockUserRepository) GetBySlackID(ctx context.Context, slackID string) (*domain.User, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetBySlackID", ctx, slackID)
-	ret0, _ := ret[0].(*domain.User)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// GetBySlackID indicates an expected call of GetBySlackID
-func (mr *MockUserRepositoryMockRecorder) GetBySlackID(ctx, slackID interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetBySlackID", reflect.TypeOf((*MockUserRepository)(nil).GetBySlackID), ctx, slackID)
-}
-
-// GetByEmail mocks base method
+// GetByEmail mocks base method.
 func (m *MockUserRepository) GetByEmail(ctx context.Context, email string) (*domain.User, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetByEmail", ctx, email)
@@ -88,13 +44,58 @@ func (m *MockUserRepository) GetByEmail(ctx context.Context, email string) (*dom
 	return ret0, ret1
 }
 
-// GetByEmail indicates an expected call of GetByEmail
+// GetByEmail indicates an expected call of GetByEmail.
 func (mr *MockUserRepositoryMockRecorder) GetByEmail(ctx, email interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetByEmail", reflect.TypeOf((*MockUserRepository)(nil).GetByEmail), ctx, email)
 }
 
-// List mocks base method
+// GetByID mocks base method.
+func (m *MockUserRepository) GetByID(ctx context.Context, id int) (*domain.User, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetByID", ctx, id)
+	ret0, _ := ret[0].(*domain.User)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetByID indicates an expected call of GetByID.
+func (mr *MockUserRepositoryMockRecorder) GetByID(ctx, id interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetByID", reflect.TypeOf((*MockUserRepository)(nil).GetByID), ctx, id)
+}
+
+// GetBySlackID mocks base method.
+func (m *MockUserRepository) GetBySlackID(ctx context.Context, slackID string) (*domain.User, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetBySlackID", ctx, slackID)
+	ret0, _ := ret[0].(*domain.User)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetBySlackID indicates an expected call of GetBySlackID.
+func (mr *MockUserRepositoryMockRecorder) GetBySlackID(ctx, slackID interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetBySlackID", reflect.TypeOf((*MockUserRepository)(nil).GetBySlackID), ctx, slackID)
+}
+
+// Insert mocks base method.
+func (m *MockUserRepository) Insert(ctx context.Context, user *domain.User) (int, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Insert", ctx, user)
+	ret0, _ := ret[0].(int)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// Insert indicates an expected call of Insert.
+func (mr *MockUserRepositoryMockRecorder) Insert(ctx, user interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Insert", reflect.TypeOf((*MockUserRepository)(nil).Insert), ctx, user)
+}
+
+// List mocks base method.
 func (m *MockUserRepository) List(ctx context.Context) ([]*domain.User, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "List", ctx)
@@ -103,13 +104,13 @@ func (m *MockUserRepository) List(ctx context.Context) ([]*domain.User, error) {
 	return ret0, ret1
 }
 
-// List indicates an expected call of List
+// List indicates an expected call of List.
 func (mr *MockUserRepositoryMockRecorder) List(ctx interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "List", reflect.TypeOf((*MockUserRepository)(nil).List), ctx)
 }
 
-// ListByID mocks base method
+// ListByID mocks base method.
 func (m *MockUserRepository) ListByID(ctx context.Context, ids []int) ([]*domain.User, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ListByID", ctx, ids)
@@ -118,13 +119,13 @@ func (m *MockUserRepository) ListByID(ctx context.Context, ids []int) ([]*domain
 	return ret0, ret1
 }
 
-// ListByID indicates an expected call of ListByID
+// ListByID indicates an expected call of ListByID.
 func (mr *MockUserRepositoryMockRecorder) ListByID(ctx, ids interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListByID", reflect.TypeOf((*MockUserRepository)(nil).ListByID), ctx, ids)
 }
 
-// Update mocks base method
+// Update mocks base method.
 func (m *MockUserRepository) Update(ctx context.Context, user *domain.User) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Update", ctx, user)
@@ -132,13 +133,13 @@ func (m *MockUserRepository) Update(ctx context.Context, user *domain.User) erro
 	return ret0
 }
 
-// Update indicates an expected call of Update
+// Update indicates an expected call of Update.
 func (mr *MockUserRepositoryMockRecorder) Update(ctx, user interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Update", reflect.TypeOf((*MockUserRepository)(nil).Update), ctx, user)
 }
 
-// VerifyEmail mocks base method
+// VerifyEmail mocks base method.
 func (m *MockUserRepository) VerifyEmail(ctx context.Context, id int, email string) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "VerifyEmail", ctx, id, email)
@@ -146,7 +147,7 @@ func (m *MockUserRepository) VerifyEmail(ctx context.Context, id int, email stri
 	return ret0
 }
 
-// VerifyEmail indicates an expected call of VerifyEmail
+// VerifyEmail indicates an expected call of VerifyEmail.
 func (mr *MockUserRepositoryMockRecorder) VerifyEmail(ctx, id, email interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VerifyEmail", reflect.TypeOf((*MockUserRepository)(nil).VerifyEmail), ctx, id, email)
