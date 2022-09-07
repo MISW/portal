@@ -1,68 +1,77 @@
 ARG go_version=1.19
 
-# ツール類
-FROM golang:${go_version} AS tools
+# tools
+FROM archlinux:base-devel AS tools
+
+RUN mkdir -p /tools/bin
+
+WORKDIR /tools
+
+ARG dbenv_version=v1.1.0
+RUN curl -fsSL https://github.com/tsuzu/dbenv/releases/download/${dbenv_version}/dbenv_linux_x86_64.tar.gz -o ./dbenv.tar.gz \
+ && tar xvf ./dbenv.tar.gz -C /tools/bin \
+ && chmod +x /tools/bin/dbenv \
+ && rm -f ./dbenv.tar.gz
 
 ARG dockerize_version=v0.6.1
+RUN curl -fsSL https://github.com/jwilder/dockerize/releases/download/${dockerize_version}/dockerize-linux-amd64-${dockerize_version}.tar.gz -o ./dockerize.tar.gz \
+ && tar xvf ./dockerize.tar.gz -C /tools/bin \
+ && chmod +x /tools/bin/dockerize \
+ && rm -f ./dockerize.tar.gz
+
 ARG sqldef_version=v0.13.8
-ARG dbenv_version=v1.1.0
+RUN curl -fsSL https://github.com/k0kubun/sqldef/releases/download/${sqldef_version}/mysqldef_linux_amd64.tar.gz -o ./mysqldef.tar.gz \
+ && tar xvf ./mysqldef.tar.gz -C /tools/bin \
+ && chmod +x /tools/bin/mysqldef \
+ && rm -f ./mysqldef.tar.gz
 
-RUN wget https://github.com/jwilder/dockerize/releases/download/${dockerize_version}/dockerize-linux-amd64-${dockerize_version}.tar.gz \
-    && tar -C /usr/local/bin -xf dockerize-linux-amd64-${dockerize_version}.tar.gz \
-    && rm dockerize-linux-amd64-${dockerize_version}.tar.gz
-
-RUN wget https://github.com/k0kubun/sqldef/releases/download/${sqldef_version}/mysqldef_linux_amd64.tar.gz \
-    && tar -C /usr/local/bin -xf mysqldef_linux_amd64.tar.gz \
-    && rm mysqldef_linux_amd64.tar.gz
-
-RUN wget https://github.com/tsuzu/dbenv/releases/download/${dbenv_version}/dbenv_linux_x86_64.tar.gz \
-    && tar -C /usr/local/bin -xf dbenv_linux_x86_64.tar.gz \
-    && rm dbenv_linux_x86_64.tar.gz
-
-# 開発環境
+# development
 FROM golang:${go_version} AS development
 
-RUN apt update && \
-    apt install -y mariadb-client && \
-    apt clean && \
-    rm -rf /var/lib/apt/lists/*
+RUN apt update \
+ && DEBIAN_FRONTEND=noninteractive apt install -y mariadb-client \
+ && apt clean \
+ && rm -rf /var/lib/apt/lists/*
 
-COPY --from=tools /usr/local/bin/dockerize /bin
-COPY --from=tools /usr/local/bin/mysqldef /bin
-COPY --from=tools /usr/local/bin/dbenv /bin
+COPY --from=tools /tools/bin/dbenv /bin
+COPY --from=tools /tools/bin/dockerize /bin
+COPY --from=tools /tools/bin/mysqldef /bin
+
 COPY ./backend /backend
 COPY ./backend/schema /schema
-COPY ./backend/docker-entrypoint.sh /bin
+COPY ./seeds /seeds
+COPY ./backend/docker-entrypoint.sh /bin/docker-entrypoint.sh
+
+EXPOSE 80
 
 ENTRYPOINT ["/bin/docker-entrypoint.sh"]
 CMD ["-d", "-w", "-m", "-s"]
 
-# ビルド
-FROM golang:${go_version} AS build-backend
+# workspace
+FROM golang:${go_version} AS workspace
 
-ADD ./backend /backend
-ENV GO111MODULE=on
+COPY ./backend /backend
 
-# https://github.com/golang/go/issues/26492
-RUN cd /backend && \
-    go install && \
-    go build \
-    -ldflags '-extldflags "-fno-PIC -static"' \
-    -buildmode pie \
-    -tags 'osusergo netgo static_build' \
-    -o ./portal
+WORKDIR /backend
 
-# 本番環境
-# distrolessのdebugを使っているのは、distrolessにshellが含まれないため
+RUN go mod download \
+ && GO111MODULE=on go build -ldflags '-extldflags "-fno-PIC -static"' -buildmode pie -tags 'osusergo netgo static_build' -o /backend/portal
+
+# production
 FROM gcr.io/distroless/base:debug AS production
 
-COPY --from=tools /usr/local/bin/dockerize /bin
-COPY --from=tools /usr/local/bin/mysqldef /bin
-COPY --from=tools /usr/local/bin/dbenv /bin
-COPY --from=build-backend /backend/portal /bin/portal
-COPY --from=build-backend /backend/schema /schema
-COPY ./backend/docker-entrypoint.sh /bin/
-ADD ./config /config
+RUN ["/busybox/sh", "-c", "ln -s /busybox/sh /bin/sh"]
+RUN ["/busybox/sh", "-c", "ln -s /bin/env /usr/bin/env"]
 
-ENTRYPOINT [ "sh", "/bin/docker-entrypoint.sh" ]
-CMD [ "-w", "-m" ]
+COPY --from=tools /tools/bin/dbenv /bin
+COPY --from=tools /tools/bin/dockerize /bin
+COPY --from=tools /tools/bin/mysqldef /bin
+
+COPY --from=workspace /backend/portal /bin/portal
+
+COPY ./backend/schema /schema
+COPY ./config /config
+COPY ./backend/docker-entrypoint.sh /bin/docker-entrypoint.sh
+
+ENTRYPOINT ["sh", "/bin/docker-entrypoint.sh"]
+CMD ["-w", "-m"]

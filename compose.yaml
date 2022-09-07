@@ -7,7 +7,7 @@ services:
       - ./envoy.yaml:/etc/envoy/envoy.yaml
 
   mysql:
-    command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    command: mariadbd --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
     environment:
       - MYSQL_DATABASE=portal
       - MYSQL_ROOT_HOST=%
@@ -21,35 +21,37 @@ services:
 
   backend:
     build:
-      dockerfile: backend.Dockerfile
-      context: .
+      dockerfile: backend.dockerfile
       target: development
+      context: .
     env_file:
       - ./dev.env
     ports:
       - "80:80"
     volumes:
+      - go:/go
       - ./backend:/backend
       - ./backend/schema:/schema
-      - ./backend/docker-entrypoint.sh:/bin/docker-entrypoint.sh
       - ./seeds:/seeds
+      - ./backend/docker-entrypoint.sh:/bin/docker-entrypoint.sh
 
   frontend:
     build:
-      dockerfile: frontend.Dockerfile
-      context: .
+      dockerfile: frontend.dockerfile
       target: development
+      context: .
     env_file:
       - ./dev.env
     ports:
       - "3000:3000"
     volumes:
-      - ./frontend:/frontend
-      - ./frontend/docker-entrypoint.sh:/bin/docker-entrypoint.sh
       - pnpm-store:/frontend/.pnpm-store
       - node_modules:/frontend/node_modules
+      - ./frontend:/frontend
+      - ./frontend/docker-entrypoint.sh:/bin/docker-entrypoint.sh
 
 volumes:
   mysql:
+  go:
   pnpm-store:
   node_modules:

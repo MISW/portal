@@ -16,7 +16,7 @@ static_resources:
               typed_config:
                 "@type": type.googleapis.com/envoy.extensions.filters.network.http_connection_manager.v3.HttpConnectionManager
                 stat_prefix: ingress_http
-                stream_idle_timeout: 240s
+                stream_idle_timeout: 480s
                 codec_type: AUTO
                 route_config:
                   name: local_route
@@ -41,7 +41,7 @@ static_resources:
   clusters:
     - name: next_backend
       type: STRICT_DNS
-      connect_timeout: 120s
+      connect_timeout: 240s
       load_assignment:
         cluster_name: next_backend
         endpoints:
@@ -53,7 +53,7 @@ static_resources:
                       port_value: 3000
     - name: apiserver_backend
       type: STRICT_DNS
-      connect_timeout: 120s
+      connect_timeout: 240s
       load_assignment:
         cluster_name: apiserver_backend
         endpoints:

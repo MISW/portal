@@ -1,0 +1,84 @@
+{
+	"mocks": {
+		"./domain/repository/mock_appconfig_repository.go": {
+			"checksum": "4pxzWYkTTE7RpuiDct9P+w==",
+			"source_checksum": "S3tAr4ZXhnAWfkBRtbHLqw==",
+			"mode": "SOURCE_MODE",
+			"source_mode_runner": {
+				"source": "./domain/repository/appconfig_repository.go",
+				"destination": "./domain/repository/mock_appconfig_repository.go",
+				"package": "repository"
+			}
+		},
+		"./domain/repository/mock_external_integration_repository.go": {
+			"checksum": "oLHKWmnk8uAEiqWcYklwuA==",
+			"source_checksum": "/ufrdor/mFri4nKpumq10Q==",
+			"mode": "SOURCE_MODE",
+			"source_mode_runner": {
+				"source": "./domain/repository/external_integration_repository.go",
+				"destination": "./domain/repository/mock_external_integration_repository.go",
+				"package": "repository"
+			}
+		},
+		"./domain/repository/mock_payment_repository.go": {
+			"checksum": "Zluk9r+dwXd+TkZ9OtECng==",
+			"source_checksum": "aOQDBbojk9M95grHg7erag==",
+			"mode": "SOURCE_MODE",
+			"source_mode_runner": {
+				"source": "./domain/repository/payment_repository.go",
+				"destination": "./domain/repository/mock_payment_repository.go",
+				"package": "repository"
+			}
+		},
+		"./domain/repository/mock_slack_repository.go": {
+			"checksum": "BE1BcfkFRtsoXNt7ka7Sfg==",
+			"source_checksum": "srStbL2MXRmIhWvkP2EtUg==",
+			"mode": "SOURCE_MODE",
+			"source_mode_runner": {
+				"source": "./domain/repository/slack_repository.go",
+				"destination": "./domain/repository/mock_slack_repository.go",
+				"package": "repository"
+			}
+		},
+		"./domain/repository/mock_token_repository.go": {
+			"checksum": "JmFHDsn64DDiRJQ1piDfSA==",
+			"source_checksum": "vQbYGuh8ms0SnKK0KJfXuA==",
+			"mode": "SOURCE_MODE",
+			"source_mode_runner": {
+				"source": "./domain/repository/token_repository.go",
+				"destination": "./domain/repository/mock_token_repository.go",
+				"package": "repository"
+			}
+		},
+		"./domain/repository/mock_user_repository.go": {
+			"checksum": "yrhdSGwLYCwHk9b8dADQKA==",
+			"source_checksum": "DD0qlIJZZ8Cr5VfjrZMFuQ==",
+			"mode": "SOURCE_MODE",
+			"source_mode_runner": {
+				"source": "./domain/repository/user_repository.go",
+				"destination": "./domain/repository/mock_user_repository.go",
+				"package": "repository"
+			}
+		},
+		"./domain/repository/mock_user_role_repository.go": {
+			"checksum": "6axCU0dEJUfDDp5gsICAaQ==",
+			"source_checksum": "XL2dxXnYiuxTbRsdKeHeHA==",
+			"mode": "SOURCE_MODE",
+			"source_mode_runner": {
+				"source": "./domain/repository/user_role_repository.go",
+				"destination": "./domain/repository/mock_user_role_repository.go",
+				"package": "repository"
+			}
+		},
+		"./internal/email/mock_email.go": {
+			"checksum": "5uXLu3+o4AERuUmqcqQo0Q==",
+			"source_checksum": "Gh/iMDo1wKO12GszzN2Bdg==",
+			"mode": "SOURCE_MODE",
+			"source_mode_runner": {
+				"source": "./internal/email/email.go",
+				"destination": "./internal/email/mock_email.go",
+				"package": "email"
+			}
+		}
+	}
+}

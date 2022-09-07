@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env sh
 
 set -eu
 
@@ -29,18 +29,18 @@ MIGRATION=0
 SEED=0
 ENVIRONMENT=prod
 
-while getopts :dmqswh OPT
+while getopts :dwmsqh OPT
 do
     case $OPT in
     d)  ENVIRONMENT=dev
         ;;
-    m)  MIGRATION=1
+    w)  WAIT=1
         ;;
-    q)  QUIT=1
+    m)  MIGRATION=1
         ;;
     s)  SEED=1
         ;;
-    w)  WAIT=1
+    q)  QUIT=1
         ;;
     h)  usage
         ;;
@@ -48,6 +48,12 @@ do
         ;;
     esac
 done
+
+if [ "${ENVIRONMENT:-}" = "dev" ]; then
+    cd /backend
+    go mod download
+    GO111MODULE=on go build -o /bin/portal
+fi
 
 if [ "$WAIT" = "1" ]; then
     echo "Waiting for db"
@@ -62,10 +68,6 @@ fi
 if [ "$SEED" = "1" ]; then
     echo "Seeding database"
     cat /seeds/*.sql | mariadb --host=$DATABASE_HOST --port=$DATABASE_PORT --user=$DATABASE_USER --password=$DATABASE_PASSWORD $DATABASE_DB
-fi
-
-if [ "${ENVIRONMENT:-}" = "dev" ]; then
-    cd /backend && GO111MODULE=on go build -o /bin/portal
 fi
 
 if [ "$QUIT" = "1" ]; then
