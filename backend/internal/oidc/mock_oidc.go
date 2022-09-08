@@ -8,7 +8,6 @@ import (
 	context "context"
 	reflect "reflect"
 
-	oidc "github.com/MISW/Portal/backend/internal/oidc"
 	gomock "github.com/golang/mock/gomock"
 )
 
@@ -36,10 +35,10 @@ func (m *MockAuthenticator) EXPECT() *MockAuthenticatorMockRecorder {
 }
 
 // Callback mocks base method.
-func (m *MockAuthenticator) Callback(ctx context.Context, expectedState, actualState, code string) (*oidc.AuthResult, error) {
+func (m *MockAuthenticator) Callback(ctx context.Context, expectedState, actualState, code string) (*AuthResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Callback", ctx, expectedState, actualState, code)
-	ret0, _ := ret[0].(*oidc.AuthResult)
+	ret0, _ := ret[0].(*AuthResult)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
