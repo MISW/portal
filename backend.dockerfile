@@ -42,6 +42,8 @@ COPY ./backend/schema /schema
 COPY ./seeds /seeds
 COPY ./backend/docker-entrypoint.sh /bin/docker-entrypoint.sh
 
+WORKDIR /backend
+
 EXPOSE 80
 
 ENTRYPOINT ["/bin/docker-entrypoint.sh"]

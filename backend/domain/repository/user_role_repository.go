@@ -6,8 +6,6 @@ import (
 	"github.com/MISW/Portal/backend/domain"
 )
 
-//go:generate mockgen -source=$GOFILE -destination=mock_$GOFILE -package=$GOPACKAGE
-
 // UserRoleRepository - Userの権限関連のDB操作
 type UserRoleRepository interface {
 	// Update - 手動でroleを切り替え

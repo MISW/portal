@@ -8,7 +8,7 @@ require (
 	github.com/go-sql-driver/mysql v1.6.0
 	github.com/golang-jwt/jwt/v4 v4.4.2
 	github.com/golang/mock v1.6.0
-	github.com/google/go-cmp v0.5.8
+	github.com/google/go-cmp v0.5.9
 	github.com/heetch/confita v0.10.0
 	github.com/jmoiron/sqlx v1.3.5
 	github.com/labstack/echo/v4 v4.9.0
@@ -16,9 +16,9 @@ require (
 	github.com/slack-go/slack v0.11.2
 	go.uber.org/dig v1.15.0
 	golang.org/x/crypto v0.0.0-20220829220503-c86fa9a7ed90
-	golang.org/x/net v0.0.0-20220906165146-f3363e06e74c
+	golang.org/x/net v0.0.0-20220907135653-1e95f45603a7
 	golang.org/x/oauth2 v0.0.0-20220822191816-0ebed06d0094
-	golang.org/x/xerrors v0.0.0-20220609144429-65e65417b02f
+	golang.org/x/xerrors v0.0.0-20220907171357-04be3eba64a2
 	gopkg.in/yaml.v3 v3.0.1
 )
 

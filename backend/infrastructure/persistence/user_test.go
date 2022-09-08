@@ -70,7 +70,7 @@ func insertTestUserData(t *testing.T, up repository.UserRepository) int {
 	id, err := up.Insert(context.Background(), userTemplate)
 
 	if err != nil {
-		t.Fatalf("inserting a new user to db failed: %+v", err)
+		t.Errorf("inserting a new user to db failed: %+v", err)
 	}
 
 	return id
@@ -81,10 +81,10 @@ func compareUser(t *testing.T, expected, actual *domain.User) {
 	expected = &e
 
 	if actual.CreatedAt.Before(time.Now().Add(-1*time.Minute)) || actual.CreatedAt.After(time.Now()) {
-		t.Fatalf("created_at is invalid: %+v", actual.CreatedAt)
+		t.Errorf("created_at is invalid: %+v", actual.CreatedAt)
 	}
 	if actual.UpdatedAt.Before(time.Now().Add(-1*time.Minute)) || actual.UpdatedAt.After(time.Now()) {
-		t.Fatalf("updated_at is invalid: %+v", actual.UpdatedAt)
+		t.Errorf("updated_at is invalid: %+v", actual.UpdatedAt)
 	}
 
 	expected.CreatedAt = actual.CreatedAt
@@ -92,7 +92,7 @@ func compareUser(t *testing.T, expected, actual *domain.User) {
 	expected.ID = actual.ID
 
 	if diff := cmp.Diff(expected, actual); diff != "" {
-		t.Fatalf("users differ: %v", diff)
+		t.Errorf("users differ: %v", diff)
 	}
 }
 
@@ -104,13 +104,13 @@ func TestInsert(t *testing.T) {
 	id := insertTestUserData(t, up)
 
 	if id == 0 {
-		t.Fatalf("id shoule not be 0, but %d", id)
+		t.Errorf("id shoule not be 0, but %d", id)
 	}
 
 	_, err := up.Insert(context.Background(), userTemplate)
 
 	if err != domain.ErrEmailConflicts {
-		t.Fatalf("the second insert should return ErrEmailConflicts: %+v", err)
+		t.Errorf("the second insert should return ErrEmailConflicts: %+v", err)
 	}
 }
 
@@ -125,7 +125,7 @@ func TestGet(t *testing.T) {
 		user, err := up.GetByID(context.Background(), id)
 
 		if err != nil {
-			t.Fatalf("failed to get user by id: %+v", err)
+			t.Errorf("failed to get user by id: %+v", err)
 		}
 
 		compareUser(t, userTemplate, user)
@@ -141,7 +141,7 @@ func TestGet(t *testing.T) {
 		user, err := up.GetByEmail(context.Background(), userTemplate.Email)
 
 		if err != nil {
-			t.Fatalf("failed to get user by id: %+v", err)
+			t.Errorf("failed to get user by id: %+v", err)
 		}
 
 		compareUser(t, userTemplate, user)
@@ -157,7 +157,7 @@ func TestGet(t *testing.T) {
 		user, err := up.GetBySlackID(context.Background(), userTemplate.SlackID)
 
 		if err != nil {
-			t.Fatalf("failed to get user by id: %+v", err)
+			t.Errorf("failed to get user by id: %+v", err)
 		}
 
 		compareUser(t, userTemplate, user)
@@ -176,11 +176,11 @@ func TestList(t *testing.T) {
 		users, err := up.List(context.Background())
 
 		if err != nil {
-			t.Fatalf("failed to list users: %+v", err)
+			t.Errorf("failed to list users: %+v", err)
 		}
 
 		if expected := 1; len(users) != expected {
-			t.Fatalf("list should return %d users, but returned %d", expected, len(users))
+			t.Errorf("list should return %d users, but returned %d", expected, len(users))
 		}
 
 		compareUser(t, userTemplate, users[0])
@@ -196,11 +196,11 @@ func TestList(t *testing.T) {
 		users, err := up.ListByID(context.Background(), []int{id})
 
 		if err != nil {
-			t.Fatalf("failed to list users: %+v", err)
+			t.Errorf("failed to list users: %+v", err)
 		}
 
 		if expected := 1; len(users) != expected {
-			t.Fatalf("list should return %d users, but returned %d", expected, len(users))
+			t.Errorf("list should return %d users, but returned %d", expected, len(users))
 		}
 
 		compareUser(t, userTemplate, users[0])
@@ -216,11 +216,11 @@ func TestList(t *testing.T) {
 		users, err := up.ListByID(context.Background(), []int{})
 
 		if err != nil {
-			t.Fatalf("failed to list users: %+v", err)
+			t.Errorf("failed to list users: %+v", err)
 		}
 
 		if expected := 0; len(users) != expected {
-			t.Fatalf("list should return %d users, but returned %d", expected, len(users))
+			t.Errorf("list should return %d users, but returned %d", expected, len(users))
 		}
 	})
 
@@ -241,13 +241,13 @@ func TestUserUpdate(t *testing.T) {
 		err := up.Update(context.Background(), &tmp2)
 
 		if err != nil {
-			t.Fatalf("failed to update user: %+v", err)
+			t.Errorf("failed to update user: %+v", err)
 		}
 
 		user, err := up.GetByID(context.Background(), id)
 
 		if err != nil {
-			t.Fatalf("failed to get user: %+v", err)
+			t.Errorf("failed to get user: %+v", err)
 		}
 
 		compareUser(t, &tmp2, user)
@@ -266,28 +266,28 @@ func TesstVerifyEmail(t *testing.T) {
 	user, err := up.GetByID(ctx, id)
 
 	if err != nil {
-		t.Fatalf("GetByID failed: %+v", err)
+		t.Errorf("GetByID failed: %+v", err)
 	}
 
 	if user.EmailVerified {
-		t.Fatalf("EmailVerified should be false")
+		t.Errorf("EmailVerified should be false")
 	}
 
 	if err := up.VerifyEmail(ctx, id, userTemplate.Email); err != nil {
-		t.Fatalf("VerifyEmail failed: %+v", err)
+		t.Errorf("VerifyEmail failed: %+v", err)
 	}
 
 	user, err = up.GetByID(ctx, id)
 
 	if err != nil {
-		t.Fatalf("GetByID failed: %+v", err)
+		t.Errorf("GetByID failed: %+v", err)
 	}
 
 	if !user.EmailVerified {
-		t.Fatalf("EmailVerified should be true")
+		t.Errorf("EmailVerified should be true")
 	}
 
 	if err := up.VerifyEmail(ctx, id, userTemplate.Email); err != domain.ErrEmailAddressChanged {
-		t.Fatalf("VerifyEmail should return ErrEmailAddressChanged: %+v", err)
+		t.Errorf("VerifyEmail should return ErrEmailAddressChanged: %+v", err)
 	}
 }

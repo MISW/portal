@@ -6,8 +6,6 @@ import (
 	domain "github.com/MISW/Portal/backend/domain"
 )
 
-//go:generate mockgen -source=$GOFILE -destination=mock_$GOFILE -package=$GOPACKAGE
-
 type SlackRepository interface {
 	// UpdateSlackID - ユーザのSlack IDを更新する
 	UpdateSlackID(ctx context.Context, id int, slackID string) error

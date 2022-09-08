@@ -50,7 +50,6 @@ do
 done
 
 if [ "${ENVIRONMENT:-}" = "dev" ]; then
-    cd /backend
     go mod download
     GO111MODULE=on go build -o /bin/portal
 fi

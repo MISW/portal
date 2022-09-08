@@ -44,13 +44,13 @@ func comparePaymentTransaction(t *testing.T, expected *domain.PaymentTransaction
 	expected = &e
 
 	if actual.CreatedAt.Before(time.Now().Add(-1*time.Minute)) || actual.CreatedAt.After(time.Now()) {
-		t.Fatalf("created_at is invalid: %+v", actual.CreatedAt)
+		t.Errorf("created_at is invalid: %+v", actual.CreatedAt)
 	}
 
 	expected.CreatedAt = actual.CreatedAt
 
 	if diff := cmp.Diff(expected, actual); diff != "" {
-		t.Fatalf("payment transactions differ: %v", diff)
+		t.Errorf("payment transactions differ: %v", diff)
 	}
 }
 
@@ -61,7 +61,7 @@ func insertTestPaymentTransactionsData(t *testing.T, ptp repository.PaymentTrans
 		err := ptp.Add(context.Background(), ps.UserID, ps.Token, ps.ExpiredAt)
 
 		if err != nil {
-			t.Fatalf("inserting a new user to db failed(%v): %+v", ps, err)
+			t.Errorf("inserting a new user to db failed(%v): %+v", ps, err)
 		}
 	}
 }
@@ -84,7 +84,7 @@ func TestPaymentTransactionPersistenceGet(t *testing.T) {
 	pt, err := ptp.Get(context.Background(), paymentTransactionTestData1.Token)
 
 	if err != nil {
-		t.Fatalf("failed to get payment transaction by token(%s): %+v", paymentTransactionTestData1.Token, err)
+		t.Errorf("failed to get payment transaction by token(%s): %+v", paymentTransactionTestData1.Token, err)
 	}
 
 	comparePaymentTransaction(t, paymentTransactionTestData1, pt)
@@ -100,13 +100,13 @@ func TestPaymentTransactionPersistenceDelete(t *testing.T) {
 	err := ptp.Delete(context.Background(), paymentTransactionTestData1.Token)
 
 	if err != nil {
-		t.Fatalf("failed to delete payment transaction: %+v", err)
+		t.Errorf("failed to delete payment transaction: %+v", err)
 	}
 
 	_, err = ptp.Get(context.Background(), paymentTransactionTestData1.Token)
 
 	if err != domain.ErrNoPaymentTransaction {
-		t.Fatalf("error on deleted payment transaction should be ErrNoPaymentTransaction, but got %+v", err)
+		t.Errorf("error on deleted payment transaction should be ErrNoPaymentTransaction, but got %+v", err)
 	}
 }
 
@@ -120,18 +120,18 @@ func TestPaymentTransactionPersistenceRevokeExpired(t *testing.T) {
 	err := ptp.RevokeExpired(context.Background())
 
 	if err != nil {
-		t.Fatalf("failed to delete payment transaction: %+v", err)
+		t.Errorf("failed to delete payment transaction: %+v", err)
 	}
 
 	_, err = ptp.Get(context.Background(), paymentTransactionTestData2.Token)
 
 	if err != domain.ErrNoPaymentTransaction {
-		t.Fatalf("error for expired token should be ErrNoPaymentTransaction, but got: %+v", err)
+		t.Errorf("error for expired token should be ErrNoPaymentTransaction, but got: %+v", err)
 	}
 
 	_, err = ptp.Get(context.Background(), paymentTransactionTestData1.Token)
 
 	if err != nil {
-		t.Fatalf("not expired should not be deleted, but got %+v", err)
+		t.Errorf("not expired should not be deleted, but got %+v", err)
 	}
 }

@@ -9,7 +9,7 @@ specifiers:
   '@mui/material': ^5.10.4
   '@mui/styles': ^5.10.3
   '@reduxjs/toolkit': ^1.8.5
-  '@types/node': ^18.7.15
+  '@types/node': ^18.7.16
   '@types/react': ^18.0.18
   '@types/react-dom': ^18.0.6
   '@types/react-redux': ^7.1.24
@@ -55,7 +55,7 @@ dependencies:
   sharp: 0.31.0
 
 devDependencies:
-  '@types/node': 18.7.15
+  '@types/node': 18.7.16
   '@types/react': 18.0.18
   '@types/react-dom': 18.0.6
   '@types/react-redux': 7.1.24
@@ -258,7 +258,7 @@ packages:
     resolution: {integrity: sha512-JyXXoCu1N8GLuKc2ii8y5RGma5FMpFeO2nAQIe0Yzrbq+rQnN+sFj47auLblR5ka6aHNGPDgv8G/iI2Grb0ldQ==}
     engines: {node: '>=6.9.0'}
     dependencies:
-      core-js-pure: 3.25.0
+      core-js-pure: 3.25.1
       regenerator-runtime: 0.13.9
     dev: true
 
@@ -926,8 +926,8 @@ packages:
     resolution: {integrity: sha512-dRLjCWHYg4oaA77cxO64oO+7JwCwnIzkZPdrrC71jQmQtlhM556pwKo5bUzqvZndkVbeFLIIi+9TC40JNF5hNQ==}
     dev: true
 
-  /@types/node/18.7.15:
-    resolution: {integrity: sha512-XnjpaI8Bgc3eBag2Aw4t2Uj/49lLBSStHWfqKvIuXD7FIrZyMLWp8KuAFHAqxMZYTF9l08N1ctUn9YNybZJVmQ==}
+  /@types/node/18.7.16:
+    resolution: {integrity: sha512-EQHhixfu+mkqHMZl1R2Ovuvn47PUw18azMJOTwSZr9/fhzHNGXAJ0ma0dayRVchprpCj0Kc1K1xKoWaATWF1qg==}
     dev: true
 
   /@types/parse-json/4.0.0:
@@ -976,7 +976,7 @@ packages:
   /@types/sharp/0.30.5:
     resolution: {integrity: sha512-EhO29617AIBqxoVtpd1qdBanWpspk/kD2B6qTFRJ31Q23Rdf+DNU1xlHSwtqvwq1vgOqBwq1i38SX+HGCymIQg==}
     dependencies:
-      '@types/node': 18.7.15
+      '@types/node': 18.7.16
     dev: true
 
   /@types/use-sync-external-store/0.0.3:
@@ -1243,7 +1243,7 @@ packages:
       postcss: ^8.1.0
     dependencies:
       browserslist: 4.21.3
-      caniuse-lite: 1.0.30001390
+      caniuse-lite: 1.0.30001393
       fraction.js: 4.2.0
       normalize-range: 0.1.2
       picocolors: 1.0.0
@@ -1309,8 +1309,8 @@ packages:
     engines: {node: ^6 || ^7 || ^8 || ^9 || ^10 || ^11 || ^12 || >=13.7}
     hasBin: true
     dependencies:
-      caniuse-lite: 1.0.30001390
-      electron-to-chromium: 1.4.242
+      caniuse-lite: 1.0.30001393
+      electron-to-chromium: 1.4.244
       node-releases: 2.0.6
       update-browserslist-db: 1.0.7_browserslist@4.21.3
 
@@ -1337,8 +1337,8 @@ packages:
     engines: {node: '>= 6'}
     dev: true
 
-  /caniuse-lite/1.0.30001390:
-    resolution: {integrity: sha512-sS4CaUM+/+vqQUlCvCJ2WtDlV81aWtHhqeEVkLokVJJa3ViN4zDxAGfq9R8i1m90uGHxo99cy10Od+lvn3hf0g==}
+  /caniuse-lite/1.0.30001393:
+    resolution: {integrity: sha512-N/od11RX+Gsk+1qY/jbPa0R6zJupEa0lxeBG598EbrtblxVCTJsQwbRBm6+V+rxpc5lHKdsXb9RY83cZIPLseA==}
 
   /chalk/2.4.2:
     resolution: {integrity: sha512-Mti+f9lpJNcwF4tWV8/OrTTtF1gZi+f8FqlyAdouralcFWFQWF2+NgCHShjkCb+IFBLq9buZwE1xckQU4peSuQ==}
@@ -1425,8 +1425,8 @@ packages:
       safe-buffer: 5.1.2
     dev: false
 
-  /core-js-pure/3.25.0:
-    resolution: {integrity: sha512-IeHpLwk3uoci37yoI2Laty59+YqH9x5uR65/yiA0ARAJrTrN4YU0rmauLWfvqOuk77SlNJXj2rM6oT/dBD87+A==}
+  /core-js-pure/3.25.1:
+    resolution: {integrity: sha512-7Fr74bliUDdeJCBMxkkIuQ4xfxn/SwrVg+HkJUAoNEXVqYLv55l6Af0dJ5Lq2YBUW9yKqSkLXaS5SYPK6MGa/A==}
     requiresBuild: true
     dev: true
 
@@ -1582,8 +1582,8 @@ packages:
       csstype: 3.1.0
     dev: false
 
-  /electron-to-chromium/1.4.242:
-    resolution: {integrity: sha512-nPdgMWtjjWGCtreW/2adkrB2jyHjClo9PtVhR6rW+oxa4E4Wom642Tn+5LslHP3XPL5MCpkn5/UEY60EXylNeQ==}
+  /electron-to-chromium/1.4.244:
+    resolution: {integrity: sha512-E21saXLt2eTDaTxgUtiJtBUqanF9A32wZasAwDZ8gvrqXoxrBrbwtDCx7c/PQTLp81wj4X0OLDeoGQg7eMo3+w==}
 
   /emoji-regex/9.2.2:
     resolution: {integrity: sha512-L18DaJsXSUk2+42pv8mLs5jJT2hqFkFE4j21wOmgbUqsZ2hL72NsUU785g9RXgo3s0ZNgVl42TiHp3ZtOv/Vyg==}
@@ -2627,7 +2627,7 @@ packages:
     dependencies:
       '@next/env': 12.2.5
       '@swc/helpers': 0.4.3
-      caniuse-lite: 1.0.30001390
+      caniuse-lite: 1.0.30001393
       postcss: 8.4.14
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0

@@ -6,8 +6,6 @@ import (
 	"github.com/MISW/Portal/backend/domain"
 )
 
-//go:generate mockgen -source=$GOFILE -destination=mock_$GOFILE -package=$GOPACKAGE
-
 // UserRepository - User関連のDB操作
 type UserRepository interface {
 	// Insert - 新規サークル員の追加

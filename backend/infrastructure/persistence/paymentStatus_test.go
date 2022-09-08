@@ -49,17 +49,17 @@ func comparePaymentStatus(t *testing.T, expected *domain.PaymentStatus, actual *
 	expected = &e
 
 	if actual.CreatedAt.Before(time.Now().Add(-1*time.Minute)) || actual.CreatedAt.After(time.Now()) {
-		t.Fatalf("created_at is invalid: %+v", actual.CreatedAt)
+		t.Errorf("created_at is invalid: %+v", actual.CreatedAt)
 	}
 	if actual.UpdatedAt.Before(time.Now().Add(-1*time.Minute)) || actual.UpdatedAt.After(time.Now()) {
-		t.Fatalf("updated_at is invalid: %+v", actual.UpdatedAt)
+		t.Errorf("updated_at is invalid: %+v", actual.UpdatedAt)
 	}
 
 	expected.CreatedAt = actual.CreatedAt
 	expected.UpdatedAt = actual.UpdatedAt
 
 	if diff := cmp.Diff(expected, actual); diff != "" {
-		t.Fatalf("payment statuses differ: %v", diff)
+		t.Errorf("payment statuses differ: %v", diff)
 	}
 }
 
@@ -70,7 +70,7 @@ func insertTestPaymentStatusData(t *testing.T, psp repository.PaymentStatusRepos
 		err := psp.Add(context.Background(), ps.UserID, ps.Period, ps.Authorizer)
 
 		if err != nil {
-			t.Fatalf("inserting a new user to db failed(%v): %+v", ps, err)
+			t.Errorf("inserting a new user to db failed(%v): %+v", ps, err)
 		}
 	}
 }
@@ -85,7 +85,7 @@ func TestPaymentStatusInsert(t *testing.T) {
 	err := psp.Add(context.Background(), paymentStatusTemplate.UserID, paymentStatusTemplate.Period, paymentStatusTemplate.Authorizer)
 
 	if err != domain.ErrAlreadyPaid {
-		t.Fatalf("conflicting insert should return ErrAlreadyPaid but got %+v", err)
+		t.Errorf("conflicting insert should return ErrAlreadyPaid but got %+v", err)
 	}
 }
 
@@ -100,7 +100,7 @@ func TestPaymentStatusGet(t *testing.T) {
 		ps, err := psp.GetLatestByUser(context.Background(), paymentStatusTemplate.UserID)
 
 		if err != nil {
-			t.Fatalf("failed to get latest payment status by id: %+v", err)
+			t.Errorf("failed to get latest payment status by id: %+v", err)
 		}
 
 		comparePaymentStatus(t, paymentStatusTemplate, ps)
@@ -116,7 +116,7 @@ func TestPaymentStatusGet(t *testing.T) {
 		ps, err := psp.Get(context.Background(), paymentStatusTemplate.UserID, paymentStatusTemplate.Period)
 
 		if err != nil {
-			t.Fatalf("failed to get latest payment status by id: %+v", err)
+			t.Errorf("failed to get latest payment status by id: %+v", err)
 		}
 
 		comparePaymentStatus(t, paymentStatusTemplate, ps)
@@ -134,27 +134,27 @@ func TestPaymentStatusDelete(t *testing.T) {
 		deleted, err := psp.Delete(context.Background(), paymentStatusTemplate.UserID, paymentStatusTemplate.Period)
 
 		if err != nil {
-			t.Fatalf("failed to delete payment status: %+v", err)
+			t.Errorf("failed to delete payment status: %+v", err)
 		}
 
 		if !deleted {
-			t.Fatalf("delete should return true")
+			t.Errorf("delete should return true")
 		}
 
 		_, err = psp.Get(context.Background(), paymentStatusTemplate.UserID, paymentStatusTemplate.Period)
 
 		if err != domain.ErrNoPaymentStatus {
-			t.Fatalf("error on deleted item should be ErrNoPaymentStatus, but got: %+v", err)
+			t.Errorf("error on deleted item should be ErrNoPaymentStatus, but got: %+v", err)
 		}
 
 		deleted, err = psp.Delete(context.Background(), paymentStatusTemplate.UserID, paymentStatusTemplate.Period)
 
 		if err != nil {
-			t.Fatalf("deletion on deleted item should return no error: %+v", err)
+			t.Errorf("deletion on deleted item should return no error: %+v", err)
 		}
 
 		if deleted {
-			t.Fatalf("deletion on deleted item should return false")
+			t.Errorf("deletion on deleted item should return false")
 		}
 	})
 }
@@ -170,11 +170,11 @@ func TestPaymentStatusList(t *testing.T) {
 		pss, err := psp.ListUsersForPeriod(context.Background(), paymentStatusTemplate.Period)
 
 		if err != nil {
-			t.Fatalf("failed to list payment statuses: %+v", err)
+			t.Errorf("failed to list payment statuses: %+v", err)
 		}
 
 		if expected := 2; len(pss) != expected {
-			t.Fatalf("list should return %d payment statuses, but returned %d", expected, len(pss))
+			t.Errorf("list should return %d payment statuses, but returned %d", expected, len(pss))
 		}
 
 		comparePaymentStatus(t, paymentStatusTemplate, pss[0])
@@ -191,11 +191,11 @@ func TestPaymentStatusList(t *testing.T) {
 		pss, err := psp.ListPeriodsForUser(context.Background(), paymentStatusTemplate.UserID)
 
 		if err != nil {
-			t.Fatalf("failed to list payment statuses: %+v", err)
+			t.Errorf("failed to list payment statuses: %+v", err)
 		}
 
 		if expected := 2; len(pss) != expected {
-			t.Fatalf("list should return %d payment statuses, but returned %d", expected, len(pss))
+			t.Errorf("list should return %d payment statuses, but returned %d", expected, len(pss))
 		}
 
 		comparePaymentStatus(t, paymentStatusTemplate, pss[0])
@@ -214,21 +214,21 @@ func TestPaymentIsXXX(t *testing.T) {
 		res, err := psp.IsLatest(context.Background(), paymentStatusTemplate.UserID, paymentStatusTemplate.Period)
 
 		if err != nil {
-			t.Fatalf("failed to call IsLatest: %+v", err)
+			t.Errorf("failed to call IsLatest: %+v", err)
 		}
 
 		if !res {
-			t.Fatalf("202010 is the latest, but false is returned")
+			t.Errorf("202010 is the latest, but false is returned")
 		}
 
 		res, err = psp.IsLatest(context.Background(), paymentStatusTemplate2.UserID, paymentStatusTemplate2.Period)
 
 		if err != nil {
-			t.Fatalf("failed to call IsLatest: %+v", err)
+			t.Errorf("failed to call IsLatest: %+v", err)
 		}
 
 		if res {
-			t.Fatalf("202004 is not the latest, but true is returned")
+			t.Errorf("202004 is not the latest, but true is returned")
 		}
 	})
 
@@ -242,21 +242,21 @@ func TestPaymentIsXXX(t *testing.T) {
 		res, err := psp.IsFirst(context.Background(), paymentStatusTemplate.UserID, paymentStatusTemplate.Period)
 
 		if err != nil {
-			t.Fatalf("failed to call IsLatest: %+v", err)
+			t.Errorf("failed to call IsLatest: %+v", err)
 		}
 
 		if res {
-			t.Fatalf("202010 is not the first, but true is returned")
+			t.Errorf("202010 is not the first, but true is returned")
 		}
 
 		res, err = psp.IsFirst(context.Background(), paymentStatusTemplate2.UserID, paymentStatusTemplate2.Period)
 
 		if err != nil {
-			t.Fatalf("failed to call IsLatest: %+v", err)
+			t.Errorf("failed to call IsLatest: %+v", err)
 		}
 
 		if !res {
-			t.Fatalf("202004 is the first, but false is returned")
+			t.Errorf("202004 is the first, but false is returned")
 		}
 	})
 }
@@ -276,7 +276,7 @@ func TestPaymentStatusHasMatchingPeriod(t *testing.T) {
 	)
 
 	if err != nil {
-		t.Fatalf("HasMatchingPeriod failed: %+v", err)
+		t.Errorf("HasMatchingPeriod failed: %+v", err)
 	}
 
 	if matched {
@@ -291,7 +291,7 @@ func TestPaymentStatusHasMatchingPeriod(t *testing.T) {
 	)
 
 	if err != nil {
-		t.Fatalf("HasMatchingPeriod failed: %+v", err)
+		t.Errorf("HasMatchingPeriod failed: %+v", err)
 	}
 
 	if !matched {
@@ -306,7 +306,7 @@ func TestPaymentStatusHasMatchingPeriod(t *testing.T) {
 	)
 
 	if err != nil {
-		t.Fatalf("HasMatchingPeriod failed: %+v", err)
+		t.Errorf("HasMatchingPeriod failed: %+v", err)
 	}
 
 	if matched {
@@ -344,11 +344,11 @@ func TestListUnpaidMembers(t *testing.T) {
 	users, err := psp.ListUnpaidMembers(context.Background(), 201004)
 
 	if err != nil {
-		t.Fatalf("ListUnpaidMembers failed: %+v", err)
+		t.Errorf("ListUnpaidMembers failed: %+v", err)
 	}
 
 	// 2 & 3
 	if len(users) != 2 || users[0].ID*users[1].ID != 6 {
-		t.Fatalf("invalid response: %+v", users)
+		t.Errorf("invalid response: %+v", users)
 	}
 }

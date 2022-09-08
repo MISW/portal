@@ -64,7 +64,7 @@ func NewSQLConn(t *testing.T) db.Ext {
 	dbx, err := sqlx.Connect("mysql", dbURL)
 
 	if err != nil {
-		t.Fatalf("failed to connect to external db for test: %v", err)
+		t.Errorf("failed to connect to external db for test: %v", err)
 	}
 
 	var lts = []byte("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
@@ -77,10 +77,10 @@ func NewSQLConn(t *testing.T) db.Ext {
 	dbName := string(b)
 
 	if _, err := dbx.Exec("CREATE DATABASE " + dbName); err != nil {
-		t.Fatalf("failed to create database: %v", err)
+		t.Errorf("failed to create database: %v", err)
 	}
 	if _, err := dbx.Exec("USE " + dbName); err != nil {
-		t.Fatalf("failed to select database: %v", err)
+		t.Errorf("failed to select database: %v", err)
 	}
 
 	createTable(t, dbx)
@@ -96,7 +96,7 @@ func createTable(t *testing.T, dbx *sqlx.DB) {
 	sqls, err := filepath.Glob("../../schema/*.sql")
 
 	if err != nil {
-		t.Fatalf("failed to open sql files: %v", err)
+		t.Errorf("failed to open sql files: %v", err)
 	}
 	t.Log(len(sqls))
 	for i := range sqls {
@@ -104,13 +104,13 @@ func createTable(t *testing.T, dbx *sqlx.DB) {
 		b, err := ioutil.ReadFile(sqls[i])
 
 		if err != nil {
-			t.Fatalf("failed to open %s: %v", sqls[i], err)
+			t.Errorf("failed to open %s: %v", sqls[i], err)
 		}
 
 		_, err = dbx.Exec(string(b))
 
 		if err != nil {
-			t.Fatalf("execute sql in %s: %v", sqls[i], err)
+			t.Errorf("execute sql in %s: %v", sqls[i], err)
 		}
 	}
 }
