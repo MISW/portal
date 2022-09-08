@@ -43,7 +43,7 @@ jobs:
 
       - name: Coverage
         working-directory: backend
-        run: go mod download && go test -v -cover -race -tags use_external_db -coverprofile=coverage $(go list ./... | grep -v /mock/)
+        run: go mod download && go list ./... | grep -v /mock/ | xargs -i go test {} -v -cover -race -tags use_external_db -coverprofile=coverage
 
       - name: Codecov
         uses: codecov/codecov-action@v3
