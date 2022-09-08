@@ -2,8 +2,6 @@ package repository
 
 import "github.com/MISW/Portal/backend/domain"
 
-//go:generate mockgen -source=$GOFILE -destination=mock_$GOFILE -package=$GOPACKAGE
-
 type AppConfigRepository interface {
 	// payment periodは支払う対象の期間
 

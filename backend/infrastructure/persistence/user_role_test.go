@@ -10,6 +10,7 @@ import (
 	"github.com/MISW/Portal/backend/domain/repository"
 	"github.com/MISW/Portal/backend/infrastructure/persistence"
 	"github.com/MISW/Portal/backend/internal/testutil"
+	"github.com/MISW/Portal/backend/mock/domain/repository"
 )
 
 func TestUpdate(t *testing.T) {
@@ -24,17 +25,17 @@ func TestUpdate(t *testing.T) {
 	err := urp.Update(context.Background(), id, updatedRole)
 
 	if err != nil {
-		t.Fatalf("failed to update role: %+v", err)
+		t.Errorf("failed to update role: %+v", err)
 	}
 
 	user, err := up.GetByID(context.Background(), id)
 
 	if err != nil {
-		t.Fatalf("failed to get user: %+v", err)
+		t.Errorf("failed to get user: %+v", err)
 	}
 
 	if user.Role != updatedRole {
-		t.Fatalf("role is not updated: %s(expected: %s)", user.Role, updatedRole)
+		t.Errorf("role is not updated: %s(expected: %s)", user.Role, updatedRole)
 	}
 }
 
@@ -46,7 +47,7 @@ func insertUsers(t *testing.T, userRepository repository.UserRepository, users [
 		id, err := userRepository.Insert(ctx, users[i])
 
 		if err != nil {
-			t.Fatalf("failed to insert user: %+v", err)
+			t.Errorf("failed to insert user: %+v", err)
 		}
 
 		users[i].ID = id
@@ -61,7 +62,7 @@ func insertPaymentStatuses(t *testing.T, paymentStatusRepository repository.Paym
 		err := paymentStatusRepository.Add(ctx, paymentStatuses[i].UserID, paymentStatuses[i].Period, paymentStatuses[i].Authorizer)
 
 		if err != nil {
-			t.Fatalf("failed to insert payment status: %+v", err)
+			t.Errorf("failed to insert payment status: %+v", err)
 		}
 	}
 }
@@ -140,13 +141,13 @@ func TestUpdateRoleWithRule(t *testing.T) {
 		expectedRoles := []domain.RoleType{domain.Member, domain.Member, domain.Admin}
 		for i := range users {
 			if err := urp.UpdateWithRule(ctx, users[i].ID, 201910, 202004); err != nil {
-				t.Fatalf("failed to update role with rule(%d): %+v", users[i].ID, err)
+				t.Errorf("failed to update role with rule(%d): %+v", users[i].ID, err)
 			}
 
 			user, err := up.GetByID(ctx, users[i].ID)
 
 			if err != nil {
-				t.Fatalf("failed to get user(%d): %+v", users[i].ID, err)
+				t.Errorf("failed to get user(%d): %+v", users[i].ID, err)
 			}
 
 			if user.Role != expectedRoles[i] {
@@ -156,13 +157,13 @@ func TestUpdateRoleWithRule(t *testing.T) {
 
 		for i := range users {
 			if err := urp.UpdateWithRule(ctx, users[i].ID, 201910, 202010); err != nil {
-				t.Fatalf("failed to update role with rule(%d): %+v", users[i].ID, err)
+				t.Errorf("failed to update role with rule(%d): %+v", users[i].ID, err)
 			}
 
 			user, err := up.GetByID(ctx, users[i].ID)
 
 			if err != nil {
-				t.Fatalf("failed to get user(%d): %+v", users[i].ID, err)
+				t.Errorf("failed to get user(%d): %+v", users[i].ID, err)
 			}
 
 			if user.Role != expectedRoles[i] {
@@ -173,13 +174,13 @@ func TestUpdateRoleWithRule(t *testing.T) {
 		expectedRoles = []domain.RoleType{domain.NotMember, domain.NotMember, domain.Admin}
 		for i := range users {
 			if err := urp.UpdateWithRule(ctx, users[i].ID, 201804, 201810); err != nil {
-				t.Fatalf("failed to update role with rule(%d): %+v", users[i].ID, err)
+				t.Errorf("failed to update role with rule(%d): %+v", users[i].ID, err)
 			}
 
 			user, err := up.GetByID(ctx, users[i].ID)
 
 			if err != nil {
-				t.Fatalf("failed to get user(%d): %+v", users[i].ID, err)
+				t.Errorf("failed to get user(%d): %+v", users[i].ID, err)
 			}
 
 			if user.Role != expectedRoles[i] {
@@ -191,13 +192,13 @@ func TestUpdateRoleWithRule(t *testing.T) {
 	t.Run("all", func(t *testing.T) {
 		expectedRoles := []domain.RoleType{domain.Member, domain.Member, domain.Admin}
 		if err := urp.UpdateAllWithRule(ctx, 201910, 202004); err != nil {
-			t.Fatalf("failed to update role with rule: %+v", err)
+			t.Errorf("failed to update role with rule: %+v", err)
 		}
 		for i := range users {
 			user, err := up.GetByID(ctx, users[i].ID)
 
 			if err != nil {
-				t.Fatalf("failed to get user(%d): %+v", users[i].ID, err)
+				t.Errorf("failed to get user(%d): %+v", users[i].ID, err)
 			}
 
 			if user.Role != expectedRoles[i] {
@@ -206,13 +207,13 @@ func TestUpdateRoleWithRule(t *testing.T) {
 		}
 
 		if err := urp.UpdateAllWithRule(ctx, 201804, 202004); err != nil {
-			t.Fatalf("failed to update role with rule: %+v", err)
+			t.Errorf("failed to update role with rule: %+v", err)
 		}
 		for i := range users {
 			user, err := up.GetByID(ctx, users[i].ID)
 
 			if err != nil {
-				t.Fatalf("failed to get user(%d): %+v", users[i].ID, err)
+				t.Errorf("failed to get user(%d): %+v", users[i].ID, err)
 			}
 
 			if user.Role != expectedRoles[i] {
@@ -222,13 +223,13 @@ func TestUpdateRoleWithRule(t *testing.T) {
 
 		expectedRoles = []domain.RoleType{domain.NotMember, domain.NotMember, domain.Admin}
 		if err := urp.UpdateAllWithRule(ctx, 201804, 201810); err != nil {
-			t.Fatalf("failed to update role with rule: %+v", err)
+			t.Errorf("failed to update role with rule: %+v", err)
 		}
 		for i := range users {
 			user, err := up.GetByID(ctx, users[i].ID)
 
 			if err != nil {
-				t.Fatalf("failed to get user(%d): %+v", users[i].ID, err)
+				t.Errorf("failed to get user(%d): %+v", users[i].ID, err)
 			}
 
 			if user.Role != expectedRoles[i] {

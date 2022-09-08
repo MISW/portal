@@ -1,83 +1,293 @@
 {
 	"mocks": {
-		"./domain/repository/mock_appconfig_repository.go": {
-			"checksum": "4pxzWYkTTE7RpuiDct9P+w==",
-			"source_checksum": "S3tAr4ZXhnAWfkBRtbHLqw==",
+		"mock/domain/repository/appconfig_repository.go": {
+			"checksum": "QJQMMM235MnkaEwkr/NrDQ==",
+			"source_checksum": "OMYnZcfHM3vE9UhQGy1CIQ==",
 			"mode": "SOURCE_MODE",
 			"source_mode_runner": {
-				"source": "./domain/repository/appconfig_repository.go",
-				"destination": "./domain/repository/mock_appconfig_repository.go",
+				"source": "domain/repository/appconfig_repository.go",
+				"destination": "mock/domain/repository/appconfig_repository.go",
 				"package": "repository"
 			}
 		},
-		"./domain/repository/mock_external_integration_repository.go": {
-			"checksum": "oLHKWmnk8uAEiqWcYklwuA==",
+		"mock/domain/repository/external_integration_repository.go": {
+			"checksum": "EgR0xXIyRffTacfjOk0KJg==",
 			"source_checksum": "/ufrdor/mFri4nKpumq10Q==",
 			"mode": "SOURCE_MODE",
 			"source_mode_runner": {
-				"source": "./domain/repository/external_integration_repository.go",
-				"destination": "./domain/repository/mock_external_integration_repository.go",
+				"source": "domain/repository/external_integration_repository.go",
+				"destination": "mock/domain/repository/external_integration_repository.go",
 				"package": "repository"
 			}
 		},
-		"./domain/repository/mock_payment_repository.go": {
-			"checksum": "Zluk9r+dwXd+TkZ9OtECng==",
-			"source_checksum": "aOQDBbojk9M95grHg7erag==",
+		"mock/domain/repository/payment_repository.go": {
+			"checksum": "nKTyegbFSZ/yIE/3NfVRWg==",
+			"source_checksum": "83bBfU/Tjd6WGtJL6N6mtA==",
 			"mode": "SOURCE_MODE",
 			"source_mode_runner": {
-				"source": "./domain/repository/payment_repository.go",
-				"destination": "./domain/repository/mock_payment_repository.go",
+				"source": "domain/repository/payment_repository.go",
+				"destination": "mock/domain/repository/payment_repository.go",
 				"package": "repository"
 			}
 		},
-		"./domain/repository/mock_slack_repository.go": {
-			"checksum": "BE1BcfkFRtsoXNt7ka7Sfg==",
-			"source_checksum": "srStbL2MXRmIhWvkP2EtUg==",
+		"mock/domain/repository/slack_repository.go": {
+			"checksum": "NuJq/RYR05dpK55WooGtHw==",
+			"source_checksum": "0kH/e1WmU3xHYlGmP135sQ==",
 			"mode": "SOURCE_MODE",
 			"source_mode_runner": {
-				"source": "./domain/repository/slack_repository.go",
-				"destination": "./domain/repository/mock_slack_repository.go",
+				"source": "domain/repository/slack_repository.go",
+				"destination": "mock/domain/repository/slack_repository.go",
 				"package": "repository"
 			}
 		},
-		"./domain/repository/mock_token_repository.go": {
-			"checksum": "JmFHDsn64DDiRJQ1piDfSA==",
-			"source_checksum": "vQbYGuh8ms0SnKK0KJfXuA==",
+		"mock/domain/repository/token_repository.go": {
+			"checksum": "5GTQKg8XHhjNoIsSbsv7Tw==",
+			"source_checksum": "OggYAzToKFPFTWn8ctz1Cg==",
 			"mode": "SOURCE_MODE",
 			"source_mode_runner": {
-				"source": "./domain/repository/token_repository.go",
-				"destination": "./domain/repository/mock_token_repository.go",
+				"source": "domain/repository/token_repository.go",
+				"destination": "mock/domain/repository/token_repository.go",
 				"package": "repository"
 			}
 		},
-		"./domain/repository/mock_user_repository.go": {
-			"checksum": "yrhdSGwLYCwHk9b8dADQKA==",
-			"source_checksum": "DD0qlIJZZ8Cr5VfjrZMFuQ==",
+		"mock/domain/repository/user_repository.go": {
+			"checksum": "D8EeBAD99T0kzYttzRg08g==",
+			"source_checksum": "I1pMO2yb9XWjOPqMU6qtDQ==",
 			"mode": "SOURCE_MODE",
 			"source_mode_runner": {
-				"source": "./domain/repository/user_repository.go",
-				"destination": "./domain/repository/mock_user_repository.go",
+				"source": "domain/repository/user_repository.go",
+				"destination": "mock/domain/repository/user_repository.go",
 				"package": "repository"
 			}
 		},
-		"./domain/repository/mock_user_role_repository.go": {
-			"checksum": "6axCU0dEJUfDDp5gsICAaQ==",
-			"source_checksum": "XL2dxXnYiuxTbRsdKeHeHA==",
+		"mock/domain/repository/user_role_repository.go": {
+			"checksum": "iLh5x/6CwbdExR820LWqKA==",
+			"source_checksum": "UU2K6hvsGaxswD+cqXxUOQ==",
 			"mode": "SOURCE_MODE",
 			"source_mode_runner": {
-				"source": "./domain/repository/user_role_repository.go",
-				"destination": "./domain/repository/mock_user_role_repository.go",
+				"source": "domain/repository/user_role_repository.go",
+				"destination": "mock/domain/repository/user_role_repository.go",
 				"package": "repository"
 			}
 		},
-		"./internal/email/mock_email.go": {
-			"checksum": "5uXLu3+o4AERuUmqcqQo0Q==",
+		"mock/interfaces/api/private/management.go": {
+			"checksum": "3i+s1r84MWZnepkJ+/kLhw==",
+			"source_checksum": "U2SLcXkWfrfrm5oq5+YfcQ==",
+			"mode": "SOURCE_MODE",
+			"source_mode_runner": {
+				"source": "interfaces/api/private/management.go",
+				"destination": "mock/interfaces/api/private/management.go",
+				"package": "private"
+			}
+		},
+		"mock/interfaces/api/private/profile.go": {
+			"checksum": "fzDtIeuzSnBarAHmwYjv4Q==",
+			"source_checksum": "fi7f2G09x25GcLoLBd/Y5g==",
+			"mode": "SOURCE_MODE",
+			"source_mode_runner": {
+				"source": "interfaces/api/private/profile.go",
+				"destination": "mock/interfaces/api/private/profile.go",
+				"package": "private"
+			}
+		},
+		"mock/interfaces/api/private/session.go": {
+			"checksum": "F19LwH/HDFQAUZ+CyHbPkA==",
+			"source_checksum": "c1uXcXzAxu/PCPn5oA+OeA==",
+			"mode": "SOURCE_MODE",
+			"source_mode_runner": {
+				"source": "interfaces/api/private/session.go",
+				"destination": "mock/interfaces/api/private/session.go",
+				"package": "private"
+			}
+		},
+		"mock/interfaces/api/public/card.go": {
+			"checksum": "GXG0VqzU+v/xD31LHINspA==",
+			"source_checksum": "1Q5gzkOTfaQSm7E24fFSIw==",
+			"mode": "SOURCE_MODE",
+			"source_mode_runner": {
+				"source": "interfaces/api/public/card.go",
+				"destination": "mock/interfaces/api/public/card.go",
+				"package": "public"
+			}
+		},
+		"mock/interfaces/api/public/session.go": {
+			"checksum": "edGCXKaRygv+7u+fbyr7og==",
+			"source_checksum": "DwFXqW9ZCHfdMANWcGbRSw==",
+			"mode": "SOURCE_MODE",
+			"source_mode_runner": {
+				"source": "interfaces/api/public/session.go",
+				"destination": "mock/interfaces/api/public/session.go",
+				"package": "public"
+			}
+		},
+		"mock/interfaces/api/public/webhook.go": {
+			"checksum": "UQDpFUN9DfoM3A4Q3rBVMA==",
+			"source_checksum": "x1OFc+Fu7OY9kbKloma/sg==",
+			"mode": "SOURCE_MODE",
+			"source_mode_runner": {
+				"source": "interfaces/api/public/webhook.go",
+				"destination": "mock/interfaces/api/public/webhook.go",
+				"package": "public"
+			}
+		},
+		"mock/internal/db/interface.go": {
+			"checksum": "NPeXFXHzSI4OgrG6kZ9bAg==",
+			"source_checksum": "QLvRdz4VWcq8jX+FtFar1w==",
+			"mode": "SOURCE_MODE",
+			"source_mode_runner": {
+				"source": "internal/db/interface.go",
+				"destination": "mock/internal/db/interface.go",
+				"package": "db"
+			}
+		},
+		"mock/internal/db/tx.go": {
+			"checksum": "oCgoOY4bDl8R1yYOH0Xhiw==",
+			"source_checksum": "yfeJwR/7gTUYUK1DJpC4rg==",
+			"mode": "SOURCE_MODE",
+			"source_mode_runner": {
+				"source": "internal/db/tx.go",
+				"destination": "mock/internal/db/tx.go",
+				"package": "db"
+			}
+		},
+		"mock/internal/email/email.go": {
+			"checksum": "nQLM5fgD7BschxcaFKFtBQ==",
 			"source_checksum": "Gh/iMDo1wKO12GszzN2Bdg==",
 			"mode": "SOURCE_MODE",
 			"source_mode_runner": {
-				"source": "./internal/email/email.go",
-				"destination": "./internal/email/mock_email.go",
+				"source": "internal/email/email.go",
+				"destination": "mock/internal/email/email.go",
 				"package": "email"
+			}
+		},
+		"mock/internal/jwt/jwt.go": {
+			"checksum": "x/dAGGQHZIQPuGZDcpUruA==",
+			"source_checksum": "sAvatLIjR9Rum+cvYnv4KA==",
+			"mode": "SOURCE_MODE",
+			"source_mode_runner": {
+				"source": "internal/jwt/jwt.go",
+				"destination": "mock/internal/jwt/jwt.go",
+				"package": "jwt"
+			}
+		},
+		"mock/internal/middleware/auth.go": {
+			"checksum": "vkRrGfwBk5dRPugEaRypEQ==",
+			"source_checksum": "I5y1rcBSj5NOBGuy4/s2XQ==",
+			"mode": "SOURCE_MODE",
+			"source_mode_runner": {
+				"source": "internal/middleware/auth.go",
+				"destination": "mock/internal/middleware/auth.go",
+				"package": "middleware"
+			}
+		},
+		"mock/internal/middleware/role.go": {
+			"checksum": "BM/yytfKgyPh35x/iRwy0g==",
+			"source_checksum": "+4qVYO/VwzrdKcYRnJIlRw==",
+			"mode": "SOURCE_MODE",
+			"source_mode_runner": {
+				"source": "internal/middleware/role.go",
+				"destination": "mock/internal/middleware/role.go",
+				"package": "middleware"
+			}
+		},
+		"mock/internal/oidc/oidc.go": {
+			"checksum": "tz2AdYlti4ns5V98zyQRhg==",
+			"source_checksum": "eoUUCRif6COcVUzbXdkEIg==",
+			"mode": "SOURCE_MODE",
+			"source_mode_runner": {
+				"source": "internal/oidc/oidc.go",
+				"destination": "mock/internal/oidc/oidc.go",
+				"package": "oidc"
+			}
+		},
+		"mock/internal/rest/response.go": {
+			"checksum": "JooxyG9PuGPDn6zm+6h/qw==",
+			"source_checksum": "z/KtvkP9uR99rJG7cmucPw==",
+			"mode": "SOURCE_MODE",
+			"source_mode_runner": {
+				"source": "internal/rest/response.go",
+				"destination": "mock/internal/rest/response.go",
+				"package": "rest"
+			}
+		},
+		"mock/internal/workers/workers.go": {
+			"checksum": "errUnZQzLnVMq/G1yMbtNA==",
+			"source_checksum": "/65iV50T5C0dCcWMLR7xQg==",
+			"mode": "SOURCE_MODE",
+			"source_mode_runner": {
+				"source": "internal/workers/workers.go",
+				"destination": "mock/internal/workers/workers.go",
+				"package": "workers"
+			}
+		},
+		"mock/usecase/card.go": {
+			"checksum": "CGXAWmPtR7CqJ4lfI8ancw==",
+			"source_checksum": "49ueKrqzIvmQUL0flRO4NA==",
+			"mode": "SOURCE_MODE",
+			"source_mode_runner": {
+				"source": "usecase/card.go",
+				"destination": "mock/usecase/card.go",
+				"package": "usecase"
+			}
+		},
+		"mock/usecase/config.go": {
+			"checksum": "BN9CAEVzEXfhN8ZMHPyAxw==",
+			"source_checksum": "dTRb4vzdveDJtEZuO9wIZw==",
+			"mode": "SOURCE_MODE",
+			"source_mode_runner": {
+				"source": "usecase/config.go",
+				"destination": "mock/usecase/config.go",
+				"package": "usecase"
+			}
+		},
+		"mock/usecase/externalIntegration.go": {
+			"checksum": "2oHIPdVlkxsu0aY4Hz1Ltw==",
+			"source_checksum": "htU6oLu1ULvsXZcx96ywQQ==",
+			"mode": "SOURCE_MODE",
+			"source_mode_runner": {
+				"source": "usecase/externalIntegration.go",
+				"destination": "mock/usecase/externalIntegration.go",
+				"package": "usecase"
+			}
+		},
+		"mock/usecase/management.go": {
+			"checksum": "3HOyq735ge950Lz7dSW4cg==",
+			"source_checksum": "RM7FkvjomVBUu2JUgx0TtA==",
+			"mode": "SOURCE_MODE",
+			"source_mode_runner": {
+				"source": "usecase/management.go",
+				"destination": "mock/usecase/management.go",
+				"package": "usecase"
+			}
+		},
+		"mock/usecase/profile.go": {
+			"checksum": "lO/FgF9lwb2i+8Ag5OZfkA==",
+			"source_checksum": "6NnP4u/Volzr8ZEOmsErTw==",
+			"mode": "SOURCE_MODE",
+			"source_mode_runner": {
+				"source": "usecase/profile.go",
+				"destination": "mock/usecase/profile.go",
+				"package": "usecase"
+			}
+		},
+		"mock/usecase/session.go": {
+			"checksum": "8yEXCAs7FuUq2ISqhY5T6Q==",
+			"source_checksum": "WI6bv6VOjhSJbh8AZfpM6g==",
+			"mode": "SOURCE_MODE",
+			"source_mode_runner": {
+				"source": "usecase/session.go",
+				"destination": "mock/usecase/session.go",
+				"package": "usecase"
+			}
+		},
+		"mock/usecase/webhook.go": {
+			"checksum": "OEj0hJRU8Soi7BznEb+9wQ==",
+			"source_checksum": "lfrNOa6Vp4POFPQ6kC//aw==",
+			"mode": "SOURCE_MODE",
+			"source_mode_runner": {
+				"source": "usecase/webhook.go",
+				"destination": "mock/usecase/webhook.go",
+				"package": "usecase"
 			}
 		}
 	}

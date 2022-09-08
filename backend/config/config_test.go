@@ -61,6 +61,6 @@ func TestLoadConfigFromEnv(t *testing.T) {
 	}
 
 	if diff := cmp.Diff(cfg, envExpectedConfig); diff != "" {
-		t.Fatalf("config does not match: expected: %v actual: %v", *envExpectedConfig, *cfg)
+		t.Errorf("config does not match: expected: %v actual: %v", *envExpectedConfig, *cfg)
 	}
 }

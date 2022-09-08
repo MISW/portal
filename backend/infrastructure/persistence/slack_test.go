@@ -10,6 +10,7 @@ import (
 	"github.com/MISW/Portal/backend/domain/repository"
 	"github.com/MISW/Portal/backend/infrastructure/persistence"
 	"github.com/MISW/Portal/backend/internal/testutil"
+	"github.com/MISW/Portal/backend/mock/domain/repository"
 )
 
 var (
@@ -65,7 +66,7 @@ func insertTestSlackData(t *testing.T, up repository.UserRepository) (invited ma
 		id, err := up.Insert(context.Background(), usersToBeInvited[i])
 
 		if err != nil {
-			t.Fatalf("inserting a new user to db failed: %+v", err)
+			t.Errorf("inserting a new user to db failed: %+v", err)
 		}
 
 		invited[id] = struct{}{}
@@ -75,7 +76,7 @@ func insertTestSlackData(t *testing.T, up repository.UserRepository) (invited ma
 		id, err := up.Insert(context.Background(), usersToBeNotInvited[i])
 
 		if err != nil {
-			t.Fatalf("inserting a new user to db failed: %+v", err)
+			t.Errorf("inserting a new user to db failed: %+v", err)
 		}
 
 		uninvited[id] = usersToBeNotInvited[i].SlackInvitationStatus
@@ -96,17 +97,17 @@ func TestUpdateSlackID(t *testing.T) {
 	err := sp.UpdateSlackID(context.Background(), id, updatedSlackID)
 
 	if err != nil {
-		t.Fatalf("failed to update slack id: %+v", err)
+		t.Errorf("failed to update slack id: %+v", err)
 	}
 
 	user, err := up.GetByID(context.Background(), id)
 
 	if err != nil {
-		t.Fatalf("failed to get user: %+v", err)
+		t.Errorf("failed to get user: %+v", err)
 	}
 
 	if user.SlackID != updatedSlackID {
-		t.Fatalf("slack id is not updated: %s(expected: %s)", user.SlackID, updatedSlackID)
+		t.Errorf("slack id is not updated: %s(expected: %s)", user.SlackID, updatedSlackID)
 	}
 }
 
@@ -121,14 +122,14 @@ func TestMarkUninvitedAsPending(t *testing.T) {
 	ctx := context.Background()
 
 	if err := sp.MarkUninvitedAsPending(ctx); err != nil {
-		t.Fatalf("failed to mark members: %+v", err)
+		t.Errorf("failed to mark members: %+v", err)
 	}
 
 	t.Run("invited", func(t *testing.T) {
 		users, err := up.List(ctx)
 
 		if err != nil {
-			t.Fatalf("failed to list all users: %+v", err)
+			t.Errorf("failed to list all users: %+v", err)
 		}
 
 		for i := range users {
@@ -156,13 +157,13 @@ func TestGetPending(t *testing.T) {
 	ctx := context.Background()
 
 	if err := sp.MarkUninvitedAsPending(ctx); err != nil {
-		t.Fatalf("failed to mark uninvited as pending: %+v", err)
+		t.Errorf("failed to mark uninvited as pending: %+v", err)
 	}
 
 	user, err := sp.GetPending(ctx)
 
 	if err != nil {
-		t.Fatalf("get pending failed: %+v", err)
+		t.Errorf("get pending failed: %+v", err)
 	}
 
 	for id := range invited {
@@ -187,25 +188,25 @@ func TestMarkAsInvited(t *testing.T) {
 	ctx := context.Background()
 
 	if err := sp.MarkUninvitedAsPending(ctx); err != nil {
-		t.Fatalf("failed to mark uninvited as pending: %+v", err)
+		t.Errorf("failed to mark uninvited as pending: %+v", err)
 	}
 
 	user, err := sp.GetPending(ctx)
 
 	if err != nil {
-		t.Fatalf("get pending failed: %+v", err)
+		t.Errorf("get pending failed: %+v", err)
 	}
 
 	err = sp.MarkAsInvited(ctx, user.ID)
 
 	if err != nil {
-		t.Fatalf("failed to mark as invited: %+v", err)
+		t.Errorf("failed to mark as invited: %+v", err)
 	}
 
 	user, err = up.GetByID(ctx, user.ID)
 
 	if err != nil {
-		t.Fatalf("failed to find user: %+v", err)
+		t.Errorf("failed to find user: %+v", err)
 	}
 
 	if user.SlackInvitationStatus != domain.Invited {
