@@ -10,7 +10,6 @@ import (
 	"github.com/MISW/Portal/backend/domain/repository"
 	"github.com/MISW/Portal/backend/infrastructure/persistence"
 	"github.com/MISW/Portal/backend/internal/testutil"
-	"github.com/MISW/Portal/backend/mock/domain/repository"
 )
 
 func TestUpdate(t *testing.T) {
