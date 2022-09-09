@@ -24,7 +24,7 @@ specifiers:
   focus-visible: ^5.2.0
   ky: ^0.31.3
   next: ^12.2.5
-  next-redux-wrapper: ^7.0.5
+  next-redux-wrapper: ^8.0.0
   postcss: ^8.4.16
   prettier: ^2.7.1
   react: ^18.2.0
@@ -48,7 +48,7 @@ dependencies:
   focus-visible: 5.2.0
   ky: 0.31.3
   next: 12.2.5_vyk55zyolcaieh7zfm7nf7uva4
-  next-redux-wrapper: 7.0.5_hqvnqhaxpizklyi3ao27hqxpae
+  next-redux-wrapper: 8.0.0_hqvnqhaxpizklyi3ao27hqxpae
   react: 18.2.0
   react-dom: 18.2.0_react@18.2.0
   react-redux: 8.0.2_yjtsim5uvgjttslbpqb5so5y3m
@@ -2595,10 +2595,10 @@ packages:
     resolution: {integrity: sha512-OWND8ei3VtNC9h7V60qff3SVobHr996CTwgxubgyQYEpg290h9J0buyECNNJexkFm5sOajh5G116RYA1c8ZMSw==}
     dev: true
 
-  /next-redux-wrapper/7.0.5_hqvnqhaxpizklyi3ao27hqxpae:
-    resolution: {integrity: sha512-UFXdAWG5i+GFT8+Hoqpx3GArkPh34fVWF9YoA2VSHlBzsrPtnRd7NWM6FNSYUennpommTpWJ09mu+r/1UxyIkg==}
+  /next-redux-wrapper/8.0.0_hqvnqhaxpizklyi3ao27hqxpae:
+    resolution: {integrity: sha512-zKRdpvDeqNXQr1j5DUWwsB2fz6XpHR32iy2qJGItTKLsbLB9GvtxDL9b4mFCfhDvnzy5dw97UqMjWDpFY8h0zA==}
     peerDependencies:
-      next: '>=10.0.3'
+      next: '>=9'
       react: '*'
       react-redux: '*'
     dependencies:
