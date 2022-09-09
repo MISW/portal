@@ -8,6 +8,7 @@ import (
 	"github.com/MISW/Portal/backend/config"
 	"github.com/MISW/Portal/backend/domain"
 	"github.com/MISW/Portal/backend/domain/repository"
+	"github.com/MISW/Portal/backend/infrastructure/memory"
 	"github.com/MISW/Portal/backend/infrastructure/persistence"
 	"github.com/MISW/Portal/backend/interfaces/api/external"
 	"github.com/MISW/Portal/backend/interfaces/api/private"
@@ -95,9 +96,12 @@ func initDig(cfg *config.Config, addr string) *dig.Container {
 
 	must(c.Provide(persistence.NewExternalIntegrationPersistence))
 
+	must(c.Provide(memory.NewAccountInfoStore))
+
 	must(c.Provide(usecase.NewAppConfigUsecase))
 
 	must(c.Provide(func(
+		accountInfoRepository repository.AccountInfoRepository,
 		userRepository repository.UserRepository,
 		tokenRepository repository.TokenRepository,
 		appConfigRepository repository.AppConfigRepository,
@@ -106,6 +110,7 @@ func initDig(cfg *config.Config, addr string) *dig.Container {
 		jwtProvider jwt.JWTProvider,
 	) usecase.SessionUsecase {
 		return usecase.NewSessionUsecase(
+			accountInfoRepository,
 			userRepository,
 			tokenRepository,
 			authenticator,

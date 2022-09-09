@@ -77,43 +77,50 @@ var _ SessionUsecase = &sessionUsecase{}
 
 // SignUp - ユーザ新規登録
 func (us *sessionUsecase) Signup(ctx context.Context, user *domain.User, token string) error {
+	//find account info
 	accountInfo, err := us.accountInfoRepository.GetByToken(ctx, token)
 	if err != nil {
+		//logout
+		if err := us.Logout(ctx, token); err != nil {
+			return err
+		}
+
 		return xerrors.Errorf("failed to find user account info: %w", err)
 	}
 
+	//user account data
 	user.AccountID = accountInfo.AccountID
 	user.Email = accountInfo.Email
 	user.Role = domain.NotMember
 	user.EmailVerified = false
-
 	if err := user.Validate(); err != nil {
 		return err
 	}
 
+	//insert into DB
 	id, err := us.userRepository.Insert(ctx, user)
-
 	if errors.Is(err, domain.ErrEmailConflicts) {
 		return rest.NewBadRequest("メールアドレスが既に利用されています")
 	}
-
 	if err != nil {
 		return errors.Errorf("failed to insert new user: %w", err)
 	}
 	user.ID = id
 
+	//delete account_info in memory
+	us.accountInfoRepository.Delete(ctx, token)
+
+	//email verification
 	token, err = us.jwtProvider.GenerateWithMap(map[string]interface{}{
 		"kind":  "email_verification",
 		"id":    user.ID,
 		"email": user.Email,
 	})
-
 	if err != nil {
 		return xerrors.Errorf("failed to generate token for email verification: %w", err)
 	}
 
 	u, err := url.Parse(us.baseURL)
-
 	if err != nil {
 		return xerrors.Errorf("base url is invalid(%s): %w", us.baseURL, err)
 	}
@@ -130,13 +137,11 @@ func (us *sessionUsecase) Signup(ctx context.Context, user *domain.User, token s
 	}
 
 	subject, body, err := us.appConfigRpoeisotry.GetEmailTemplate(domain.EmailVerification)
-
 	if err != nil {
 		return xerrors.Errorf("failed to get email template for verification: %w", err)
 	}
 
 	subject, body, err = email.GenerateEmailFromTemplate(subject, body, metadata)
-
 	if err != nil {
 		return xerrors.Errorf("failed to generate email from template: %w", err)
 	}

@@ -6,9 +6,9 @@ import (
 
 // AccountInfo - ソーシャルログインしたアカウントの情報. Signupする前に用いる
 type AccountInfo struct {
-	Token     string
-	AccountID string
-	Email     string
+	Token     string `json:"token"`
+	AccountID string `json:"sub"`
+	Email     string `json:"email"`
 }
 
 func NewAccountInfo(token, accountID, email string) AccountInfo {
@@ -19,7 +19,7 @@ func NewAccountInfo(token, accountID, email string) AccountInfo {
 	}
 }
 
-// Validate - userを検証
+// Validate - account_infoを検証
 func (account *AccountInfo) Validate() error {
 	if len(account.Token) == 0 {
 		return rest.NewBadRequest("トークンが空です")
