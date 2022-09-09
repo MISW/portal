@@ -17,7 +17,6 @@ import (
 	"github.com/MISW/Portal/backend/internal/jwt"
 	"github.com/MISW/Portal/backend/internal/middleware"
 	"github.com/MISW/Portal/backend/internal/oidc"
-	"github.com/MISW/Portal/backend/internal/slack"
 	"github.com/MISW/Portal/backend/internal/workers"
 	"github.com/MISW/Portal/backend/usecase"
 	_ "github.com/go-sql-driver/mysql"
@@ -58,10 +57,6 @@ func initDig(cfg *config.Config, addr string) *dig.Container {
 		}
 
 		return auth, nil
-	}))
-
-	must(c.Provide(func() *slack.Client {
-		return slack.NewClient(cfg.SlackToken, cfg.SlackTeamID)
 	}))
 
 	must(c.Provide(func() email.Sender {
@@ -130,8 +125,6 @@ func initDig(cfg *config.Config, addr string) *dig.Container {
 
 	must(c.Provide(usecase.NewManagementUsecase))
 
-	must(c.Provide(usecase.NewWebhookUsecase))
-
 	must(c.Provide(usecase.NewExternalIntegrationUsecase))
 
 	must(c.Provide(private.NewSessionHandler))
@@ -146,17 +139,11 @@ func initDig(cfg *config.Config, addr string) *dig.Container {
 
 	must(c.Provide(public.NewCardHandler))
 
-	must(c.Provide(func(wu usecase.WebhookUsecase) public.WebhookHandler {
-		return public.NewWebhookHandler(cfg.SlackSigningSecret, wu)
-	}))
-
 	must(c.Provide(middleware.NewAuthMiddleware))
 
 	must(c.Provide(func() (jwt.JWTProvider, error) {
 		return jwt.NewJWTProvider(cfg.JWTKey)
 	}))
-
-	must(c.Provide(workers.NewSlackInviter, dig.Name("slack")))
 
 	return c
 }
@@ -244,14 +231,6 @@ func initHandler(cfg *config.Config, addr string, digc *dig.Container) *echo.Ech
 		g.POST("/callback", sh.Callback)
 		g.POST("/signup", sh.Signup)
 		g.POST("/verify_email", sh.VerifyEmail)
-
-		if err := digc.Invoke(func(wu public.WebhookHandler) {
-			g := g.Group("/webhook")
-
-			g.POST("/slack", wu.Slack)
-		}); err != nil {
-			return err
-		}
 
 		if err := digc.Invoke(func(ch public.CardHandler) {
 			g.GET("/card/:id", func(c echo.Context) error {
