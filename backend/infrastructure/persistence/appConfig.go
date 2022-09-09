@@ -3,6 +3,7 @@ package persistence
 import (
 	"database/sql"
 	"encoding/json"
+	"errors"
 	"strconv"
 
 	"golang.org/x/xerrors"
@@ -36,7 +37,7 @@ const (
 func (acp *appConfigPersistence) GetPaymentPeriod() (int, error) {
 	period, err := acp.getValue(paymentPeriod)
 
-	if xerrors.Is(err, sql.ErrNoRows) {
+	if errors.Is(err, sql.ErrNoRows) {
 		return defaultPaymentPeriod, nil
 	}
 
@@ -64,7 +65,7 @@ func (acp *appConfigPersistence) SetPaymentPeriod(period int) error {
 func (acp *appConfigPersistence) GetCurrentPeriod() (int, error) {
 	period, err := acp.getValue(currentPeriod)
 
-	if xerrors.Is(err, sql.ErrNoRows) {
+	if errors.Is(err, sql.ErrNoRows) {
 		return defaultCurrentPeriod, nil
 	}
 
@@ -101,7 +102,7 @@ type emailTemplateType struct {
 func (acp *appConfigPersistence) GetEmailTemplate(kind domain.EmailKind) (subject, body string, err error) {
 	value, err := acp.getValue(emailTemplate + "-" + string(kind))
 
-	if xerrors.Is(err, sql.ErrNoRows) {
+	if errors.Is(err, sql.ErrNoRows) {
 		return "", "", nil
 	}
 

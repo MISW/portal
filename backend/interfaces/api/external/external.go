@@ -1,6 +1,7 @@
 package external
 
 import (
+	"errors"
 	"net/http"
 
 	"github.com/MISW/Portal/backend/internal/rest"
@@ -31,7 +32,7 @@ func (h *ExternalHandler) GetUserRoleFromAccountID(e echo.Context) error {
 	role, err := h.eu.GetUserRoleFromAccountID(param.AccountID)
 
 	var frerr rest.ErrorResponse
-	if xerrors.As(err, &frerr) {
+	if errors.As(err, &frerr) {
 		return rest.RespondMessage(e, frerr)
 	}
 

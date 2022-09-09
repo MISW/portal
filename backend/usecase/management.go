@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"strings"
 	"time"
@@ -118,7 +119,7 @@ func (mu *managementUsecase) AuthorizeTransaction(ctx context.Context, token str
 	transaction, err := mu.PaymentTransactionRepository.Get(ctx, token)
 
 	if err != nil {
-		if xerrors.Is(err, domain.ErrNoPaymentTransaction) {
+		if errors.Is(err, domain.ErrNoPaymentTransaction) {
 			return rest.NewBadRequest("無効なトークンです")
 		}
 
@@ -132,7 +133,7 @@ func (mu *managementUsecase) AuthorizeTransaction(ctx context.Context, token str
 	err = mu.AddPaymentStatus(ctx, transaction.UserID, 0, authorizer)
 
 	var frerr rest.ErrorResponse
-	if xerrors.As(err, &frerr) {
+	if errors.As(err, &frerr) {
 		return frerr
 	}
 
@@ -165,7 +166,7 @@ func (mu *managementUsecase) AddPaymentStatus(ctx context.Context, userID, perio
 	}
 
 	if err := mu.PaymentStatusRepository.Add(ctx, userID, period, authorizer); err != nil {
-		if xerrors.Is(err, domain.ErrAlreadyPaid) {
+		if errors.Is(err, domain.ErrAlreadyPaid) {
 			return rest.NewConflict("すでに支払い済みです")
 		}
 
@@ -235,7 +236,7 @@ func (mu *managementUsecase) GetPaymentStatus(ctx context.Context, userID, perio
 
 	ps, err := mu.PaymentStatusRepository.Get(ctx, userID, period)
 
-	if xerrors.Is(err, domain.ErrNoPaymentStatus) {
+	if errors.Is(err, domain.ErrNoPaymentStatus) {
 		return nil, rest.NewNotFound("存在しない支払い情報です")
 	}
 
@@ -265,7 +266,7 @@ func (mu *managementUsecase) GetUser(ctx context.Context, userID int) (*domain.U
 	ps, err := mu.GetPaymentStatus(ctx, userID, 0)
 
 	var notFound *rest.NotFound
-	if xerrors.As(err, &notFound) {
+	if errors.As(err, &notFound) {
 		ps = nil
 	} else if err != nil {
 		return nil, xerrors.Errorf("failed to get payment status for user(%d): %w", userID, err)

@@ -7,7 +7,6 @@ import (
 
 	"github.com/MISW/Portal/backend/domain"
 	"github.com/MISW/Portal/backend/internal/cookies"
-	"github.com/MISW/Portal/backend/internal/middleware"
 	"github.com/MISW/Portal/backend/internal/rest"
 	"github.com/MISW/Portal/backend/usecase"
 	"github.com/labstack/echo/v4"
@@ -52,19 +51,8 @@ func (s *sessionHandler) Logout(e echo.Context) error {
 }
 
 func (s *sessionHandler) Signup(e echo.Context) error {
-	user := e.Get(middleware.UserKey).(*domain.User)
+	ck, err := e.Cookie(cookies.TokenCookieKey)
 
-	var param struct {
-		Token string `json:"token" query:"token"`
-		Email string `json:"email" query:"email"`
-		Sub   string `json:"sub"`
-	}
-
-	if err := e.Bind(&param); err != nil {
-		return rest.RespondMessage(e, rest.NewBadRequest(fmt.Sprintf("token is missing: %v", err)))
-	}
-
-	_, err := e.Cookie(cookies.TokenCookieKey)
 	if err != nil {
 		return rest.RespondMessage(
 			e,
@@ -73,7 +61,6 @@ func (s *sessionHandler) Signup(e echo.Context) error {
 	}
 
 	u := &domain.User{}
-
 	if err := e.Bind(u); err != nil {
 		return rest.RespondMessage(
 			e,
@@ -83,7 +70,7 @@ func (s *sessionHandler) Signup(e echo.Context) error {
 		)
 	}
 
-	err = s.su.Signup(e.Request().Context(), u)
+	err = s.su.Signup(e.Request().Context(), u, ck.Value)
 
 	var frerr rest.ErrorResponse
 	if errors.As(err, &frerr) {

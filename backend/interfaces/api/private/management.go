@@ -2,6 +2,7 @@ package private
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 
 	"github.com/MISW/Portal/backend/domain"
@@ -79,7 +80,7 @@ func (mh *managementHandler) ListUsers(e echo.Context) error {
 	users, err := mh.mu.ListUsers(e.Request().Context(), query.Period)
 
 	var frerr rest.ErrorResponse
-	if xerrors.As(err, &frerr) {
+	if errors.As(err, &frerr) {
 		return rest.RespondMessage(e, frerr)
 	}
 
@@ -110,7 +111,7 @@ func (mh *managementHandler) AuthorizeTransaction(e echo.Context) error {
 	err := mh.mu.AuthorizeTransaction(e.Request().Context(), param.Token, user.ID)
 
 	var frerr rest.ErrorResponse
-	if xerrors.As(err, &frerr) {
+	if errors.As(err, &frerr) {
 		return rest.RespondMessage(e, frerr)
 	}
 
@@ -137,7 +138,7 @@ func (mh *managementHandler) AddPaymentStatus(e echo.Context) error {
 	err := mh.mu.AddPaymentStatus(e.Request().Context(), param.UserID, param.Period, user.ID)
 
 	var frerr rest.ErrorResponse
-	if xerrors.As(err, &frerr) {
+	if errors.As(err, &frerr) {
 		return rest.RespondMessage(e, frerr)
 	}
 
@@ -162,7 +163,7 @@ func (mh *managementHandler) GetPaymentStatus(e echo.Context) error {
 	ps, err := mh.mu.GetPaymentStatus(e.Request().Context(), param.UserID, param.Period)
 
 	var frerr rest.ErrorResponse
-	if xerrors.As(err, &frerr) {
+	if errors.As(err, &frerr) {
 		return rest.RespondMessage(e, frerr)
 	}
 
@@ -215,7 +216,7 @@ func (mh *managementHandler) GetPaymentStatuses(e echo.Context) error {
 		ps, err := mh.mu.GetPaymentStatus(ctx, *param.UserID, *param.Period)
 
 		var nf *rest.NotFound
-		if err != nil && !xerrors.As(err, &nf) {
+		if err != nil && !errors.As(err, &nf) {
 			return xerrors.Errorf("failed to get payment status(user_id: %d, period: %d)", *param.UserID, *param.Period, err)
 		}
 
@@ -254,7 +255,7 @@ func (mh *managementHandler) GetUser(e echo.Context) error {
 	user, err := mh.mu.GetUser(e.Request().Context(), param.UserID)
 
 	var frerr rest.ErrorResponse
-	if xerrors.As(err, &frerr) {
+	if errors.As(err, &frerr) {
 		return rest.RespondMessage(e, frerr)
 	}
 
@@ -284,7 +285,7 @@ func (mh *managementHandler) UpdateUser(e echo.Context) error {
 	err := mh.mu.UpdateUser(e.Request().Context(), param.User)
 
 	var frerr rest.ErrorResponse
-	if xerrors.As(err, &frerr) {
+	if errors.As(err, &frerr) {
 		return rest.RespondMessage(e, err)
 	}
 
@@ -337,7 +338,7 @@ func (mh *managementHandler) SetConfig(e echo.Context) error {
 		err := mh.acu.SetPaymentPeriod(payload.PaymentPeriod)
 
 		var frerr rest.ErrorResponse
-		if xerrors.As(err, &frerr) {
+		if errors.As(err, &frerr) {
 			return rest.RespondMessage(e, frerr)
 		}
 
@@ -359,7 +360,7 @@ func (mh *managementHandler) SetConfig(e echo.Context) error {
 		err := mh.acu.SetCurrentPeriod(payload.CurrentPeriod)
 
 		var frerr rest.ErrorResponse
-		if xerrors.As(err, &frerr) {
+		if errors.As(err, &frerr) {
 			return rest.RespondMessage(e, frerr)
 		}
 
@@ -383,7 +384,7 @@ func (mh *managementHandler) SetConfig(e echo.Context) error {
 		err := mh.acu.SetEmailTemplate(payload.EmailKind, payload.Subject, payload.Body)
 
 		var frerr rest.ErrorResponse
-		if xerrors.As(err, &frerr) {
+		if errors.As(err, &frerr) {
 			return rest.RespondMessage(e, frerr)
 		}
 
@@ -407,7 +408,7 @@ func (mh *managementHandler) GetConfig(e echo.Context) error {
 		pp, err := mh.acu.GetPaymentPeriod()
 
 		var frerr rest.ErrorResponse
-		if xerrors.As(err, &frerr) {
+		if errors.As(err, &frerr) {
 			return rest.RespondMessage(e, frerr)
 		}
 
@@ -423,7 +424,7 @@ func (mh *managementHandler) GetConfig(e echo.Context) error {
 		cp, err := mh.acu.GetCurrentPeriod()
 
 		var frerr rest.ErrorResponse
-		if xerrors.As(err, &frerr) {
+		if errors.As(err, &frerr) {
 			return rest.RespondMessage(e, frerr)
 		}
 
@@ -441,7 +442,7 @@ func (mh *managementHandler) GetConfig(e echo.Context) error {
 		subject, body, err := mh.acu.GetEmailTemplate(emailKind)
 
 		var frerr rest.ErrorResponse
-		if xerrors.As(err, &frerr) {
+		if errors.As(err, &frerr) {
 			return rest.RespondMessage(e, frerr)
 		}
 
@@ -472,7 +473,7 @@ func (mh *managementHandler) RemindPayment(e echo.Context) error {
 	err := mh.mu.RemindPayment(e.Request().Context(), param.Filter)
 
 	var frerr rest.ErrorResponse
-	if xerrors.As(err, &frerr) {
+	if errors.As(err, &frerr) {
 		e.Logger().Errorf("failed to send payment reminder: %+v", frerr)
 
 		return rest.RespondMessage(e, frerr)

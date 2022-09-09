@@ -14,7 +14,7 @@ type UserRepository interface {
 	// GetByID - IDで検索
 	GetByID(ctx context.Context, id int) (*domain.User, error)
 
-	// GetByID - Account IDで検索
+	// GetByAccountID - Account IDで検索
 	GetByAccountID(ctx context.Context, accountID string) (*domain.User, error)
 
 	// GetByEmail - Emailで検索

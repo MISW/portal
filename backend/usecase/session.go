@@ -14,13 +14,14 @@ import (
 	"github.com/MISW/Portal/backend/internal/oidc"
 	"github.com/MISW/Portal/backend/internal/rest"
 	"github.com/MISW/Portal/backend/internal/tokenutil"
+	"github.com/pkg/errors"
 	"golang.org/x/xerrors"
 )
 
 // SessionUsecase - login/signup/logoutなどのセッション周りの処理
 type SessionUsecase interface {
 	// SignUp - ユーザ新規登録
-	Signup(ctx context.Context, user *domain.User) error
+	Signup(ctx context.Context, user *domain.User, token string) error
 
 	// Login - OpenID ConnectのリダイレクトURLを生成する
 	Login(ctx context.Context) (redirectURL, state string, err error)
@@ -40,6 +41,7 @@ type SessionUsecase interface {
 
 // NewSessionUsecase - ユーザ関連のユースケースを初期化
 func NewSessionUsecase(
+	accountInfoRepository repository.AccountInfoRepository,
 	userRepository repository.UserRepository,
 	tokenRepository repository.TokenRepository,
 	authenticator oidc.Authenticator,
@@ -49,31 +51,39 @@ func NewSessionUsecase(
 	baseURL string,
 ) SessionUsecase {
 	return &sessionUsecase{
-		userRepository:      userRepository,
-		tokenRepository:     tokenRepository,
-		authenticator:       authenticator,
-		appConfigRpoeisotry: appConfigRpoeisotry,
-		mailer:              mailer,
-		jwtProvider:         jwtProvider,
-		baseURL:             baseURL,
+		accountInfoRepository: accountInfoRepository,
+		userRepository:        userRepository,
+		tokenRepository:       tokenRepository,
+		authenticator:         authenticator,
+		appConfigRpoeisotry:   appConfigRpoeisotry,
+		mailer:                mailer,
+		jwtProvider:           jwtProvider,
+		baseURL:               baseURL,
 	}
 }
 
 type sessionUsecase struct {
-	appConfigRpoeisotry repository.AppConfigRepository
-	userRepository      repository.UserRepository
-	tokenRepository     repository.TokenRepository
-	authenticator       oidc.Authenticator
-	mailer              email.Sender
-	jwtProvider         jwt.JWTProvider
-	baseURL             string
+	accountInfoRepository repository.AccountInfoRepository
+	appConfigRpoeisotry   repository.AppConfigRepository
+	userRepository        repository.UserRepository
+	tokenRepository       repository.TokenRepository
+	authenticator         oidc.Authenticator
+	mailer                email.Sender
+	jwtProvider           jwt.JWTProvider
+	baseURL               string
 }
 
 var _ SessionUsecase = &sessionUsecase{}
 
 // SignUp - ユーザ新規登録
-func (us *sessionUsecase) Signup(ctx context.Context, user *domain.User) error {
-	user.AccountID = "" //TODO: Loginした時にSessionにAccountIDを保存しておく
+func (us *sessionUsecase) Signup(ctx context.Context, user *domain.User, token string) error {
+	accountInfo, err := us.accountInfoRepository.GetByToken(ctx, token)
+	if err != nil {
+		return xerrors.Errorf("failed to find user account info: %w", err)
+	}
+
+	user.AccountID = accountInfo.AccountID
+	user.Email = accountInfo.Email
 	user.Role = domain.NotMember
 	user.EmailVerified = false
 
@@ -83,16 +93,16 @@ func (us *sessionUsecase) Signup(ctx context.Context, user *domain.User) error {
 
 	id, err := us.userRepository.Insert(ctx, user)
 
-	if xerrors.Is(err, domain.ErrEmailConflicts) {
+	if errors.Is(err, domain.ErrEmailConflicts) {
 		return rest.NewBadRequest("メールアドレスが既に利用されています")
 	}
 
 	if err != nil {
-		return xerrors.Errorf("failed to insert new user: %w", err)
+		return errors.Errorf("failed to insert new user: %w", err)
 	}
 	user.ID = id
 
-	token, err := us.jwtProvider.GenerateWithMap(map[string]interface{}{
+	token, err = us.jwtProvider.GenerateWithMap(map[string]interface{}{
 		"kind":  "email_verification",
 		"id":    user.ID,
 		"email": user.Email,
@@ -150,6 +160,8 @@ func (us *sessionUsecase) Login(ctx context.Context) (redirectURL, state string,
 }
 
 // Callback - OpenID Connectでのcallbackを受け取る
+// TODO: signup時点でアカウントができたとしている。callbackを受けた時にsessionにuserIDを保存して置けるようにしたい。/signup/callbackエンドポイントでも作るか..?
+// TODO: emailのアップデートもした方が良いかも? しかしその場合、email_verificationもした方がいい気がするが...
 func (us *sessionUsecase) Callback(ctx context.Context, expectedState, actualState, code string) (token string, err error) {
 	res, err := us.authenticator.Callback(ctx, expectedState, actualState, code)
 
@@ -158,22 +170,27 @@ func (us *sessionUsecase) Callback(ctx context.Context, expectedState, actualSta
 	}
 
 	// TODO: 雑すぎるンで何とかする
-	var avatarURL, avatarThumbnailURL string
+	var avatarURL, avatarThumbnailURL, email string
 
-	v, ok := res.Profile["picture"]
-	if ok {
+	if v, ok := res.Profile["picture"]; ok {
 		s, ok := v.(string)
 		if ok {
 			avatarURL = s
 		}
 	}
-	v, ok = res.Profile["https://misw.jp/thumbnail"]
-	if ok {
+	if v, ok := res.Profile["https://misw.jp/thumbnail"]; ok {
 		s, ok := v.(string)
 		if ok {
 			avatarThumbnailURL = s
 		}
 	}
+	if v, ok := res.Profile["email"]; ok {
+		s, ok := v.(string)
+		if ok {
+			email = s
+		}
+	}
+
 	var avatar *domain.Avatar
 	if avatarURL != "" && avatarThumbnailURL != "" {
 		avatar = &domain.Avatar{
@@ -185,19 +202,46 @@ func (us *sessionUsecase) Callback(ctx context.Context, expectedState, actualSta
 	accountID := res.IDToken.Subject
 
 	user, err := us.userRepository.GetByAccountID(ctx, accountID)
-
 	if err != nil {
+		if err == domain.ErrNoUser { //ユーザーがいないとき、Signup時のためにAccountInfoとして情報を保存しておいて、
+			account := domain.NewAccountInfo(token, accountID, email)
+			token, err = us.handleNoUserCallback(ctx, &account)
+			if err != nil {
+				return "", err
+			}
+			return token, nil
+		}
 		return "", xerrors.Errorf("failed to find user account associated with AccountID(%s): %w", accountID, err)
 	}
 
-	token, err = tokenutil.GenerateRandomToken()
+	token, err = us.handleUserCallback(ctx, user, avatar)
+	if err != nil {
+		return "", err
+	}
 
+	return token, nil
+}
+
+// handleNoUserCallback DBにデータが保存されていないUserのCallbackを取り扱う
+func (us *sessionUsecase) handleNoUserCallback(ctx context.Context, account *domain.AccountInfo) (string, error) {
+	token, err := tokenutil.GenerateRandomToken()
+	if err != nil {
+		return "", xerrors.Errorf("failed to generate token: %w", err)
+	}
+	if err := us.accountInfoRepository.Save(ctx, account); err != nil {
+		return "", err
+	}
+	return token, nil
+}
+
+// handleUserCallback DBにデータが保存されているUserのcallbackを取り扱う
+func (us *sessionUsecase) handleUserCallback(ctx context.Context, user *domain.User, avatar *domain.Avatar) (string, error) {
+	token, err := tokenutil.GenerateRandomToken()
 	if err != nil {
 		return "", xerrors.Errorf("failed to generate token: %w", err)
 	}
 
 	err = us.tokenRepository.Add(ctx, user.ID, token, time.Now().Add(10*24*time.Hour))
-
 	if err != nil {
 		return "", xerrors.Errorf("failed to insert new token: %w", err)
 	}
@@ -209,7 +253,6 @@ func (us *sessionUsecase) Callback(ctx context.Context, expectedState, actualSta
 			return "", xerrors.Errorf("failed to update avatar: %w", err)
 		}
 	}
-
 	return token, nil
 }
 
@@ -224,7 +267,7 @@ func (us *sessionUsecase) Logout(ctx context.Context, token string) error {
 	return nil
 }
 
-// Validate - トークンの有効性を検証しユーザを取得する
+// Validate - トークンの有効性を検証しDBからユーザを取得する
 func (us *sessionUsecase) Validate(ctx context.Context, token string) (user *domain.User, err error) {
 	tk, err := us.tokenRepository.GetByToken(ctx, token)
 
