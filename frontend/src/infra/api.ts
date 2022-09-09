@@ -188,10 +188,6 @@ export const createApiClient = (baseUrl: string, options?: Options) => {
       });
     },
 
-    async inviteToSlack(): Promise<void> {
-      await http.post('api/private/management/slack/invite');
-    },
-
     async remindPayment(): Promise<void> {
       await http.post('api/private/management/remind_payment');
     },

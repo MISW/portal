@@ -12,7 +12,6 @@ const Page: NextPage = () => {
         <li>確認メールをチェック</li>
         <li>指定の口座番号へ入会費1000円を振込</li>
         <li>振込が確認され次第, 会員登録完了! </li>
-        <li>MISWの連絡ツール Slack への招待リンクがメアド宛に送られます!</li>
       </ol>
       <Link href="/signup/form" passHref>
         <Button color="primary" variant="contained">

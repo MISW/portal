@@ -73,7 +73,7 @@ const useCurrentPeriodNode = (currentPeriod: number | undefined, setCurrentPerio
 };
 
 const useEmailTemplateNode = () => {
-  type KindType = 'email_verification' | 'slack_invitation' | 'after_registration' | 'payment_reminder';
+  type KindType = 'email_verification' | 'after_registration' | 'payment_reminder';
   const options: {
     key: KindType;
     label: string;
@@ -81,10 +81,6 @@ const useEmailTemplateNode = () => {
     {
       key: 'email_verification',
       label: 'Eメール認証',
-    },
-    {
-      key: 'slack_invitation',
-      label: 'Slack招待時の同時送信メール',
     },
     {
       key: 'after_registration',

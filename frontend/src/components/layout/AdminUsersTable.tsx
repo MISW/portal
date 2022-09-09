@@ -75,9 +75,6 @@ const Root = styled('div')(({ theme }) => ({
 
 export type handleClickMenuParam =
   | {
-      kind: 'slack';
-    }
-  | {
       kind: 'export';
     }
   | {
@@ -214,15 +211,10 @@ const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
     setAnchorEl(event.currentTarget);
   };
 
-  const handleClose = (name: 'slack' | 'export' | 'remind_payment' | null) => () => {
+  const handleClose = (name: 'export' | 'remind_payment' | null) => () => {
     setAnchorEl(null);
 
     switch (name) {
-      case 'slack':
-        handleClickMenu({
-          kind: 'slack',
-        });
-        break;
       case 'export':
         handleClickMenu({
           kind: 'export',
@@ -286,7 +278,6 @@ const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
                 horizontal: 'right',
               }}
             >
-              <MenuItem onClick={handleClose('slack')}>Slackに招待</MenuItem>
               <MenuItem onClick={handleClose('export')}>CSVエクスポート</MenuItem>
               <MenuItem onClick={handleClose('remind_payment')}>会費未払い通知メール</MenuItem>
             </Menu>

@@ -21,8 +21,8 @@ const RemindPaymentDialog: React.FC<React.PropsWithChildren<Props>> = (props) =>
   const { onClose, targetUsers, open } = props;
 
   return (
-    <Dialog disableEscapeKeyDown maxWidth="sm" aria-labelledby="confirm-slack-invitation-dialog" open={open}>
-      <DialogTitle id="confirm-slack-invitation-dialog-title">以下のメンバーにメールを送信します(予定)</DialogTitle>
+    <Dialog disableEscapeKeyDown maxWidth="sm" aria-labelledby="confirm-remind-payment-dialog" open={open}>
+      <DialogTitle id="confirm-remind-payment-dialog-title">以下のメンバーにメールを送信します(予定)</DialogTitle>
       <DialogContent dividers>
         <List component="nav" aria-label="members to be invited">
           {targetUsers.length === 0

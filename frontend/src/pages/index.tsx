@@ -37,13 +37,8 @@ interface LinkData {
 
 const linkData: Array<LinkData> = [
   {
-    title: 'Slack',
-    description: '主な連絡ツール. 大事な連絡はこれで送られます',
-    link: 'https://misw-info.slack.com',
-  },
-  {
     title: 'Discord',
-    description: 'ボイスチャット',
+    description: '連絡ツール & 活動場所',
     link: 'https://discord.com/invite/2UGRSbhkRY',
   },
   {
@@ -87,6 +82,7 @@ const paymentData = [
   ['振込依頼人名', '自分の名前'],
 ];
 
+//TODO: アカウントがまだ無い場合はSignupへ飛ばす 
 const Page: NextPage = () => {
   const currentUser = nonNullOrThrow(useSelector(selectCurrentUser));
 
@@ -105,12 +101,6 @@ const Page: NextPage = () => {
                 <strong>入会費1000円</strong>
                 を以下の口座へ振り込んでください。
               </p>
-              <p>
-                振込が確認され次第, メール {currentUser.email}
-                宛にサークル内の連絡ツール
-                <strong>Slack</strong>
-                の招待が届きます!
-              </p>
             </div>
             <TableContainer component={Paper}>
               <Table aria-label="simple table">
@@ -128,7 +118,7 @@ const Page: NextPage = () => {
             </TableContainer>
 
             <Alert severity="error">
-              もし振込から1週間以上経ってもSlack招待が確認出来ない場合は
+              もし振込から1週間以上経っても会員になったことの確認が出来ない場合は
               <ul>
                 <li>メール info@misw.jp</li>
                 <li>Twitter @misw_info</li>
@@ -150,7 +140,6 @@ const Page: NextPage = () => {
 
       <Typography variant="h6">Getting Started</Typography>
       <ol>
-        <li>slackの情報を登録</li>
         <li>kibelaの自己紹介記事を書く</li>
         <li>活動/ディスコードにてサークル員と交流する</li>
         <li>新歓講座に参加する</li>
