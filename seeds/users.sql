@@ -16,15 +16,14 @@ INSERT INTO users
   workshops,
   squads,
   role,
-  slack_invitation_status,
-  slack_id,
+  account_od,
   discord_id,
   email_verified
 )
 VALUES
 (
-  "hebi@example.com", 55, "HEBI", "ヘビ", "hebi", "male", "Foo大学", "Bar学部", "Hoge学科", "35782161", "0123456789", "", "プログラミング", "Web", "admin", "invited", "U014KLTG3CZ", NULL, 1
+  "hebi@example.com", 55, "HEBI", "ヘビ", "hebi", "male", "Foo大学", "Bar学部", "Hoge学科", "35782161", "0123456789", "", "プログラミング", "Web", "admin", "oauth|xxxxxxxxxx", NULL, 1
 ),
 (
-  "caffee@example.com", 56, "CAFFEE", "カフィ", "caffee", "female", "Foo大学", "Bar学部", "Hoge学科", "35782161", "0123456789", "", "プログラミング", "Web", "admin", "invited", "U0203QJ9683", NULL, 1
+  "caffee@example.com", 56, "CAFFEE", "カフィ", "caffee", "female", "Foo大学", "Bar学部", "Hoge学科", "35782161", "0123456789", "", "プログラミング", "Web", "admin", "oauth|xxxxxxxxxx", NULL, 1
 );

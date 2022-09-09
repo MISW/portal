@@ -30,7 +30,7 @@ INSERT INTO users (
 	workshops,
 	squads,
 	role,
-	slack_id
+	account_id
 ) VALUES (
 	?,
 	?,
@@ -62,7 +62,7 @@ func validateRole(role string) bool {
 	return false
 }
 
-//代,苗字,名前,セイ,メイ,性別,ハンネ,大学,学部,学科,学籍番号,slackID,メールアドレス,研究会,班,電話番号,ロール
+//代,苗字,名前,セイ,メイ,性別,ハンネ,大学,学部,学科,学籍番号,accountID,メールアドレス,研究会,班,電話番号,ロール
 /*
 0: 代
 1: 苗字
@@ -75,7 +75,7 @@ func validateRole(role string) bool {
 8: 学部
 9: 学科
 10: 学籍番号
-11: slackID
+11: アカウントID (Auth0参照)
 12: メールアドレス
 13: 研究会 (プログラミング, CG, MIDI. 複数の場合はスペースで区切る)
 14: 班
