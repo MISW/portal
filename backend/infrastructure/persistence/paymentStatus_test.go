@@ -324,19 +324,16 @@ func TestListUnpaidMembers(t *testing.T) {
 		Email:                 "1@example.com",
 		Sex:                   domain.Male,
 		Role:                  domain.Member,
-		SlackInvitationStatus: domain.Invited,
 	})
 	up.Insert(context.Background(), &domain.User{
 		Email:                 "2@example.com",
 		Sex:                   domain.Male,
 		Role:                  domain.Member,
-		SlackInvitationStatus: domain.Invited,
 	})
 	up.Insert(context.Background(), &domain.User{
 		Email:                 "3@example.com",
 		Sex:                   domain.Male,
 		Role:                  domain.Admin,
-		SlackInvitationStatus: domain.Invited,
 	})
 
 	insertTestPaymentStatusData(t, psp)

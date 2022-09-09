@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"net/url"
 	"path"
-	"strings"
 	"time"
 
 	"github.com/MISW/Portal/backend/domain"
@@ -74,9 +73,8 @@ var _ SessionUsecase = &sessionUsecase{}
 
 // SignUp - ユーザ新規登録
 func (us *sessionUsecase) Signup(ctx context.Context, user *domain.User) error {
-	user.SlackID = ""
+	user.AccountID = "" //TODO: Loginした時にSessionにAccountIDを保存しておく
 	user.Role = domain.NotMember
-	user.SlackInvitationStatus = domain.Never
 	user.EmailVerified = false
 
 	if err := user.Validate(); err != nil {
@@ -151,20 +149,12 @@ func (us *sessionUsecase) Login(ctx context.Context) (redirectURL, state string,
 	return url, state, nil
 }
 
-const (
-	auth0Prefix = "oauth2|slack|"
-)
-
 // Callback - OpenID Connectでのcallbackを受け取る
 func (us *sessionUsecase) Callback(ctx context.Context, expectedState, actualState, code string) (token string, err error) {
 	res, err := us.authenticator.Callback(ctx, expectedState, actualState, code)
 
 	if err != nil {
 		return "", xerrors.Errorf("failed to verify your token: %w", err)
-	}
-
-	if !strings.HasPrefix(res.IDToken.Subject, auth0Prefix) {
-		return "", xerrors.Errorf("sub is invalid: %s", res.IDToken.Subject)
 	}
 
 	// TODO: 雑すぎるンで何とかする
@@ -192,12 +182,12 @@ func (us *sessionUsecase) Callback(ctx context.Context, expectedState, actualSta
 		}
 	}
 
-	slackID := strings.TrimPrefix(res.IDToken.Subject, auth0Prefix)
+	accountID := res.IDToken.Subject
 
-	user, err := us.userRepository.GetBySlackID(ctx, slackID)
+	user, err := us.userRepository.GetByAccountID(ctx, accountID)
 
 	if err != nil {
-		return "", xerrors.Errorf("failed to find user account associated with SlackID(%s): %w", slackID, err)
+		return "", xerrors.Errorf("failed to find user account associated with AccountID(%s): %w", accountID, err)
 	}
 
 	token, err = tokenutil.GenerateRandomToken()

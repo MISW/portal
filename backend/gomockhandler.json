@@ -1,3 +1,4 @@
+// TODO: gomockhandlerで現在のmock生成
 {
 	"mocks": {
 		"domain/repository/mock_appconfig_repository.go": {

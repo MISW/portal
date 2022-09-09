@@ -19,16 +19,16 @@ type ExternalHandler struct {
 	eu usecase.ExternalIntegrationUsecase
 }
 
-func (h *ExternalHandler) GetUserRoleFromSlackID(e echo.Context) error {
+func (h *ExternalHandler) GetUserRoleFromAccountID(e echo.Context) error {
 	var param struct {
-		SlackID string `query:"slack_id"`
+		AccountID string `query:"account_id"`
 	}
 
 	if err := e.Bind(&param); err != nil {
-		return rest.RespondMessage(e, rest.NewBadRequest("invalid slack_id"))
+		return rest.RespondMessage(e, rest.NewBadRequest("invalid account_id"))
 	}
 
-	role, err := h.eu.GetUserRoleFromSlackID(param.SlackID)
+	role, err := h.eu.GetUserRoleFromAccountID(param.AccountID)
 
 	var frerr rest.ErrorResponse
 	if xerrors.As(err, &frerr) {
@@ -44,11 +44,11 @@ func (h *ExternalHandler) GetUserRoleFromSlackID(e echo.Context) error {
 	})
 }
 
-func (h *ExternalHandler) GetAllMemberRolesBySlackID(e echo.Context) error {
-	roles, err := h.eu.GetAllMemberRolesBySlackID(e.Request().Context())
+func (h *ExternalHandler) GetAllMemberRolesByAccountID(e echo.Context) error {
+	roles, err := h.eu.GetAllMemberRolesByAccountID(e.Request().Context())
 
 	if err != nil {
-		return xerrors.Errorf("failed to retrieve users' roles: %w", err);
+		return xerrors.Errorf("failed to retrieve users' roles: %w", err)
 	}
 
 	type ResponseItem struct {

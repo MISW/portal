@@ -17,7 +17,6 @@ import (
 	"github.com/MISW/Portal/backend/internal/jwt"
 	"github.com/MISW/Portal/backend/internal/middleware"
 	"github.com/MISW/Portal/backend/internal/oidc"
-	"github.com/MISW/Portal/backend/internal/workers"
 	"github.com/MISW/Portal/backend/usecase"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jmoiron/sqlx"
@@ -88,8 +87,6 @@ func initDig(cfg *config.Config, addr string) *dig.Container {
 
 	must(c.Provide(persistence.NewUserPersistence))
 
-	must(c.Provide(persistence.NewSlackPersistence))
-
 	must(c.Provide(persistence.NewPaymentTransactionPersistence))
 
 	must(c.Provide(persistence.NewAppConfigPersistence))
@@ -152,21 +149,6 @@ func initDigContainer(cfg *config.Config, addr string) *dig.Container {
 	return initDig(cfg, addr)
 }
 
-func initWorkers(digc *dig.Container) func() {
-	ctx, cancel := context.WithCancel(context.Background())
-
-	if err := digc.Invoke(func(param struct {
-		dig.In
-		SlackInviter workers.Worker `name:"slack"`
-	}) {
-		go param.SlackInviter.Start(ctx)
-	}); err != nil {
-		panic(err)
-	}
-
-	return cancel
-}
-
 func initHandler(cfg *config.Config, addr string, digc *dig.Container) *echo.Echo {
 	e := echo.New()
 	e.Use(echomiddleware.Logger())
@@ -179,6 +161,7 @@ func initHandler(cfg *config.Config, addr string, digc *dig.Container) *echo.Ech
 		g := e.Group("/api/private", auth.Authenticate)
 
 		g.POST("/logout", sh.Logout)
+		g.POST("/signup", sh.Signup)
 
 		if err := digc.Invoke(func(ph private.ProfileHandler) {
 			prof := g.Group("/profile")
@@ -213,10 +196,6 @@ func initHandler(cfg *config.Config, addr string, digc *dig.Container) *echo.Ech
 			g.GET("/config", mh.GetConfig)
 			g.POST("/config", mh.SetConfig)
 
-			slack := g.Group("/slack")
-
-			slack.POST("/invite", mh.InviteToSlack)
-
 		}); err != nil {
 			return err
 		}
@@ -229,7 +208,6 @@ func initHandler(cfg *config.Config, addr string, digc *dig.Container) *echo.Ech
 
 		g.POST("/login", sh.Login)
 		g.POST("/callback", sh.Callback)
-		g.POST("/signup", sh.Signup)
 		g.POST("/verify_email", sh.VerifyEmail)
 
 		if err := digc.Invoke(func(ch public.CardHandler) {
@@ -248,9 +226,9 @@ func initHandler(cfg *config.Config, addr string, digc *dig.Container) *echo.Ech
 		g := e.Group("/api/external")
 		g.Use(middleware.NewStaticTokenAuthMiddleware(cfg.ExternalIntegrationTokens))
 
-		g.GET("/find_role", eh.GetUserRoleFromSlackID)
+		g.GET("/find_role", eh.GetUserRoleFromAccountID)
 
-		g.GET("/all_member_roles", eh.GetAllMemberRolesBySlackID)
+		g.GET("/all_member_roles", eh.GetAllMemberRolesByAccountID)
 
 		return nil
 	}))

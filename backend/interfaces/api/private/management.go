@@ -41,9 +41,6 @@ type ManagementHandler interface {
 	// UpdateRole - ユーザのroleを変更
 	UpdateRole(e echo.Context) error
 
-	// InviteToSlack - Slackに招待されていないメンバーをSlackに招待する(非同期)
-	InviteToSlack(e echo.Context) error
-
 	// SetConfig - コンフィグの変更
 	SetConfig(e echo.Context) error
 
@@ -311,15 +308,6 @@ func (mh *managementHandler) UpdateRole(e echo.Context) error {
 
 	if err := mh.mu.UpdateRole(e.Request().Context(), param.UserID, param.Role); err != nil {
 		return xerrors.Errorf("failed to update role(%d): %w", param.UserID, err)
-	}
-
-	return rest.RespondOK(e, nil)
-}
-
-// InviteToSlack - Slackに招待されていないメンバーをSlackに招待する(非同期)
-func (mh *managementHandler) InviteToSlack(e echo.Context) error {
-	if err := mh.mu.InviteToSlack(e.Request().Context()); err != nil {
-		return xerrors.Errorf("failed to invite to slack: %w", err)
 	}
 
 	return rest.RespondOK(e, nil)

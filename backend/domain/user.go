@@ -86,38 +86,6 @@ type Avatar struct {
 	ThumbnailURL string `json:"thumbnail_url" yaml:"thumbnail_url"`
 }
 
-// SlackInvitationStatus - Slack招待のステータス
-type SlackInvitationStatus string
-
-const (
-	// Never - not invited
-	Never SlackInvitationStatus = "never"
-	// Pending - requested to invite
-	Pending SlackInvitationStatus = "pending"
-	// Invited - already invited
-	Invited SlackInvitationStatus = "invited"
-)
-
-var (
-	// SlackInvitationStatuses contains all statuses
-	SlackInvitationStatuses = []SlackInvitationStatus{
-		Never,
-		Pending,
-		Invited,
-	}
-)
-
-// Validate - 存在しているroleかどうかチェックし、すればtrue、しなければfalseを返す
-func (r SlackInvitationStatus) Validate() bool {
-	for i := range SlackInvitationStatuses {
-		if SlackInvitationStatuses[i] == r {
-			return true
-		}
-	}
-
-	return false
-}
-
 // User - サークル員の情報
 type User struct {
 	ID                   int        `json:"id" yaml:"id"`
@@ -136,11 +104,9 @@ type User struct {
 	Squads               []string   `json:"squads" yaml:"squads"`
 	Role                 RoleType   `json:"role" yaml:"role"`
 
-	SlackInvitationStatus SlackInvitationStatus `json:"slack_invitation_status" yaml:"slack_invitation_status"`
-
-	// 外部サービス
-	SlackID           string `json:"slack_id" yaml:"slack_id"`
-	DiscordID         string `json:"discord_id,omitempty" yaml:"discord_id,omitempty"`
+	// 外部サービス ログインに使用しているアカウントのID
+	AccountID         string `json:"accound_od" yaml:"accound_id"`
+	DiscordID         string `json:"discord_id,omitempty" yaml:"discord_id,omitempty"` //discordログインにした場合は消してしまってもよい
 	TwitterScreenName string `json:"twitter_screen_name,omitempty" yaml:"twitter_screen_name,omitempty"`
 
 	EmailVerified bool `json:"email_verified" yaml:"email_verified"`
@@ -191,14 +157,9 @@ func (user *User) Validate() error {
 	if !user.Role.Validate() {
 		return rest.NewBadRequest("存在しないロールが指定されています")
 	}
-	if !user.SlackInvitationStatus.Validate() {
-		return rest.NewBadRequest("存在しないSlack招待ステータスが指定されています")
-	}
 
-	if len(user.SlackID) != 0 &&
-		(user.SlackInvitationStatus == Pending ||
-			user.SlackInvitationStatus == Never) {
-		return rest.NewBadRequest("既にSlackに参加済みです")
+	if len(user.AccountID) != 0 {
+		return rest.NewBadRequest("アカウントのIDが設定されていません")
 	}
 
 	// TODO: 100代までもし使う場合は修正
@@ -213,8 +174,8 @@ var (
 	// ErrEmailConflicts - emailが既に登録されている
 	ErrEmailConflicts = xerrors.New("email conflicts")
 
-	// ErrSlackIDConflicts - Slack IDが既に登録されている
-	ErrSlackIDConflicts = xerrors.New("slack id conflicts")
+	// ErrAccountIDConflicts - account IDが既に登録されている
+	ErrAccountIDConflicts = xerrors.New("account id conflicts")
 
 	// ErrNoUser - Userが存在しない
 	ErrNoUser = xerrors.New("no such user")

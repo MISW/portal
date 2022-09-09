@@ -79,21 +79,18 @@ func TestUpdateRoleWithRule(t *testing.T) {
 			Generation:            54,
 			Sex:                   domain.Female,
 			Role:                  domain.Member,
-			SlackInvitationStatus: domain.Never,
 		},
 		{
 			Email:                 "mischan2@example.com",
 			Generation:            54,
 			Sex:                   domain.Female,
 			Role:                  domain.NotMember,
-			SlackInvitationStatus: domain.Never,
 		},
 		{
 			Email:                 "mischan3@example.com",
 			Generation:            54,
 			Sex:                   domain.Female,
 			Role:                  domain.Admin,
-			SlackInvitationStatus: domain.Never,
 		},
 	}
 

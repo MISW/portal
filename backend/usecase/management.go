@@ -8,7 +8,6 @@ import (
 
 	"github.com/MISW/Portal/backend/internal/email"
 	"github.com/MISW/Portal/backend/internal/rest"
-	"github.com/MISW/Portal/backend/internal/workers"
 	"go.uber.org/dig"
 
 	"golang.org/x/xerrors"
@@ -47,9 +46,6 @@ type ManagementUsecase interface {
 	// UpdateRole - ユーザのroleを変更
 	UpdateRole(ctx context.Context, userID int, role domain.RoleType) error
 
-	// InviteToSlack - Slackに招待されていないメンバーをSlackに招待する(非同期)
-	InviteToSlack(ctx context.Context) error
-
 	// RemindPayment - 未払い会員に催促メールを送る
 	RemindPayment(ctx context.Context, filter []int) error
 }
@@ -61,9 +57,7 @@ type ManagementUsecaseParams struct {
 	PaymentStatusRepository      repository.PaymentStatusRepository
 	PaymentTransactionRepository repository.PaymentTransactionRepository
 	AppConfigRepository          repository.AppConfigRepository
-	SlackRepository              repository.SlackRepository
 	UserRoleRepository           repository.UserRoleRepository
-	SlackInviter                 workers.Worker `name:"slack"`
 	EmailSender                  email.Sender
 }
 
@@ -321,16 +315,6 @@ func (mu *managementUsecase) UpdateRole(ctx context.Context, userID int, role do
 	if err != nil {
 		return xerrors.Errorf("failed to find user by id(%d): %w", userID, err)
 	}
-
-	return nil
-}
-
-func (mu *managementUsecase) InviteToSlack(ctx context.Context) error {
-	if err := mu.SlackRepository.MarkUninvitedAsPending(ctx); err != nil {
-		return xerrors.Errorf("failed to mark uninvited members as pending: %w", err)
-	}
-
-	mu.SlackInviter.Trigger()
 
 	return nil
 }
