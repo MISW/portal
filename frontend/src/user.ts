@@ -77,6 +77,7 @@ export type ConfigurableProfile = Omit<
   discordId: UserAllInfoJSON['discord_id'];
 };
 
+//TODO: AccountIDも表示する
 export const toUserProfile = (json: UserInfoJSON): ConfigurableProfile => {
   return {
     id: json.id,

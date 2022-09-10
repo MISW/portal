@@ -416,7 +416,7 @@ payment status: https://github.com/MISW/Portal/blob/master/backend/domain/paymen
 
 - 外部アカウントでログイン(orSignup)する
 - フロント側で情報を入力する
-- `/api/public/signup` を叩いて登録する。同時にAccount IDやemailも登録される
+- `/api/private/signup` を叩いて登録する。同時にAccount IDやemailも登録される
 - not member role としてアカウントが作成される
 - メールが送信され、メールアドレス認証を行う
   - email_verified flag が立つ

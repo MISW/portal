@@ -80,12 +80,11 @@ func (us *sessionUsecase) Signup(ctx context.Context, user *domain.User, token s
 	//find account info
 	accountInfo, err := us.accountInfoRepository.GetByToken(ctx, token)
 	if err != nil {
-		//logout
-		if err := us.Logout(ctx, token); err != nil {
-			return err
+		//ログイン済みだった場合の処理
+		if _, err := us.Validate(ctx, token); err != nil {
+			return xerrors.Errorf("failed to validate token: %w", err)
 		}
-
-		return xerrors.Errorf("failed to find user account info: %w", err)
+		return rest.NewForbidden("既に存在しているユーザーです")
 	}
 
 	//user account data
@@ -208,9 +207,9 @@ func (us *sessionUsecase) Callback(ctx context.Context, expectedState, actualSta
 
 	user, err := us.userRepository.GetByAccountID(ctx, accountID)
 	if err != nil {
-		if err == domain.ErrNoUser { //ユーザーがいないとき、Signup時のためにAccountInfoとして情報を保存しておいて、
-			account := domain.NewAccountInfo(token, accountID, email)
-			token, err = us.handleNoUserCallback(ctx, &account)
+		//ユーザーがいない場合、Signup時のためにAccountInfoとして利用するために情報を保存しておく
+		if err == domain.ErrNoUser {
+			token, err = us.handleNoUserCallback(ctx, accountID, email)
 			if err != nil {
 				return "", err
 			}
@@ -227,13 +226,14 @@ func (us *sessionUsecase) Callback(ctx context.Context, expectedState, actualSta
 	return token, nil
 }
 
-// handleNoUserCallback DBにデータが保存されていないUserのCallbackを取り扱う
-func (us *sessionUsecase) handleNoUserCallback(ctx context.Context, account *domain.AccountInfo) (string, error) {
+// handleNoUserCallback DBにデータが保存されていないUserのCallbackを取り扱う.
+func (us *sessionUsecase) handleNoUserCallback(ctx context.Context, accountID, email string) (string, error) {
 	token, err := tokenutil.GenerateRandomToken()
 	if err != nil {
 		return "", xerrors.Errorf("failed to generate token: %w", err)
 	}
-	if err := us.accountInfoRepository.Save(ctx, account); err != nil {
+	account := domain.NewAccountInfo(token, accountID, email)
+	if err := us.accountInfoRepository.Save(ctx, &account); err != nil {
 		return "", err
 	}
 	return token, nil

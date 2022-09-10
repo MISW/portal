@@ -166,7 +166,6 @@ func initHandler(cfg *config.Config, addr string, digc *dig.Container) *echo.Ech
 		g := e.Group("/api/private", auth.Authenticate)
 
 		g.POST("/logout", sh.Logout)
-		g.POST("/signup", sh.Signup)
 
 		if err := digc.Invoke(func(ph private.ProfileHandler) {
 			prof := g.Group("/profile")
@@ -212,6 +211,7 @@ func initHandler(cfg *config.Config, addr string, digc *dig.Container) *echo.Ech
 		g := e.Group("/api/public")
 
 		g.POST("/login", sh.Login)
+		g.POST("/signup", sh.Signup)
 		g.POST("/callback", sh.Callback)
 		g.POST("/verify_email", sh.VerifyEmail)
 

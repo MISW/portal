@@ -158,7 +158,7 @@ func (user *User) Validate() error {
 		return rest.NewBadRequest("存在しないロールが指定されています")
 	}
 
-	if len(user.AccountID) != 0 {
+	if len(user.AccountID) == 0 {
 		return rest.NewBadRequest("アカウントのIDが設定されていません")
 	}
 

@@ -1,11 +1,14 @@
 package public
 
 import (
+	"errors"
+	"fmt"
 	"net/http"
 	"os"
 	"strings"
 	"time"
 
+	"github.com/MISW/Portal/backend/domain"
 	"github.com/MISW/Portal/backend/internal/cookies"
 	"github.com/MISW/Portal/backend/internal/rest"
 	"github.com/MISW/Portal/backend/usecase"
@@ -16,6 +19,8 @@ import (
 // SessionHandler - セッション周りの非公開API
 type SessionHandler interface {
 	Login(e echo.Context) error
+
+	Signup(e echo.Context) error
 
 	Callback(e echo.Context) error
 
@@ -157,6 +162,39 @@ func (s *sessionHandler) VerifyEmail(e echo.Context) error {
 	)
 
 	e.SetCookie(cookie)
+
+	return rest.RespondOK(e, nil)
+}
+
+func (s *sessionHandler) Signup(e echo.Context) error {
+	ck, err := e.Cookie(cookies.TokenCookieKey)
+	if err != nil {
+		return rest.RespondMessage(
+			e,
+			rest.NewUnauthorized("ログインが必要です"),
+		)
+	}
+
+	u := &domain.User{}
+	if err := e.Bind(u); err != nil {
+		return rest.RespondMessage(
+			e,
+			rest.NewBadRequest(
+				fmt.Sprintf("リクエストデータが不正です(%v)", err),
+			),
+		)
+	}
+
+	err = s.su.Signup(e.Request().Context(), u, ck.Value)
+
+	var frerr rest.ErrorResponse
+	if errors.As(err, &frerr) {
+		return rest.RespondMessage(e, frerr)
+	}
+
+	if err != nil {
+		return fmt.Errorf("signup failed: %w", err)
+	}
 
 	return rest.RespondOK(e, nil)
 }
