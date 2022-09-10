@@ -14,7 +14,7 @@ export const createApiClient = (baseUrl: string, options?: Options) => {
   return Object.freeze({
     // Public Endpoints
     async signup(input: Readonly<SignupInput>): Promise<void> {
-      await http.post('api/public/signup', {
+      await http.post('api/public/oidc_account/signup', {
         json: toSnakeCase(input),
       });
     },
