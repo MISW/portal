@@ -29,8 +29,8 @@ type SessionUsecase interface {
 	// Callback - OpenID Connectでのcallbackを受け取る
 	Callback(ctx context.Context, expectedState, actualState, code string) (token string, err error)
 
-	// Logout - トークンを無効化する
-	Logout(ctx context.Context, token string) error
+	// Logout - トークンを無効化する. LogoutのURLを返す.
+	Logout(ctx context.Context, token string, returnToURL *url.URL) (logoutURL string, err error)
 
 	// Validate - トークンの有効性を検証しユーザを取得する
 	Validate(ctx context.Context, token string) (user *domain.User, err error)
@@ -261,15 +261,19 @@ func (us *sessionUsecase) handleUserCallback(ctx context.Context, user *domain.U
 	return token, nil
 }
 
-// Logout - トークンを無効化する
-func (us *sessionUsecase) Logout(ctx context.Context, token string) error {
-	err := us.tokenRepository.Delete(ctx, token)
-
+// Logout - トークンを無効化する. LogoutのURLを返す.
+func (us *sessionUsecase) Logout(ctx context.Context, token string, returnToURL *url.URL) (logoutURL string, err error) {
+	err = us.tokenRepository.Delete(ctx, token)
 	if err != nil {
-		return xerrors.Errorf("failed to delete the token: %w", err)
+		return "", xerrors.Errorf("failed to delete the token: %w", err)
 	}
 
-	return nil
+	logoutURL, err = us.authenticator.Logout(ctx, returnToURL)
+	if err != nil {
+		return "", xerrors.Errorf("failed to generate logout url: %w", err)
+	}
+
+	return
 }
 
 // Validate - トークンの有効性を検証しDBからユーザを取得する

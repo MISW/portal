@@ -81,7 +81,7 @@
 
 - method: POST
 - path: /signup
-- description: 新規アカウント登録用エンドポイン t
+- description: 新規アカウント登録用エンドポイント. DBに存在しないアカウントで先にLoginしておく必要がある. 
 - parameter: `Content-Type: application/json` の body を POST
 
 https://github.com/MISW/Portal/blob/master/backend/domain/user.go#L46
@@ -129,7 +129,9 @@ E メールが送信されているので E メールを確認してください
 - response:
 
 ```json=
-{}
+{
+  "logout_url": "logout url"
+}
 ```
 
 ### Get Profile

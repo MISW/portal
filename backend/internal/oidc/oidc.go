@@ -3,6 +3,7 @@ package oidc
 import (
 	"context"
 	"net/http"
+	"net/url"
 
 	"github.com/MISW/Portal/backend/internal/tokenutil"
 	"github.com/coreos/go-oidc/v3/oidc"
@@ -22,6 +23,9 @@ type AuthResult struct {
 type Authenticator interface {
 	// Login - OpenID Connect Providerへのredirect URLとstateを生成する
 	Login(ctx context.Context) (redirectURL, state string, err error)
+
+	// Logout - OpenID Connectでログアウトする
+	Logout(ctx context.Context, returnTo *url.URL) (logoutURL string, err error)
 
 	// Callback - 外部からのCallbackを検証する
 	Callback(ctx context.Context, expectedState, actualState, code string) (*AuthResult, error)
@@ -108,5 +112,21 @@ func (author *authenticator) Login(ctx context.Context) (redirectURL, state stri
 
 	redirectURL = author.config.AuthCodeURL(string(hashedState))
 
+	return
+}
+
+// Logout - OpenID COnnect ProviderへのlogoutURLを生成する. ログアウト後の戻り場所も指定する.
+func (author *authenticator) Logout(ctx context.Context, returnTo *url.URL) (logoutURL string, err error) {
+	logoutURLbase, err := url.Parse("https://" + author.config.Endpoint.AuthURL + "v2/logout")
+	if err != nil {
+		return "", xerrors.Errorf("failed to generate logout url: %w", err)
+	}
+
+	parameters := url.Values{}
+	parameters.Add("returnTo", returnTo.String())
+	parameters.Add("client_id", author.config.ClientID)
+	logoutURLbase.RawQuery = parameters.Encode()
+
+	logoutURL = logoutURLbase.String()
 	return
 }
