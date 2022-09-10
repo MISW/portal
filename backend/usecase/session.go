@@ -21,7 +21,7 @@ import (
 // SessionUsecase - login/signup/logoutなどのセッション周りの処理
 type SessionUsecase interface {
 	// SignUp - ユーザ新規登録
-	Signup(ctx context.Context, user *domain.User, token string) error
+	Signup(ctx context.Context, user *domain.User, accountInfo *domain.OIDCAccountInfo) error
 
 	// Login - OpenID ConnectのリダイレクトURLを生成する
 	Login(ctx context.Context) (redirectURL, state string, err error)
@@ -40,13 +40,16 @@ type SessionUsecase interface {
 	// Validate - トークンの有効性を検証しユーザを取得する
 	Validate(ctx context.Context, token string) (user *domain.User, err error)
 
+	// ValidateOIDC - トークンの有効性を検証しoidc infoを取得する
+	ValidateOIDC(ctx context.Context, token string) (user *domain.OIDCAccountInfo, err error)
+
 	// VerifyEmail - Eメール認証用のトークンを受け取ってログイン用トークンを返す
 	VerifyEmail(ctx context.Context, verifyToken string) (token string, err error)
 }
 
 // NewSessionUsecase - ユーザ関連のユースケースを初期化
 func NewSessionUsecase(
-	accountInfoRepository repository.AccountInfoRepository,
+	accountInfoRepository repository.OIDCAccountInfoRepository,
 	userRepository repository.UserRepository,
 	tokenRepository repository.TokenRepository,
 	authenticator oidc.Authenticator,
@@ -68,7 +71,7 @@ func NewSessionUsecase(
 }
 
 type sessionUsecase struct {
-	accountInfoRepository repository.AccountInfoRepository
+	accountInfoRepository repository.OIDCAccountInfoRepository
 	appConfigRpoeisotry   repository.AppConfigRepository
 	userRepository        repository.UserRepository
 	tokenRepository       repository.TokenRepository
@@ -81,17 +84,7 @@ type sessionUsecase struct {
 var _ SessionUsecase = &sessionUsecase{}
 
 // SignUp - ユーザ新規登録
-func (us *sessionUsecase) Signup(ctx context.Context, user *domain.User, token string) error {
-	//find account info
-	accountInfo, err := us.accountInfoRepository.GetByToken(ctx, token)
-	if err != nil {
-		//ログイン済みだった場合の処理
-		if _, err := us.Validate(ctx, token); err != nil {
-			return xerrors.Errorf("failed to validate token: %w", err)
-		}
-		return rest.NewForbidden("既に存在しているユーザーです")
-	}
-
+func (us *sessionUsecase) Signup(ctx context.Context, user *domain.User, accountInfo *domain.OIDCAccountInfo) error {
 	//user account data
 	user.AccountID = accountInfo.AccountID
 	user.Email = accountInfo.Email
@@ -112,10 +105,10 @@ func (us *sessionUsecase) Signup(ctx context.Context, user *domain.User, token s
 	user.ID = id
 
 	//delete account_info in memory
-	us.accountInfoRepository.Delete(ctx, token)
+	us.accountInfoRepository.Delete(ctx, accountInfo.Token)
 
 	//email verification
-	token, err = us.jwtProvider.GenerateWithMap(map[string]interface{}{
+	token, err := us.jwtProvider.GenerateWithMap(map[string]interface{}{
 		"kind":  "email_verification",
 		"id":    user.ID,
 		"email": user.Email,
@@ -238,7 +231,7 @@ func (us *sessionUsecase) handleNoUserCallback(ctx context.Context, accountID, e
 	if err != nil {
 		return "", xerrors.Errorf("failed to generate token: %w", err)
 	}
-	account := domain.NewAccountInfo(token, accountID, email)
+	account := domain.NewOIDCAccountInfo(token, accountID, email)
 	if err := us.accountInfoRepository.Save(ctx, &account); err != nil {
 		return "", err
 	}
@@ -311,6 +304,20 @@ func (us *sessionUsecase) Validate(ctx context.Context, token string) (user *dom
 	}
 
 	return user, nil
+}
+
+// ValidateOIDC - トークンの有効性を検証しOIDCAccountInfoStorreからAccountInfoを取得する
+func (us *sessionUsecase) ValidateOIDC(ctx context.Context, token string) (accountInfo *domain.OIDCAccountInfo, err error) {
+	//find account info
+	accountInfo, err = us.accountInfoRepository.GetByToken(ctx, token)
+	if err != nil {
+		//ログイン済みだった場合の処理
+		if _, err := us.Validate(ctx, token); err != nil {
+			return nil, xerrors.Errorf("failed to validate token: %w", err)
+		}
+		return nil, rest.NewForbidden("既に存在しているユーザーです")
+	}
+	return
 }
 
 type customClaims struct {

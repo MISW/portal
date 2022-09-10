@@ -9,20 +9,20 @@ import (
 	"golang.org/x/xerrors"
 )
 
-func NewAccountInfoStore() repository.AccountInfoRepository {
-	return &accountInfoStore{
+func NewOIDCAccountInfoStore() repository.OIDCAccountInfoRepository {
+	return &oidcAccountInfoStore{
 		m:     new(sync.Mutex),
-		store: make(map[string]domain.AccountInfo, 0),
+		store: make(map[string]domain.OIDCAccountInfo, 0),
 	}
 }
 
 // アカウント情報をメモリ上に(一時的に)格納しておく
-type accountInfoStore struct {
+type oidcAccountInfoStore struct {
 	m     *sync.Mutex
-	store map[string]domain.AccountInfo
+	store map[string]domain.OIDCAccountInfo
 }
 
-func (s *accountInfoStore) Save(ctx context.Context, account *domain.AccountInfo) error {
+func (s *oidcAccountInfoStore) Save(ctx context.Context, account *domain.OIDCAccountInfo) error {
 	s.m.Lock()
 	defer s.m.Unlock()
 
@@ -34,14 +34,14 @@ func (s *accountInfoStore) Save(ctx context.Context, account *domain.AccountInfo
 	return nil
 }
 
-func (s *accountInfoStore) Delete(ctx context.Context, token string) {
+func (s *oidcAccountInfoStore) Delete(ctx context.Context, token string) {
 	s.m.Lock()
 	defer s.m.Unlock()
 
 	delete(s.store, token)
 }
 
-func (s *accountInfoStore) GetByToken(ctx context.Context, token string) (*domain.AccountInfo, error) {
+func (s *oidcAccountInfoStore) GetByToken(ctx context.Context, token string) (*domain.OIDCAccountInfo, error) {
 	s.m.Lock()
 	defer s.m.Unlock()
 

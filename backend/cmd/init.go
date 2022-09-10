@@ -13,6 +13,7 @@ import (
 	"github.com/MISW/Portal/backend/interfaces/api/external"
 	"github.com/MISW/Portal/backend/interfaces/api/private"
 	"github.com/MISW/Portal/backend/interfaces/api/public"
+	"github.com/MISW/Portal/backend/interfaces/api/public/oidc_account"
 	"github.com/MISW/Portal/backend/internal/db"
 	"github.com/MISW/Portal/backend/internal/email"
 	"github.com/MISW/Portal/backend/internal/jwt"
@@ -96,12 +97,12 @@ func initDig(cfg *config.Config, addr string) *dig.Container {
 
 	must(c.Provide(persistence.NewExternalIntegrationPersistence))
 
-	must(c.Provide(memory.NewAccountInfoStore))
+	must(c.Provide(memory.NewOIDCAccountInfoStore))
 
 	must(c.Provide(usecase.NewAppConfigUsecase))
 
 	must(c.Provide(func(
-		accountInfoRepository repository.AccountInfoRepository,
+		oidcAccountInfoRepository repository.OIDCAccountInfoRepository,
 		userRepository repository.UserRepository,
 		tokenRepository repository.TokenRepository,
 		appConfigRepository repository.AppConfigRepository,
@@ -110,7 +111,7 @@ func initDig(cfg *config.Config, addr string) *dig.Container {
 		jwtProvider jwt.JWTProvider,
 	) usecase.SessionUsecase {
 		return usecase.NewSessionUsecase(
-			accountInfoRepository,
+			oidcAccountInfoRepository,
 			userRepository,
 			tokenRepository,
 			authenticator,
@@ -141,7 +142,11 @@ func initDig(cfg *config.Config, addr string) *dig.Container {
 
 	must(c.Provide(public.NewCardHandler))
 
+	must(c.Provide(oidc_account.NewOIDCHandler))
+
 	must(c.Provide(middleware.NewAuthMiddleware))
+
+	must(c.Provide(middleware.NewOIDCAccountMiddleware))
 
 	must(c.Provide(func() (jwt.JWTProvider, error) {
 		return jwt.NewJWTProvider(cfg.JWTKey)
@@ -212,7 +217,7 @@ func initHandler(cfg *config.Config, addr string, digc *dig.Container) *echo.Ech
 
 		g.POST("/login", sh.Login)
 		g.POST("/logout", sh.Logout)
-		g.POST("/signup", sh.Signup)
+
 		g.POST("/callback", sh.Callback)
 		g.POST("/verify_email", sh.VerifyEmail)
 
@@ -221,6 +226,20 @@ func initHandler(cfg *config.Config, addr string, digc *dig.Container) *echo.Ech
 				id := c.Param("id")
 				return ch.Get(c, id)
 			})
+		}); err != nil {
+			return err
+		}
+
+		// oidc_account handler: user who login with oidc but doesn't have account in portal.
+		if err := digc.Invoke(func(oh oidc_account.Handler) error {
+			g := g.Group("/oidc_account")
+			if err := digc.Invoke(func(m middleware.OIDCAccountMiddleware) {
+				g.Use(m.Authenticate)
+				g.POST("/signup", oh.Signup)
+			}); err != nil {
+				return err
+			}
+			return nil
 		}); err != nil {
 			return err
 		}

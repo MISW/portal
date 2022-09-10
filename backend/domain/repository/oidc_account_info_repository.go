@@ -6,15 +6,15 @@ import (
 	"github.com/MISW/Portal/backend/domain"
 )
 
-// AccountInfoRepository - ソーシャルログインに用いるアカウント情報関連の操作
+// OIDCAccountInfoRepository - ソーシャルログインに用いるアカウント情報関連の操作
 // DBに未登録のユーザーがログインした際にここに情報を保存する
 // ユーザーがSignupする際にここに保存した情報を使用する
-type AccountInfoRepository interface {
+type OIDCAccountInfoRepository interface {
 	// Save - アカウント情報の保存
-	Save(ctx context.Context, account *domain.AccountInfo) error
+	Save(ctx context.Context, account *domain.OIDCAccountInfo) error
 
 	// GetByToken - Tokenで検索・取得
-	GetByToken(ctx context.Context, token string) (*domain.AccountInfo, error)
+	GetByToken(ctx context.Context, token string) (*domain.OIDCAccountInfo, error)
 
 	// Delete - 削除
 	Delete(ctx context.Context, token string)
