@@ -25,7 +25,7 @@ type Authenticator interface {
 	Login(ctx context.Context) (redirectURL, state string, err error)
 
 	// Logout - OpenID Connectでログアウトする
-	Logout(ctx context.Context, returnTo *url.URL) (logoutURL string, err error)
+	Logout(ctx context.Context) (logoutURL string, err error)
 
 	// Callback - 外部からのCallbackを検証する
 	Callback(ctx context.Context, expectedState, actualState, code string) (*AuthResult, error)
@@ -47,14 +47,16 @@ func NewAuthenticator(ctx context.Context, clientID, clientSecret, redirectURL, 
 	}
 
 	return &authenticator{
-		provider: provider,
-		config:   conf,
+		providerURL: providerURL,
+		provider:    provider,
+		config:      conf,
 	}, nil
 }
 
 type authenticator struct {
-	provider *oidc.Provider
-	config   oauth2.Config
+	providerURL string
+	provider    *oidc.Provider
+	config      oauth2.Config
 }
 
 // Callback - 外部からのCallbackを検証する
@@ -115,15 +117,20 @@ func (author *authenticator) Login(ctx context.Context) (redirectURL, state stri
 	return
 }
 
-// Logout - OpenID COnnect ProviderへのlogoutURLを生成する. ログアウト後の戻り場所も指定する.
-func (author *authenticator) Logout(ctx context.Context, returnTo *url.URL) (logoutURL string, err error) {
-	logoutURLbase, err := url.Parse("https://" + author.config.Endpoint.AuthURL + "v2/logout")
+// Logout - OpenID COnnect ProviderへのlogoutURLを生成する.
+func (author *authenticator) Logout(ctx context.Context) (logoutURL string, err error) {
+	//TODO: このLogoutのURL生成部分、何とかならないかな...
+	path, err := url.JoinPath(author.providerURL, "/v2/logout")
+	if err != nil {
+		return "", xerrors.Errorf("failed to join path: %w", err)
+	}
+	logoutURLbase, err := url.Parse(path)
 	if err != nil {
 		return "", xerrors.Errorf("failed to generate logout url: %w", err)
 	}
 
 	parameters := url.Values{}
-	parameters.Add("returnTo", returnTo.String())
+	//parameters.Add("returnTo", returnTo) //logout後のurlを指定したい場合はこれを追加する
 	parameters.Add("client_id", author.config.ClientID)
 	logoutURLbase.RawQuery = parameters.Encode()
 

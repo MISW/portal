@@ -26,11 +26,16 @@ type SessionUsecase interface {
 	// Login - OpenID ConnectのリダイレクトURLを生成する
 	Login(ctx context.Context) (redirectURL, state string, err error)
 
-	// Callback - OpenID Connectでのcallbackを受け取る
-	Callback(ctx context.Context, expectedState, actualState, code string) (token string, err error)
+	// Callback - OpenID Connectでのcallbackを受け取る.
+	// ログインに成功したらtokenを返す.
+	// DBにアカウントを持っている(signup済み)の場合はhasAccount=trueとなる.
+	Callback(ctx context.Context, expectedState, actualState, code string) (token string, hasAccount bool, err error)
 
 	// Logout - トークンを無効化する. LogoutのURLを返す.
-	Logout(ctx context.Context, token string, returnToURL *url.URL) (logoutURL string, err error)
+	Logout(ctx context.Context, token string) (logoutURL string, err error)
+
+	// LogoutFromOIDC -  OIDCアカウントからLogoutするURLを返す.
+	LogoutFromOIDC(ctx context.Context) (logoutURL string, err error)
 
 	// Validate - トークンの有効性を検証しユーザを取得する
 	Validate(ctx context.Context, token string) (user *domain.User, err error)
@@ -164,13 +169,14 @@ func (us *sessionUsecase) Login(ctx context.Context) (redirectURL, state string,
 }
 
 // Callback - OpenID Connectでのcallbackを受け取る
-// TODO: signup時点でアカウントができたとしている。callbackを受けた時にsessionにuserIDを保存して置けるようにしたい。/signup/callbackエンドポイントでも作るか..?
-// TODO: emailのアップデートもした方が良いかも? しかしその場合、email_verificationもした方がいい気がするが...
-func (us *sessionUsecase) Callback(ctx context.Context, expectedState, actualState, code string) (token string, err error) {
+// ログインに成功したらtokenを返す.
+// DBにアカウントを持っている(signup済み)の場合はhasAccount=trueとなる.
+// TODO: emailのアップデートもした方が良いかも? しかしその場合、再度email_verificationもした方がいい気がするが...
+func (us *sessionUsecase) Callback(ctx context.Context, expectedState, actualState, code string) (token string, hasAccount bool, err error) {
 	res, err := us.authenticator.Callback(ctx, expectedState, actualState, code)
 
 	if err != nil {
-		return "", xerrors.Errorf("failed to verify your token: %w", err)
+		return "", false, xerrors.Errorf("failed to verify your token: %w", err)
 	}
 
 	// TODO: 雑すぎるンで何とかする
@@ -211,19 +217,19 @@ func (us *sessionUsecase) Callback(ctx context.Context, expectedState, actualSta
 		if err == domain.ErrNoUser {
 			token, err = us.handleNoUserCallback(ctx, accountID, email)
 			if err != nil {
-				return "", err
+				return "", false, err
 			}
-			return token, nil
+			return token, false, nil
 		}
-		return "", xerrors.Errorf("failed to find user account associated with AccountID(%s): %w", accountID, err)
+		return "", false, xerrors.Errorf("failed to find user account associated with AccountID(%s): %w", accountID, err)
 	}
 
 	token, err = us.handleUserCallback(ctx, user, avatar)
 	if err != nil {
-		return "", err
+		return "", true, err
 	}
 
-	return token, nil
+	return token, true, nil
 }
 
 // handleNoUserCallback DBにデータが保存されていないUserのCallbackを取り扱う.
@@ -262,13 +268,23 @@ func (us *sessionUsecase) handleUserCallback(ctx context.Context, user *domain.U
 }
 
 // Logout - トークンを無効化する. LogoutのURLを返す.
-func (us *sessionUsecase) Logout(ctx context.Context, token string, returnToURL *url.URL) (logoutURL string, err error) {
+func (us *sessionUsecase) Logout(ctx context.Context, token string) (logoutURL string, err error) {
 	err = us.tokenRepository.Delete(ctx, token)
 	if err != nil {
 		return "", xerrors.Errorf("failed to delete the token: %w", err)
 	}
 
-	logoutURL, err = us.authenticator.Logout(ctx, returnToURL)
+	logoutURL, err = us.LogoutFromOIDC(ctx)
+	if err != nil {
+		return "", xerrors.Errorf("failed to generate logout url: %w", err)
+	}
+
+	return
+}
+
+// LogoutFromOIDC - LogoutのURLを返す.
+func (us *sessionUsecase) LogoutFromOIDC(ctx context.Context) (logoutURL string, err error) {
+	logoutURL, err = us.authenticator.Logout(ctx)
 	if err != nil {
 		return "", xerrors.Errorf("failed to generate logout url: %w", err)
 	}

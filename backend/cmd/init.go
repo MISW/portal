@@ -211,6 +211,7 @@ func initHandler(cfg *config.Config, addr string, digc *dig.Container) *echo.Ech
 		g := e.Group("/api/public")
 
 		g.POST("/login", sh.Login)
+		g.POST("/logout", sh.Logout)
 		g.POST("/signup", sh.Signup)
 		g.POST("/callback", sh.Callback)
 		g.POST("/verify_email", sh.VerifyEmail)

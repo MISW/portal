@@ -1,7 +1,6 @@
 package private
 
 import (
-	"net/url"
 	"time"
 
 	"github.com/MISW/Portal/backend/internal/cookies"
@@ -38,12 +37,7 @@ func (s *sessionHandler) Logout(e echo.Context) error {
 		)
 	}
 
-	returnTo, err := url.Parse(e.Request().Host)
-	if err != nil {
-		return rest.NewInternalServerError("failed to generate returnTo Address")
-	}
-
-	logoutURL, err := s.su.Logout(e.Request().Context(), ck.Value, returnTo)
+	logoutURL, err := s.su.Logout(e.Request().Context(), ck.Value)
 	if err != nil {
 		return rest.NewInternalServerError("failed to logout: " + err.Error())
 	}

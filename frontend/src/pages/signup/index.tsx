@@ -2,8 +2,11 @@ import { NextPage } from 'next';
 import Link from 'next/link';
 import { Button } from '@mui/material';
 import { NoSSR } from 'components/utils/NoSSR';
+import { useLogoutFromOIDC } from 'features/auth';
 
 const Page: NextPage = () => {
+  const {handleLogout} = useLogoutFromOIDC();
+
   return (
     <NoSSR>
       <p>会員登録方法</p>
@@ -18,6 +21,9 @@ const Page: NextPage = () => {
           会員登録フォームへ
         </Button>
       </Link>
+      <Button onClick={handleLogout} >
+        (別アカウントでログインする)
+      </Button>
     </NoSSR>
   );
 };

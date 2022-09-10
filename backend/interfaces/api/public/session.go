@@ -20,6 +20,8 @@ import (
 type SessionHandler interface {
 	Login(e echo.Context) error
 
+	Logout(e echo.Context) error
+
 	Signup(e echo.Context) error
 
 	Callback(e echo.Context) error
@@ -86,6 +88,21 @@ func (s *sessionHandler) Login(e echo.Context) error {
 	)
 }
 
+// Logout - OIDC account からログインするURLを返す. 認証に失敗したユーザが別アカウントでログインするために必要.
+func (s *sessionHandler) Logout(e echo.Context) error {
+	logoutURL, err := s.su.LogoutFromOIDC(e.Request().Context())
+	if err != nil {
+		return xerrors.Errorf("failed to generate logout url for OpenID Connect: %w", err)
+	}
+
+	return rest.RespondOK(
+		e,
+		map[string]interface{}{
+			"logout_url": logoutURL,
+		},
+	)
+}
+
 func (s *sessionHandler) Callback(e echo.Context) error {
 	type OAuth2Param struct {
 		Code  string `json:"code" query:"code"`
@@ -111,7 +128,7 @@ func (s *sessionHandler) Callback(e echo.Context) error {
 
 	expectedState := cookie.Value
 
-	token, err := s.su.Callback(e.Request().Context(), expectedState, oauth2Param.State, oauth2Param.Code)
+	token, hasAccount, err := s.su.Callback(e.Request().Context(), expectedState, oauth2Param.State, oauth2Param.Code)
 
 	if err != nil {
 		e.Logger().Infof("failed to validate token: %+v", err)
@@ -130,7 +147,9 @@ func (s *sessionHandler) Callback(e echo.Context) error {
 
 	e.SetCookie(cookie)
 
-	return rest.RespondOK(e, nil)
+	return rest.RespondOK(e, map[string]interface{}{
+		"has_account": hasAccount,
+	})
 }
 
 func (s *sessionHandler) VerifyEmail(e echo.Context) error {

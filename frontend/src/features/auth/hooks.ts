@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useRouter } from 'next/router';
-import { verifyEmail as verifyEmailRequest, login as loginRequest, logout as logoutRequest, processCallback } from './operations';
+import { verifyEmail as verifyEmailRequest, login as loginRequest, logout as logoutRequest, logoutFromOIDC as logoutFromOIDCRequest, processCallback } from './operations';
 
 export const useVerifyEmail = () => {
   const dispatch = useDispatch();
@@ -44,6 +44,7 @@ export const useLogin = () => {
   } as const;
 };
 
+//みすポータルからログアウトする
 export const useLogout = () => {
   const dispatch = useDispatch();
   const [error, setError] = useState<unknown>();
@@ -61,6 +62,31 @@ export const useLogout = () => {
   } as const;
 };
 
+//OpenIDConnectで使ってるアカウントからログアウトする
+export const useLogoutFromOIDC = () => {
+  const dispatch = useDispatch();
+  const [error, setError] = useState<unknown>();
+  const handleLogout = useCallback(async () => {
+    try {
+      const { logoutUrl } = await dispatch(logoutFromOIDCRequest());
+      location.href = logoutUrl;
+    } catch (e) {
+      setError(e);
+    }
+  }, [dispatch]);
+  return {
+    error,
+    handleLogout,
+  } as const;
+};
+
+
+/*
+ ログインのcallbackを取り扱う
+ ログインに成功した場合: 
+  - みすポータルにアカウントを既に持っている場合: `/`へリダイレクト
+  - みすポータルにアカウントをまだ持っていない場合: `/signup`へリダイレクト
+*/
 export const useAuthCallback = () => {
   const dispatch = useDispatch();
   const router = useRouter();
@@ -68,8 +94,12 @@ export const useAuthCallback = () => {
   const handleCallback = useCallback(
     async (code: string, state: string) => {
       try {
-        await dispatch(processCallback(code, state));
-        await router.push('/');
+        const {hasAccount} = await dispatch(processCallback(code, state));
+        if(hasAccount){
+          await router.push('/');
+        }else{
+          await router.push('/signup');
+        }
       } catch (e) {
         setError(e);
       }

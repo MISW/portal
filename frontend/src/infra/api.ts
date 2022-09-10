@@ -42,13 +42,36 @@ export const createApiClient = (baseUrl: string, options?: Options) => {
       };
     },
 
-    async processCallback(code: string, state: string) {
-      await http.post('api/public/callback', {
+    async logoutFromOIDC(): Promise<{
+      logoutUrl: string;
+    }> {
+      const res = await http
+        .post('api/public/logout', {
+          json: {},
+        })
+        .json<{
+          logout_url: string;
+        }>();
+      return {
+        logoutUrl: res.logout_url,
+      }
+    },
+
+    async processCallback(code: string, state: string): Promise<{
+      hasAccount: boolean,
+    }> {
+      const res = await http.post('api/public/callback', {
         json: {
           code,
           state,
         },
-      });
+      })
+        .json<{
+          has_account: boolean,
+        }>();
+      return {
+        hasAccount: res.has_account,
+      }
     },
 
     async fetchCard(id: number) {

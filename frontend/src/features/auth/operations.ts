@@ -22,9 +22,11 @@ export const login =
   };
 
 export const processCallback =
-  (code: string, state: string): AppThunk =>
+  (code: string, state: string): AppThunk<{
+    hasAccount: boolean;
+  }> => 
   async (_dispatch, _, { api }) => {
-    await api.processCallback(code, state);
+    return await api.processCallback(code, state);
   };
 
 export const logout =
@@ -33,4 +35,12 @@ export const logout =
   }> =>
   async (_dispatch, _, { api }) => {
     return await api.logout();
+  };
+
+export const logoutFromOIDC =
+  (): AppThunk<{
+    logoutUrl: string;
+  }> =>
+  async (_dispatch, _, { api }) => {
+    return await api.logoutFromOIDC();
   };

@@ -1,22 +1,55 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { NextPage } from 'next';
-import { Typography } from '@mui/material';
-import { useAuthCallback } from 'features/auth';
+import { Alert, Button, Typography } from '@mui/material';
+import { useAuthCallback, useLogout, useLogoutFromOIDC } from 'features/auth';
+import { DefaultLayout } from 'components/layout/DefaultLayout';
 
+//TODO: loginに失敗(UnAuthorizedした場合、Logoutして別アカウントにならなければいけないが、logout apiはprivateの認証を必要とするためアクセスできない)
 const Page: NextPage = () => {
+  const {handleLogout} = useLogoutFromOIDC();
   const { handleCallback } = useAuthCallback();
+  const [error, setError] = useState<string|null>(null);
+  const [errorDescription, setErrorDescription] = useState<string|null>(null);
+
   useEffect(() => {
+
     const params = new URLSearchParams(location.search);
     const code = params.get('code');
     const state = params.get('state');
+    const _error = params.get('error');
+    const _errorDescription = params.get('error_description'); 
+
     if (code == null || state == null) {
-      throw new Error('There is no status and code in query parameter');
+      if(_error == null || _errorDescription == null){
+        setError("unexpected error");
+        setErrorDescription("There is no expected query parameter");
+        //throw new Error('There is no expected query parameter');
+      }else{
+        setError(_error);
+        setErrorDescription(_errorDescription);
+      }
     }
     handleCallback(code, state);
   }, [handleCallback]);
   return (
     <>
-      <Typography>Loading...</Typography>
+      {
+        error?
+          <>
+             <Alert severity="error">
+                <p>このアカウントではログインできません</p>
+                <p>エラー: {error}</p>
+                <p>説明: {errorDescription}</p>
+                <Button onClick={handleLogout} variant="outlined" color="warning">
+                  Logout
+                </Button>
+             </Alert>
+          </>
+          :<>
+            <Typography>Loading...</Typography>
+          </>
+      }
+      
     </>
   );
 };

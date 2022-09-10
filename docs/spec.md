@@ -56,6 +56,20 @@
 
 この ridirect_url に遷移すれば良い
 
+### Logout
+
+- method: POST
+- path: /logout
+- description: OIDCアカウントからログアウトする
+- response:
+
+```json=
+{
+  "logout_url": "logout url"
+}
+```
+このlogout_urlに遷移すればoidcで使ってるアカウントからログアウトできる
+
 ### Callback
 
 - method: POST
@@ -71,10 +85,12 @@
 ```
 
 - set-cookie: misw-portal-token
-- response:
+- response: 
 
 ```json=
-{}
+{
+  "has_account": "true | false", //みすポータルにアカウントを持っているかどうか
+}
 ```
 
 ## Signup

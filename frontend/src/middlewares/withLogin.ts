@@ -17,6 +17,7 @@ export type NextPageWithUserInfo<P = Record<string, never>, IP = P> = NextCompon
 
 /**
  * ログインしていることを強制する．ログインしてなかったら/loginに飛ばす
+ * TODO: ログインには成功したがユーザーが帰ってこないという場合にloginに無限リダイレクトしてしまう
  */
 export const withLogin = <P, IP>(page: NextPage<P, IP>) => {
   const wrapped: NextPage<P, IP | undefined> = (props) => createElement(page, props);
