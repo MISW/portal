@@ -4,6 +4,7 @@ import { decodeCard } from './decode';
 import { User, UpdateUserProfileInput, SignupInput, PaymentStatus } from 'models/user';
 import { Period, EmailKind, EmailTemplate } from 'models/appconfig';
 import { UpdateAppConfigInput } from './type';
+import { stringify } from 'querystring';
 
 export const createApiClient = (baseUrl: string, options?: Options) => {
   const http = ky.create({
@@ -56,12 +57,19 @@ export const createApiClient = (baseUrl: string, options?: Options) => {
     },
 
     // Private Endpoints
-    async logout(): Promise<void> {
-      await http
+    async logout(): Promise<{
+      logoutUrl: string;
+    }> {
+      const res = await http
         .post('api/private/logout', {
           json: {},
         })
-        .json();
+        .json<{
+          logout_url: string;
+        }>();
+      return {
+        logoutUrl: res.logout_url,
+      }
     },
 
     async fetchCurrentProfile(): Promise<User> {

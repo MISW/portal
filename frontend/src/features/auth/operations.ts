@@ -28,7 +28,9 @@ export const processCallback =
   };
 
 export const logout =
-  (): AppThunk =>
+  (): AppThunk<{
+    logoutUrl: string;
+  }> =>
   async (_dispatch, _, { api }) => {
-    await api.logout();
+    return await api.logout();
   };

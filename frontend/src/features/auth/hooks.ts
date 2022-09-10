@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useRouter } from 'next/router';
-import { verifyEmail as verifyEmailRequest, login as loginRequest, logout, processCallback } from './operations';
+import { verifyEmail as verifyEmailRequest, login as loginRequest, logout as logoutRequest, processCallback } from './operations';
 
 export const useVerifyEmail = () => {
   const dispatch = useDispatch();
@@ -46,16 +46,15 @@ export const useLogin = () => {
 
 export const useLogout = () => {
   const dispatch = useDispatch();
-  const router = useRouter();
   const [error, setError] = useState<unknown>();
   const handleLogout = useCallback(async () => {
     try {
-      await dispatch(logout());
-      await router.push('/login');
+      const { logoutUrl } = await dispatch(logoutRequest());
+      location.href = logoutUrl;
     } catch (e) {
       setError(e);
     }
-  }, [router, dispatch]);
+  }, [dispatch]);
   return {
     error,
     handleLogout,
