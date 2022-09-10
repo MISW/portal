@@ -235,6 +235,7 @@ func initHandler(cfg *config.Config, addr string, digc *dig.Container) *echo.Ech
 			g := g.Group("/oidc_account")
 			if err := digc.Invoke(func(m middleware.OIDCAccountMiddleware) {
 				g.Use(m.Authenticate)
+				g.GET("/", oh.Get)
 				g.POST("/signup", oh.Signup)
 			}); err != nil {
 				return err

@@ -14,6 +14,7 @@ import (
 // Handler - アカウントは持っていないがOIDCでログインはできるユーザが取り扱える
 type Handler interface {
 	Signup(e echo.Context) error
+	Get(e echo.Context) error
 }
 
 type oidcHandler struct {
@@ -53,4 +54,17 @@ func (s *oidcHandler) Signup(e echo.Context) error {
 	}
 
 	return rest.RespondOK(e, nil)
+}
+
+func (h *oidcHandler) Get(e echo.Context) error {
+	accountInfo, ok := e.Get(middleware.OIDCAccountInfoKey).(*domain.OIDCAccountInfo)
+	if !ok {
+		return rest.NewInternalServerError("failed to get oidc account info")
+	}
+
+	return rest.RespondOK(e,
+		map[string]interface{}{
+			"info": *accountInfo,
+		},
+	)
 }
