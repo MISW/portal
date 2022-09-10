@@ -4,7 +4,6 @@ import { Alert, Button, Typography } from '@mui/material';
 import { useAuthCallback, useLogout, useLogoutFromOIDC } from 'features/auth';
 import { DefaultLayout } from 'components/layout/DefaultLayout';
 
-//TODO: loginに失敗(UnAuthorizedした場合、Logoutして別アカウントにならなければいけないが、logout apiはprivateの認証を必要とするためアクセスできない)
 const Page: NextPage = () => {
   const {handleLogout} = useLogoutFromOIDC();
   const { handleCallback } = useAuthCallback();
