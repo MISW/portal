@@ -122,7 +122,7 @@
 
 #### Info
 - method: GET
-- path: /
+- path: ""
 - description: account_infoを取得する
 - response:
 ```json=
