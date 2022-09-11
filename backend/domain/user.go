@@ -105,7 +105,7 @@ type User struct {
 	Role                 RoleType   `json:"role" yaml:"role"`
 
 	// 外部サービス ログインに使用しているアカウントのID
-	AccountID         string `json:"accound_od" yaml:"accound_id"`
+	AccountID         string `json:"account_id" yaml:"account_id"`
 	DiscordID         string `json:"discord_id,omitempty" yaml:"discord_id,omitempty"` //discordログインにした場合は消してしまってもよい
 	TwitterScreenName string `json:"twitter_screen_name,omitempty" yaml:"twitter_screen_name,omitempty"`
 
