@@ -64,7 +64,9 @@ func (h *oidcHandler) Get(e echo.Context) error {
 
 	return rest.RespondOK(e,
 		map[string]interface{}{
-			"info": *accountInfo,
+			"token":      accountInfo.Token,
+			"account_id": accountInfo.AccountID,
+			"email":      accountInfo.Email,
 		},
 	)
 }

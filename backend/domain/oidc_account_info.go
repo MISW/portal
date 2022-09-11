@@ -7,7 +7,7 @@ import (
 // OIDCAccountInfo - ソーシャルログインしたアカウントの情報. Signupする前に用いる
 type OIDCAccountInfo struct {
 	Token     string `json:"token"`
-	AccountID string `json:"sub"`
+	AccountID string `json:"account_id"` //auth0のsub
 	Email     string `json:"email"`
 }
 

@@ -1,12 +1,15 @@
 import { useEffect, useState } from 'react';
 import { NextPage } from 'next';
 import { Alert, Button, Typography } from '@mui/material';
-import { useAuthCallback, useLogout, useLogoutFromOIDC } from 'features/auth';
-import { DefaultLayout } from 'components/layout/DefaultLayout';
+import { useAuthCallback, useLogoutFromOIDC } from 'features/auth';
 
+
+/*
+TODO: DBに存在しないユーザだったらcallbackでloadingになりっぱなしでは? (failed to validate token)
+*/
 const Page: NextPage = () => {
   const {handleLogout} = useLogoutFromOIDC();
-  const { handleCallback } = useAuthCallback();
+  const {handleCallback } = useAuthCallback();
   const [error, setError] = useState<string|null>(null);
   const [errorDescription, setErrorDescription] = useState<string|null>(null);
 
@@ -33,7 +36,7 @@ const Page: NextPage = () => {
   return (
     <>
       {
-        error?
+        error ?
           <>
              <Alert severity="error">
                 <p>このアカウントではログインできません</p>

@@ -3,9 +3,14 @@ import Link from 'next/link';
 import { Button } from '@mui/material';
 import { NoSSR } from 'components/utils/NoSSR';
 import { useLogoutFromOIDC } from 'features/auth';
+import { withLoginOIDC } from 'middlewares/withLoginOIDC';
+import { nonNullOrThrow } from 'utils';
+import { useSelector } from 'react-redux';
+import { selectCurrentOidcAccountInfo } from 'features/currentOidcAccount';
 
 const Page: NextPage = () => {
   const {handleLogout} = useLogoutFromOIDC();
+  const accountInfo = nonNullOrThrow(useSelector(selectCurrentOidcAccountInfo))
 
   return (
     <NoSSR>
@@ -16,6 +21,7 @@ const Page: NextPage = () => {
         <li>指定の口座番号へ入会費1000円を振込</li>
         <li>振込が確認され次第, 会員登録完了! </li>
       </ol>
+      <p>現在のアカウント: {accountInfo.accountId}</p>
       <Link href="/signup/form" passHref>
         <Button color="primary" variant="contained">
           会員登録フォームへ
@@ -28,4 +34,4 @@ const Page: NextPage = () => {
   );
 };
 
-export default Page;
+export default withLoginOIDC(Page);

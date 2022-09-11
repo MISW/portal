@@ -6,6 +6,7 @@ import { Alert } from '@mui/material';
 import { useDispatch } from 'react-redux';
 import { signup } from 'features/auth';
 import { NoSSR } from 'components/utils/NoSSR';
+import { withLoginOIDC } from 'middlewares/withLoginOIDC';
 
 const Page: NextPage = () => {
   const dispatch = useDispatch();
@@ -47,4 +48,4 @@ const Page: NextPage = () => {
   );
 };
 
-export default Page;
+export default withLoginOIDC(Page);

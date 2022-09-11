@@ -124,6 +124,14 @@
 - method: GET
 - path: /
 - description: account_infoを取得する
+- response:
+```json=
+{
+  token: "string",
+	acciunt_id: "account_id",
+	email: "email"`,
+}
+```
 
 #### Signup
 

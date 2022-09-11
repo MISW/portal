@@ -19,6 +19,25 @@ export const createApiClient = (baseUrl: string, options?: Options) => {
       });
     },
 
+    async fetchCurrentOidcAccountInfo(): Promise<{
+      token: string;
+      accountId: string;
+      email: string; 
+    }> {
+      const res = await http
+        .get('api/public/oidc_account/')
+        .json<{
+          token: string;
+          account_id: string;
+          email: string;
+        }>();
+      return {
+        token: res.token,
+        accountId: res.account_id,
+        email: res.email,
+      };
+    },
+
     async verifyEmail(token: string): Promise<void> {
       await http.post('api/public/verify_email', {
         json: {
