@@ -5,8 +5,8 @@ import Period from 'components/layout/config/Period';
 import EmailTemplate from 'components/layout/config/EmailTemplate';
 import { usePaymentPeriodConfig, useCurrentPeriodConfig, useEmailTemplateConfig, EmailTemplate as EmailTemplateType } from 'hooks/appConfig';
 import { calcPeriod } from 'utils';
-import { withLogin } from 'middlewares/withLogin';
 import { NoSSR } from 'components/utils/NoSSR';
+import { withLoginUser } from 'middlewares/withLoginUser';
 
 const usePaymentPeriodNode = (paymentPeriod: number | undefined, setPaymentPeriod: (period: number) => Promise<void>, optionsForPayment: number[]) => {
   const [expanded, setExpanded] = useState<boolean>(false);
@@ -152,4 +152,4 @@ const Page: NextPage = () => {
   );
 };
 
-export default withLogin(Page);
+export default withLoginUser(Page);

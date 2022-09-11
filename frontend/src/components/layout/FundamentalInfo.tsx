@@ -173,7 +173,7 @@ const FundamentalInfo: React.FC<
           <KanaNameField {...kana} />
           <GenderField {...sex} />
           <PhoneNumberField {...emergencyPhoneNumber} />
-          <EmailField {...email} />
+          {/* <EmailField {...email} /> /*deprecated: emailは入力させるのではなくOIDCのアカウントのメアドを使う*/ }
         </Grid>
         <Alert
           severity="info"

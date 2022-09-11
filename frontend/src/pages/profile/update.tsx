@@ -2,7 +2,7 @@ import { NextPage } from 'next';
 import { Alert } from '@mui/material';
 import RegisterForm, { SubmitResult } from 'components/layout/RegisterForm';
 import { ConfigurableProfile } from 'user';
-import { withLogin } from 'middlewares/withLogin';
+import { withLoginUser } from 'middlewares/withLoginUser';
 import { selectCurrentUser, updateCurrentUser } from 'features/currentUser';
 import { nonNullOrThrow } from 'utils';
 import { unwrapResult } from '@reduxjs/toolkit';
@@ -48,4 +48,4 @@ const Page: NextPage = () => {
   );
 };
 
-export default withLogin(Page);
+export default withLoginUser(Page);

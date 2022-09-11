@@ -3,7 +3,7 @@ import { NextPage } from 'next';
 import { Grid, Paper, TableContainer, Table, TableBody, TableRow, TableCell, Typography } from '@mui/material';
 import LinkContentCard from 'components/design/LinkContentCard';
 import { Alert, AlertTitle } from '@mui/material';
-import { withLogin } from 'middlewares/withLogin';
+import { withLoginUser } from 'middlewares/withLoginUser';
 import { nonNullOrThrow } from 'utils';
 import { useSelector } from 'react-redux';
 import { selectCurrentUser } from 'features/currentUser';
@@ -172,4 +172,4 @@ const Page: NextPage = () => {
   );
 };
 
-export default withLogin(Page);
+export default withLoginUser(Page);

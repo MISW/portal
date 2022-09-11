@@ -3,10 +3,6 @@ import { NextPage } from 'next';
 import { Alert, Button, Typography } from '@mui/material';
 import { useAuthCallback, useLogoutFromOIDC } from 'features/auth';
 
-
-/*
-TODO: DBに存在しないユーザだったらcallbackでloadingになりっぱなしでは? (failed to validate token)
-*/
 const Page: NextPage = () => {
   const {handleLogout} = useLogoutFromOIDC();
   const {handleCallback } = useAuthCallback();
@@ -43,7 +39,7 @@ const Page: NextPage = () => {
                 <p>エラー: {error}</p>
                 <p>説明: {errorDescription}</p>
                 <Button onClick={handleLogout} variant="outlined" color="warning">
-                  Logout
+                  ログアウト
                 </Button>
              </Alert>
           </>

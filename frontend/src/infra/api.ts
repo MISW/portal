@@ -25,7 +25,7 @@ export const createApiClient = (baseUrl: string, options?: Options) => {
       email: string; 
     }> {
       const res = await http
-        .get('api/public/oidc_account/')
+        .get('api/public/oidc_account')
         .json<{
           token: string;
           account_id: string;
