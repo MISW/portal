@@ -5,7 +5,6 @@ import { wrapper } from 'store';
 import { selectCurrentUser } from 'features/currentUser';
 import { Merge } from 'type-fest';
 import { User } from 'models/user';
-import { selectCurrentOidcAccountInfo } from 'features/currentOidcAccount';
 
 type WithCurrentUser<T> = Merge<
   T,

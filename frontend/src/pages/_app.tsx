@@ -14,7 +14,6 @@ import { useLogout } from 'features/auth';
 import { useSystemColorScheme } from '../hooks/theme';
 import lighttheme from '../components/theme/lighttheme';
 import darktheme from '../components/theme/darktheme';
-import { fetchCurrentOidcAccountInfo, selectCurrentOidcAccountInfo } from 'features/currentOidcAccount';
 
 declare module '@mui/styles/defaultTheme' {
   // eslint-disable-next-line @typescript-eslint/no-empty-interface

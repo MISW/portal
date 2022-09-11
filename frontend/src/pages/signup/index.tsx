@@ -3,10 +3,10 @@ import Link from 'next/link';
 import { Button } from '@mui/material';
 import { NoSSR } from 'components/utils/NoSSR';
 import { useLogoutFromOIDC } from 'features/auth';
-import { withLoginOIDC } from 'middlewares/withLoginOIDC';
 import { nonNullOrThrow } from 'utils';
 import { useSelector } from 'react-redux';
 import { selectCurrentOidcAccountInfo } from 'features/currentOidcAccount';
+import { withLoginOIDC } from 'middlewares/withLoginOIDC';
 
 const Page: NextPage = () => {
   const {handleLogout} = useLogoutFromOIDC();
