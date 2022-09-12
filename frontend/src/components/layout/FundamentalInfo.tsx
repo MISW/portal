@@ -164,7 +164,7 @@ const FundamentalInfo: React.FC<
   React.PropsWithChildren<{
     userHooks: UserProfileHooks;
   }>
-> = ({ userHooks: { name, kana, sex, emergencyPhoneNumber, email } }) => {
+> = ({ userHooks: { name, kana, sex, emergencyPhoneNumber/*, email*/ } }) => {
   return (
     <>
       <Grid container spacing={3}>

@@ -27,7 +27,7 @@ const Page: NextPage = () => {
         setErrorDescription(_errorDescription);
       }
     }
-    handleCallback(code, state);
+    handleCallback(code as string, state as string);
   }, [handleCallback]);
   return (
     <>

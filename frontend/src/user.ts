@@ -104,7 +104,7 @@ export const toUserProfile = (json: UserInfoJSON): ConfigurableProfile => {
 export const toUserInfoJSON = (p: ConfigurableProfile): UserInfoJSON => {
   return {
     id: p.id,
-    email: p.email,
+    //email: p.email,
     generation: p.generation,
     name: p.name,
     kana: p.kana,
