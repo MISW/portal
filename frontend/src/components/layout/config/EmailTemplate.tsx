@@ -118,7 +118,7 @@ function EmailTemplate<T extends string>(param: {
                   shrink: true,
                 }}
                 multiline={true}
-                rows={1}
+                rows={5}
                 maxRows={10}
                 disabled={values === undefined}
                 value={values?.body ?? ''}
