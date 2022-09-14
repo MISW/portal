@@ -15,8 +15,8 @@ const Page: NextPage = () => {
   const dispatch = useDispatch();
   const [email, setEmail] = useState<string>();
 
-  const accountInfo = nonNullOrThrow(useSelector(selectCurrentOidcAccountInfo))
-  
+  const accountInfo = nonNullOrThrow(useSelector(selectCurrentOidcAccountInfo));
+
   const onSubmit = async (user: ConfigurableProfile): Promise<SubmitResult> => {
     try {
       await dispatch(
@@ -34,7 +34,7 @@ const Page: NextPage = () => {
         status: 'success' as const,
       };
     } catch (err) {
-      //TODO: errorメッセージ表示。エラー起きた時の型変換してエラーメッセージ表示 
+      //TODO: errorメッセージ表示。エラー起きた時の型変換してエラーメッセージ表示
       console.error(err);
       return {
         status: 'error' as const,

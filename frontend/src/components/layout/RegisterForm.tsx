@@ -84,7 +84,23 @@ const RegisterForm: React.FC<
       discordId,
     };
     return [fundamentalInfo, universityInfo, circleInfo] as const;
-  }, [name, kana, /*email,*/ sex, emergencyPhoneNumber, univName, department, subject, studentId, generation, handle, otherCircles, workshops, squads, discordId]);
+  }, [
+    name,
+    kana,
+    //email,
+    sex,
+    emergencyPhoneNumber,
+    univName,
+    department,
+    subject,
+    studentId,
+    generation,
+    handle,
+    otherCircles,
+    workshops,
+    squads,
+    discordId,
+  ]);
 
   const [submitResult, setSubmitResult] = useState<SubmitResult>(null);
 

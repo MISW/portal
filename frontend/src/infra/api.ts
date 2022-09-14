@@ -22,15 +22,13 @@ export const createApiClient = (baseUrl: string, options?: Options) => {
     async fetchCurrentOidcAccountInfo(): Promise<{
       token: string;
       accountId: string;
-      email: string; 
+      email: string;
     }> {
-      const res = await http
-        .get('api/public/oidc_account')
-        .json<{
-          token: string;
-          account_id: string;
-          email: string;
-        }>();
+      const res = await http.get('api/public/oidc_account').json<{
+        token: string;
+        account_id: string;
+        email: string;
+      }>();
       return {
         token: res.token,
         accountId: res.account_id,
@@ -73,24 +71,28 @@ export const createApiClient = (baseUrl: string, options?: Options) => {
         }>();
       return {
         logoutUrl: res.logout_url,
-      }
+      };
     },
 
-    async processCallback(code: string, state: string): Promise<{
-      hasAccount: boolean,
+    async processCallback(
+      code: string,
+      state: string,
+    ): Promise<{
+      hasAccount: boolean;
     }> {
-      const res = await http.post('api/public/callback', {
-        json: {
-          code,
-          state,
-        },
-      })
+      const res = await http
+        .post('api/public/callback', {
+          json: {
+            code,
+            state,
+          },
+        })
         .json<{
-          has_account: boolean,
+          has_account: boolean;
         }>();
       return {
         hasAccount: res.has_account,
-      }
+      };
     },
 
     async fetchCard(id: number) {
@@ -111,7 +113,7 @@ export const createApiClient = (baseUrl: string, options?: Options) => {
         }>();
       return {
         logoutUrl: res.logout_url,
-      }
+      };
     },
 
     async fetchCurrentProfile(): Promise<User> {

@@ -86,7 +86,7 @@ const Page: NextPage = () => {
   const currentUser = nonNullOrThrow(useSelector(selectCurrentUser));
 
   if (currentUser.role === 'not_member') {
-    if(currentUser.emailVerified){
+    if (currentUser.emailVerified) {
       return (
         <StyledNoSSR>
           <div>
@@ -116,7 +116,7 @@ const Page: NextPage = () => {
                   </TableBody>
                 </Table>
               </TableContainer>
-  
+
               <Alert severity="error">
                 もし振込から1週間以上経っても会員になったことの確認が出来ない場合は
                 <ul>
@@ -130,14 +130,14 @@ const Page: NextPage = () => {
           </div>
         </StyledNoSSR>
       );
-    }else{
+    } else {
       return (
         <StyledNoSSR>
           <div>
             <Paper className={classes.paper}>
               <Alert severity="warning">
                 <AlertTitle>まだメール認証が終わっていません！</AlertTitle>
-                受信メール(や迷惑メールボックス)を確認してください。 
+                受信メール(や迷惑メールボックス)を確認してください。
               </Alert>
             </Paper>
           </div>

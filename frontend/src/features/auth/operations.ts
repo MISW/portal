@@ -22,9 +22,12 @@ export const login =
   };
 
 export const processCallback =
-  (code: string, state: string): AppThunk<{
+  (
+    code: string,
+    state: string,
+  ): AppThunk<{
     hasAccount: boolean;
-  }> => 
+  }> =>
   async (_dispatch, _, { api }) => {
     return await api.processCallback(code, state);
   };

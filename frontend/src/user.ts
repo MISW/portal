@@ -64,10 +64,7 @@ export type UserInfoJSON = Omit<UserAllInfoJSON, 'email' | 'account_id' | 'role'
   role?: RoleType;
 };
 
-export type ConfigurableProfile = Omit<
-  UserInfoJSON,
-  'other_circles' | 'emergency_phone_number' | 'student_id' | 'university' | 'discord_id' 
-> & {
+export type ConfigurableProfile = Omit<UserInfoJSON, 'other_circles' | 'emergency_phone_number' | 'student_id' | 'university' | 'discord_id'> & {
   otherCircles: UserAllInfoJSON['other_circles'];
   emergencyPhoneNumber: UserAllInfoJSON['emergency_phone_number'];
   studentId: UserAllInfoJSON['student_id'];

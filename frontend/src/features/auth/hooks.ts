@@ -1,7 +1,13 @@
 import { useCallback, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useRouter } from 'next/router';
-import { verifyEmail as verifyEmailRequest, login as loginRequest, logout as logoutRequest, logoutFromOIDC as logoutFromOIDCRequest, processCallback } from './operations';
+import {
+  verifyEmail as verifyEmailRequest,
+  login as loginRequest,
+  logout as logoutRequest,
+  logoutFromOIDC as logoutFromOIDCRequest,
+  processCallback,
+} from './operations';
 
 export const useVerifyEmail = () => {
   const dispatch = useDispatch();
@@ -80,7 +86,6 @@ export const useLogoutFromOIDC = () => {
   } as const;
 };
 
-
 /*
  ログインのcallbackを取り扱う
  ログインに成功した場合: 
@@ -94,12 +99,12 @@ export const useAuthCallback = () => {
   const handleCallback = useCallback(
     async (code: string, state: string) => {
       try {
-        const {hasAccount} = await dispatch(processCallback(code, state));
-        if(hasAccount==null){
+        const { hasAccount } = await dispatch(processCallback(code, state));
+        if (hasAccount == null) {
           throw new TypeError('nullish value');
-        }else if(hasAccount){
+        } else if (hasAccount) {
           await router.push('/');
-        }else{
+        } else {
           await router.push('/signup');
         }
       } catch (e) {

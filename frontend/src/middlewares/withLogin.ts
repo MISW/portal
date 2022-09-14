@@ -20,15 +20,15 @@ export type NextPageWithUserInfo<P = Record<string, never>, IP = P> = NextCompon
  * ログインしていることを強制する．ログインしてなかったら/loginに飛ばす
  * DBに情報をもつユーザ(Signup済み)であればcurrentUserで何もしない
  * DBに情報をもたないユーザ(未Signup)であればcurrentOidcAccountで、/signupへ飛ばす. (注意: /loginを叩かないと、ユーザ情報の更新はできない.)
- * どれでもなければ、未ログインとして/loginへ飛ばす. 
+ * どれでもなければ、未ログインとして/loginへ飛ばす.
  */
 export const withLogin = <P, IP>(page: NextPage<P, IP>) => {
   const wrapped: NextPage<P, IP | undefined> = (props) => createElement(page, props);
   wrapped.getInitialProps = wrapper.getInitialPageProps((store) => async (ctx) => {
     const currentUser = selectCurrentUser(store.getState());
-    const currentOidcAccount = selectCurrentOidcAccountInfo(store.getState())
+    const currentOidcAccount = selectCurrentOidcAccountInfo(store.getState());
     if (currentUser == null) {
-      if(currentOidcAccount == null){
+      if (currentOidcAccount == null) {
         if (ctx.res) {
           // server
           ctx.res.writeHead(302, {
@@ -41,7 +41,7 @@ export const withLogin = <P, IP>(page: NextPage<P, IP>) => {
           Router.push('/login');
           return;
         }
-      }else{
+      } else {
         if (ctx.res) {
           // server
           ctx.res.writeHead(302, {
@@ -55,7 +55,6 @@ export const withLogin = <P, IP>(page: NextPage<P, IP>) => {
           return;
         }
       }
-      
     }
     return await page.getInitialProps?.({
       ...ctx,
