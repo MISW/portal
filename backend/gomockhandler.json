@@ -1,4 +1,3 @@
-// TODO: gomockhandlerで現在のmock生成
 {
 	"mocks": {
 		"domain/repository/mock_appconfig_repository.go": {
@@ -28,16 +27,6 @@
 			"source_mode_runner": {
 				"source": "domain/repository/payment_repository.go",
 				"destination": "domain/repository/mock_payment_repository.go",
-				"package": "repository"
-			}
-		},
-		"domain/repository/mock_slack_repository.go": {
-			"checksum": "NuJq/RYR05dpK55WooGtHw==",
-			"source_checksum": "0kH/e1WmU3xHYlGmP135sQ==",
-			"mode": "SOURCE_MODE",
-			"source_mode_runner": {
-				"source": "domain/repository/slack_repository.go",
-				"destination": "domain/repository/mock_slack_repository.go",
 				"package": "repository"
 			}
 		},
@@ -118,16 +107,6 @@
 			"source_mode_runner": {
 				"source": "interfaces/api/public/session.go",
 				"destination": "interfaces/api/public/mock_session.go",
-				"package": "public"
-			}
-		},
-		"interfaces/api/public/mock_webhook.go": {
-			"checksum": "UQDpFUN9DfoM3A4Q3rBVMA==",
-			"source_checksum": "x1OFc+Fu7OY9kbKloma/sg==",
-			"mode": "SOURCE_MODE",
-			"source_mode_runner": {
-				"source": "interfaces/api/public/webhook.go",
-				"destination": "interfaces/api/public/mock_webhook.go",
 				"package": "public"
 			}
 		},
