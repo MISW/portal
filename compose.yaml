@@ -38,7 +38,7 @@ services:
   frontend:
     build:
       dockerfile: frontend.dockerfile
-      target: production
+      target: development
       context: .
     env_file:
       - ./dev.env
