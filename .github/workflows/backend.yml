@@ -9,10 +9,11 @@ on:
       - backend/**
 
 env:
-  TEST_EMAIL_SMTP_SERVER: ${{secrets.TEST_EMAIL_SMTP_SERVER}}
+  SMTP_SERVER: ${{secrets.SMTP_SERVER}}
+  SMTP_USERNAME: ${{secrets.SMTP_USERNAME}}
+  SMTP_PASSWORD: ${{secrets.SMTP_PASSWORD}}
+  SMTP_FROM: ${{secrets.SMTP_FROM}}
   TEST_EMAIL_TO: ${{secrets.TEST_EMAIL_TO}}
-  TEST_EMAIL_PASS: ${{secrets.TEST_EMAIL_PASS}}
-  TEST_EMAIL_FROM: ${{secrets.TEST_EMAIL_FROM}}
 
 jobs:
   build:
