@@ -34,8 +34,8 @@ type SessionUsecase interface {
 	// Logout - トークンを無効化する. LogoutのURLを返す.
 	Logout(ctx context.Context, token string) (logoutURL string, err error)
 
-	// LogoutFromOIDC -  OIDCアカウントからLogoutするURLを返す.
-	LogoutFromOIDC(ctx context.Context) (logoutURL string, err error)
+	// LogoutFromOIDC -  OIDCアカウントからLogoutするURLを返す.oidcAccountInfoを格納している場合はそれを消す.
+	LogoutFromOIDC(ctx context.Context, token string) (logoutURL string, err error)
 
 	// Validate - トークンの有効性を検証しユーザを取得する
 	Validate(ctx context.Context, token string) (user *domain.User, err error)
@@ -267,7 +267,7 @@ func (us *sessionUsecase) Logout(ctx context.Context, token string) (logoutURL s
 		return "", xerrors.Errorf("failed to delete the token: %w", err)
 	}
 
-	logoutURL, err = us.LogoutFromOIDC(ctx)
+	logoutURL, err = us.LogoutFromOIDC(ctx, token)
 	if err != nil {
 		return "", xerrors.Errorf("failed to generate logout url: %w", err)
 	}
@@ -275,8 +275,11 @@ func (us *sessionUsecase) Logout(ctx context.Context, token string) (logoutURL s
 	return
 }
 
-// LogoutFromOIDC - LogoutのURLを返す.
-func (us *sessionUsecase) LogoutFromOIDC(ctx context.Context) (logoutURL string, err error) {
+// LogoutFromOIDC - LogoutのURLを返す.oidcAccountInfoを格納していた場合はそれを消す.
+func (us *sessionUsecase) LogoutFromOIDC(ctx context.Context, token string) (logoutURL string, err error) {
+	//あったら消す、なかったら何もしない
+	us.accountInfoRepository.Delete(ctx, token)
+
 	logoutURL, err = us.authenticator.Logout(ctx)
 	if err != nil {
 		return "", xerrors.Errorf("failed to generate logout url: %w", err)
