@@ -374,6 +374,19 @@ func (up *userPersistence) Update(ctx context.Context, user *domain.User) error 
 
 // VerifyEmail - メールアドレスを認証済みにする
 func (up *userPersistence) VerifyEmail(ctx context.Context, id int, email string) error {
+	//既に認証済みかどうか
+	u, err := up.GetByID(ctx, id)
+	if err != nil {
+		return err
+	}
+	if u.Email != email {
+		return domain.ErrEmailAddressChanged
+	}
+	if u.EmailVerified {
+		return domain.ErrEmailAlreadyVerified
+	}
+
+	//updateする
 	res, err := up.db.Exec(`
 	UPDATE users SET
 		email_verified=1
@@ -391,7 +404,7 @@ func (up *userPersistence) VerifyEmail(ctx context.Context, id int, email string
 	}
 
 	if affected != 1 {
-		return domain.ErrEmailAddressChanged
+		return xerrors.Errorf("failed to update email verification status")
 	}
 
 	return nil

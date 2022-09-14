@@ -137,7 +137,7 @@ const Page: NextPage = () => {
             <Paper className={classes.paper}>
               <Alert severity="warning">
                 <AlertTitle>まだメール認証が終わっていません！</AlertTitle>
-                ログインに利用したアカウントで仕様しているメールの受信メールや迷惑メールを確認してください。 
+                受信メール(や迷惑メールボックス)を確認してください。 
               </Alert>
             </Paper>
           </div>

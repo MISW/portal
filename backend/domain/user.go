@@ -182,4 +182,7 @@ var (
 
 	// ErrEmailAddressChanged - 既にEメールアドレスが変更されており、認証が失敗した
 	ErrEmailAddressChanged = xerrors.New("email address has been changed")
+
+	// ErrEmailAlreadyVerified - 既にEメールアドレスは認証済み
+	ErrEmailAlreadyVerified = xerrors.New("email address is already verified")
 )

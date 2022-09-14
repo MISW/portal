@@ -344,7 +344,7 @@ func (us *sessionUsecase) VerifyEmail(ctx context.Context, verifyToken string) (
 
 	if !ok {
 		return "", rest.NewBadRequest(
-			fmt.Sprintf("invalid token(incorrect claims)"),
+			"invalid token(incorrect claims)",
 		)
 	}
 
@@ -354,24 +354,32 @@ func (us *sessionUsecase) VerifyEmail(ctx context.Context, verifyToken string) (
 		)
 	}
 
+	newEmailVerified := true
 	err = us.userRepository.VerifyEmail(ctx, claims.ID, claims.Email)
-
-	if err == domain.ErrEmailAddressChanged {
+	if errors.Is(err, domain.ErrEmailAddressChanged) {
 		return "", rest.NewBadRequest("Your email address has been changed")
+	}
+	if err == nil || errors.Is(err, domain.ErrEmailAlreadyVerified) {
+		err = nil
+		newEmailVerified = false
+		//return "", rest.NewConflict("Your email address is already verified") //二重のメアド認証を許さなかい場合
 	}
 
 	if err != nil {
 		return "", xerrors.Errorf("failed to verify email: %w", err)
 	}
 
-	user, err := us.userRepository.GetByID(ctx, claims.ID)
+	//新しいメアドが認証された場合はその旨をメール送信する.
+	if newEmailVerified {
+		user, err := us.userRepository.GetByID(ctx, claims.ID)
 
-	if err != nil {
-		return "", xerrors.Errorf("failed to find user: %w", err)
-	}
+		if err != nil {
+			return "", xerrors.Errorf("failed to find user: %w", err)
+		}
 
-	if err := us.sendEmailAfterRegistration(user); err != nil {
-		return "", xerrors.Errorf("failed to send email after registration: %w", err)
+		if err := us.sendEmailAfterRegistration(user); err != nil {
+			return "", xerrors.Errorf("failed to send email after registration: %w", err)
+		}
 	}
 
 	token, err = tokenutil.GenerateRandomToken()
