@@ -5,10 +5,10 @@ import Router from 'next/router';
 import Profile from 'components/layout/Profile';
 import PaymentStatuses from 'components/layout/PaymentStatuses';
 import { Box } from '@mui/material';
-import { withLogin } from 'middlewares/withLogin';
 import { selectCurrentUser, selectCurrentPaymentStatuses, fetchCurrentPaymentStatuses } from 'features/currentUser';
 import { nonNullOrThrow } from 'utils';
 import { NoSSR } from 'components/utils/NoSSR';
+import { withLoginUser } from 'middlewares/withLoginUser';
 
 const Page: NextPage = () => {
   const dispatch = useDispatch();
@@ -26,4 +26,4 @@ const Page: NextPage = () => {
   );
 };
 
-export default withLogin(Page);
+export default withLoginUser(Page);

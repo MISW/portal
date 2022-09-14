@@ -2,7 +2,7 @@ import { useCallback } from 'react';
 import type { NextPage } from 'next';
 import Head from 'next/head';
 import { useDispatch, useSelector } from 'react-redux';
-import { withLogin } from 'middlewares/withLogin';
+import { withLoginUser } from 'middlewares/withLoginUser';
 import { selectCurrentUser, updateCurrentUser } from 'features/currentUser';
 import { EditCard } from 'components/pages/EditCard';
 
@@ -39,4 +39,4 @@ const EditCardPage: NextPage = () => {
   );
 };
 
-export default withLogin(EditCardPage);
+export default withLoginUser(EditCardPage);

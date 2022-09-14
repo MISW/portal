@@ -3,7 +3,7 @@ import { NextPage } from 'next';
 import { Grid, Paper, TableContainer, Table, TableBody, TableRow, TableCell, Typography } from '@mui/material';
 import LinkContentCard from 'components/design/LinkContentCard';
 import { Alert, AlertTitle } from '@mui/material';
-import { withLogin } from 'middlewares/withLogin';
+import { withLoginUser } from 'middlewares/withLoginUser';
 import { nonNullOrThrow } from 'utils';
 import { useSelector } from 'react-redux';
 import { selectCurrentUser } from 'features/currentUser';
@@ -137,7 +137,7 @@ const Page: NextPage = () => {
             <Paper className={classes.paper}>
               <Alert severity="warning">
                 <AlertTitle>まだメール認証が終わっていません！</AlertTitle>
-                ログインに利用したアカウントで仕様しているメールの受信メールや迷惑メールを確認してください。 
+                受信メール(や迷惑メールボックス)を確認してください。 
               </Alert>
             </Paper>
           </div>
@@ -172,4 +172,4 @@ const Page: NextPage = () => {
   );
 };
 
-export default withLogin(Page);
+export default withLoginUser(Page);

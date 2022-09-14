@@ -14,9 +14,28 @@ export const createApiClient = (baseUrl: string, options?: Options) => {
   return Object.freeze({
     // Public Endpoints
     async signup(input: Readonly<SignupInput>): Promise<void> {
-      await http.post('api/public/signup', {
+      await http.post('api/public/oidc_account/signup', {
         json: toSnakeCase(input),
       });
+    },
+
+    async fetchCurrentOidcAccountInfo(): Promise<{
+      token: string;
+      accountId: string;
+      email: string; 
+    }> {
+      const res = await http
+        .get('api/public/oidc_account')
+        .json<{
+          token: string;
+          account_id: string;
+          email: string;
+        }>();
+      return {
+        token: res.token,
+        accountId: res.account_id,
+        email: res.email,
+      };
     },
 
     async verifyEmail(token: string): Promise<void> {

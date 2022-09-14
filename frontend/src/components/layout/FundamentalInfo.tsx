@@ -164,7 +164,7 @@ const FundamentalInfo: React.FC<
   React.PropsWithChildren<{
     userHooks: UserProfileHooks;
   }>
-> = ({ userHooks: { name, kana, sex, emergencyPhoneNumber, email } }) => {
+> = ({ userHooks: { name, kana, sex, emergencyPhoneNumber/*, email*/ } }) => {
   return (
     <>
       <Grid container spacing={3}>
@@ -173,7 +173,7 @@ const FundamentalInfo: React.FC<
           <KanaNameField {...kana} />
           <GenderField {...sex} />
           <PhoneNumberField {...emergencyPhoneNumber} />
-          <EmailField {...email} />
+          {/* <EmailField {...email} /> /*deprecated: emailは入力させるのではなくOIDCのアカウントのメアドを使う*/ }
         </Grid>
         <Alert
           severity="info"

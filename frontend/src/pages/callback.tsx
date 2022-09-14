@@ -1,12 +1,11 @@
 import { useEffect, useState } from 'react';
 import { NextPage } from 'next';
 import { Alert, Button, Typography } from '@mui/material';
-import { useAuthCallback, useLogout, useLogoutFromOIDC } from 'features/auth';
-import { DefaultLayout } from 'components/layout/DefaultLayout';
+import { useAuthCallback, useLogoutFromOIDC } from 'features/auth';
 
 const Page: NextPage = () => {
   const {handleLogout} = useLogoutFromOIDC();
-  const { handleCallback } = useAuthCallback();
+  const {handleCallback } = useAuthCallback();
   const [error, setError] = useState<string|null>(null);
   const [errorDescription, setErrorDescription] = useState<string|null>(null);
 
@@ -28,19 +27,19 @@ const Page: NextPage = () => {
         setErrorDescription(_errorDescription);
       }
     }
-    handleCallback(code, state);
+    handleCallback(code as string, state as string);
   }, [handleCallback]);
   return (
     <>
       {
-        error?
+        error ?
           <>
              <Alert severity="error">
                 <p>このアカウントではログインできません</p>
                 <p>エラー: {error}</p>
                 <p>説明: {errorDescription}</p>
                 <Button onClick={handleLogout} variant="outlined" color="warning">
-                  Logout
+                  ログアウト
                 </Button>
              </Alert>
           </>

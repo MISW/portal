@@ -6,7 +6,7 @@ import { usersCSV, saveFile, nonNullOrThrow } from 'utils';
 import { Typography } from '@mui/material';
 import Toolbar from '@mui/material/Toolbar';
 import RemindPaymentDialog from 'components/layout/RemindPaymentDialog';
-import { withLogin } from 'middlewares/withLogin';
+import { withLoginUser } from 'middlewares/withLoginUser';
 import { User } from 'models/user';
 import { useDispatch, useSelector, useStore } from 'react-redux';
 import { selectAllUsers, fetchAllUsers, addPaymentStatus, deletePaymentStatus, selectUserById } from 'features/users';
@@ -109,4 +109,4 @@ const Page: NextPage = () => {
   );
 };
 
-export default withLogin(Page);
+export default withLoginUser(Page);

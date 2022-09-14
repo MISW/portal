@@ -93,26 +93,7 @@
 }
 ```
 
-## Signup
-
-- method: POST
-- path: /signup
-- description: 新規アカウント登録用エンドポイント. DBに存在しないアカウントで先にLoginしておく必要がある. 
-- parameter: `Content-Type: application/json` の body を POST
-
-https://github.com/MISW/Portal/blob/master/backend/domain/user.go#L46
-
-JSON フォーマットはここを参照(ただし、ID、AccountID、 Email、 Role、CreatedAt、UpdatedAt は指定しなくて良い(自動で生成される))
-
-- response:
-
-```json=
-{}
-```
-
-E メールが送信されているので E メールを確認してください、みたいなメッセージを表示するだけで良い
-
-## Verify Email
+### Verify Email
 
 - method: POST
 - path: /veryfy_email
@@ -132,6 +113,52 @@ E メールが送信されているので E メールを確認してください
 ```
 
 メールに添付のリンクを開くと `/verify_email` が開かれるようになっており、URL のパラメータに token が付いているのでこれをこのエンドポイントの body に添付して POST する
+
+
+### Endpoint: OIDC Account
+
+- path: /oidc_account
+- description: OIDCでログインはしているが、portalにはアカウントを作成していないユーザ
+
+#### Info
+- method: GET
+- path: ""
+- description: account_infoを取得する
+- response:
+```json=
+{
+  token: "string",
+	acciunt_id: "account_id",
+	email: "email"`,
+}
+```
+
+#### Signup
+
+- method: POST
+- path: /signup
+- description: 新規アカウント登録用エンドポイント. DBに存在しないアカウントで先にLoginしておく必要がある. 
+- parameter: `Content-Type: application/json` の body を POST
+
+- JSON フォーマットは[ここ](https://github.com/MISW/Portal/blob/master/backend/domain/user.go#L122)を参照(ただし、ID、AccountID、 Email、 Role、CreatedAt、UpdatedAt は指定しなくて良い(自動で生成される))
+
+- response:
+  - 成功時: 
+  ```json=
+  {}
+  ```
+  - (特に)失敗時:
+  ```json=
+  {
+    "status_code": "code",
+		"status":      "http.StatusText(code)",
+		"message":     "message",
+  }
+  ```
+
+
+E メールが送信されているので E メールを確認してください、みたいなメッセージを表示するだけで良い
+
 
 ## Endpoint: Private
 

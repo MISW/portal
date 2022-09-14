@@ -95,7 +95,9 @@ export const useAuthCallback = () => {
     async (code: string, state: string) => {
       try {
         const {hasAccount} = await dispatch(processCallback(code, state));
-        if(hasAccount){
+        if(hasAccount==null){
+          throw new TypeError('nullish value');
+        }else if(hasAccount){
           await router.push('/');
         }else{
           await router.push('/signup');

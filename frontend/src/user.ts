@@ -59,7 +59,7 @@ export type UserWithPaymentJSON = UserAllInfoJSON & {
   payment_status?: PaymentStatus;
 };
 
-export type UserInfoJSON = Omit<UserAllInfoJSON, 'account_id' | 'role' | 'created_at' | 'email_verified' | 'updated_at' | 'id'> & {
+export type UserInfoJSON = Omit<UserAllInfoJSON, 'email' | 'account_id' | 'role' | 'created_at' | 'email_verified' | 'updated_at' | 'id'> & {
   id?: number;
   role?: RoleType;
 };
@@ -81,7 +81,7 @@ export type ConfigurableProfile = Omit<
 export const toUserProfile = (json: UserInfoJSON): ConfigurableProfile => {
   return {
     id: json.id,
-    email: json.email,
+    //email: json.email,
     generation: json.generation,
     name: json.name,
     kana: json.kana,
@@ -95,6 +95,7 @@ export const toUserProfile = (json: UserInfoJSON): ConfigurableProfile => {
     otherCircles: json.other_circles,
     workshops: json.workshops,
     squads: json.squads,
+    //accountId: json.account_id,
     discordId: json.discord_id,
     role: json.role,
   };
@@ -103,7 +104,7 @@ export const toUserProfile = (json: UserInfoJSON): ConfigurableProfile => {
 export const toUserInfoJSON = (p: ConfigurableProfile): UserInfoJSON => {
   return {
     id: p.id,
-    email: p.email,
+    //email: p.email,
     generation: p.generation,
     name: p.name,
     kana: p.kana,

@@ -4,23 +4,23 @@ import (
 	"github.com/MISW/Portal/backend/internal/rest"
 )
 
-// AccountInfo - ソーシャルログインしたアカウントの情報. Signupする前に用いる
-type AccountInfo struct {
+// OIDCAccountInfo - ソーシャルログインしたアカウントの情報. Signupする前に用いる
+type OIDCAccountInfo struct {
 	Token     string `json:"token"`
-	AccountID string `json:"sub"`
+	AccountID string `json:"account_id"` //auth0のsub
 	Email     string `json:"email"`
 }
 
-func NewAccountInfo(token, accountID, email string) AccountInfo {
-	return AccountInfo{
+func NewOIDCAccountInfo(token, accountID, email string) OIDCAccountInfo {
+	return OIDCAccountInfo{
 		Token:     token,
 		AccountID: accountID,
 		Email:     email,
 	}
 }
 
-// Validate - account_infoを検証
-func (account *AccountInfo) Validate() error {
+// Validate - oidc_account_infoを検証
+func (account *OIDCAccountInfo) Validate() error {
 	if len(account.Token) == 0 {
 		return rest.NewBadRequest("トークンが空です")
 	}

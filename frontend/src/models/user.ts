@@ -44,4 +44,4 @@ export type User = {
 
 export type UpdateUserProfileInput = Omit<User, 'accountId' | 'role' | 'createdAt' | 'updatedAt' | 'emailVerified' | 'id'>;
 
-export type SignupInput = Omit<UpdateUserProfileInput, 'cardPublished'>;
+export type SignupInput = Omit<UpdateUserProfileInput, 'email' | 'cardPublished'>;

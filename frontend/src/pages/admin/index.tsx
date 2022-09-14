@@ -2,7 +2,7 @@ import Container from '@mui/material/Container';
 import { NextPage } from 'next';
 import { Typography, Grid, Box } from '@mui/material';
 import LinkContentCard from 'components/design/LinkContentCard';
-import { withLogin } from 'middlewares/withLogin';
+import { withLoginUser } from 'middlewares/withLoginUser';
 import { NoSSR } from 'components/utils/NoSSR';
 
 const links = [
@@ -35,4 +35,4 @@ const Page: NextPage = () => {
   );
 };
 
-export default withLogin(Page);
+export default withLoginUser(Page);
