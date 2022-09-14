@@ -140,6 +140,7 @@ const PhoneNumberField: React.FC<React.PropsWithChildren<FormContentProps<string
   );
 };
 
+/*
 const EmailField: React.FC<React.PropsWithChildren<FormContentProps<string>>> = ({ value, onChange, error }) => {
   return (
     <Grid item xs={12}>
@@ -159,6 +160,7 @@ const EmailField: React.FC<React.PropsWithChildren<FormContentProps<string>>> = 
     </Grid>
   );
 };
+*/
 
 const FundamentalInfo: React.FC<
   React.PropsWithChildren<{

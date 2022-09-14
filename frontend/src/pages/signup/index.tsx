@@ -6,7 +6,6 @@ import { NoSSR } from 'components/utils/NoSSR';
 import { useLogoutFromOIDC } from 'features/auth';
 import { useSelector } from 'react-redux';
 import { fetchCurrentOidcAccountInfo, selectCurrentOidcAccountInfo } from 'features/currentOidcAccount';
-import { wrapper } from 'store';
 import { useDispatch } from 'react-redux';
 
 const Page: NextPage = () => {

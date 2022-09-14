@@ -4,7 +4,6 @@ import { decodeCard } from './decode';
 import { User, UpdateUserProfileInput, SignupInput, PaymentStatus } from 'models/user';
 import { Period, EmailKind, EmailTemplate } from 'models/appconfig';
 import { UpdateAppConfigInput } from './type';
-import { stringify } from 'querystring';
 
 export const createApiClient = (baseUrl: string, options?: Options) => {
   const http = ky.create({
