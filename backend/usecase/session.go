@@ -100,7 +100,7 @@ func (us *sessionUsecase) Signup(ctx context.Context, user *domain.User, account
 		return rest.NewBadRequest("メールアドレスが既に利用されています")
 	}
 	if err != nil {
-		return errors.Errorf("failed to insert new user: %w", err)
+		return xerrors.Errorf("failed to insert new user: %w", err)
 	}
 	user.ID = id
 
