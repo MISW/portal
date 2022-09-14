@@ -73,7 +73,7 @@ const useCurrentPeriodNode = (currentPeriod: number | undefined, setCurrentPerio
 };
 
 const useEmailTemplateNode = () => {
-  type KindType = 'email_verification' | 'after_registration' | 'payment_reminder';
+  type KindType = 'email_verification' | 'after_registration' | 'payment_receipt' | 'payment_reminder';
   const options: {
     key: KindType;
     label: string;
@@ -85,6 +85,10 @@ const useEmailTemplateNode = () => {
     {
       key: 'after_registration',
       label: 'メールアドレス確認後の支払い方法案内メール',
+    },
+    {
+      key: 'payment_receipt',
+      label: '会費支払い確認済メール',
     },
     {
       key: 'payment_reminder',

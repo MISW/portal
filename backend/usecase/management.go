@@ -181,6 +181,30 @@ func (mu *managementUsecase) AddPaymentStatus(ctx context.Context, userID, perio
 		return xerrors.Errorf("failed to update role for user(%d) automatically: %w", userID, err)
 	}
 
+	// メール送信: これによって自分が入会できたことを確認できる。
+	// TODO1: メール送信に失敗した場合、手動で再送信する必要がある。DBなどにメール送信失敗者を保存しておいて、定期的に送信再チャレンジした方が良さそう。
+	// TODO2: いずれは領収証として支払い金額も載せた方がいいかもしれない。
+	user, err := mu.UserRepository.GetByID(ctx, userID)
+	if err != nil {
+		return xerrors.Errorf("failed to send email because no user(%d) found: %w", userID, err)
+	}
+
+	subject, body, err := mu.AppConfigRepository.GetEmailTemplate(domain.PaymentReceipt)
+	if err != nil {
+		return xerrors.Errorf("failed to send email because failed to get email template for payment reminder: %w", err)
+	}
+
+	subject, body, err = email.GenerateEmailFromTemplate(subject, body, map[string]interface{}{
+		"User": user,
+	})
+	if err != nil {
+		return xerrors.Errorf("failed to send email: %w", err)
+	}
+
+	if err := mu.EmailSender.Send(user.Email, subject, body); err != nil {
+		return xerrors.Errorf("failed to send email: %w", err)
+	}
+
 	return nil
 }
 

@@ -10,6 +10,9 @@ const (
 	// AfterRegistration - 新規登録時(メール確認後)
 	AfterRegistration EmailKind = "after_registration"
 
+	// PaymentReceipt - 支払い確認時
+	PaymentReceipt EmailKind = "payment_receipt"
+
 	// PaymentReminder - 支払いが完了していないメンバーに対してメールを送る
 	PaymentReminder EmailKind = "payment_reminder"
 )
@@ -18,6 +21,7 @@ var (
 	allEmailKinds = []EmailKind{
 		EmailVerification,
 		AfterRegistration,
+		PaymentReceipt,
 		PaymentReminder,
 	}
 )
