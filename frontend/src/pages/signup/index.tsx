@@ -40,7 +40,11 @@ const Page: NextPage = () => {
     </NoSSR>
   ) : (
     <NoSSR>
-      <Alert severity="info">まず最初にログイン(またはサインアップ)してください。</Alert>
+      <Alert severity="info">
+        <p>まず最初にログイン(またはサインアップ)してください。</p> 
+        <small>discordアカウントでログインする場合は、MISWのdiscordに使ってるアカウントでログインしてください.</small>
+        <small>slackアカウントを用いたログインは廃止予定です.</small>
+      </Alert>
       <Button
         onClick={() => {
           router.push('/login');

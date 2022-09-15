@@ -85,12 +85,14 @@ func (s *sessionHandler) Login(e echo.Context) error {
 
 // Logout - OIDC account からログインするURLを返す. 認証に失敗したユーザが別アカウントでログインするために必要.
 func (s *sessionHandler) Logout(e echo.Context) error {
+	//cookieにtokenが会ったらそれを使う
+	token := ""
 	ck, err := e.Cookie(cookies.TokenCookieKey)
-	if err != nil {
-		ck.Value = ""
+	if err == nil {
+		token = ck.Value
 	}
 
-	logoutURL, err := s.su.LogoutFromOIDC(e.Request().Context(), ck.Value)
+	logoutURL, err := s.su.LogoutFromOIDC(e.Request().Context(), token)
 	if err != nil {
 		return xerrors.Errorf("failed to generate logout url for OpenID Connect: %w", err)
 	}

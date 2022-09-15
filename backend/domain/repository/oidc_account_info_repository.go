@@ -17,5 +17,5 @@ type OIDCAccountInfoRepository interface {
 	GetByToken(ctx context.Context, token string) (*domain.OIDCAccountInfo, error)
 
 	// Delete - 削除
-	Delete(ctx context.Context, token string)
+	Delete(ctx context.Context, token string) error
 }
