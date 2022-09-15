@@ -1,3 +1,4 @@
+//go:build use_external_db
 // +build use_external_db
 
 package persistence_test
@@ -75,22 +76,25 @@ func TestUpdateRoleWithRule(t *testing.T) {
 
 	users := []*domain.User{
 		{
-			Email:                 "mischan@example.com",
-			Generation:            54,
-			Sex:                   domain.Female,
-			Role:                  domain.Member,
+			Email:      "mischan@example.com",
+			Generation: 54,
+			Sex:        domain.Female,
+			Role:       domain.Member,
+			AccountID:  "oauth|mischan1",
 		},
 		{
-			Email:                 "mischan2@example.com",
-			Generation:            54,
-			Sex:                   domain.Female,
-			Role:                  domain.NotMember,
+			Email:      "mischan2@example.com",
+			Generation: 54,
+			Sex:        domain.Female,
+			Role:       domain.NotMember,
+			AccountID:  "oauth|mischan2",
 		},
 		{
-			Email:                 "mischan3@example.com",
-			Generation:            54,
-			Sex:                   domain.Female,
-			Role:                  domain.Admin,
+			Email:      "mischan3@example.com",
+			Generation: 54,
+			Sex:        domain.Female,
+			Role:       domain.Admin,
+			AccountID:  "oauth|mischan3",
 		},
 	}
 

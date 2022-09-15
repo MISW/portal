@@ -3,6 +3,7 @@ package persistence
 import (
 	"context"
 	"database/sql"
+	"log"
 	"strings"
 	"time"
 
@@ -205,6 +206,8 @@ func (up *userPersistence) Insert(ctx context.Context, user *domain.User) (int, 
 
 	if err != nil {
 		if mysqlErr, ok := err.(*mysql.MySQLError); ok && mysqlErr.Number == 1062 {
+			log.Println(mysqlErr.Error())
+			//TODO: duplicate entry のエラーはメールアドレスだけに限らない
 			return 0, domain.ErrEmailConflicts
 		}
 
