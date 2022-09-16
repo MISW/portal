@@ -12,7 +12,7 @@ services:
       - MYSQL_DATABASE=portal
       - MYSQL_ROOT_HOST=%
       - MYSQL_ROOT_PASSWORD=root
-      # - TZ=Asia/Tokyo # backendはUTCのため違いが生じてしまう. backendでJST対応してからDBも日本時刻に合わせよう.
+      - TZ=Asia/Tokyo
     image: mariadb:10
     ports:
       - "3306:3306"
