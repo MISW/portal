@@ -9,13 +9,13 @@ import (
 type JWTProvider interface {
 	GenerateWithMap(claims map[string]interface{}) (string, error)
 
-	Generate(sc *jwt.StandardClaims) (string, error)
+	Generate(sc *jwt.RegisteredClaims) (string, error)
 
 	Parse(tokenString string) (*jwt.Token, error)
 
 	ParseAsMap(tokenString string) (map[string]interface{}, error)
 
-	ParseAsStandard(tokenString string) (*jwt.StandardClaims, error)
+	ParseAsStandard(tokenString string) (*jwt.RegisteredClaims, error)
 
 	ParseAs(tokenString string, as jwt.Claims) (jwt.Claims, error)
 }
@@ -45,7 +45,7 @@ func (p *jwtProvider) GenerateWithMap(claims map[string]interface{}) (string, er
 	return token, nil
 }
 
-func (p *jwtProvider) Generate(sc *jwt.StandardClaims) (string, error) {
+func (p *jwtProvider) Generate(sc *jwt.RegisteredClaims) (string, error) {
 	token, err := jwt.
 		NewWithClaims(jwt.SigningMethodHS512, sc).
 		SignedString(p.key)
@@ -89,20 +89,20 @@ func (p *jwtProvider) ParseAsMap(tokenString string) (map[string]interface{}, er
 	return mapClaims, nil
 }
 
-func (p *jwtProvider) ParseAsStandard(tokenString string) (*jwt.StandardClaims, error) {
+func (p *jwtProvider) ParseAsStandard(tokenString string) (*jwt.RegisteredClaims, error) {
 	token, err := p.Parse(tokenString)
 
 	if err != nil {
 		return nil, xerrors.Errorf("failed to parse token: %w", err)
 	}
 
-	standardClaims, ok := token.Claims.(*jwt.StandardClaims)
+	RegisteredClaims, ok := token.Claims.(*jwt.RegisteredClaims)
 
 	if !ok {
-		return nil, xerrors.Errorf("the claims are not expected claims(StandardClaims)")
+		return nil, xerrors.Errorf("the claims are not expected claims(RegisteredClaims)")
 	}
 
-	return standardClaims, nil
+	return RegisteredClaims, nil
 }
 
 func (p *jwtProvider) ParseAs(tokenString string, as jwt.Claims) (jwt.Claims, error) {

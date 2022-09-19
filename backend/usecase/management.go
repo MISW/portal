@@ -104,7 +104,7 @@ func (mu *managementUsecase) ListUsers(ctx context.Context, period int) ([]*doma
 	uts := make([]*domain.UserPaymentStatus, len(users))
 
 	for i := range uts {
-		ps, _ := psmap[users[i].ID]
+		ps := psmap[users[i].ID]
 
 		uts[i] = &domain.UserPaymentStatus{
 			User:          *users[i],

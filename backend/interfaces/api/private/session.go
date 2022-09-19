@@ -37,7 +37,7 @@ func (s *sessionHandler) Logout(e echo.Context) error {
 		)
 	}
 
-	logoutURL, err := s.su.Logout(e.Request().Context(), ck.Value)
+	logoutURL, _ := s.su.Logout(e.Request().Context(), ck.Value)
 	if err != nil {
 		return rest.NewInternalServerError("failed to logout: " + err.Error())
 	}

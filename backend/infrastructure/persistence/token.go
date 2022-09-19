@@ -26,16 +26,6 @@ type token struct {
 	UpdatedAt time.Time `db:"updated_at"`
 }
 
-func newToken(t *domain.Token) *token {
-	return &token{
-		UserID:    t.UserID,
-		Token:     t.Token,
-		ExpiredAt: t.ExpiredAt,
-		CreatedAt: t.CreatedAt,
-		UpdatedAt: t.UpdatedAt,
-	}
-}
-
 func parseToken(t *token) *domain.Token {
 	return &domain.Token{
 		UserID:    t.UserID,

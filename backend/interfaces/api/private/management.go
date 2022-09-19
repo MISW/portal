@@ -217,7 +217,7 @@ func (mh *managementHandler) GetPaymentStatuses(e echo.Context) error {
 
 		var nf *rest.NotFound
 		if err != nil && !errors.As(err, &nf) {
-			return xerrors.Errorf("failed to get payment status(user_id: %d, period: %d)", *param.UserID, *param.Period, err)
+			return xerrors.Errorf("failed to get payment status(user_id: %d, period: %d)", *param.UserID, *param.Period)
 		}
 
 		if ps != nil {
@@ -229,7 +229,7 @@ func (mh *managementHandler) GetPaymentStatuses(e echo.Context) error {
 		res, err = mh.mu.GetPaymentStatusesForUser(ctx, *param.UserID)
 
 		if err != nil {
-			return xerrors.Errorf("failed to list payment statuses for user(%d) due to internal server error: %w", err)
+			return xerrors.Errorf("failed to list payment statuses for user(%d) due to internal server error: %w", *param.UserID, err)
 		}
 	case param.Period != nil:
 		return rest.NewBadRequest("特定のperiodに対する支払い情報一覧を取得する機能は未実装です")
