@@ -28,18 +28,20 @@ type sessionHandler struct {
 }
 
 func (s *sessionHandler) Logout(e echo.Context) error {
-	ck, err := e.Cookie(cookies.TokenCookieKey)
+	ck, uaerr := e.Cookie(cookies.TokenCookieKey)
 
-	if err != nil {
+	if uaerr != nil {
 		return rest.RespondMessage(
 			e,
 			rest.NewUnauthorized("unauthorized"),
 		)
 	}
 
-	logoutURL, _ := s.su.Logout(e.Request().Context(), ck.Value)
-	if err != nil {
-		return rest.NewInternalServerError("failed to logout: " + err.Error())
+	logoutURL, iserr := s.su.Logout(e.Request().Context(), ck.Value)
+	iserrstr := iserr.Error()
+
+	if iserr != nil {
+		return rest.NewInternalServerError("failed to logout: " + iserrstr)
 	}
 
 	ck.Value = ""

@@ -43,7 +43,7 @@
 
 - method: POST
 - path: /login
-- description: 外部アカウント(slackなど)のログイン時にリダイレクトする URL を返す
+- description: 外部アカウント(slack など)のログイン時にリダイレクトする URL を返す
 - parameter: なし
 - set-cookie: misw-portal-state
 - response:
@@ -60,7 +60,7 @@
 
 - method: POST
 - path: /logout
-- description: OIDCアカウントからログアウトする
+- description: OIDC アカウントからログアウトする
 - response:
 
 ```json=
@@ -68,7 +68,8 @@
   "logout_url": "logout url"
 }
 ```
-このlogout_urlに遷移すればoidcで使ってるアカウントからログアウトできる
+
+この logout_url に遷移すれば oidc で使ってるアカウントからログアウトできる
 
 ### Callback
 
@@ -85,7 +86,7 @@
 ```
 
 - set-cookie: misw-portal-token
-- response: 
+- response:
 
 ```json=
 {
@@ -114,17 +115,18 @@
 
 メールに添付のリンクを開くと `/verify_email` が開かれるようになっており、URL のパラメータに token が付いているのでこれをこのエンドポイントの body に添付して POST する
 
-
 ### Endpoint: OIDC Account
 
 - path: /oidc_account
-- description: OIDCでログインはしているが、portalにはアカウントを作成していないユーザ
+- description: OIDC でログインはしているが、portal にはアカウントを作成していないユーザ
 
 #### Info
+
 - method: GET
 - path: ""
-- description: account_infoを取得する
+- description: account_info を取得する
 - response:
+
 ```json=
 {
   token: "string",
@@ -137,13 +139,13 @@
 
 - method: POST
 - path: /signup
-- description: 新規アカウント登録用エンドポイント. DBに存在しないアカウントで先にLoginしておく必要がある. 
+- description: 新規アカウント登録用エンドポイント. DB に存在しないアカウントで先に Login しておく必要がある.
 - parameter: `Content-Type: application/json` の body を POST
 
 - JSON フォーマットは[ここ](https://github.com/MISW/Portal/blob/master/backend/domain/user.go#L122)を参照(ただし、ID、AccountID、 Email、 Role、CreatedAt、UpdatedAt は指定しなくて良い(自動で生成される))
 
 - response:
-  - 成功時: 
+  - 成功時:
   ```json=
   {}
   ```
@@ -151,14 +153,12 @@
   ```json=
   {
     "status_code": "code",
-		"status":      "http.StatusText(code)",
-		"message":     "message",
+  	"status":      "http.StatusText(code)",
+  	"message":     "message",
   }
   ```
 
-
 E メールが送信されているので E メールを確認してください、みたいなメッセージを表示するだけで良い
-
 
 ## Endpoint: Private
 
@@ -376,7 +376,7 @@ payment status: https://github.com/MISW/Portal/blob/master/backend/domain/paymen
     - query: email_kind
     - email_kind
       - email_verification: 新規登録時のメール認証
-     
+
 ### Set Config
 
 - method: POST
@@ -461,7 +461,7 @@ payment status: https://github.com/MISW/Portal/blob/master/backend/domain/paymen
 
 - 外部アカウントでログイン(orSignup)する
 - フロント側で情報を入力する
-- `/api/private/signup` を叩いて登録する。同時にAccount IDやemailも登録される
+- `/api/private/signup` を叩いて登録する。同時に Account ID や email も登録される
 - not member role としてアカウントが作成される
 - メールが送信され、メールアドレス認証を行う
   - email_verified flag が立つ
@@ -469,11 +469,9 @@ payment status: https://github.com/MISW/Portal/blob/master/backend/domain/paymen
 - 会計が読み取る
 - member role に変更
 
-
 ### ログイン時の挙動
 
 - signup ページ以外で非ログイン状態
 - `/api/public/login` を叩いて返ってきた redirect_url に転送
 - 転送されて Auth0 で認証に成功すると `/callback` に返ってくる
 - この時に `/callback?code=XXXX&state=XXXX` みたいな感じで code と state がついてくるのでこれを読み取って `/api/public/callback` を叩く
-
