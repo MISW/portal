@@ -32,7 +32,7 @@ specifiers:
   react-redux: ^8.0.2
   sharp: ^0.31.0
   tailwindcss: ^3.1.8
-  type-fest: ^2.19.0
+  type-fest: ^3.0.0
   typescript: ^4.7.4
 
 dependencies:
@@ -69,7 +69,7 @@ devDependencies:
   postcss: 8.4.16
   prettier: 2.7.1
   tailwindcss: 3.1.8_postcss@8.4.16
-  type-fest: 2.19.0
+  type-fest: 3.0.0
   typescript: 4.7.4
 
 packages:
@@ -1673,7 +1673,7 @@ packages:
       eslint: 8.23.0
       eslint-import-resolver-node: 0.3.6
       eslint-import-resolver-typescript: 2.7.1_faomjyrlgqmwswvqymymzkxcqi
-      eslint-plugin-import: 2.26.0_ijmu6epd3rsbb7y7umh7oqxvja
+      eslint-plugin-import: 2.26.0_iepzrjnvahcxaf6zc7cutko6om
       eslint-plugin-jsx-a11y: 6.6.1_eslint@8.23.0
       eslint-plugin-react: 7.31.7_eslint@8.23.0
       eslint-plugin-react-hooks: 4.6.0_eslint@8.23.0
@@ -1710,7 +1710,7 @@ packages:
     dependencies:
       debug: 4.3.4
       eslint: 8.23.0
-      eslint-plugin-import: 2.26.0_ijmu6epd3rsbb7y7umh7oqxvja
+      eslint-plugin-import: 2.26.0_iepzrjnvahcxaf6zc7cutko6om
       glob: 7.2.3
       is-glob: 4.0.3
       resolve: 1.22.1
@@ -1719,7 +1719,7 @@ packages:
       - supports-color
     dev: true
 
-  /eslint-module-utils/2.7.4_5ep4gvkdjjju3hv6nnofcqbqsy:
+  /eslint-module-utils/2.7.4_jkckkukndwd4xurous7ym67tze:
     resolution: {integrity: sha512-j4GT+rqzCoRKHwURX7pddtIPGySnX9Si/cgMI5ztrcqOPtk5dDEeZ34CQVPphnqkJytlc97Vuk05Um2mJ3gEQA==}
     engines: {node: '>=4'}
     peerDependencies:
@@ -1744,12 +1744,11 @@ packages:
       debug: 3.2.7
       eslint: 8.23.0
       eslint-import-resolver-node: 0.3.6
-      eslint-import-resolver-typescript: 2.7.1_faomjyrlgqmwswvqymymzkxcqi
     transitivePeerDependencies:
       - supports-color
     dev: true
 
-  /eslint-plugin-import/2.26.0_ijmu6epd3rsbb7y7umh7oqxvja:
+  /eslint-plugin-import/2.26.0_iepzrjnvahcxaf6zc7cutko6om:
     resolution: {integrity: sha512-hYfi3FXaM8WPLf4S1cikh/r4IxnO6zrhZbEGz2b660EJRbuxgpDS5gkCuYgGWg2xxh2rBuIr4Pvhve/7c31koA==}
     engines: {node: '>=4'}
     peerDependencies:
@@ -1766,7 +1765,7 @@ packages:
       doctrine: 2.1.0
       eslint: 8.23.0
       eslint-import-resolver-node: 0.3.6
-      eslint-module-utils: 2.7.4_5ep4gvkdjjju3hv6nnofcqbqsy
+      eslint-module-utils: 2.7.4_jkckkukndwd4xurous7ym67tze
       has: 1.0.3
       is-core-module: 2.10.0
       is-glob: 4.0.3
@@ -3440,9 +3439,9 @@ packages:
     engines: {node: '>=10'}
     dev: true
 
-  /type-fest/2.19.0:
-    resolution: {integrity: sha512-RAH822pAdBgcNMAfWnCBU3CFZcfZ/i1eZjwFU/dsLKumyuuP3niueg2UAukXYF0E2AAoc82ZSSf9J0WQBinzHA==}
-    engines: {node: '>=12.20'}
+  /type-fest/3.0.0:
+    resolution: {integrity: sha512-MINvUN5ug9u+0hJDzSZNSnuKXI8M4F5Yvb6SQZ2CYqe7SgKXKOosEcU5R7tRgo85I6eAVBbkVF7TCvB4AUK2xQ==}
+    engines: {node: '>=14.16'}
     dev: true
 
   /typescript/4.7.4:
