@@ -1,3 +1,4 @@
+//go:build use_external_db
 // +build use_external_db
 
 package persistence_test

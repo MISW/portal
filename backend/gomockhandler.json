@@ -82,7 +82,7 @@
 		},
 		"interfaces/api/private/mock_session.go": {
 			"checksum": "F19LwH/HDFQAUZ+CyHbPkA==",
-			"source_checksum": "JUG6/7conCzbcJXL/xQhDA==",
+			"source_checksum": "71L/PlGxZ0/G9xUYwXljzQ==",
 			"mode": "SOURCE_MODE",
 			"source_mode_runner": {
 				"source": "interfaces/api/private/session.go",
