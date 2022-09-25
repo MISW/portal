@@ -140,6 +140,7 @@ const PhoneNumberField: React.FC<React.PropsWithChildren<FormContentProps<string
   );
 };
 
+/*
 const EmailField: React.FC<React.PropsWithChildren<FormContentProps<string>>> = ({ value, onChange, error }) => {
   return (
     <Grid item xs={12}>
@@ -159,12 +160,13 @@ const EmailField: React.FC<React.PropsWithChildren<FormContentProps<string>>> = 
     </Grid>
   );
 };
+*/
 
 const FundamentalInfo: React.FC<
   React.PropsWithChildren<{
     userHooks: UserProfileHooks;
   }>
-> = ({ userHooks: { name, kana, sex, emergencyPhoneNumber, email } }) => {
+> = ({ userHooks: { name, kana, sex, emergencyPhoneNumber /*, email*/ } }) => {
   return (
     <>
       <Grid container spacing={3}>
@@ -173,7 +175,7 @@ const FundamentalInfo: React.FC<
           <KanaNameField {...kana} />
           <GenderField {...sex} />
           <PhoneNumberField {...emergencyPhoneNumber} />
-          <EmailField {...email} />
+          {/* <EmailField {...email} /> /*deprecated: emailは入力させるのではなくOIDCのアカウントのメアドを使う*/}
         </Grid>
         <Alert
           severity="info"

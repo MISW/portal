@@ -18,15 +18,14 @@ VALUES
   '2022-04-01 00:00:00',
   '2022-04-01 00:00:00'
 ),
-(
-  'email-template-v1-payment_reminder',
-  '{\"subject\":\"【重要】MISW春会費納入期限について\",\"body\":\"{{.User.Handle}}さん\\nかねてからMISWに入会していただき誠にありがとうございます。サークル費払って！！！！\"}',
+(  'email-template-v1-payment_receipt',
+  '{\"subject\":\"会費支払いを確認しました\",\"body\":\"{{.User.Handle}}さん\\n\\n会費支払いを確認しました。\\n以下のページよりご確認いただけます。\\n\\nhttp://localhost:8080/profile"}',
   '2022-04-01 00:00:00',
   '2022-04-01 00:00:00'
 ),
 (
-  'email-template-v1-slack_invitation',
-  '{\"subject\":\"Slackへの招待を確認してください\",\"body\":\"{{.User.Handle}}さん、初めまして。MISWへようこそ！\\n\\n入会費の払込が確認できたため, 会員登録が完了しました！\"}',
+  'email-template-v1-payment_reminder',
+  '{\"subject\":\"【重要】MISW春会費納入期限について\",\"body\":\"{{.User.Handle}}さん\\nかねてからMISWに入会していただき誠にありがとうございます。サークル費払って！！！！\"}',
   '2022-04-01 00:00:00',
   '2022-04-01 00:00:00'
 ),

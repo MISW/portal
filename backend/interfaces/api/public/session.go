@@ -1,13 +1,11 @@
 package public
 
 import (
-	"fmt"
 	"net/http"
 	"os"
 	"strings"
 	"time"
 
-	"github.com/MISW/Portal/backend/domain"
 	"github.com/MISW/Portal/backend/internal/cookies"
 	"github.com/MISW/Portal/backend/internal/rest"
 	"github.com/MISW/Portal/backend/usecase"
@@ -19,9 +17,9 @@ import (
 type SessionHandler interface {
 	Login(e echo.Context) error
 
-	Callback(e echo.Context) error
+	Logout(e echo.Context) error
 
-	Signup(e echo.Context) error
+	Callback(e echo.Context) error
 
 	VerifyEmail(e echo.Context) error
 }
@@ -85,6 +83,28 @@ func (s *sessionHandler) Login(e echo.Context) error {
 	)
 }
 
+// Logout - OIDC account からログインするURLを返す. 認証に失敗したユーザが別アカウントでログインするために必要.
+func (s *sessionHandler) Logout(e echo.Context) error {
+	//cookieにtokenが会ったらそれを使う
+	token := ""
+	ck, err := e.Cookie(cookies.TokenCookieKey)
+	if err == nil {
+		token = ck.Value
+	}
+
+	logoutURL, err := s.su.LogoutFromOIDC(e.Request().Context(), token)
+	if err != nil {
+		return xerrors.Errorf("failed to generate logout url for OpenID Connect: %w", err)
+	}
+
+	return rest.RespondOK(
+		e,
+		map[string]interface{}{
+			"logout_url": logoutURL,
+		},
+	)
+}
+
 func (s *sessionHandler) Callback(e echo.Context) error {
 	type OAuth2Param struct {
 		Code  string `json:"code" query:"code"`
@@ -110,7 +130,7 @@ func (s *sessionHandler) Callback(e echo.Context) error {
 
 	expectedState := cookie.Value
 
-	token, err := s.su.Callback(e.Request().Context(), expectedState, oauth2Param.State, oauth2Param.Code)
+	token, hasAccount, err := s.su.Callback(e.Request().Context(), expectedState, oauth2Param.State, oauth2Param.Code)
 
 	if err != nil {
 		e.Logger().Infof("failed to validate token: %+v", err)
@@ -129,33 +149,9 @@ func (s *sessionHandler) Callback(e echo.Context) error {
 
 	e.SetCookie(cookie)
 
-	return rest.RespondOK(e, nil)
-}
-
-func (s *sessionHandler) Signup(e echo.Context) error {
-	u := &domain.User{}
-
-	if err := e.Bind(u); err != nil {
-		return rest.RespondMessage(
-			e,
-			rest.NewBadRequest(
-				fmt.Sprintf("リクエストデータが不正です(%v)", err),
-			),
-		)
-	}
-
-	err := s.su.Signup(e.Request().Context(), u)
-
-	var frerr rest.ErrorResponse
-	if xerrors.As(err, &frerr) {
-		return rest.RespondMessage(e, frerr)
-	}
-
-	if err != nil {
-		return xerrors.Errorf("signup failed: %w", err)
-	}
-
-	return rest.RespondOK(e, nil)
+	return rest.RespondOK(e, map[string]interface{}{
+		"has_account": hasAccount,
+	})
 }
 
 func (s *sessionHandler) VerifyEmail(e echo.Context) error {

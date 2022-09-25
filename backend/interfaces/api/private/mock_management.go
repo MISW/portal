@@ -132,20 +132,6 @@ func (mr *MockManagementHandlerMockRecorder) GetUser(e interface{}) *gomock.Call
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUser", reflect.TypeOf((*MockManagementHandler)(nil).GetUser), e)
 }
 
-// InviteToSlack mocks base method.
-func (m *MockManagementHandler) InviteToSlack(e echo.Context) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "InviteToSlack", e)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// InviteToSlack indicates an expected call of InviteToSlack.
-func (mr *MockManagementHandlerMockRecorder) InviteToSlack(e interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "InviteToSlack", reflect.TypeOf((*MockManagementHandler)(nil).InviteToSlack), e)
-}
-
 // ListUsers mocks base method.
 func (m *MockManagementHandler) ListUsers(e echo.Context) error {
 	m.ctrl.T.Helper()

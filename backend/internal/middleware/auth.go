@@ -24,6 +24,7 @@ type authMiddleware struct {
 	su usecase.SessionUsecase
 }
 
+// TODO: Roleで振り分けたり、DBにユーザーがいなかったらSignupに飛ばしたり、など
 func (m *authMiddleware) Authenticate(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		ck, err := c.Cookie(cookies.TokenCookieKey)

@@ -1,3 +1,4 @@
+//go:build use_external_db
 // +build use_external_db
 
 package persistence_test
@@ -321,22 +322,22 @@ func TestListUnpaidMembers(t *testing.T) {
 	up := persistence.NewUserPersistence(conn)
 
 	up.Insert(context.Background(), &domain.User{
-		Email:                 "1@example.com",
-		Sex:                   domain.Male,
-		Role:                  domain.Member,
-		SlackInvitationStatus: domain.Invited,
+		Email:     "1@example.com",
+		Sex:       domain.Male,
+		Role:      domain.Member,
+		AccountID: "1",
 	})
 	up.Insert(context.Background(), &domain.User{
-		Email:                 "2@example.com",
-		Sex:                   domain.Male,
-		Role:                  domain.Member,
-		SlackInvitationStatus: domain.Invited,
+		Email:     "2@example.com",
+		Sex:       domain.Male,
+		Role:      domain.Member,
+		AccountID: "2",
 	})
 	up.Insert(context.Background(), &domain.User{
-		Email:                 "3@example.com",
-		Sex:                   domain.Male,
-		Role:                  domain.Admin,
-		SlackInvitationStatus: domain.Invited,
+		Email:     "3@example.com",
+		Sex:       domain.Male,
+		Role:      domain.Admin,
+		AccountID: "3",
 	})
 
 	insertTestPaymentStatusData(t, psp)

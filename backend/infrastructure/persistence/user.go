@@ -3,6 +3,7 @@ package persistence
 import (
 	"context"
 	"database/sql"
+	"log"
 	"strings"
 	"time"
 
@@ -39,10 +40,8 @@ type user struct {
 	Squads               string         `db:"squads"`
 	Role                 string         `db:"role"`
 
-	SlackInvitationStatus string `db:"slack_invitation_status"`
-
 	// 外部サービス
-	SlackID           sql.NullString `db:"slack_id"`
+	AccountID         string         `db:"account_id"`
 	DiscordID         sql.NullString `db:"discord_id"`
 	TwitterScreenName sql.NullString `db:"twitter_screen_name"`
 
@@ -86,12 +85,7 @@ func newUser(u *domain.User) *user {
 		Squads:               strings.Join(u.Squads, "\n"),
 		Role:                 string(u.Role),
 
-		SlackInvitationStatus: string(u.SlackInvitationStatus),
-
-		SlackID: sql.NullString{
-			String: u.SlackID,
-			Valid:  len(u.SlackID) != 0,
-		},
+		AccountID: u.AccountID,
 		DiscordID: sql.NullString{
 			String: u.DiscordID,
 			Valid:  len(u.DiscordID) != 0,
@@ -138,9 +132,7 @@ func parseUser(u *user) *domain.User {
 		Squads:               strings.Split(u.Squads, "\n"),
 		Role:                 domain.RoleType(u.Role),
 
-		SlackInvitationStatus: domain.SlackInvitationStatus(u.SlackInvitationStatus),
-
-		SlackID:           u.SlackID.String,
+		AccountID:         u.AccountID,
 		DiscordID:         u.DiscordID.String,
 		TwitterScreenName: u.TwitterScreenName.String,
 
@@ -181,8 +173,7 @@ func (up *userPersistence) Insert(ctx context.Context, user *domain.User) (int, 
 		workshops,
 		squads,
 		role,
-		slack_invitation_status,
-		slack_id,
+		account_id,
 		discord_id,
 		twitter_screen_name,
 		email_verified,
@@ -205,8 +196,7 @@ func (up *userPersistence) Insert(ctx context.Context, user *domain.User) (int, 
 		:workshops,
 		:squads,
 		:role,
-		:slack_invitation_status,
-		:slack_id,
+		:account_id,
 		:discord_id,
 		:twitter_screen_name,
 		:email_verified,
@@ -216,6 +206,8 @@ func (up *userPersistence) Insert(ctx context.Context, user *domain.User) (int, 
 
 	if err != nil {
 		if mysqlErr, ok := err.(*mysql.MySQLError); ok && mysqlErr.Number == 1062 {
+			log.Println(mysqlErr.Error())
+			//TODO: duplicate entry のエラーはメールアドレスだけに限らない
 			return 0, domain.ErrEmailConflicts
 		}
 
@@ -250,20 +242,20 @@ func (up *userPersistence) GetByID(ctx context.Context, id int) (*domain.User, e
 	return parseUser(&u), nil
 }
 
-// GetBySlackID finds existing user by user's Slack ID(neither name nor display name)
-func (up *userPersistence) GetBySlackID(ctx context.Context, slackID string) (*domain.User, error) {
+// GetByAccountID finds existing user by user's Account ID
+func (up *userPersistence) GetByAccountID(ctx context.Context, accountID string) (*domain.User, error) {
 	var u user
 	if err := sqlx.Get(
 		up.db,
 		&u,
-		`SELECT * FROM users WHERE slack_id=?`,
-		slackID,
+		`SELECT * FROM users WHERE account_id=?`,
+		accountID,
 	); err != nil {
 		if err == sql.ErrNoRows {
 			return nil, domain.ErrNoUser
 		}
 
-		return nil, xerrors.Errorf("failed to find user by Slack ID: %w", err)
+		return nil, xerrors.Errorf("failed to find user by Account ID: %w", err)
 	}
 
 	return parseUser(&u), nil
@@ -364,8 +356,7 @@ func (up *userPersistence) Update(ctx context.Context, user *domain.User) error 
 		workshops=:workshops,
 		squads=:squads,
 		role=:role,
-		slack_invitation_status=:slack_invitation_status,
-		slack_id=:slack_id,
+		account_id=:account_id,
 		discord_id=:discord_id,
 		twitter_screen_name=:twitter_screen_name,
 		email_verified=:email_verified,
@@ -386,6 +377,19 @@ func (up *userPersistence) Update(ctx context.Context, user *domain.User) error 
 
 // VerifyEmail - メールアドレスを認証済みにする
 func (up *userPersistence) VerifyEmail(ctx context.Context, id int, email string) error {
+	//既に認証済みかどうか
+	u, err := up.GetByID(ctx, id)
+	if err != nil {
+		return err
+	}
+	if u.Email != email {
+		return domain.ErrEmailAddressChanged
+	}
+	if u.EmailVerified {
+		return domain.ErrEmailAlreadyVerified
+	}
+
+	//updateする
 	res, err := up.db.Exec(`
 	UPDATE users SET
 		email_verified=1
@@ -403,7 +407,7 @@ func (up *userPersistence) VerifyEmail(ctx context.Context, id int, email string
 	}
 
 	if affected != 1 {
-		return domain.ErrEmailAddressChanged
+		return xerrors.Errorf("failed to update email verification status")
 	}
 
 	return nil

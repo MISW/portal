@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"net/url"
 	"path"
-	"strings"
 	"time"
 
 	"github.com/MISW/Portal/backend/domain"
@@ -15,25 +14,34 @@ import (
 	"github.com/MISW/Portal/backend/internal/oidc"
 	"github.com/MISW/Portal/backend/internal/rest"
 	"github.com/MISW/Portal/backend/internal/tokenutil"
+	"github.com/pkg/errors"
 	"golang.org/x/xerrors"
 )
 
 // SessionUsecase - login/signup/logoutなどのセッション周りの処理
 type SessionUsecase interface {
 	// SignUp - ユーザ新規登録
-	Signup(ctx context.Context, user *domain.User) error
+	Signup(ctx context.Context, user *domain.User, accountInfo *domain.OIDCAccountInfo) error
 
 	// Login - OpenID ConnectのリダイレクトURLを生成する
 	Login(ctx context.Context) (redirectURL, state string, err error)
 
-	// Callback - OpenID Connectでのcallbackを受け取る
-	Callback(ctx context.Context, expectedState, actualState, code string) (token string, err error)
+	// Callback - OpenID Connectでのcallbackを受け取る.
+	// ログインに成功したらtokenを返す.
+	// DBにアカウントを持っている(signup済み)の場合はhasAccount=trueとなる.
+	Callback(ctx context.Context, expectedState, actualState, code string) (token string, hasAccount bool, err error)
 
-	// Logout - トークンを無効化する
-	Logout(ctx context.Context, token string) error
+	// Logout - トークンを無効化する. LogoutのURLを返す.
+	Logout(ctx context.Context, token string) (logoutURL string, err error)
+
+	// LogoutFromOIDC -  OIDCアカウントからLogoutするURLを返す.oidcAccountInfoを格納している場合はそれを消す.
+	LogoutFromOIDC(ctx context.Context, token string) (logoutURL string, err error)
 
 	// Validate - トークンの有効性を検証しユーザを取得する
 	Validate(ctx context.Context, token string) (user *domain.User, err error)
+
+	// ValidateOIDC - トークンの有効性を検証しoidc infoを取得する
+	ValidateOIDC(ctx context.Context, token string) (user *domain.OIDCAccountInfo, err error)
 
 	// VerifyEmail - Eメール認証用のトークンを受け取ってログイン用トークンを返す
 	VerifyEmail(ctx context.Context, verifyToken string) (token string, err error)
@@ -41,6 +49,7 @@ type SessionUsecase interface {
 
 // NewSessionUsecase - ユーザ関連のユースケースを初期化
 func NewSessionUsecase(
+	accountInfoRepository repository.OIDCAccountInfoRepository,
 	userRepository repository.UserRepository,
 	tokenRepository repository.TokenRepository,
 	authenticator oidc.Authenticator,
@@ -50,62 +59,65 @@ func NewSessionUsecase(
 	baseURL string,
 ) SessionUsecase {
 	return &sessionUsecase{
-		userRepository:      userRepository,
-		tokenRepository:     tokenRepository,
-		authenticator:       authenticator,
-		appConfigRpoeisotry: appConfigRpoeisotry,
-		mailer:              mailer,
-		jwtProvider:         jwtProvider,
-		baseURL:             baseURL,
+		accountInfoRepository: accountInfoRepository,
+		userRepository:        userRepository,
+		tokenRepository:       tokenRepository,
+		authenticator:         authenticator,
+		appConfigRpoeisotry:   appConfigRpoeisotry,
+		mailer:                mailer,
+		jwtProvider:           jwtProvider,
+		baseURL:               baseURL,
 	}
 }
 
 type sessionUsecase struct {
-	appConfigRpoeisotry repository.AppConfigRepository
-	userRepository      repository.UserRepository
-	tokenRepository     repository.TokenRepository
-	authenticator       oidc.Authenticator
-	mailer              email.Sender
-	jwtProvider         jwt.JWTProvider
-	baseURL             string
+	accountInfoRepository repository.OIDCAccountInfoRepository
+	appConfigRpoeisotry   repository.AppConfigRepository
+	userRepository        repository.UserRepository
+	tokenRepository       repository.TokenRepository
+	authenticator         oidc.Authenticator
+	mailer                email.Sender
+	jwtProvider           jwt.JWTProvider
+	baseURL               string
 }
 
 var _ SessionUsecase = &sessionUsecase{}
 
 // SignUp - ユーザ新規登録
-func (us *sessionUsecase) Signup(ctx context.Context, user *domain.User) error {
-	user.SlackID = ""
+func (us *sessionUsecase) Signup(ctx context.Context, user *domain.User, accountInfo *domain.OIDCAccountInfo) error {
+	//user account data
+	user.AccountID = accountInfo.AccountID
+	user.Email = accountInfo.Email
 	user.Role = domain.NotMember
-	user.SlackInvitationStatus = domain.Never
 	user.EmailVerified = false
-
 	if err := user.Validate(); err != nil {
 		return err
 	}
 
+	//insert into DB
 	id, err := us.userRepository.Insert(ctx, user)
-
-	if xerrors.Is(err, domain.ErrEmailConflicts) {
+	if errors.Is(err, domain.ErrEmailConflicts) {
 		return rest.NewBadRequest("メールアドレスが既に利用されています")
 	}
-
 	if err != nil {
 		return xerrors.Errorf("failed to insert new user: %w", err)
 	}
 	user.ID = id
 
+	//delete account_info in memory
+	us.accountInfoRepository.Delete(ctx, accountInfo.Token)
+
+	//email verification
 	token, err := us.jwtProvider.GenerateWithMap(map[string]interface{}{
 		"kind":  "email_verification",
 		"id":    user.ID,
 		"email": user.Email,
 	})
-
 	if err != nil {
 		return xerrors.Errorf("failed to generate token for email verification: %w", err)
 	}
 
 	u, err := url.Parse(us.baseURL)
-
 	if err != nil {
 		return xerrors.Errorf("base url is invalid(%s): %w", us.baseURL, err)
 	}
@@ -122,13 +134,11 @@ func (us *sessionUsecase) Signup(ctx context.Context, user *domain.User) error {
 	}
 
 	subject, body, err := us.appConfigRpoeisotry.GetEmailTemplate(domain.EmailVerification)
-
 	if err != nil {
 		return xerrors.Errorf("failed to get email template for verification: %w", err)
 	}
 
 	subject, body, err = email.GenerateEmailFromTemplate(subject, body, metadata)
-
 	if err != nil {
 		return xerrors.Errorf("failed to generate email from template: %w", err)
 	}
@@ -151,39 +161,39 @@ func (us *sessionUsecase) Login(ctx context.Context) (redirectURL, state string,
 	return url, state, nil
 }
 
-const (
-	auth0Prefix = "oauth2|slack|"
-)
-
 // Callback - OpenID Connectでのcallbackを受け取る
-func (us *sessionUsecase) Callback(ctx context.Context, expectedState, actualState, code string) (token string, err error) {
+// ログインに成功したらtokenを返す.
+// DBにアカウントを持っている(signup済み)の場合はhasAccount=trueとなる.
+// TODO: emailのアップデートもした方が良いかも? しかしその場合、再度email_verificationもした方がいい気がするが...
+func (us *sessionUsecase) Callback(ctx context.Context, expectedState, actualState, code string) (token string, hasAccount bool, err error) {
 	res, err := us.authenticator.Callback(ctx, expectedState, actualState, code)
 
 	if err != nil {
-		return "", xerrors.Errorf("failed to verify your token: %w", err)
-	}
-
-	if !strings.HasPrefix(res.IDToken.Subject, auth0Prefix) {
-		return "", xerrors.Errorf("sub is invalid: %s", res.IDToken.Subject)
+		return "", false, xerrors.Errorf("failed to verify your token: %w", err)
 	}
 
 	// TODO: 雑すぎるンで何とかする
-	var avatarURL, avatarThumbnailURL string
+	var avatarURL, avatarThumbnailURL, email string
 
-	v, ok := res.Profile["picture"]
-	if ok {
+	if v, ok := res.Profile["picture"]; ok {
 		s, ok := v.(string)
 		if ok {
 			avatarURL = s
 		}
 	}
-	v, ok = res.Profile["https://misw.jp/thumbnail"]
-	if ok {
+	if v, ok := res.Profile["https://misw.jp/thumbnail"]; ok {
 		s, ok := v.(string)
 		if ok {
 			avatarThumbnailURL = s
 		}
 	}
+	if v, ok := res.Profile["email"]; ok {
+		s, ok := v.(string)
+		if ok {
+			email = s
+		}
+	}
+
 	var avatar *domain.Avatar
 	if avatarURL != "" && avatarThumbnailURL != "" {
 		avatar = &domain.Avatar{
@@ -192,22 +202,50 @@ func (us *sessionUsecase) Callback(ctx context.Context, expectedState, actualSta
 		}
 	}
 
-	slackID := strings.TrimPrefix(res.IDToken.Subject, auth0Prefix)
+	accountID := res.IDToken.Subject
 
-	user, err := us.userRepository.GetBySlackID(ctx, slackID)
-
+	user, err := us.userRepository.GetByAccountID(ctx, accountID)
 	if err != nil {
-		return "", xerrors.Errorf("failed to find user account associated with SlackID(%s): %w", slackID, err)
+		//ユーザーがいない場合、Signup時のためにAccountInfoとして利用するために情報を保存しておく
+		if err == domain.ErrNoUser {
+			token, err = us.handleNoUserCallback(ctx, accountID, email)
+			if err != nil {
+				return "", false, err
+			}
+			return token, false, nil
+		}
+		return "", false, xerrors.Errorf("failed to find user account associated with AccountID(%s): %w", accountID, err)
 	}
 
-	token, err = tokenutil.GenerateRandomToken()
+	token, err = us.handleUserCallback(ctx, user, avatar)
+	if err != nil {
+		return "", true, err
+	}
 
+	return token, true, nil
+}
+
+// handleNoUserCallback DBにデータが保存されていないUserのCallbackを取り扱う.
+func (us *sessionUsecase) handleNoUserCallback(ctx context.Context, accountID, email string) (string, error) {
+	token, err := tokenutil.GenerateRandomToken()
+	if err != nil {
+		return "", xerrors.Errorf("failed to generate token: %w", err)
+	}
+	account := domain.NewOIDCAccountInfo(token, accountID, email)
+	if err := us.accountInfoRepository.Save(ctx, &account); err != nil {
+		return "", err
+	}
+	return token, nil
+}
+
+// handleUserCallback DBにデータが保存されているUserのcallbackを取り扱う
+func (us *sessionUsecase) handleUserCallback(ctx context.Context, user *domain.User, avatar *domain.Avatar) (string, error) {
+	token, err := tokenutil.GenerateRandomToken()
 	if err != nil {
 		return "", xerrors.Errorf("failed to generate token: %w", err)
 	}
 
 	err = us.tokenRepository.Add(ctx, user.ID, token, time.Now().Add(10*24*time.Hour))
-
 	if err != nil {
 		return "", xerrors.Errorf("failed to insert new token: %w", err)
 	}
@@ -219,22 +257,38 @@ func (us *sessionUsecase) Callback(ctx context.Context, expectedState, actualSta
 			return "", xerrors.Errorf("failed to update avatar: %w", err)
 		}
 	}
-
 	return token, nil
 }
 
-// Logout - トークンを無効化する
-func (us *sessionUsecase) Logout(ctx context.Context, token string) error {
-	err := us.tokenRepository.Delete(ctx, token)
-
+// Logout - トークンを無効化する. LogoutのURLを返す.
+func (us *sessionUsecase) Logout(ctx context.Context, token string) (logoutURL string, err error) {
+	err = us.tokenRepository.Delete(ctx, token)
 	if err != nil {
-		return xerrors.Errorf("failed to delete the token: %w", err)
+		return "", xerrors.Errorf("failed to delete the token: %w", err)
 	}
 
-	return nil
+	logoutURL, err = us.LogoutFromOIDC(ctx, token)
+	if err != nil {
+		return "", xerrors.Errorf("failed to generate logout url: %w", err)
+	}
+
+	return
 }
 
-// Validate - トークンの有効性を検証しユーザを取得する
+// LogoutFromOIDC - LogoutのURLを返す.oidcAccountInfoを格納していた場合はそれを消す.
+func (us *sessionUsecase) LogoutFromOIDC(ctx context.Context, token string) (logoutURL string, err error) {
+	//あったら消す、なかったら何もしない
+	us.accountInfoRepository.Delete(ctx, token)
+
+	logoutURL, err = us.authenticator.Logout(ctx)
+	if err != nil {
+		return "", xerrors.Errorf("failed to generate logout url: %w", err)
+	}
+
+	return
+}
+
+// Validate - トークンの有効性を検証しDBからユーザを取得する
 func (us *sessionUsecase) Validate(ctx context.Context, token string) (user *domain.User, err error) {
 	tk, err := us.tokenRepository.GetByToken(ctx, token)
 
@@ -253,6 +307,20 @@ func (us *sessionUsecase) Validate(ctx context.Context, token string) (user *dom
 	}
 
 	return user, nil
+}
+
+// ValidateOIDC - トークンの有効性を検証しOIDCAccountInfoStorreからAccountInfoを取得する
+func (us *sessionUsecase) ValidateOIDC(ctx context.Context, token string) (accountInfo *domain.OIDCAccountInfo, err error) {
+	//find account info
+	accountInfo, err = us.accountInfoRepository.GetByToken(ctx, token)
+	if err != nil {
+		//ログイン済みだった場合の処理
+		if _, err := us.Validate(ctx, token); err != nil {
+			return nil, xerrors.Errorf("failed to validate token: %w", err)
+		}
+		return nil, rest.NewForbidden("既に存在しているユーザーです")
+	}
+	return
 }
 
 type customClaims struct {
@@ -279,7 +347,7 @@ func (us *sessionUsecase) VerifyEmail(ctx context.Context, verifyToken string) (
 
 	if !ok {
 		return "", rest.NewBadRequest(
-			fmt.Sprintf("invalid token(incorrect claims)"),
+			"invalid token(incorrect claims)",
 		)
 	}
 
@@ -289,24 +357,32 @@ func (us *sessionUsecase) VerifyEmail(ctx context.Context, verifyToken string) (
 		)
 	}
 
+	newEmailVerified := true
 	err = us.userRepository.VerifyEmail(ctx, claims.ID, claims.Email)
-
-	if err == domain.ErrEmailAddressChanged {
+	if errors.Is(err, domain.ErrEmailAddressChanged) {
 		return "", rest.NewBadRequest("Your email address has been changed")
+	}
+	if err == nil || errors.Is(err, domain.ErrEmailAlreadyVerified) {
+		err = nil
+		newEmailVerified = false
+		//return "", rest.NewConflict("Your email address is already verified") //二重のメアド認証を許さなかい場合
 	}
 
 	if err != nil {
 		return "", xerrors.Errorf("failed to verify email: %w", err)
 	}
 
-	user, err := us.userRepository.GetByID(ctx, claims.ID)
+	//新しいメアドが認証された場合はその旨をメール送信する.
+	if newEmailVerified {
+		user, err := us.userRepository.GetByID(ctx, claims.ID)
 
-	if err != nil {
-		return "", xerrors.Errorf("failed to find user: %w", err)
-	}
+		if err != nil {
+			return "", xerrors.Errorf("failed to find user: %w", err)
+		}
 
-	if err := us.sendEmailAfterRegistration(user); err != nil {
-		return "", xerrors.Errorf("failed to send email after registration: %w", err)
+		if err := us.sendEmailAfterRegistration(user); err != nil {
+			return "", xerrors.Errorf("failed to send email after registration: %w", err)
+		}
 	}
 
 	token, err = tokenutil.GenerateRandomToken()

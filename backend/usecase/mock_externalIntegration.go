@@ -34,32 +34,32 @@ func (m *MockExternalIntegrationUsecase) EXPECT() *MockExternalIntegrationUsecas
 	return m.recorder
 }
 
-// GetAllMemberRolesBySlackID mocks base method.
-func (m *MockExternalIntegrationUsecase) GetAllMemberRolesBySlackID(ctx context.Context) (map[string]string, error) {
+// GetAllMemberRolesByAccountID mocks base method.
+func (m *MockExternalIntegrationUsecase) GetAllMemberRolesByAccountID(ctx context.Context) (map[string]string, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetAllMemberRolesBySlackID", ctx)
+	ret := m.ctrl.Call(m, "GetAllMemberRolesByAccountID", ctx)
 	ret0, _ := ret[0].(map[string]string)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// GetAllMemberRolesBySlackID indicates an expected call of GetAllMemberRolesBySlackID.
-func (mr *MockExternalIntegrationUsecaseMockRecorder) GetAllMemberRolesBySlackID(ctx interface{}) *gomock.Call {
+// GetAllMemberRolesByAccountID indicates an expected call of GetAllMemberRolesByAccountID.
+func (mr *MockExternalIntegrationUsecaseMockRecorder) GetAllMemberRolesByAccountID(ctx interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAllMemberRolesBySlackID", reflect.TypeOf((*MockExternalIntegrationUsecase)(nil).GetAllMemberRolesBySlackID), ctx)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAllMemberRolesByAccountID", reflect.TypeOf((*MockExternalIntegrationUsecase)(nil).GetAllMemberRolesByAccountID), ctx)
 }
 
-// GetUserRoleFromSlackID mocks base method.
-func (m *MockExternalIntegrationUsecase) GetUserRoleFromSlackID(slackID string) (string, error) {
+// GetUserRoleFromAccountID mocks base method.
+func (m *MockExternalIntegrationUsecase) GetUserRoleFromAccountID(accountID string) (string, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetUserRoleFromSlackID", slackID)
+	ret := m.ctrl.Call(m, "GetUserRoleFromAccountID", accountID)
 	ret0, _ := ret[0].(string)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// GetUserRoleFromSlackID indicates an expected call of GetUserRoleFromSlackID.
-func (mr *MockExternalIntegrationUsecaseMockRecorder) GetUserRoleFromSlackID(slackID interface{}) *gomock.Call {
+// GetUserRoleFromAccountID indicates an expected call of GetUserRoleFromAccountID.
+func (mr *MockExternalIntegrationUsecaseMockRecorder) GetUserRoleFromAccountID(accountID interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUserRoleFromSlackID", reflect.TypeOf((*MockExternalIntegrationUsecase)(nil).GetUserRoleFromSlackID), slackID)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUserRoleFromAccountID", reflect.TypeOf((*MockExternalIntegrationUsecase)(nil).GetUserRoleFromAccountID), accountID)
 }

@@ -64,3 +64,18 @@ func (mr *MockAuthenticatorMockRecorder) Login(ctx interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Login", reflect.TypeOf((*MockAuthenticator)(nil).Login), ctx)
 }
+
+// Logout mocks base method.
+func (m *MockAuthenticator) Logout(ctx context.Context) (string, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Logout", ctx)
+	ret0, _ := ret[0].(string)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// Logout indicates an expected call of Logout.
+func (mr *MockAuthenticatorMockRecorder) Logout(ctx interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Logout", reflect.TypeOf((*MockAuthenticator)(nil).Logout), ctx)
+}

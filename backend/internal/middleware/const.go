@@ -1,5 +1,6 @@
 package middleware
 
 const (
-	UserKey = "portal-user"
+	UserKey            = "portal-user"
+	OIDCAccountInfoKey = "oidc-account-info"
 )

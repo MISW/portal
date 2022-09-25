@@ -7,11 +7,11 @@ const (
 	// EmailVerification - Eメール認証で送信するメール
 	EmailVerification EmailKind = "email_verification"
 
-	// SlackInvitation - Slack招待の際に同時に送信するリンク
-	SlackInvitation EmailKind = "slack_invitation"
-
 	// AfterRegistration - 新規登録時(メール確認後)
 	AfterRegistration EmailKind = "after_registration"
+
+	// PaymentReceipt - 支払い確認時
+	PaymentReceipt EmailKind = "payment_receipt"
 
 	// PaymentReminder - 支払いが完了していないメンバーに対してメールを送る
 	PaymentReminder EmailKind = "payment_reminder"
@@ -20,8 +20,8 @@ const (
 var (
 	allEmailKinds = []EmailKind{
 		EmailVerification,
-		SlackInvitation,
 		AfterRegistration,
+		PaymentReceipt,
 		PaymentReminder,
 	}
 )

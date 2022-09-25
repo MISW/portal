@@ -1,5 +1,5 @@
 import { NextPage } from 'next';
-import { withLogin } from 'middlewares/withLogin';
+import { withLoginUser } from 'middlewares/withLoginUser';
 
 // TODO: よくわからんページ。何もないなら消す
 
@@ -28,4 +28,4 @@ const Page: NextPage = () => {
   );
 };
 
-export default withLogin(Page);
+export default withLoginUser(Page);

@@ -13,9 +13,26 @@ export const createApiClient = (baseUrl: string, options?: Options) => {
   return Object.freeze({
     // Public Endpoints
     async signup(input: Readonly<SignupInput>): Promise<void> {
-      await http.post('api/public/signup', {
+      await http.post('api/public/oidc_account/signup', {
         json: toSnakeCase(input),
       });
+    },
+
+    async fetchCurrentOidcAccountInfo(): Promise<{
+      token: string;
+      accountId: string;
+      email: string;
+    }> {
+      const res = await http.get('api/public/oidc_account').json<{
+        token: string;
+        account_id: string;
+        email: string;
+      }>();
+      return {
+        token: res.token,
+        accountId: res.account_id,
+        email: res.email,
+      };
     },
 
     async verifyEmail(token: string): Promise<void> {
@@ -41,13 +58,40 @@ export const createApiClient = (baseUrl: string, options?: Options) => {
       };
     },
 
-    async processCallback(code: string, state: string) {
-      await http.post('api/public/callback', {
-        json: {
-          code,
-          state,
-        },
-      });
+    async logoutFromOIDC(): Promise<{
+      logoutUrl: string;
+    }> {
+      const res = await http
+        .post('api/public/logout', {
+          json: {},
+        })
+        .json<{
+          logout_url: string;
+        }>();
+      return {
+        logoutUrl: res.logout_url,
+      };
+    },
+
+    async processCallback(
+      code: string,
+      state: string,
+    ): Promise<{
+      hasAccount: boolean;
+    }> {
+      const res = await http
+        .post('api/public/callback', {
+          json: {
+            code,
+            state,
+          },
+        })
+        .json<{
+          has_account: boolean;
+        }>();
+      return {
+        hasAccount: res.has_account,
+      };
     },
 
     async fetchCard(id: number) {
@@ -56,12 +100,19 @@ export const createApiClient = (baseUrl: string, options?: Options) => {
     },
 
     // Private Endpoints
-    async logout(): Promise<void> {
-      await http
+    async logout(): Promise<{
+      logoutUrl: string;
+    }> {
+      const res = await http
         .post('api/private/logout', {
           json: {},
         })
-        .json();
+        .json<{
+          logout_url: string;
+        }>();
+      return {
+        logoutUrl: res.logout_url,
+      };
     },
 
     async fetchCurrentProfile(): Promise<User> {
@@ -186,10 +237,6 @@ export const createApiClient = (baseUrl: string, options?: Options) => {
           user_id: targetUserId,
         },
       });
-    },
-
-    async inviteToSlack(): Promise<void> {
-      await http.post('api/private/management/slack/invite');
     },
 
     async remindPayment(): Promise<void> {

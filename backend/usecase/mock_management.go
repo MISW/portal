@@ -122,20 +122,6 @@ func (mr *MockManagementUsecaseMockRecorder) GetUser(ctx, userID interface{}) *g
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUser", reflect.TypeOf((*MockManagementUsecase)(nil).GetUser), ctx, userID)
 }
 
-// InviteToSlack mocks base method.
-func (m *MockManagementUsecase) InviteToSlack(ctx context.Context) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "InviteToSlack", ctx)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// InviteToSlack indicates an expected call of InviteToSlack.
-func (mr *MockManagementUsecaseMockRecorder) InviteToSlack(ctx interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "InviteToSlack", reflect.TypeOf((*MockManagementUsecase)(nil).InviteToSlack), ctx)
-}
-
 // ListUsers mocks base method.
 func (m *MockManagementUsecase) ListUsers(ctx context.Context, period int) ([]*domain.UserPaymentStatus, error) {
 	m.ctrl.T.Helper()

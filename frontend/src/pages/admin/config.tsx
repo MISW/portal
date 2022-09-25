@@ -5,8 +5,8 @@ import Period from 'components/layout/config/Period';
 import EmailTemplate from 'components/layout/config/EmailTemplate';
 import { usePaymentPeriodConfig, useCurrentPeriodConfig, useEmailTemplateConfig, EmailTemplate as EmailTemplateType } from 'hooks/appConfig';
 import { calcPeriod } from 'utils';
-import { withLogin } from 'middlewares/withLogin';
 import { NoSSR } from 'components/utils/NoSSR';
+import { withLoginUser } from 'middlewares/withLoginUser';
 
 const usePaymentPeriodNode = (paymentPeriod: number | undefined, setPaymentPeriod: (period: number) => Promise<void>, optionsForPayment: number[]) => {
   const [expanded, setExpanded] = useState<boolean>(false);
@@ -73,7 +73,7 @@ const useCurrentPeriodNode = (currentPeriod: number | undefined, setCurrentPerio
 };
 
 const useEmailTemplateNode = () => {
-  type KindType = 'email_verification' | 'slack_invitation' | 'after_registration' | 'payment_reminder';
+  type KindType = 'email_verification' | 'after_registration' | 'payment_receipt' | 'payment_reminder';
   const options: {
     key: KindType;
     label: string;
@@ -83,12 +83,12 @@ const useEmailTemplateNode = () => {
       label: 'Eメール認証',
     },
     {
-      key: 'slack_invitation',
-      label: 'Slack招待時の同時送信メール',
-    },
-    {
       key: 'after_registration',
       label: 'メールアドレス確認後の支払い方法案内メール',
+    },
+    {
+      key: 'payment_receipt',
+      label: '会費支払い確認済メール',
     },
     {
       key: 'payment_reminder',
@@ -156,4 +156,4 @@ const Page: NextPage = () => {
   );
 };
 
-export default withLogin(Page);
+export default withLoginUser(Page);

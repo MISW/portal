@@ -2,13 +2,13 @@ package usecase
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"strings"
 	"time"
 
 	"github.com/MISW/Portal/backend/internal/email"
 	"github.com/MISW/Portal/backend/internal/rest"
-	"github.com/MISW/Portal/backend/internal/workers"
 	"go.uber.org/dig"
 
 	"golang.org/x/xerrors"
@@ -47,9 +47,6 @@ type ManagementUsecase interface {
 	// UpdateRole - ユーザのroleを変更
 	UpdateRole(ctx context.Context, userID int, role domain.RoleType) error
 
-	// InviteToSlack - Slackに招待されていないメンバーをSlackに招待する(非同期)
-	InviteToSlack(ctx context.Context) error
-
 	// RemindPayment - 未払い会員に催促メールを送る
 	RemindPayment(ctx context.Context, filter []int) error
 }
@@ -61,9 +58,7 @@ type ManagementUsecaseParams struct {
 	PaymentStatusRepository      repository.PaymentStatusRepository
 	PaymentTransactionRepository repository.PaymentTransactionRepository
 	AppConfigRepository          repository.AppConfigRepository
-	SlackRepository              repository.SlackRepository
 	UserRoleRepository           repository.UserRoleRepository
-	SlackInviter                 workers.Worker `name:"slack"`
 	EmailSender                  email.Sender
 }
 
@@ -109,7 +104,7 @@ func (mu *managementUsecase) ListUsers(ctx context.Context, period int) ([]*doma
 	uts := make([]*domain.UserPaymentStatus, len(users))
 
 	for i := range uts {
-		ps, _ := psmap[users[i].ID]
+		ps := psmap[users[i].ID]
 
 		uts[i] = &domain.UserPaymentStatus{
 			User:          *users[i],
@@ -124,7 +119,7 @@ func (mu *managementUsecase) AuthorizeTransaction(ctx context.Context, token str
 	transaction, err := mu.PaymentTransactionRepository.Get(ctx, token)
 
 	if err != nil {
-		if xerrors.Is(err, domain.ErrNoPaymentTransaction) {
+		if errors.Is(err, domain.ErrNoPaymentTransaction) {
 			return rest.NewBadRequest("無効なトークンです")
 		}
 
@@ -138,7 +133,7 @@ func (mu *managementUsecase) AuthorizeTransaction(ctx context.Context, token str
 	err = mu.AddPaymentStatus(ctx, transaction.UserID, 0, authorizer)
 
 	var frerr rest.ErrorResponse
-	if xerrors.As(err, &frerr) {
+	if errors.As(err, &frerr) {
 		return frerr
 	}
 
@@ -171,7 +166,7 @@ func (mu *managementUsecase) AddPaymentStatus(ctx context.Context, userID, perio
 	}
 
 	if err := mu.PaymentStatusRepository.Add(ctx, userID, period, authorizer); err != nil {
-		if xerrors.Is(err, domain.ErrAlreadyPaid) {
+		if errors.Is(err, domain.ErrAlreadyPaid) {
 			return rest.NewConflict("すでに支払い済みです")
 		}
 
@@ -184,6 +179,30 @@ func (mu *managementUsecase) AddPaymentStatus(ctx context.Context, userID, perio
 
 	if err := mu.UserRoleRepository.UpdateWithRule(ctx, userID, currentPeriod, paymentPeriod); err != nil {
 		return xerrors.Errorf("failed to update role for user(%d) automatically: %w", userID, err)
+	}
+
+	// メール送信: これによって自分が入会できたことを確認できる。
+	// TODO1: メール送信に失敗した場合、手動で再送信する必要がある。DBなどにメール送信失敗者を保存しておいて、定期的に送信再チャレンジした方が良さそう。
+	// TODO2: いずれは領収証として支払い金額も載せた方がいいかもしれない。
+	user, err := mu.UserRepository.GetByID(ctx, userID)
+	if err != nil {
+		return xerrors.Errorf("failed to send email because no user(%d) found: %w", userID, err)
+	}
+
+	subject, body, err := mu.AppConfigRepository.GetEmailTemplate(domain.PaymentReceipt)
+	if err != nil {
+		return xerrors.Errorf("failed to send email because failed to get email template for payment reminder: %w", err)
+	}
+
+	subject, body, err = email.GenerateEmailFromTemplate(subject, body, map[string]interface{}{
+		"User": user,
+	})
+	if err != nil {
+		return xerrors.Errorf("failed to send email: %w", err)
+	}
+
+	if err := mu.EmailSender.Send(user.Email, subject, body); err != nil {
+		return xerrors.Errorf("failed to send email: %w", err)
 	}
 
 	return nil
@@ -241,7 +260,7 @@ func (mu *managementUsecase) GetPaymentStatus(ctx context.Context, userID, perio
 
 	ps, err := mu.PaymentStatusRepository.Get(ctx, userID, period)
 
-	if xerrors.Is(err, domain.ErrNoPaymentStatus) {
+	if errors.Is(err, domain.ErrNoPaymentStatus) {
 		return nil, rest.NewNotFound("存在しない支払い情報です")
 	}
 
@@ -271,7 +290,7 @@ func (mu *managementUsecase) GetUser(ctx context.Context, userID int) (*domain.U
 	ps, err := mu.GetPaymentStatus(ctx, userID, 0)
 
 	var notFound *rest.NotFound
-	if xerrors.As(err, &notFound) {
+	if errors.As(err, &notFound) {
 		ps = nil
 	} else if err != nil {
 		return nil, xerrors.Errorf("failed to get payment status for user(%d): %w", userID, err)
@@ -321,16 +340,6 @@ func (mu *managementUsecase) UpdateRole(ctx context.Context, userID int, role do
 	if err != nil {
 		return xerrors.Errorf("failed to find user by id(%d): %w", userID, err)
 	}
-
-	return nil
-}
-
-func (mu *managementUsecase) InviteToSlack(ctx context.Context) error {
-	if err := mu.SlackRepository.MarkUninvitedAsPending(ctx); err != nil {
-		return xerrors.Errorf("failed to mark uninvited members as pending: %w", err)
-	}
-
-	mu.SlackInviter.Trigger()
 
 	return nil
 }

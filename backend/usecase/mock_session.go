@@ -36,12 +36,13 @@ func (m *MockSessionUsecase) EXPECT() *MockSessionUsecaseMockRecorder {
 }
 
 // Callback mocks base method.
-func (m *MockSessionUsecase) Callback(ctx context.Context, expectedState, actualState, code string) (string, error) {
+func (m *MockSessionUsecase) Callback(ctx context.Context, expectedState, actualState, code string) (string, bool, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Callback", ctx, expectedState, actualState, code)
 	ret0, _ := ret[0].(string)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
+	ret1, _ := ret[1].(bool)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
 }
 
 // Callback indicates an expected call of Callback.
@@ -67,11 +68,12 @@ func (mr *MockSessionUsecaseMockRecorder) Login(ctx interface{}) *gomock.Call {
 }
 
 // Logout mocks base method.
-func (m *MockSessionUsecase) Logout(ctx context.Context, token string) error {
+func (m *MockSessionUsecase) Logout(ctx context.Context, token string) (string, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Logout", ctx, token)
-	ret0, _ := ret[0].(error)
-	return ret0
+	ret0, _ := ret[0].(string)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
 }
 
 // Logout indicates an expected call of Logout.
@@ -80,18 +82,33 @@ func (mr *MockSessionUsecaseMockRecorder) Logout(ctx, token interface{}) *gomock
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Logout", reflect.TypeOf((*MockSessionUsecase)(nil).Logout), ctx, token)
 }
 
-// Signup mocks base method.
-func (m *MockSessionUsecase) Signup(ctx context.Context, user *domain.User) error {
+// LogoutFromOIDC mocks base method.
+func (m *MockSessionUsecase) LogoutFromOIDC(ctx context.Context, token string) (string, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Signup", ctx, user)
+	ret := m.ctrl.Call(m, "LogoutFromOIDC", ctx, token)
+	ret0, _ := ret[0].(string)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// LogoutFromOIDC indicates an expected call of LogoutFromOIDC.
+func (mr *MockSessionUsecaseMockRecorder) LogoutFromOIDC(ctx, token interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "LogoutFromOIDC", reflect.TypeOf((*MockSessionUsecase)(nil).LogoutFromOIDC), ctx, token)
+}
+
+// Signup mocks base method.
+func (m *MockSessionUsecase) Signup(ctx context.Context, user *domain.User, accountInfo *domain.OIDCAccountInfo) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Signup", ctx, user, accountInfo)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // Signup indicates an expected call of Signup.
-func (mr *MockSessionUsecaseMockRecorder) Signup(ctx, user interface{}) *gomock.Call {
+func (mr *MockSessionUsecaseMockRecorder) Signup(ctx, user, accountInfo interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Signup", reflect.TypeOf((*MockSessionUsecase)(nil).Signup), ctx, user)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Signup", reflect.TypeOf((*MockSessionUsecase)(nil).Signup), ctx, user, accountInfo)
 }
 
 // Validate mocks base method.
@@ -107,6 +124,21 @@ func (m *MockSessionUsecase) Validate(ctx context.Context, token string) (*domai
 func (mr *MockSessionUsecaseMockRecorder) Validate(ctx, token interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Validate", reflect.TypeOf((*MockSessionUsecase)(nil).Validate), ctx, token)
+}
+
+// ValidateOIDC mocks base method.
+func (m *MockSessionUsecase) ValidateOIDC(ctx context.Context, token string) (*domain.OIDCAccountInfo, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ValidateOIDC", ctx, token)
+	ret0, _ := ret[0].(*domain.OIDCAccountInfo)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ValidateOIDC indicates an expected call of ValidateOIDC.
+func (mr *MockSessionUsecaseMockRecorder) ValidateOIDC(ctx, token interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ValidateOIDC", reflect.TypeOf((*MockSessionUsecase)(nil).ValidateOIDC), ctx, token)
 }
 
 // VerifyEmail mocks base method.

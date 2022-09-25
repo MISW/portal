@@ -62,18 +62,18 @@ func (mr *MockSessionHandlerMockRecorder) Login(e interface{}) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Login", reflect.TypeOf((*MockSessionHandler)(nil).Login), e)
 }
 
-// Signup mocks base method.
-func (m *MockSessionHandler) Signup(e echo.Context) error {
+// Logout mocks base method.
+func (m *MockSessionHandler) Logout(e echo.Context) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Signup", e)
+	ret := m.ctrl.Call(m, "Logout", e)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
-// Signup indicates an expected call of Signup.
-func (mr *MockSessionHandlerMockRecorder) Signup(e interface{}) *gomock.Call {
+// Logout indicates an expected call of Logout.
+func (mr *MockSessionHandlerMockRecorder) Logout(e interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Signup", reflect.TypeOf((*MockSessionHandler)(nil).Signup), e)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Logout", reflect.TypeOf((*MockSessionHandler)(nil).Logout), e)
 }
 
 // VerifyEmail mocks base method.

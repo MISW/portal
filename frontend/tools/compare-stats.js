@@ -6,7 +6,7 @@ const formatSize = (size, signed) => {
   if (signed && Math.abs(size) <= 10) return "=";
   const sign = size < 0 ? "-" : signed ? "+" : "";
   size = Math.abs(size);
-  rank = 0;
+  var rank = 0;
   while (size > 1024 && rank < units.length) {
     size /= 1024;
     rank++;

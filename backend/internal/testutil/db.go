@@ -3,7 +3,6 @@ package testutil
 import (
 	"context"
 	"database/sql"
-	"io/ioutil"
 	"math/rand"
 	"os"
 	"path/filepath"
@@ -101,7 +100,7 @@ func createTable(t *testing.T, dbx *sqlx.DB) {
 	t.Log(len(sqls))
 	for i := range sqls {
 		t.Logf("running %s", sqls[i])
-		b, err := ioutil.ReadFile(sqls[i])
+		b, err := os.ReadFile(sqls[i])
 
 		if err != nil {
 			t.Errorf("failed to open %s: %v", sqls[i], err)

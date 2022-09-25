@@ -1,3 +1,4 @@
+//go:build use_external_db
 // +build use_external_db
 
 package persistence_test
@@ -27,16 +28,15 @@ var (
 			Department: "基幹理工学部",
 			Subject:    "情報理工学科",
 		},
-		StudentID:             "1W180000-0",
-		EmergencyPhoneNumber:  "0120117117",
-		OtherCircles:          "WCE",
-		Workshops:             []string{"Programming", "CG", "MIDI"},
-		Squads:                []string{"Web", "Webデザイン"},
-		Role:                  domain.Admin,
-		SlackInvitationStatus: domain.Invited,
-		EmailVerified:         false,
-		SlackID:               "UAJXXXXXX",
-		DiscordID:             "mischan#0123",
+		StudentID:            "1W180000-0",
+		EmergencyPhoneNumber: "0120117117",
+		OtherCircles:         "WCE",
+		Workshops:            []string{"Programming", "CG", "MIDI"},
+		Squads:               []string{"Web", "Webデザイン"},
+		Role:                 domain.Admin,
+		EmailVerified:        false,
+		AccountID:            "oauth|1xxxxxxx",
+		DiscordID:            "mischan#0123",
 	}
 
 	userTemplate2 = &domain.User{
@@ -51,16 +51,15 @@ var (
 			Department: "基幹理工学部",
 			Subject:    "情報通信学科",
 		},
-		StudentID:             "1W180000-1",
-		EmergencyPhoneNumber:  "0120117117",
-		OtherCircles:          "WCE",
-		Workshops:             []string{"Programming", "CG", "MIDI"},
-		Squads:                []string{"Web", "Webデザイン"},
-		Role:                  domain.Admin,
-		SlackInvitationStatus: domain.Invited,
-		EmailVerified:         true,
-		SlackID:               "UAJXXXXXX",
-		DiscordID:             "mischan#0123",
+		StudentID:            "1W180000-1",
+		EmergencyPhoneNumber: "0120117117",
+		OtherCircles:         "WCE",
+		Workshops:            []string{"Programming", "CG", "MIDI"},
+		Squads:               []string{"Web", "Webデザイン"},
+		Role:                 domain.Admin,
+		EmailVerified:        true,
+		AccountID:            "oauth|2xxxxxxx",
+		DiscordID:            "mischan#0123",
 	}
 )
 
@@ -81,10 +80,10 @@ func compareUser(t *testing.T, expected, actual *domain.User) {
 	expected = &e
 
 	if actual.CreatedAt.Before(time.Now().Add(-1*time.Minute)) || actual.CreatedAt.After(time.Now()) {
-		t.Errorf("created_at is invalid: %+v", actual.CreatedAt)
+		t.Errorf("created_at is invalid: now(%+v) actual(%+v)", time.Now(), actual.CreatedAt)
 	}
 	if actual.UpdatedAt.Before(time.Now().Add(-1*time.Minute)) || actual.UpdatedAt.After(time.Now()) {
-		t.Errorf("updated_at is invalid: %+v", actual.UpdatedAt)
+		t.Errorf("updated_at is invalid: now(%+v) actual(%+v)", time.Now(), actual.UpdatedAt)
 	}
 
 	expected.CreatedAt = actual.CreatedAt
@@ -147,14 +146,14 @@ func TestGet(t *testing.T) {
 		compareUser(t, userTemplate, user)
 	})
 
-	t.Run("get_by_slack", func(t *testing.T) {
+	t.Run("get_by_account", func(t *testing.T) {
 		conn := testutil.NewSQLConn(t)
 
 		up := persistence.NewUserPersistence(conn)
 
 		insertTestUserData(t, up)
 
-		user, err := up.GetBySlackID(context.Background(), userTemplate.SlackID)
+		user, err := up.GetByAccountID(context.Background(), userTemplate.AccountID)
 
 		if err != nil {
 			t.Errorf("failed to get user by id: %+v", err)

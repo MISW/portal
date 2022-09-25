@@ -21,12 +21,12 @@ type externalIntegrationPersistence struct {
 
 var _ repository.ExternalIntegrationRepository = &externalIntegrationPersistence{}
 
-// GetUserRole finds a user by slack id and returns his/her role
-func (p *externalIntegrationPersistence) GetUserRoleFromSlackID(slackID string) (string, error) {
+// GetUserRole finds a user by account id and returns his/her role
+func (p *externalIntegrationPersistence) GetUserRoleFromAccountID(accountID string) (string, error) {
 	var role string
 	err := sqlx.Get(
 		p.db, &role,
-		"SELECT role FROM users WHERE slack_id = ?", slackID,
+		"SELECT role FROM users WHERE account_id = ?", accountID,
 	)
 
 	if err == sql.ErrNoRows {
@@ -34,7 +34,7 @@ func (p *externalIntegrationPersistence) GetUserRoleFromSlackID(slackID string) 
 	}
 
 	if err != nil {
-		return "", xerrors.Errorf("failed to find user from slack id: %w", err)
+		return "", xerrors.Errorf("failed to find user from account id: %w", err)
 	}
 
 	return role, nil

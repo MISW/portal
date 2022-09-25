@@ -43,7 +43,7 @@
 
 - method: POST
 - path: /login
-- description: Slack ログイン時にリダイレクトする URL を返す
+- description: 外部アカウント(slack など)のログイン時にリダイレクトする URL を返す
 - parameter: なし
 - set-cookie: misw-portal-state
 - response:
@@ -55,6 +55,21 @@
 ```
 
 この ridirect_url に遷移すれば良い
+
+### Logout
+
+- method: POST
+- path: /logout
+- description: OIDC アカウントからログアウトする
+- response:
+
+```json=
+{
+  "logout_url": "logout url"
+}
+```
+
+この logout_url に遷移すれば oidc で使ってるアカウントからログアウトできる
 
 ### Callback
 
@@ -74,29 +89,12 @@
 - response:
 
 ```json=
-{}
+{
+  "has_account": "true | false", //みすポータルにアカウントを持っているかどうか
+}
 ```
 
-## Signup
-
-- method: POST
-- path: /signup
-- description: 新規アカウント登録用エンドポイン t
-- parameter: `Content-Type: application/json` の body を POST
-
-https://github.com/MISW/Portal/blob/master/backend/domain/user.go#L46
-
-JSON フォーマットはここを参照(ただし、ID、SlackID、Role、CreatedAt、UpdatedAt は指定しなくて良い(自動で生成される))
-
-- response:
-
-```json=
-{}
-```
-
-E メールが送信されているので E メールを確認してください、みたいなメッセージを表示するだけで良い
-
-## Verify Email
+### Verify Email
 
 - method: POST
 - path: /veryfy_email
@@ -117,6 +115,51 @@ E メールが送信されているので E メールを確認してください
 
 メールに添付のリンクを開くと `/verify_email` が開かれるようになっており、URL のパラメータに token が付いているのでこれをこのエンドポイントの body に添付して POST する
 
+### Endpoint: OIDC Account
+
+- path: /oidc_account
+- description: OIDC でログインはしているが、portal にはアカウントを作成していないユーザ
+
+#### Info
+
+- method: GET
+- path: ""
+- description: account_info を取得する
+- response:
+
+```json=
+{
+  token: "string",
+	acciunt_id: "account_id",
+	email: "email"`,
+}
+```
+
+#### Signup
+
+- method: POST
+- path: /signup
+- description: 新規アカウント登録用エンドポイント. DB に存在しないアカウントで先に Login しておく必要がある.
+- parameter: `Content-Type: application/json` の body を POST
+
+- JSON フォーマットは[ここ](https://github.com/MISW/Portal/blob/master/backend/domain/user.go#L122)を参照(ただし、ID、AccountID、 Email、 Role、CreatedAt、UpdatedAt は指定しなくて良い(自動で生成される))
+
+- response:
+  - 成功時:
+  ```json=
+  {}
+  ```
+  - (特に)失敗時:
+  ```json=
+  {
+    "status_code": "code",
+  	"status":      "http.StatusText(code)",
+  	"message":     "message",
+  }
+  ```
+
+E メールが送信されているので E メールを確認してください、みたいなメッセージを表示するだけで良い
+
 ## Endpoint: Private
 
 - path: /private
@@ -129,7 +172,9 @@ E メールが送信されているので E メールを確認してください
 - response:
 
 ```json=
-{}
+{
+  "logout_url": "logout url"
+}
 ```
 
 ### Get Profile
@@ -149,7 +194,7 @@ E メールが送信されているので E メールを確認してください
 
 https://github.com/MISW/Portal/blob/master/backend/domain/user.go#L46
 
-JSON フォーマットはここを参照(ただし、ID、SlackID、Role、CreatedAt、UpdatedAt は指定しなくて良い(自動で生成される))
+JSON フォーマットはここを参照(ただし、ID、AccountID、Email、Role、CreatedAt、UpdatedAt は指定しなくて良い(自動で生成される))
 
 一部値に関しては変更が効かないようになっている
 
@@ -225,7 +270,7 @@ payment status: https://github.com/MISW/Portal/blob/master/backend/domain/paymen
             ""
         ],
         "role": "admin",
-        "slack_id": "U01210BMT0D",
+        "account_id": "U01210BMT0D",
         "created_at": "2020-04-17T16:59:56+09:00",
         "updated_at": "2020-04-19T14:30:28+09:00",
         "payment_status": {
@@ -331,7 +376,6 @@ payment status: https://github.com/MISW/Portal/blob/master/backend/domain/paymen
     - query: email_kind
     - email_kind
       - email_verification: 新規登録時のメール認証
-      - slack_invitation: Slack の招待時に同時に送信するメール
 
 ### Set Config
 
@@ -382,9 +426,9 @@ payment status: https://github.com/MISW/Portal/blob/master/backend/domain/paymen
 ### Find Role
 
 - path: /find_role
-- description: slack_id からロールを取得
+- description: account_id からロールを取得
 - query:
-  - slack_id
+  - account_id
 - response:
 
 ```json
@@ -401,10 +445,10 @@ payment status: https://github.com/MISW/Portal/blob/master/backend/domain/paymen
 
 ```json
 {
-    "slack_id_1": {
+    "account_id_1": {
         "role": "ロール"
     },
-    "slack_id_2": {
+    "account_id_2": {
         "role": "ロール"
     },
     ...
@@ -415,16 +459,15 @@ payment status: https://github.com/MISW/Portal/blob/master/backend/domain/paymen
 
 ### 新規登録(Sign up)時のフロー
 
+- 外部アカウントでログイン(orSignup)する
 - フロント側で情報を入力する
-- `/api/public/signup` を叩いて登録する
+- `/api/private/signup` を叩いて登録する。同時に Account ID や email も登録される
 - not member role としてアカウントが作成される
 - メールが送信され、メールアドレス認証を行う
   - email_verified flag が立つ
 - QR コード生成 API を叩いて(未定義)QR コードを生成し表示する
 - 会計が読み取る
 - member role に変更
-- Slack から招待メールが届く
-- Portal 側のデータベースに Slack ID が保存される
 
 ### ログイン時の挙動
 
@@ -432,32 +475,3 @@ payment status: https://github.com/MISW/Portal/blob/master/backend/domain/paymen
 - `/api/public/login` を叩いて返ってきた redirect_url に転送
 - 転送されて Auth0 で認証に成功すると `/callback` に返ってくる
 - この時に `/callback?code=XXXX&state=XXXX` みたいな感じで code と state がついてくるのでこれを読み取って `/api/public/callback` を叩く
-
-### Slack の招待 API を叩くために必要な呼び出し
-
-https://slack.com/oauth/authorize?&client_id=2591799685.577702399297&team=misw-info&install_redirect=install-on-team&scope=admin+client
-
-https://elements.heroku.com/buttons/outsideris/slack-invite-automation
-
-OAuth tokens
-Visit https://api.slack.com/apps and Create New App.
-
-Click "Permissions".
-
-In "OAuth & Permissions" page, select admin scope under "Permission Scopes" menu and save changes.
-
-Click "Install App to Workspace".
-
-Visit https://slack.com/oauth/authorize?&client_id=CLIENT_ID&team=TEAM_ID&install_redirect=install-on-team&scope=admin+client in your browser and authorize your app.
-
-```
-This form requires the client permission. Otherwise, you can see {"ok":false,"error":"missing_scope","needed":"client","provided":"admin"} error.
-Your TEAM_ID is the subdomain for your slack team, e.g. myteam.slack.com - your TEAM_ID is myteam.
-Your CLIENT_ID found in "Basic Information" section for your App.
-You will be shown a Installed App Settings > OAuth Tokens for Your Team screen.
-You can test auto invites with curl by providing the OAuth Access Token.
-```
-
-curl -X POST 'https://myteam.slack.com/api/users.admin.invite' \
---data 'email=test@email.com&token=OAuthAccessToken&set_active=true' \
---compressed

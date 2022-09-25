@@ -28,7 +28,6 @@ func Run() {
 
 	digc := initDigContainer(cfg, addr)
 
-	cancel := initWorkers(digc)
 	handler := initHandler(cfg, addr, digc)
 
 	go func() {
@@ -37,7 +36,6 @@ func Run() {
 
 		log.Printf("received signal: %v", <-ch)
 
-		cancel()
 		ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 		defer cancel()
 		handler.Shutdown(ctx)

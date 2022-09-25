@@ -30,16 +30,6 @@ type paymentStatus struct {
 	UpdatedAt time.Time `db:"updated_at"`
 }
 
-func newPaymentStatus(ps *domain.PaymentStatus) *paymentStatus {
-	return &paymentStatus{
-		UserID:     ps.UserID,
-		Authorizer: ps.Authorizer,
-		Period:     ps.Period,
-		CreatedAt:  ps.CreatedAt,
-		UpdatedAt:  ps.UpdatedAt,
-	}
-}
-
 func parsePaymentStatus(ps *paymentStatus) *domain.PaymentStatus {
 	return &domain.PaymentStatus{
 		UserID:     ps.UserID,

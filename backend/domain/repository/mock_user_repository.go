@@ -35,6 +35,21 @@ func (m *MockUserRepository) EXPECT() *MockUserRepositoryMockRecorder {
 	return m.recorder
 }
 
+// GetByAccountID mocks base method.
+func (m *MockUserRepository) GetByAccountID(ctx context.Context, accountID string) (*domain.User, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetByAccountID", ctx, accountID)
+	ret0, _ := ret[0].(*domain.User)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetByAccountID indicates an expected call of GetByAccountID.
+func (mr *MockUserRepositoryMockRecorder) GetByAccountID(ctx, accountID interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetByAccountID", reflect.TypeOf((*MockUserRepository)(nil).GetByAccountID), ctx, accountID)
+}
+
 // GetByEmail mocks base method.
 func (m *MockUserRepository) GetByEmail(ctx context.Context, email string) (*domain.User, error) {
 	m.ctrl.T.Helper()
@@ -63,21 +78,6 @@ func (m *MockUserRepository) GetByID(ctx context.Context, id int) (*domain.User,
 func (mr *MockUserRepositoryMockRecorder) GetByID(ctx, id interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetByID", reflect.TypeOf((*MockUserRepository)(nil).GetByID), ctx, id)
-}
-
-// GetBySlackID mocks base method.
-func (m *MockUserRepository) GetBySlackID(ctx context.Context, slackID string) (*domain.User, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetBySlackID", ctx, slackID)
-	ret0, _ := ret[0].(*domain.User)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// GetBySlackID indicates an expected call of GetBySlackID.
-func (mr *MockUserRepositoryMockRecorder) GetBySlackID(ctx, slackID interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetBySlackID", reflect.TypeOf((*MockUserRepository)(nil).GetBySlackID), ctx, slackID)
 }
 
 // Insert mocks base method.

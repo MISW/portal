@@ -35,7 +35,7 @@ func (m *MockJWTProvider) EXPECT() *MockJWTProviderMockRecorder {
 }
 
 // Generate mocks base method.
-func (m *MockJWTProvider) Generate(sc *jwt.StandardClaims) (string, error) {
+func (m *MockJWTProvider) Generate(sc *jwt.RegisteredClaims) (string, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Generate", sc)
 	ret0, _ := ret[0].(string)
@@ -110,10 +110,10 @@ func (mr *MockJWTProviderMockRecorder) ParseAsMap(tokenString interface{}) *gomo
 }
 
 // ParseAsStandard mocks base method.
-func (m *MockJWTProvider) ParseAsStandard(tokenString string) (*jwt.StandardClaims, error) {
+func (m *MockJWTProvider) ParseAsStandard(tokenString string) (*jwt.RegisteredClaims, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ParseAsStandard", tokenString)
-	ret0, _ := ret[0].(*jwt.StandardClaims)
+	ret0, _ := ret[0].(*jwt.RegisteredClaims)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

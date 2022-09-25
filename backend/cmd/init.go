@@ -8,17 +8,17 @@ import (
 	"github.com/MISW/Portal/backend/config"
 	"github.com/MISW/Portal/backend/domain"
 	"github.com/MISW/Portal/backend/domain/repository"
+	"github.com/MISW/Portal/backend/infrastructure/memory"
 	"github.com/MISW/Portal/backend/infrastructure/persistence"
 	"github.com/MISW/Portal/backend/interfaces/api/external"
 	"github.com/MISW/Portal/backend/interfaces/api/private"
 	"github.com/MISW/Portal/backend/interfaces/api/public"
+	"github.com/MISW/Portal/backend/interfaces/api/public/oidc_account"
 	"github.com/MISW/Portal/backend/internal/db"
 	"github.com/MISW/Portal/backend/internal/email"
 	"github.com/MISW/Portal/backend/internal/jwt"
 	"github.com/MISW/Portal/backend/internal/middleware"
 	"github.com/MISW/Portal/backend/internal/oidc"
-	"github.com/MISW/Portal/backend/internal/slack"
-	"github.com/MISW/Portal/backend/internal/workers"
 	"github.com/MISW/Portal/backend/usecase"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jmoiron/sqlx"
@@ -60,10 +60,6 @@ func initDig(cfg *config.Config, addr string) *dig.Container {
 		return auth, nil
 	}))
 
-	must(c.Provide(func() *slack.Client {
-		return slack.NewClient(cfg.SlackToken, cfg.SlackTeamID)
-	}))
-
 	must(c.Provide(func() email.Sender {
 		if os.Getenv("DEBUG_MODE") == "1" {
 			return email.NewMock()
@@ -93,8 +89,6 @@ func initDig(cfg *config.Config, addr string) *dig.Container {
 
 	must(c.Provide(persistence.NewUserPersistence))
 
-	must(c.Provide(persistence.NewSlackPersistence))
-
 	must(c.Provide(persistence.NewPaymentTransactionPersistence))
 
 	must(c.Provide(persistence.NewAppConfigPersistence))
@@ -103,9 +97,12 @@ func initDig(cfg *config.Config, addr string) *dig.Container {
 
 	must(c.Provide(persistence.NewExternalIntegrationPersistence))
 
+	must(c.Provide(memory.NewOIDCAccountInfoStore))
+
 	must(c.Provide(usecase.NewAppConfigUsecase))
 
 	must(c.Provide(func(
+		oidcAccountInfoRepository repository.OIDCAccountInfoRepository,
 		userRepository repository.UserRepository,
 		tokenRepository repository.TokenRepository,
 		appConfigRepository repository.AppConfigRepository,
@@ -114,6 +111,7 @@ func initDig(cfg *config.Config, addr string) *dig.Container {
 		jwtProvider jwt.JWTProvider,
 	) usecase.SessionUsecase {
 		return usecase.NewSessionUsecase(
+			oidcAccountInfoRepository,
 			userRepository,
 			tokenRepository,
 			authenticator,
@@ -130,8 +128,6 @@ func initDig(cfg *config.Config, addr string) *dig.Container {
 
 	must(c.Provide(usecase.NewManagementUsecase))
 
-	must(c.Provide(usecase.NewWebhookUsecase))
-
 	must(c.Provide(usecase.NewExternalIntegrationUsecase))
 
 	must(c.Provide(private.NewSessionHandler))
@@ -146,38 +142,21 @@ func initDig(cfg *config.Config, addr string) *dig.Container {
 
 	must(c.Provide(public.NewCardHandler))
 
-	must(c.Provide(func(wu usecase.WebhookUsecase) public.WebhookHandler {
-		return public.NewWebhookHandler(cfg.SlackSigningSecret, wu)
-	}))
+	must(c.Provide(oidc_account.NewOIDCHandler))
 
 	must(c.Provide(middleware.NewAuthMiddleware))
+
+	must(c.Provide(middleware.NewOIDCAccountMiddleware))
 
 	must(c.Provide(func() (jwt.JWTProvider, error) {
 		return jwt.NewJWTProvider(cfg.JWTKey)
 	}))
-
-	must(c.Provide(workers.NewSlackInviter, dig.Name("slack")))
 
 	return c
 }
 
 func initDigContainer(cfg *config.Config, addr string) *dig.Container {
 	return initDig(cfg, addr)
-}
-
-func initWorkers(digc *dig.Container) func() {
-	ctx, cancel := context.WithCancel(context.Background())
-
-	if err := digc.Invoke(func(param struct {
-		dig.In
-		SlackInviter workers.Worker `name:"slack"`
-	}) {
-		go param.SlackInviter.Start(ctx)
-	}); err != nil {
-		panic(err)
-	}
-
-	return cancel
 }
 
 func initHandler(cfg *config.Config, addr string, digc *dig.Container) *echo.Echo {
@@ -226,10 +205,6 @@ func initHandler(cfg *config.Config, addr string, digc *dig.Container) *echo.Ech
 			g.GET("/config", mh.GetConfig)
 			g.POST("/config", mh.SetConfig)
 
-			slack := g.Group("/slack")
-
-			slack.POST("/invite", mh.InviteToSlack)
-
 		}); err != nil {
 			return err
 		}
@@ -241,23 +216,31 @@ func initHandler(cfg *config.Config, addr string, digc *dig.Container) *echo.Ech
 		g := e.Group("/api/public")
 
 		g.POST("/login", sh.Login)
+		g.POST("/logout", sh.Logout)
+
 		g.POST("/callback", sh.Callback)
-		g.POST("/signup", sh.Signup)
 		g.POST("/verify_email", sh.VerifyEmail)
-
-		if err := digc.Invoke(func(wu public.WebhookHandler) {
-			g := g.Group("/webhook")
-
-			g.POST("/slack", wu.Slack)
-		}); err != nil {
-			return err
-		}
 
 		if err := digc.Invoke(func(ch public.CardHandler) {
 			g.GET("/card/:id", func(c echo.Context) error {
 				id := c.Param("id")
 				return ch.Get(c, id)
 			})
+		}); err != nil {
+			return err
+		}
+
+		// oidc_account handler: user who login with oidc but doesn't have account in portal.
+		if err := digc.Invoke(func(oh oidc_account.Handler) error {
+			g := g.Group("/oidc_account")
+			if err := digc.Invoke(func(m middleware.OIDCAccountMiddleware) {
+				g.Use(m.Authenticate)
+				g.GET("", oh.Get)
+				g.POST("/signup", oh.Signup)
+			}); err != nil {
+				return err
+			}
+			return nil
 		}); err != nil {
 			return err
 		}
@@ -269,9 +252,9 @@ func initHandler(cfg *config.Config, addr string, digc *dig.Container) *echo.Ech
 		g := e.Group("/api/external")
 		g.Use(middleware.NewStaticTokenAuthMiddleware(cfg.ExternalIntegrationTokens))
 
-		g.GET("/find_role", eh.GetUserRoleFromSlackID)
+		g.GET("/find_role", eh.GetUserRoleFromAccountID)
 
-		g.GET("/all_member_roles", eh.GetAllMemberRolesBySlackID)
+		g.GET("/all_member_roles", eh.GetAllMemberRolesByAccountID)
 
 		return nil
 	}))

@@ -50,10 +50,10 @@ export type UserProfileHooks = {
 // user情報を操作するためのフックを返す.
 const useUserHooks = (genFirstYear: number, user?: Partial<ConfigurableProfile>): UserProfileHooks => {
   return {
-    email: useStateWithValidate(user?.email ?? '', (value) => /^\S+@\S+$/.test(value)),
+    //email: useStateWithValidate(user?.email ?? '', (value) => /^\S+@\S+$/.test(value)),
     generation: useStateWithValidate(user?.generation ?? genFirstYear),
     name: useStateWithValidate(user?.name ?? '', (value) => /^\S+\s\S+$/.test(value)),
-    kana: useStateWithValidate(user?.kana ?? '', (value) => /^[ァ-ヶー]+\s[ァ-ヶー]+$/.test(value)),
+    kana: useStateWithValidate(user?.kana ?? '', (value) => /^[\u30A0-\u30FF]+\s[\u30A0-\u30FF]+$/.test(value)),
     handle: useStateWithValidate(user?.handle ?? '', (value) => /^\S+$/.test(value)),
     sex: useStateWithValidate(user?.sex ?? 'other'),
     univName: useStateWithValidate(user?.univName ?? '', (value) => /^\S+$/.test(value)),

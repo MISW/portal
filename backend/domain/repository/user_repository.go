@@ -14,8 +14,8 @@ type UserRepository interface {
 	// GetByID - IDで検索
 	GetByID(ctx context.Context, id int) (*domain.User, error)
 
-	// GetByID - Slack IDで検索
-	GetBySlackID(ctx context.Context, slackID string) (*domain.User, error)
+	// GetByAccountID - Account IDで検索
+	GetByAccountID(ctx context.Context, accountID string) (*domain.User, error)
 
 	// GetByEmail - Emailで検索
 	GetByEmail(ctx context.Context, email string) (*domain.User, error)

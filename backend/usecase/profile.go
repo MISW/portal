@@ -56,11 +56,10 @@ func (pu *profileUsecase) Get(ctx context.Context, userID int) (*domain.User, er
 
 // Update - 自分自身のプロフィール情報を更新する
 func (pu *profileUsecase) Update(ctx context.Context, registeredUser, user *domain.User) (*domain.User, error) {
-	user.SlackID = registeredUser.SlackID
+	user.AccountID = registeredUser.AccountID
 	user.Role = registeredUser.Role
 	user.Generation = registeredUser.Generation
 	user.ID = registeredUser.ID
-	user.SlackInvitationStatus = registeredUser.SlackInvitationStatus
 	user.EmailVerified = registeredUser.EmailVerified
 	user.Avatar = registeredUser.Avatar
 

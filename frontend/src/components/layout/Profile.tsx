@@ -111,7 +111,7 @@ const Profile: React.FC<
           <RowItem label="研究会" value={user.workshops.join(', ')} />
           <RowItem label="班" value={user.squads.join(', ')} />
           <RowItem label="他サークル" value={user.otherCircles} />
-          <RowItem label="Slack ID" value={user.slackId} />
+          <RowItem label="Account ID" value={user.accountId} />
           <RowItem label="Discord ID" value={user.discordId ?? '未設定'} />
         </TableBody>
       </Table>
