@@ -12,7 +12,7 @@ require (
 	github.com/heetch/confita v0.10.0
 	github.com/jmoiron/sqlx v1.3.5
 	github.com/labstack/echo/v4 v4.9.0
-	github.com/labstack/gommon v0.3.1
+	github.com/labstack/gommon v0.4.0
 	github.com/pkg/errors v0.9.1
 	go.uber.org/dig v1.15.0
 	golang.org/x/crypto v0.0.0-20220924013350-4ba4fb4dd9e7
