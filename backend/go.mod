@@ -15,7 +15,7 @@ require (
 	github.com/labstack/gommon v0.4.0
 	github.com/pkg/errors v0.9.1
 	go.uber.org/dig v1.15.0
-	golang.org/x/crypto v0.0.0-20220924013350-4ba4fb4dd9e7
+	golang.org/x/crypto v0.0.0-20221012134737-56aed061732a
 	golang.org/x/net v0.0.0-20220923203811-8be639271d50
 	golang.org/x/oauth2 v0.0.0-20220909003341-f21342109be1
 	golang.org/x/xerrors v0.0.0-20220907171357-04be3eba64a2
