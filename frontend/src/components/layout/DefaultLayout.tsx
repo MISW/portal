@@ -98,7 +98,7 @@ export const DefaultLayout: React.FC<
           <AppBar position="fixed" color="primary" enableColorOnDark className={classes.appBar}>
             <Toolbar>
               <div className={classes.title}>
-                <NextLink href="/" passHref>
+                <NextLink href="/" passHref legacyBehavior>
                   <MUILink variant="h6" color="inherit" underline="hover" align="center">
                     みすポータル
                   </MUILink>
@@ -122,7 +122,7 @@ export const DefaultLayout: React.FC<
                       </Typography>
                       <div>
                         {role === 'admin' && (
-                          <NextLink href="/admin" passHref>
+                          <NextLink href="/admin" passHref legacyBehavior>
                             <Tooltip title="管理者" placement="right-end">
                               <IconButton component="a" aria-label="admin" aria-controls="menu-appbar" aria-haspopup="true" color="secondary" size="large">
                                 <Lock />
@@ -158,12 +158,12 @@ export const DefaultLayout: React.FC<
                           open={open}
                           onClose={handleClose}
                         >
-                          <NextLink passHref href="/profile">
+                          <NextLink passHref href="/profile" legacyBehavior>
                             <MenuItem component="a" onClick={handleClose}>
                               Profile
                             </MenuItem>
                           </NextLink>
-                          <NextLink passHref href="/card">
+                          <NextLink passHref href="/card" legacyBehavior>
                             <MenuItem component="a" onClick={handleClose}>
                               Card
                             </MenuItem>

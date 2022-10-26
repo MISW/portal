@@ -31,7 +31,7 @@ const Page: NextPage = () => {
         <p>現在のアカウントのメールアドレス: {accountInfo.email}</p>
       </ol>
       <br />
-      <Link href="/signup/form" passHref>
+      <Link href="/signup/form" passHref legacyBehavior>
         <Button color="primary" variant="contained">
           会員登録フォームへ
         </Button>
