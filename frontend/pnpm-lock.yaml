@@ -22,7 +22,7 @@ specifiers:
   eslint-config-next: ^13.0.0
   eslint-config-prettier: ^8.5.0
   focus-visible: ^5.2.0
-  ky: ^0.31.4
+  ky: ^0.32.0
   next: ^13.0.0
   next-redux-wrapper: ^8.0.0
   postcss: ^8.4.18
@@ -46,7 +46,7 @@ dependencies:
   '@reduxjs/toolkit': 1.8.6_kuo2ie247izvzll3jejufdtq3q
   clsx: 1.2.1
   focus-visible: 5.2.0
-  ky: 0.31.4
+  ky: 0.32.0
   next: 13.0.0_qtpcxnaaarbm4ws7ughq6oxfve
   next-redux-wrapper: 8.0.0_dgi44kqkm4hdk35szxcg42d4dy
   react: 18.2.0
@@ -2493,8 +2493,8 @@ packages:
       object.assign: 4.1.4
     dev: true
 
-  /ky/0.31.4:
-    resolution: {integrity: sha512-OFuAD3riwhAfHK3J4FrhlujFRpm0ELBEfDHZfFpw89OTozQt3NLF39lNblUO5udj5vSkyaBKnLai/rFCzBfISQ==}
+  /ky/0.32.0:
+    resolution: {integrity: sha512-oayLkXBe2IQj0VJb07HJ6yjfZ2ijqw3GKjPnEjWmqIpavV68ZYOgwtKrwQbDSP0WxZ9z6B0MjPNSvfbaFctFRw==}
     engines: {node: '>=14.16'}
     dev: false
 
