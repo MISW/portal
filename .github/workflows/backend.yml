@@ -42,9 +42,21 @@ jobs:
           chmod +x /usr/local/bin/mysqldef
           rm -f ./mysqldef.tar.gz
 
+      - name: Download modules
+        working-directory: backend
+        run: go mod download
+
       - name: Coverage
         working-directory: backend
-        run: go mod download && go test -v -cover -race -tags use_external_db -coverprofile=coverage ./...
+        run: go test -v -cover -race -tags use_external_db -coverprofile=coverage ./...
+
+      - name: Report likely mistakes
+        working-directory: backend
+        run: go vet ./...
+
+      - name: Staticcheck
+        working-directory: backend
+        run: go install honnef.co/go/tools/cmd/staticcheck@latest && staticcheck ./...
 
       - name: Codecov
         uses: codecov/codecov-action@v3
