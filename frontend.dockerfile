@@ -7,7 +7,7 @@ RUN mkdir -p /tools/bin
 
 WORKDIR /tools
 
-ARG pnpm_version=v7.14.0
+ARG pnpm_version=v7.14.2
 RUN curl -fsSL https://github.com/pnpm/pnpm/releases/download/${pnpm_version}/pnpm-linux-x64 -o /tools/bin/pnpm \
  && chmod +x /tools/bin/pnpm
 
