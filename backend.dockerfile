@@ -9,29 +9,29 @@ WORKDIR /tools
 
 ARG dbenv_version=v1.1.0
 RUN curl -fsSL https://github.com/tsuzu/dbenv/releases/download/${dbenv_version}/dbenv_linux_x86_64.tar.gz -o ./dbenv.tar.gz \
- && tar xvf ./dbenv.tar.gz -C /tools/bin \
- && chmod +x /tools/bin/dbenv \
- && rm -f ./dbenv.tar.gz
+  && tar xvf ./dbenv.tar.gz -C /tools/bin \
+  && chmod +x /tools/bin/dbenv \
+  && rm -f ./dbenv.tar.gz
 
 ARG dockerize_version=v0.6.1
 RUN curl -fsSL https://github.com/jwilder/dockerize/releases/download/${dockerize_version}/dockerize-linux-amd64-${dockerize_version}.tar.gz -o ./dockerize.tar.gz \
- && tar xvf ./dockerize.tar.gz -C /tools/bin \
- && chmod +x /tools/bin/dockerize \
- && rm -f ./dockerize.tar.gz
+  && tar xvf ./dockerize.tar.gz -C /tools/bin \
+  && chmod +x /tools/bin/dockerize \
+  && rm -f ./dockerize.tar.gz
 
-ARG sqldef_version=v0.13.18
+ARG sqldef_version=v0.14.1
 RUN curl -fsSL https://github.com/k0kubun/sqldef/releases/download/${sqldef_version}/mysqldef_linux_amd64.tar.gz -o ./mysqldef.tar.gz \
- && tar xvf ./mysqldef.tar.gz -C /tools/bin \
- && chmod +x /tools/bin/mysqldef \
- && rm -f ./mysqldef.tar.gz
+  && tar xvf ./mysqldef.tar.gz -C /tools/bin \
+  && chmod +x /tools/bin/mysqldef \
+  && rm -f ./mysqldef.tar.gz
 
 # development
 FROM golang:${go_version} AS development
 
 RUN apt update \
- && DEBIAN_FRONTEND=noninteractive apt install -y mariadb-client \
- && apt clean \
- && rm -rf /var/lib/apt/lists/*
+  && DEBIAN_FRONTEND=noninteractive apt install -y mariadb-client \
+  && apt clean \
+  && rm -rf /var/lib/apt/lists/*
 
 COPY --from=tools /tools/bin/dbenv /bin
 COPY --from=tools /tools/bin/dockerize /bin
@@ -57,7 +57,7 @@ COPY ./backend /backend
 WORKDIR /backend
 
 RUN go mod download \
- && GO111MODULE=on go build -ldflags '-extldflags "-fno-PIC -static"' -buildmode pie -tags 'osusergo netgo static_build' -o /backend/portal
+  && GO111MODULE=on go build -ldflags '-extldflags "-fno-PIC -static"' -buildmode pie -tags 'osusergo netgo static_build' -o /backend/portal
 
 # production
 FROM gcr.io/distroless/base:debug AS production

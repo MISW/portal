@@ -9,15 +9,15 @@ WORKDIR /tools
 
 ARG pnpm_version=v7.14.2
 RUN curl -fsSL https://github.com/pnpm/pnpm/releases/download/${pnpm_version}/pnpm-linux-x64 -o /tools/bin/pnpm \
- && chmod +x /tools/bin/pnpm
+  && chmod +x /tools/bin/pnpm
 
 # base
 FROM node:${node_version}-bullseye-slim AS base
 
 RUN apt update \
- && DEBIAN_FRONTEND=noninteractive apt install -y ca-certificates fonts-noto-cjk tzdata \
- && apt clean \
- && rm -rf /var/lib/apt/lists/*
+  && DEBIAN_FRONTEND=noninteractive apt install -y ca-certificates fonts-noto-cjk tzdata \
+  && apt clean \
+  && rm -rf /var/lib/apt/lists/*
 
 COPY --from=tools /tools/bin/pnpm /bin
 
@@ -42,7 +42,7 @@ FROM base AS workspace
 WORKDIR /frontend
 
 RUN pnpm i --frozen-lockfile \
- && pnpm build
+  && pnpm build
 
 # pruned
 FROM workspace AS pruned
