@@ -9,9 +9,10 @@ import { selectCurrentUser, selectCurrentPaymentStatuses, fetchCurrentPaymentSta
 import { nonNullOrThrow } from 'utils';
 import { NoSSR } from 'components/utils/NoSSR';
 import { withLoginUser } from 'middlewares/withLoginUser';
+import { AppDispatch } from 'store/store';
 
 const Page: NextPage = () => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const currentUser = nonNullOrThrow(useSelector(selectCurrentUser));
   const paymentStatuses = useSelector(selectCurrentPaymentStatuses);
   useEffect(() => {

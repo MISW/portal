@@ -12,11 +12,12 @@ import {
   updateEmailTemplate as updateEmailTemplateThunk,
 } from 'features/appconfig';
 import { EmailKind } from 'models/appconfig';
+import { AppDispatch } from 'store/store';
 
 export type PeriodConfigState = () => [number | undefined, (period: number) => Promise<void>];
 
 export const usePaymentPeriodConfig: PeriodConfigState = () => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const paymentPeriod = useSelector(selectPaymentPeriod);
   useEffect(() => {
     dispatch(fetchPaymentPeriod());
@@ -42,7 +43,7 @@ export const usePaymentPeriodConfig: PeriodConfigState = () => {
 };
 
 export const useCurrentPeriodConfig: PeriodConfigState = () => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const currentPeriod = useSelector(selectCurrentPeriod);
   useEffect(() => {
     dispatch(fetchCurrentPeriod());
@@ -72,7 +73,7 @@ export type EmailTemplate = {
 };
 
 export function useEmailTemplateConfig(emailKind: EmailKind) {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const emailTemplate = useSelector(useMemo(() => selectEmailTemplateOf(emailKind), [emailKind]));
   useEffect(() => {
     if (emailTemplate == null) dispatch(fetchEmailTemplate(emailKind));

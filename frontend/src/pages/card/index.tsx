@@ -5,9 +5,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { withLoginUser } from 'middlewares/withLoginUser';
 import { selectCurrentUser, updateCurrentUser } from 'features/currentUser';
 import { EditCard } from 'components/pages/EditCard';
+import { AppDispatch } from 'store/store';
 
 const EditCardPage: NextPage = () => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const user = useSelector(selectCurrentUser);
   const handlePublish = useCallback(
     ({ twitterScreenName, discordID }: { twitterScreenName?: string; discordID?: string }) => {
