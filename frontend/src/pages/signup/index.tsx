@@ -7,12 +7,13 @@ import { useLogoutFromOIDC } from 'features/auth';
 import { useSelector } from 'react-redux';
 import { fetchCurrentOidcAccountInfo, selectCurrentOidcAccountInfo } from 'features/currentOidcAccount';
 import { useDispatch } from 'react-redux';
+import { AppDispatch } from 'store/store';
 
 const Page: NextPage = () => {
   const router = useRouter();
   const { handleLogout } = useLogoutFromOIDC();
 
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const accountInfo = useSelector(selectCurrentOidcAccountInfo);
   if (accountInfo == null) dispatch(fetchCurrentOidcAccountInfo());
 

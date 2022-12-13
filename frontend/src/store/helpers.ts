@@ -4,14 +4,21 @@ import { RootState, AppDispatch, ExtraArgument } from './store';
 
 export const hydrated = createAction<RootState, typeof HYDRATE>(HYDRATE);
 
-type DefaultThunkApiConfig = Readonly<{
+type DefaultThunkApiConfig<T = unknown> = Readonly<{
   state: RootState;
   dispatch?: AppDispatch;
   extra: ExtraArgument;
-  rejectValue?: unknown;
+  rejectValue?: T;
 }>;
 
-type CreateAppAsyncThunk = <Returned, ThunkArg = void, ThunkApiConfig = DefaultThunkApiConfig>(
+type AsyncThunkConfig<T = unknown> = Readonly<{
+  state: RootState;
+  dispatch?: AppDispatch;
+  extra: ExtraArgument;
+  rejectValue?: T;
+}>;
+
+type CreateAppAsyncThunk = <Returned, ThunkArg = void, ThunkApiConfig extends AsyncThunkConfig = DefaultThunkApiConfig>(
   typePrefix: string,
   payloadCreator: AsyncThunkPayloadCreator<Returned, ThunkArg, ThunkApiConfig>,
   options?: Readonly<{

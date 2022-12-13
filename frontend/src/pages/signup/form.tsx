@@ -10,9 +10,10 @@ import { withLoginOIDC } from 'middlewares/withLoginOIDC';
 import { nonNullOrThrow } from 'utils';
 import { useSelector } from 'react-redux';
 import { selectCurrentOidcAccountInfo } from 'features/currentOidcAccount';
+import { AppDispatch } from 'store/store';
 
 const Page: NextPage = () => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const [email, setEmail] = useState<string>();
 
   const accountInfo = nonNullOrThrow(useSelector(selectCurrentOidcAccountInfo));

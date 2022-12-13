@@ -8,9 +8,10 @@ import {
   logoutFromOIDC as logoutFromOIDCRequest,
   processCallback,
 } from './operations';
+import { AppDispatch } from 'store/store';
 
 export const useVerifyEmail = () => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const [status, setStatus] = useState<'pending' | 'fulfilled' | 'rejected'>();
   const [error, setError] = useState<unknown>();
   const verifyEmail = useCallback(
@@ -34,7 +35,7 @@ export const useVerifyEmail = () => {
 };
 
 export const useLogin = () => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const [error, setError] = useState<unknown>();
   const login = useCallback(async () => {
     try {
@@ -52,7 +53,7 @@ export const useLogin = () => {
 
 //みすポータルからログアウトする
 export const useLogout = () => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const [error, setError] = useState<unknown>();
   const handleLogout = useCallback(async () => {
     try {
@@ -70,7 +71,7 @@ export const useLogout = () => {
 
 //OpenIDConnectで使ってるアカウントからログアウトする
 export const useLogoutFromOIDC = () => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const [error, setError] = useState<unknown>();
   const handleLogout = useCallback(async () => {
     try {
@@ -88,12 +89,12 @@ export const useLogoutFromOIDC = () => {
 
 /*
  ログインのcallbackを取り扱う
- ログインに成功した場合: 
+ ログインに成功した場合:
   - みすポータルにアカウントを既に持っている場合: `/`へリダイレクト
   - みすポータルにアカウントをまだ持っていない場合: `/signup`へリダイレクト
 */
 export const useAuthCallback = () => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
   const [error, setError] = useState<unknown>();
   const handleCallback = useCallback(

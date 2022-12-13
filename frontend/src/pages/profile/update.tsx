@@ -8,9 +8,10 @@ import { nonNullOrThrow } from 'utils';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { useSelector, useDispatch } from 'react-redux';
 import { NoSSR } from 'components/utils/NoSSR';
+import { AppDispatch } from 'store/store';
 
 const Page: NextPage = () => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const currentUser = nonNullOrThrow(useSelector(selectCurrentUser));
   const onSubmit = async (user: ConfigurableProfile): Promise<SubmitResult> => {
     try {
