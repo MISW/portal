@@ -37,7 +37,7 @@ jobs:
 
       - name: Install mysqldef
         run: |
-          curl -fsSL https://github.com/k0kubun/sqldef/releases/download/v0.14.1/mysqldef_linux_amd64.tar.gz -o ./mysqldef.tar.gz
+          curl -fsSL https://github.com/k0kubun/sqldef/releases/download/v0.15.2/mysqldef_linux_amd64.tar.gz -o ./mysqldef.tar.gz
           tar xvf mysqldef.tar.gz -C /usr/local/bin
           chmod +x /usr/local/bin/mysqldef
           rm -f ./mysqldef.tar.gz
@@ -57,6 +57,10 @@ jobs:
       - name: Staticcheck
         working-directory: backend
         run: go install honnef.co/go/tools/cmd/staticcheck@latest && staticcheck ./...
+
+      - name: Build
+        working-directory: backend
+        run: go build -ldflags '-extldflags "-fno-PIC -static"' -buildmode pie -tags 'osusergo netgo static_build'
 
       - name: Codecov
         uses: codecov/codecov-action@v3

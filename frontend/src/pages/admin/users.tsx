@@ -12,6 +12,7 @@ import { useDispatch, useSelector, useStore } from 'react-redux';
 import { selectAllUsers, fetchAllUsers, addPaymentStatus, deletePaymentStatus, selectUserById } from 'features/users';
 import { remindPayment } from 'features/admin';
 import { NoSSR } from 'components/utils/NoSSR';
+import { AppDispatch } from 'store/store';
 
 const headCells: HeadCell[] = labelsInJapanese.map(
   ({ id, label }) =>
@@ -36,7 +37,7 @@ const toTableData = (u: User): UserTableData => ({
 const Page: NextPage = () => {
   const users = useSelector(selectAllUsers);
   const store = useStore();
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   useEffect(() => {
     const thunkAction = dispatch(fetchAllUsers());
     return () => thunkAction.abort();
@@ -94,7 +95,7 @@ const Page: NextPage = () => {
               );
             }
 
-            const user = toTableData(nonNullOrThrow(selectUserById(store.getState(), id)));
+            const user = toTableData(nonNullOrThrow(selectUserById(store.getState() as any, id)));
 
             return user;
           }}
