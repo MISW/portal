@@ -29,7 +29,6 @@ services:
     ports:
       - "80:80"
     volumes:
-      - go:/go
       - ./backend:/backend
       - ./backend/schema:/schema
       - ./seeds:/seeds
@@ -45,7 +44,6 @@ services:
     ports:
       - "3000:3000"
     volumes:
-      - .next:/frontend/.next
       - pnpm-store:/frontend/.pnpm-store
       - node_modules:/frontend/node_modules
       - ./frontend:/frontend
@@ -53,7 +51,5 @@ services:
 
 volumes:
   mysql:
-  go:
-  .next:
   pnpm-store:
   node_modules:

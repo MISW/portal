@@ -37,7 +37,7 @@ jobs:
 
       - name: Install mysqldef
         run: |
-          curl -fsSL https://github.com/k0kubun/sqldef/releases/download/v0.15.2/mysqldef_linux_amd64.tar.gz -o ./mysqldef.tar.gz
+          curl -fsSL https://github.com/k0kubun/sqldef/releases/download/v0.15.6/mysqldef_linux_amd64.tar.gz -o ./mysqldef.tar.gz
           tar xvf mysqldef.tar.gz -C /usr/local/bin
           chmod +x /usr/local/bin/mysqldef
           rm -f ./mysqldef.tar.gz
