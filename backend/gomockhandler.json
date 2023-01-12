@@ -82,7 +82,7 @@
 		},
 		"interfaces/api/private/mock_session.go": {
 			"checksum": "F19LwH/HDFQAUZ+CyHbPkA==",
-			"source_checksum": "71L/PlGxZ0/G9xUYwXljzQ==",
+			"source_checksum": "a54UkNOjxSoMXxEfcyIR7g==",
 			"mode": "SOURCE_MODE",
 			"source_mode_runner": {
 				"source": "interfaces/api/private/session.go",
@@ -172,7 +172,7 @@
 		},
 		"internal/oidc/mock_oidc.go": {
 			"checksum": "NS+g5lOAMSWjE25MJa2MHQ==",
-			"source_checksum": "7rTPsfPv3EESuGjQI6k6hA==",
+			"source_checksum": "zRc496wwmethnkAwdLuobw==",
 			"mode": "SOURCE_MODE",
 			"source_mode_runner": {
 				"source": "internal/oidc/oidc.go",

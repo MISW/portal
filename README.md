@@ -60,10 +60,9 @@ docker compose logs app # Webサーバのみ(MySQLを無視)
 
 ### Frontend Environment
 
+[Install nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+
 ```sh
-sudo dnf module enable nodejs:18
-sudo dnf install nodejs
-sudo npm install -g pnpm
 cd frontend
 pnpm i
 pnpm format
@@ -75,10 +74,15 @@ pnpm start
 
 ### Backend Environment
 
+[Install Go](https://github.com/golang/go#download-and-install)
+
 ```sh
-sudo dnf install golang
 cd backend
 go install
-go build
+gomockhandler mockgen -config=gomockhandler.json
+go test -v -race -tags use_external_db ./...
+go vet ./...
+staticcheck ./...
+go build -ldflags '-extldflags "-fno-PIC -static"' -buildmode pie -tags 'osusergo netgo static_build'
 ./backend
 ```

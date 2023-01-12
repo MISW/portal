@@ -106,7 +106,7 @@ func (author *authenticator) Login(ctx context.Context) (redirectURL, state stri
 		return "", "", xerrors.Errorf("failed to generate a random token: %w", err)
 	}
 
-	hashedState, err := bcrypt.GenerateFromPassword([]byte(state), bcrypt.DefaultCost)
+	hashedState, err := bcrypt.GenerateFromPassword([]byte(state[:72]), bcrypt.DefaultCost)
 
 	if err != nil {
 		return "", "", xerrors.Errorf("failed to hash the state string: %w", err)
