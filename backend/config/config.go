@@ -49,7 +49,6 @@ func NewBackend() backend.Backend {
 			return []byte(val), nil
 		}
 		key = strings.Replace(strings.ToUpper(key), "-", "_", -1)
-		fmt.Println(key)
 		if val := os.Getenv(key); val != "" {
 			return []byte(val), nil
 		}
@@ -59,8 +58,6 @@ func NewBackend() backend.Backend {
 
 // ReadConfig - configを読み込む
 func ReadConfig() (*Config, error) {
-
-	fmt.Println(strings.Join(os.Environ(), "\n"))
 	var bs []backend.Backend = []backend.Backend{
 		NewBackend(),
 		file.NewOptionalBackend("/etc/portal/portal.yml"),
@@ -80,6 +77,8 @@ func ReadConfig() (*Config, error) {
 	if err != nil {
 		return nil, xerrors.Errorf("failed to load config: %w", err)
 	}
+
+	fmt.Println(cfg)
 
 	return cfg, nil
 }
