@@ -5,10 +5,13 @@ on:
     branches:
       - main
   pull_request:
+    branches:
+      - main
     paths:
       - backend/**
 
 env:
+  DATABASE_URL: "root:password@tcp(mysql)/?parseTime=true&multiStatements=true"
   SMTP_SERVER: ${{secrets.SMTP_SERVER}}
   SMTP_USERNAME: ${{secrets.SMTP_USERNAME}}
   SMTP_PASSWORD: ${{secrets.SMTP_PASSWORD}}
@@ -29,15 +32,13 @@ jobs:
 
     container:
       image: golang:1.19
-      env:
-        DATABASE_URL: "root:password@tcp(mysql)/?parseTime=true&multiStatements=true"
 
     steps:
       - uses: actions/checkout@v3
 
       - name: Install mysqldef
         run: |
-          curl -fsSL https://github.com/k0kubun/sqldef/releases/download/v0.15.6/mysqldef_linux_amd64.tar.gz -o ./mysqldef.tar.gz
+          curl -fsSL https://github.com/k0kubun/sqldef/releases/download/v0.15.7/mysqldef_linux_amd64.tar.gz -o ./mysqldef.tar.gz
           tar xvf mysqldef.tar.gz -C /usr/local/bin
           chmod +x /usr/local/bin/mysqldef
           rm -f ./mysqldef.tar.gz
