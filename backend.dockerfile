@@ -57,7 +57,7 @@ COPY ./backend /backend
 WORKDIR /backend
 
 RUN go mod download \
-  && go build -buildmode pie -o /backend/portal
+  && go build -buildmode pie -buildvcs=false -o /backend/portal
 
 # production
 FROM gcr.io/distroless/base:debug AS production
