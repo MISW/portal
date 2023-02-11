@@ -1,4 +1,4 @@
-ARG go_version=1.19
+ARG go_version=1.20
 
 # tools
 FROM archlinux:base-devel AS tools
@@ -19,7 +19,7 @@ RUN curl -fsSL https://github.com/jwilder/dockerize/releases/download/${dockeriz
   && chmod +x /tools/bin/dockerize \
   && rm -f ./dockerize.tar.gz
 
-ARG sqldef_version=v0.15.7
+ARG sqldef_version=v0.15.10
 RUN curl -fsSL https://github.com/k0kubun/sqldef/releases/download/${sqldef_version}/mysqldef_linux_amd64.tar.gz -o ./mysqldef.tar.gz \
   && tar xvf ./mysqldef.tar.gz -C /tools/bin \
   && chmod +x /tools/bin/mysqldef \
@@ -57,7 +57,7 @@ COPY ./backend /backend
 WORKDIR /backend
 
 RUN go mod download \
-  && go build -ldflags '-extldflags "-fno-PIC -static"' -buildmode pie -tags 'osusergo netgo static_build' -o /backend/portal
+  && go build -buildmode pie -o /backend/portal
 
 # production
 FROM gcr.io/distroless/base:debug AS production
