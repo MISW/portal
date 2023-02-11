@@ -69,9 +69,9 @@ func NewSQLConn(t *testing.T) db.Ext {
 	var lts = []byte("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
 
 	b := make([]byte, 10)
-	rand.Seed(time.Now().UnixNano())
+	rand1 := rand.New(rand.NewSource(time.Now().UnixNano()))
 	for i := range b {
-		b[i] = lts[rand.Intn(len(lts))]
+		b[i] = lts[rand1.Intn(len(lts))]
 	}
 	dbName := string(b)
 

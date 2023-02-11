@@ -51,7 +51,7 @@ done
 
 if [ "${ENVIRONMENT:-}" = "dev" ]; then
     go mod download
-    GO111MODULE=on go build -o /bin/portal
+    go build -buildmode pie -buildvcs=false -o /bin/portal
 fi
 
 if [ "$WAIT" = "1" ]; then
