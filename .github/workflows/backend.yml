@@ -61,7 +61,7 @@ jobs:
 
       - name: Build
         working-directory: backend
-        run: go build -buildmode pie
+        run: go build -buildmode pie -buildvcs=false
 
       - name: Codecov
         uses: codecov/codecov-action@v3
