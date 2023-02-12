@@ -1,5 +1,7 @@
 {
   "name": "mis-portal-frontend",
+  "version": "2.0.0",
+  "license": "MPL-2.0",
   "scripts": {
     "coverage": "cp -v ./.next/swc-trace-profile-*.json ./coverage",
     "build": "next build",
@@ -17,7 +19,6 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
     "@fortawesome/fontawesome-common-types": "^6.3.0",
     "@fortawesome/free-brands-svg-icons": "^6.3.0",
@@ -26,18 +27,18 @@
     "@mui/styles": "^5.11.7",
     "@reduxjs/toolkit": "^1.9.2",
     "clsx": "^1.2.1",
-    "focus-visible": "^5.2.0",
     "ky": "^0.33.2",
     "next": "^13.1.6",
     "next-redux-wrapper": "^8.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-redux": "^8.0.5",
-    "sharp": "^0.31.3"
+    "sharp": "^0.31.3",
+    "tss-react": "^4.6.0"
   },
   "devDependencies": {
     "@types/node": "^18.13.0",
-    "@types/react": "^18.0.27",
+    "@types/react": "^18.0.28",
     "@types/react-dom": "^18.0.10",
     "@types/react-redux": "^7.1.25",
     "@types/sharp": "^0.31.1",
@@ -52,5 +53,10 @@
     "tailwindcss": "^3.2.6",
     "type-fest": "^3.5.7",
     "typescript": "^4.9.5"
+  },
+  "pnpm": {
+    "overrides": {
+      "@mui/styled-engine": "5.11.0"
+    }
   }
 }
