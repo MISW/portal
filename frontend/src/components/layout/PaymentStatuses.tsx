@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
-import clsx from 'clsx';
 import { Typography } from '@mui/material';
 import Toolbar from '@mui/material/Toolbar';
 import Table from '@mui/material/Table';
@@ -11,7 +10,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import { periodsInJapanese } from '../../user';
 import { PaymentStatus } from 'models/user';
-import { makeStyles, createStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 
 const PREFIX = 'PaymentStatuses';
 
@@ -28,7 +27,7 @@ const StyledTableContainer = styled(TableContainer)(() => ({
   },
 }));
 
-const useToolbarStyle = makeStyles(() => ({
+const useToolbarStyle = makeStyles()(() => ({
   [`& .${classes.root}`]: {},
 
   [`& .${classes.title}`]: {
@@ -36,13 +35,11 @@ const useToolbarStyle = makeStyles(() => ({
   },
 }));
 
-const paymentStatusesStyle = makeStyles(() =>
-  createStyles({
-    fixedTable: {
-      'table-layout': 'fixed',
-    },
-  }),
-);
+const paymentStatusesStyle = makeStyles()(() => ({
+  fixedTable: {
+    'table-layout': 'fixed',
+  },
+}));
 
 const PaymentStatuses: React.FC<
   React.PropsWithChildren<{
@@ -51,8 +48,8 @@ const PaymentStatuses: React.FC<
     handleEditButton?: () => void;
   }>
 > = ({ paymentStatuses }) => {
-  const toolbarClasses = useToolbarStyle();
-  const paymentStatusesClasses = paymentStatusesStyle();
+  const { classes: toolbarClasses, cx } = useToolbarStyle();
+  const { classes: paymentStatusesClasses } = paymentStatusesStyle();
 
   return (
     <StyledTableContainer>
@@ -63,7 +60,7 @@ const PaymentStatuses: React.FC<
       </Toolbar>
 
       <Table
-        className={clsx(
+        className={cx(
           {
             [paymentStatusesClasses.fixedTable]: paymentStatuses.length == 0,
           },

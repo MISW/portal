@@ -2,12 +2,12 @@
 
 import { Children } from 'react';
 import Document, { Html, Head, Main, NextScript } from 'next/document';
-import ServerStyleSheets from '@mui/styles/ServerStyleSheets';
+import { ServerStyleSheets } from '@mui/styles';
 
 export default class MyDocument extends Document {
   render(): JSX.Element {
     return (
-      <Html lang="ja" prefix="og: http://ogp.me/ns#">
+      <Html lang="ja" prefix="og: https://ogp.me/ns#">
         <Head>
           <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" />
         </Head>

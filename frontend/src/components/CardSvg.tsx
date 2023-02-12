@@ -80,7 +80,7 @@ export const CardSvg: React.VFC<{
   readonly twitterScreenName?: string;
   readonly discordId?: string;
 }> = ({ width, height, avatarUrl, miswLogoUrl, generation, handle, workshops, squads, twitterScreenName, discordId }) => (
-  <svg version="1.1" baseProfile="full" width={width} height={height} viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
+  <svg version="1.1" baseProfile="full" width={width} height={height} viewBox="0 0 1200 630" xmlns="https://www.w3.org/2000/svg">
     <rect width="100%" height="100%" fill="white" />
 
     <Avatar avatarUrl={avatarUrl} x={30} y={30} width={150} height={150} />

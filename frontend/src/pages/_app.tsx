@@ -1,7 +1,6 @@
 // https://github.com/mui-org/material-ui/blob/master/examples/nextjs/pages/_app.js 参照
 
 import 'tailwindcss/tailwind.css';
-import 'focus-visible';
 import { useEffect } from 'react';
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
@@ -15,7 +14,7 @@ import { useSystemColorScheme } from '../hooks/theme';
 import lighttheme from '../components/theme/lighttheme';
 import darktheme from '../components/theme/darktheme';
 
-declare module '@mui/styles/defaultTheme' {
+declare module '@mui/material/styles/ThemeProvider' {
   // eslint-disable-next-line @typescript-eslint/no-empty-interface
   interface DefaultTheme extends Theme {}
 }

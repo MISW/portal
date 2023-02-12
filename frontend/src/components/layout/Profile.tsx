@@ -10,7 +10,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import NoWrapButton from './NoWrapButton';
 import { User } from 'models/user';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 
 const PREFIX = 'Profile';
 
@@ -27,7 +27,7 @@ const StyledTableContainer = styled(TableContainer)(() => ({
   },
 }));
 
-const useToolbarStyle = makeStyles(() => ({
+const useToolbarStyle = makeStyles()(() => ({
   [`& .${classes.root}`]: {},
 
   [`& .${classes.title}`]: {
@@ -58,7 +58,7 @@ const Profile: React.FC<
     size?: 'small' | 'medium';
   }>
 > = ({ user, editButton, handleEditButton, title, size }) => {
-  const toolbarClasses = useToolbarStyle();
+  const { classes: toolbarClasses } = useToolbarStyle();
 
   title = title ?? true;
   size = size ?? 'medium';

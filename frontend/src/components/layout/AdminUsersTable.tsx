@@ -1,7 +1,6 @@
 import { useEffect } from 'react';
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
-import clsx from 'clsx';
 import { lighten } from '@mui/material/styles';
 import { Box } from '@mui/material';
 import Table from '@mui/material/Table';
@@ -27,7 +26,7 @@ import NoWrapButton from './NoWrapButton';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import { UserTableData } from '../../user';
-import { makeStyles, createStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import { colors } from 'components/design/Button/colors';
 
 const PREFIX = 'EnhancedTable';
@@ -173,27 +172,27 @@ function EnhancedTableHead(props: EnhancedTableProps) {
   );
 }
 
-const useToolbarStyles = makeStyles((theme) =>
-  createStyles({
-    root: {
-      paddingLeft: theme.spacing(2),
-      paddingRight: theme.spacing(1),
-    },
-    highlight:
-      theme.palette.mode === 'light'
-        ? {
-            color: theme.palette.secondary.main,
-            backgroundColor: lighten(theme.palette.secondary.light, 0.85),
-          }
-        : {
-            color: theme.palette.text.primary,
-            backgroundColor: theme.palette.secondary.dark,
-          },
-    title: {
-      flex: '1 1 100%',
-    },
-  }),
-);
+const useToolbarStyles = makeStyles()((theme) => ({
+  root: {
+    paddingLeft: theme.spacing(2),
+    paddingRight: theme.spacing(1),
+  },
+
+  highlight:
+    theme.palette.mode === 'light'
+      ? {
+          color: theme.palette.secondary.main,
+          backgroundColor: lighten(theme.palette.secondary.light, 0.85),
+        }
+      : {
+          color: theme.palette.text.primary,
+          backgroundColor: theme.palette.secondary.dark,
+        },
+
+  title: {
+    flex: '1 1 100%',
+  },
+}));
 
 interface EnhancedTableToolbarProps {
   numSelected: number;
@@ -203,7 +202,7 @@ interface EnhancedTableToolbarProps {
 }
 
 const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
-  const classes = useToolbarStyles();
+  const { classes, cx } = useToolbarStyles();
   const { numSelected, editMode, handleClickOnEditMode, handleClickMenu } = props;
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
@@ -230,7 +229,7 @@ const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
 
   return (
     <Toolbar
-      className={clsx(classes.root, {
+      className={cx(classes.root, {
         [classes.highlight]: numSelected > 0,
       })}
     >
