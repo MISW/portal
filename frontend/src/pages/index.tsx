@@ -17,8 +17,8 @@ const classes = {
 
 const StyledNoSSR = styled(NoSSR)(({ theme }) => ({
   [`& .${classes.paper}`]: {
-    marginTop: theme.spacing(1),
-    marginBottom: theme.spacing(3),
+    marginTop: theme.spacing(2),
+    marginBottom: theme.spacing(2),
     padding: theme.spacing(2),
     [theme.breakpoints.up('sm')]: {
       marginTop: theme.spacing(6),
@@ -37,39 +37,34 @@ interface LinkData {
 
 const linkData: Array<LinkData> = [
   {
+    title: '公式サイト',
+    description: 'MIS.Wの公式サイト',
+    link: 'https://misw.jp/',
+  },
+  {
+    title: '公式ブログ',
+    description: 'MIS.Wの公式ブログ',
+    link: 'https://blog.misw.jp/',
+  },
+  {
     title: 'Discord',
-    description: '連絡ツール & 活動場所',
-    link: 'https://discord.com/invite/2UGRSbhkRY',
+    description: 'MIS.Wの公式Discordサーバー',
+    link: 'https://discord.com/invite/2UGRSbhkRY/',
   },
   {
     title: 'Twitter',
-    description: 'サークル員の生息地 MISWと検索してフォローを!',
-    link: 'https://twitter.com/misw_info',
+    description: 'MIS.Wの公式Twitterアカウント',
+    link: 'https://twitter.com/misw_info/',
   },
   {
     title: 'Kibela',
-    description: 'サークル員専用ブログ, 資料置き場',
-    link: 'https://misw.kibe.la',
+    description: 'サークル用の資料共有サイト',
+    link: 'https://misw.kibe.la/',
   },
   {
     title: 'みすクラウド',
-    description: 'サークル員専用クラウド',
-    link: 'https://cloud.misw.jp',
-  },
-  {
-    title: 'misw.jp',
-    description: '公式ホームページ',
-    link: 'https://misw.jp',
-  },
-  {
-    title: 'blog.misw.jp',
-    description: 'サークル員による外部公開ブログ',
-    link: 'https://blog.misw.jp',
-  },
-  {
-    title: 'misw.github.io',
-    description: '主にプロ研の入門記事置き場',
-    link: 'https://misw.github.io',
+    description: 'サークル用のオンラインストレージ',
+    link: 'https://cloud.misw.jp/',
   },
 ];
 
@@ -147,12 +142,8 @@ const Page: NextPage = () => {
   }
   return (
     <NoSSR>
-      <Typography variant="h2">
-        Create MISW <br /> with your own hand.
-      </Typography>
-      <p>Welcome to MISW!</p>
-
-      <Typography variant="h6">Getting Started</Typography>
+      <Typography variant="h1">Welcome to MIS.W!</Typography>
+      <Typography variant="h4">Getting Started</Typography>
       <ol>
         <li>kibelaの自己紹介記事を書く</li>
         <li>活動/ディスコードにてサークル員と交流する</li>
@@ -162,7 +153,7 @@ const Page: NextPage = () => {
         <li>その他イベントに参加する/イベントを企画する</li>
         <li>上記活動を通してインスピレーションを得て未来の創作につなげる</li>
       </ol>
-      <Typography variant="h6">Useful Links</Typography>
+      <Typography variant="h4">Useful Links</Typography>
       <Grid container spacing={4}>
         {linkData.map((data, i) => (
           <LinkContentCard {...data} key={i} />

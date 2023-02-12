@@ -22,7 +22,7 @@ const StyledGrid = styled(Grid)({
     flex: 1,
   },
   [`& .${classes.cardMedia}`]: {
-    width: 160,
+    width: 80,
   },
 });
 
@@ -35,7 +35,7 @@ export const LinkContentCard: React.FC<
   }>
 > = ({ title, description, link }) => {
   return (
-    <StyledGrid item xs={12} md={6}>
+    <StyledGrid item xs={12} md={6} xl={4}>
       <CardActionArea component="a" href={link}>
         <Card className={classes.card} variant="outlined">
           <div className={classes.cardDetails}>
