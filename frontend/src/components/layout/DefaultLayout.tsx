@@ -56,12 +56,10 @@ const StyledStyledEngineProvider = styled(StyledEngineProvider)(({ theme }) => (
 const Copyright: React.FC<React.PropsWithChildren<unknown>> = () => {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
-      {'Copyright © '}
+      {'Copyright (c) 2020-2023, '}
       <MUILink color="inherit" href="https://misw.jp/" underline="hover">
-        MISW
-      </MUILink>{' '}
-      2020-2022
-      {'.'}
+        MIS.W（早稲田大学経営情報学会）
+      </MUILink>
     </Typography>
   );
 };

@@ -36,7 +36,7 @@ const App = (props: AppProps) => {
     <StyledEngineProvider injectFirst>
       <ThemeProvider theme={scheme === 'dark' ? darktheme : lighttheme}>
         <Head>
-          <title>MISW Portal</title>
+          <title>みすポータル</title>
           <meta name="viewport" content="initial-scale=1.0,width=device-width" />
         </Head>
         <CssBaseline />
