@@ -41,7 +41,7 @@ const CardPage: NextPage<CardPageProps> = ({ card, baseURL }) => {
   return (
     <>
       <Head>
-        <title>{title} | MISW Portal</title>
+        <title>{title} | みすポータル</title>
         <meta property="og:url" content={pageURL} />
         <meta property="og:type" content="website" />
         <meta property="og:title" content={title} />

@@ -22,22 +22,22 @@ services:
   backend:
     build:
       dockerfile: backend.dockerfile
-      target: development
+      target: production
       context: .
     env_file:
       - ./dev.env
     ports:
       - "80:80"
     volumes:
+      - gopkg:/go/pkg
       - ./backend:/backend
       - ./backend/schema:/schema
       - ./seeds:/seeds
-      - ./backend/docker-entrypoint.sh:/bin/docker-entrypoint.sh
 
   frontend:
     build:
       dockerfile: frontend.dockerfile
-      target: development
+      target: production
       context: .
     env_file:
       - ./dev.env
@@ -47,9 +47,9 @@ services:
       - pnpm-store:/frontend/.pnpm-store
       - node_modules:/frontend/node_modules
       - ./frontend:/frontend
-      - ./frontend/docker-entrypoint.sh:/bin/docker-entrypoint.sh
 
 volumes:
   mysql:
+  gopkg:
   pnpm-store:
   node_modules:

@@ -1,3 +1,4 @@
+TRUNCATE appconfig;
 INSERT INTO `appconfig`
 (
   `configkey`, `configvalue`, `created_at`, `updated_at`

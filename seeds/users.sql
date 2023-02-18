@@ -1,3 +1,4 @@
+TRUNCATE users;
 INSERT INTO `users`
 (
   `id`, `email`, `generation`, `name`, `kana`, `handle`, `sex`, `avatar_url`, `avatar_thumbnail_url`, `university_name`, `university_department`, `university_subject`, `student_id`, `emergency_phone_number`, `other_circles`, `workshops`, `squads`, `role`, `account_id`, `discord_id`, `twitter_screen_name`, `email_verified`, `card_published`, `created_at`, `updated_at`

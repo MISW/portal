@@ -180,7 +180,7 @@ export const DefaultLayout: React.FC<
               <>{children}</>
             </Container>
           </main>
-          <footer>
+          <footer className="bg-sky-600 table-footer-group fixed inset-x-0 bottom-0" color="primary">
             <Copyright />
           </footer>
         </div>

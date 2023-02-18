@@ -7,24 +7,16 @@ RUN mkdir -p /tools/bin
 
 WORKDIR /tools
 
-ARG pnpm_version=v7.27.0
+ARG pnpm_version=v7.27.1
 RUN curl -fsSL https://github.com/pnpm/pnpm/releases/download/${pnpm_version}/pnpm-linux-x64 -o /tools/bin/pnpm \
   && chmod +x /tools/bin/pnpm
 
-# base
-FROM node:${node_version}-bullseye-slim AS base
-
-RUN apt update \
-  && DEBIAN_FRONTEND=noninteractive apt install -y ca-certificates fonts-noto-cjk tzdata \
-  && apt clean \
-  && rm -rf /var/lib/apt/lists/*
+# development
+FROM node:${node_version}-bullseye-slim AS development
 
 COPY --from=tools /tools/bin/pnpm /bin
 
-COPY ./frontend /frontend
-
-# development
-FROM base AS development
+RUN mkdir -p /frontend
 
 COPY ./frontend/docker-entrypoint.sh /bin/docker-entrypoint.sh
 
@@ -37,7 +29,11 @@ EXPOSE 3000
 ENTRYPOINT ["/bin/docker-entrypoint.sh"]
 
 # workspace
-FROM base AS workspace
+FROM node:${node_version}-bullseye-slim AS workspace
+
+COPY --from=tools /tools/bin/pnpm /bin
+
+COPY ./frontend /frontend
 
 WORKDIR /frontend
 
@@ -58,7 +54,7 @@ RUN ["/busybox/sh", "-c", "ln -s /busybox/sh /bin/sh"]
 RUN ["/busybox/sh", "-c", "ln -s /bin/env /usr/bin/env"]
 RUN ["/busybox/sh", "-c", "ln -s /nodejs/bin/node /bin/node"]
 
-COPY --from=base /frontend/next.config.js /portal/next.config.js
+COPY --from=workspace /frontend/next.config.js /portal/next.config.js
 
 COPY --from=workspace /frontend/.next /portal/.next
 

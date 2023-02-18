@@ -19,12 +19,11 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@emotion/styled": "^11.10.5",
+    "@emotion/styled": "^11.10.6",
     "@fortawesome/fontawesome-common-types": "^6.3.0",
     "@fortawesome/free-brands-svg-icons": "^6.3.0",
-    "@mui/icons-material": "^5.11.0",
-    "@mui/material": "^5.11.8",
-    "@mui/styles": "^5.11.7",
+    "@mui/icons-material": "^5.11.9",
+    "@mui/material": "^5.11.9",
     "@reduxjs/toolkit": "^1.9.2",
     "clsx": "^1.2.1",
     "ky": "^0.33.2",
@@ -34,29 +33,26 @@
     "react-dom": "^18.2.0",
     "react-redux": "^8.0.5",
     "sharp": "^0.31.3",
-    "tss-react": "^4.6.0"
+    "styled-components": "^5.3.6",
+    "tss-react": "^4.6.1"
   },
   "devDependencies": {
-    "@types/node": "^18.13.0",
+    "@types/node": "^18.14.0",
     "@types/react": "^18.0.28",
-    "@types/react-dom": "^18.0.10",
+    "@types/react-dom": "^18.0.11",
     "@types/react-redux": "^7.1.25",
     "@types/sharp": "^0.31.1",
-    "@typescript-eslint/eslint-plugin": "^5.51.0",
-    "@typescript-eslint/parser": "^5.51.0",
+    "@types/styled-components": "^5.1.26",
+    "@typescript-eslint/eslint-plugin": "^5.52.0",
+    "@typescript-eslint/parser": "^5.52.0",
     "autoprefixer": "^10.4.13",
     "eslint": "^8.34.0",
     "eslint-config-next": "^13.1.6",
     "eslint-config-prettier": "^8.6.0",
     "postcss": "^8.4.21",
     "prettier": "^2.8.4",
-    "tailwindcss": "^3.2.6",
-    "type-fest": "^3.5.7",
+    "tailwindcss": "^3.2.7",
+    "type-fest": "^3.6.0",
     "typescript": "^4.9.5"
-  },
-  "pnpm": {
-    "overrides": {
-      "@mui/styled-engine": "5.11.0"
-    }
   }
 }

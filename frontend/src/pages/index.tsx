@@ -1,6 +1,6 @@
 import { styled } from '@mui/material/styles';
 import { NextPage } from 'next';
-import { Grid, Paper, TableContainer, Table, TableBody, TableRow, TableCell, Typography } from '@mui/material';
+import { Grid, List, ListItem, ListItemText, Paper, TableContainer, Table, TableBody, TableRow, TableCell, Typography } from '@mui/material';
 import LinkContentCard from 'components/design/LinkContentCard';
 import { Alert, AlertTitle } from '@mui/material';
 import { withLoginUser } from 'middlewares/withLoginUser';
@@ -49,7 +49,7 @@ const linkData: Array<LinkData> = [
   {
     title: 'Discord',
     description: 'MIS.Wの公式Discordサーバー',
-    link: 'https://discord.com/invite/2UGRSbhkRY/',
+    link: 'https://discord.com/channels/695145923843457104/',
   },
   {
     title: 'Twitter',
@@ -142,19 +142,37 @@ const Page: NextPage = () => {
   }
   return (
     <NoSSR>
-      <Typography variant="h1">Welcome to MIS.W!</Typography>
-      <Typography variant="h4">Getting Started</Typography>
-      <ol>
-        <li>kibelaの自己紹介記事を書く</li>
-        <li>活動/ディスコードにてサークル員と交流する</li>
-        <li>新歓講座に参加する</li>
-        <li>発表会に参加する</li>
-        <li>企画に参加する/企画を立ち上げる</li>
-        <li>その他イベントに参加する/イベントを企画する</li>
-        <li>上記活動を通してインスピレーションを得て未来の創作につなげる</li>
-      </ol>
-      <Typography variant="h4">Useful Links</Typography>
-      <Grid container spacing={4}>
+      <Typography variant="h2" align="center">
+        Welcome to MIS.W!
+      </Typography>
+      <br />
+      <Typography variant="h5">Getting Started</Typography>
+      <List dense>
+        <ListItem>
+          <ListItemText primary="kibelaの自己紹介記事を書く" />
+        </ListItem>
+        <ListItem>
+          <ListItemText primary="活動/ディスコードにてサークル員と交流する" />
+        </ListItem>
+        <ListItem>
+          <ListItemText primary="新歓講座に参加する" />
+        </ListItem>
+        <ListItem>
+          <ListItemText primary="発表会に参加する" />
+        </ListItem>
+        <ListItem>
+          <ListItemText primary="企画に参加する/企画を立ち上げる" />
+        </ListItem>
+        <ListItem>
+          <ListItemText primary="その他イベントに参加する/イベントを企画する" />
+        </ListItem>
+        <ListItem>
+          <ListItemText primary="上記活動を通してインスピレーションを得て未来の創作につなげる" />
+        </ListItem>
+      </List>
+      <br />
+      <Typography variant="h5">Useful Links</Typography>
+      <Grid container spacing={2}>
         {linkData.map((data, i) => (
           <LinkContentCard {...data} key={i} />
         ))}

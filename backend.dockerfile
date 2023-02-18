@@ -37,9 +37,8 @@ COPY --from=tools /tools/bin/dbenv /bin
 COPY --from=tools /tools/bin/dockerize /bin
 COPY --from=tools /tools/bin/mysqldef /bin
 
-COPY ./backend /backend
-COPY ./backend/schema /schema
-COPY ./seeds /seeds
+RUN mkdir -p /backend
+
 COPY ./backend/docker-entrypoint.sh /bin/docker-entrypoint.sh
 
 WORKDIR /backend
