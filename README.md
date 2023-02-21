@@ -31,7 +31,7 @@ docker compose up -d --build
 - Wait for install packages
 - Wait for db wake up
 - Wait for server wake up
-- Open **[localhost:8080](http://localhost:8080/)** in browser
+- Open **[localhost:1080](http://localhost:1080/)** in browser
 
 ### Show Logs
 
@@ -83,6 +83,6 @@ gomockhandler mockgen -config=gomockhandler.json
 go test -v -race -tags use_external_db ./...
 go vet ./...
 staticcheck ./...
-go build -ldflags '-extldflags "-fno-PIC -static"' -buildmode pie -tags 'osusergo netgo static_build'
+go build -buildmode pie
 ./backend
 ```
