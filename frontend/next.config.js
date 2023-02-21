@@ -5,8 +5,8 @@
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
+  staticPageGenerationTimeout: 240,
   compiler: {
-    emotion: true,
     styledComponents: true,
   },
   experimental: {
@@ -20,7 +20,6 @@ const nextConfig = {
       },
     ]
   },
-  staticPageGenerationTimeout: 240,
 };
 
 module.exports = nextConfig;

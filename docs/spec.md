@@ -130,8 +130,8 @@
 ```json=
 {
   token: "string",
-	acciunt_id: "account_id",
-	email: "email"`,
+  acciunt_id: "account_id",
+  email: "email"`,
 }
 ```
 
@@ -146,15 +146,18 @@
 
 - response:
   - 成功時:
+
   ```json=
   {}
   ```
+
   - (特に)失敗時:
+
   ```json=
   {
     "status_code": "code",
-  	"status":      "http.StatusText(code)",
-  	"message":     "message",
+    "status":      "http.StatusText(code)",
+    "message":     "message",
   }
   ```
 
@@ -192,7 +195,7 @@ E メールが送信されているので E メールを確認してください
 - description: 自身の登録情報を更新する
 - parameter: `Content-Type: application/json` の body を POST
 
-https://github.com/MISW/Portal/blob/master/backend/domain/user.go#L46
+<https://github.com/MISW/Portal/blob/master/backend/domain/user.go#L46>
 
 JSON フォーマットはここを参照(ただし、ID、AccountID、Email、Role、CreatedAt、UpdatedAt は指定しなくて良い(自動で生成される))
 
@@ -214,7 +217,7 @@ JSON フォーマットはここを参照(ただし、ID、AccountID、Email、R
 }
 ```
 
-payment status: https://github.com/MISW/Portal/blob/master/backend/domain/payment.go#L10
+payment status: <https://github.com/MISW/Portal/blob/master/backend/domain/payment.go#L10>
 
 ### Get Payment Transaction
 
