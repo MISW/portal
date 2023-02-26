@@ -32,7 +32,7 @@ specifiers:
   styled-components: 5.3.6
   tailwindcss: 3.2.7
   tss-react: 4.6.1
-  type-fest: 3.6.0
+  type-fest: 3.6.1
   typescript: 4.9.5
 
 dependencies:
@@ -69,7 +69,7 @@ devDependencies:
   postcss: 8.4.21
   prettier: 2.8.4
   tailwindcss: 3.2.7_postcss@8.4.21
-  type-fest: 3.6.0
+  type-fest: 3.6.1
   typescript: 4.9.5
 
 packages:
@@ -3569,8 +3569,8 @@ packages:
     engines: {node: '>=10'}
     dev: true
 
-  /type-fest/3.6.0:
-    resolution: {integrity: sha512-RqTRtKTzvPpNdDUp1dVkKQRunlPITk4mXeqFlAZoJsS+fLRn8AdPK0TcQDumGayhU7fjlBfiBjsq3pe3rIfXZQ==}
+  /type-fest/3.6.1:
+    resolution: {integrity: sha512-htXWckxlT6U4+ilVgweNliPqlsVSSucbxVexRYllyMVJDtf5rTjv6kF/s+qAd4QSL1BZcnJPEJavYBPQiWuZDA==}
     engines: {node: '>=14.16'}
     dev: true
 
