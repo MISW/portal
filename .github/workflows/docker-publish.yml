@@ -23,9 +23,11 @@ jobs:
       matrix:
         include:
           - name: frontend
+            context: .
             file: frontend.dockerfile
             target: production
           - name: backend
+            context: .
             file: backend.dockerfile
             target: production
 
@@ -63,8 +65,8 @@ jobs:
         id: build-and-push
         uses: docker/build-push-action@v4
         with:
-          context: .
           push: true
+          context: ${{ matrix.context }}
           file: ${{ matrix.file }}
           target: ${{ matrix.target }}
           tags: ${{ steps.meta.outputs.tags }}
