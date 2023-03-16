@@ -20,7 +20,7 @@ specifiers:
   eslint: 8.35.0
   eslint-config-next: 13.2.3
   eslint-config-prettier: 8.7.0
-  ky: 0.33.2
+  ky: 0.33.3
   next: 13.2.3
   next-redux-wrapper: 8.1.0
   postcss: 8.4.21
@@ -43,7 +43,7 @@ dependencies:
   '@mui/material': 5.11.12_xqeqsl5kvjjtyxwyi3jhw3yuli
   '@reduxjs/toolkit': 1.9.3_k4ae6lp43ej6mezo3ztvx6pykq
   clsx: 1.2.1
-  ky: 0.33.2
+  ky: 0.33.3
   next: 13.2.3_biqbaboplfbrettd7655fr4n2y
   next-redux-wrapper: 8.1.0_qcqop67xukp6nuxiiqtcjozpsy
   react: 18.2.0
@@ -2523,8 +2523,8 @@ packages:
       object.assign: 4.1.4
     dev: true
 
-  /ky/0.33.2:
-    resolution: {integrity: sha512-f6oS2rKUcPu5FzdqCDbFpmzis/JlqFZw8uIHm/jf8Kc3vtnW+VDhuashOAKyBZv8bFiZFZUMNxTC0JtahEvujA==}
+  /ky/0.33.3:
+    resolution: {integrity: sha512-CasD9OCEQSFIam2U8efFK81Yeg8vNMTBUqtMOHlrcWQHqUX3HeCl9Dr31u4toV7emlH8Mymk5+9p0lL6mKb/Xw==}
     engines: {node: '>=14.16'}
     dev: false
 
