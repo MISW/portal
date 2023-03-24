@@ -19,7 +19,7 @@ env:
   TEST_EMAIL_TO: ${{secrets.TEST_EMAIL_TO}}
 
 jobs:
-  build:
+  backend-ci:
     runs-on: ubuntu-latest
 
     services:

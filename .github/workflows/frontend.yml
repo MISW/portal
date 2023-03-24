@@ -15,7 +15,7 @@ defaults:
     working-directory: frontend
 
 jobs:
-  build:
+  frontend-ci:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -29,7 +29,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 18.x
-          cache: 'pnpm'
+          cache: "pnpm"
           cache-dependency-path: |
             frontend/pnpm-lock.yaml
 
