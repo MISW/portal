@@ -7,8 +7,6 @@ on:
   pull_request:
     branches:
       - main
-    paths:
-      - backend/**
 
 env:
   DATABASE_URL: "root:password@tcp(mysql)/?parseTime=true&multiStatements=true"
