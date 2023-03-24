@@ -7,7 +7,7 @@ specifiers:
   '@mui/icons-material': 5.11.11
   '@mui/material': 5.11.14
   '@reduxjs/toolkit': 1.9.3
-  '@types/node': 18.15.7
+  '@types/node': 18.15.8
   '@types/react': 18.0.29
   '@types/react-dom': 18.0.11
   '@types/react-redux': 7.1.25
@@ -54,7 +54,7 @@ dependencies:
   tss-react: 4.8.2_3og6jmu6wvzuytygvdoxepq3x4
 
 devDependencies:
-  '@types/node': 18.15.7
+  '@types/node': 18.15.8
   '@types/react': 18.0.29
   '@types/react-dom': 18.0.11
   '@types/react-redux': 7.1.25
@@ -808,8 +808,8 @@ packages:
     resolution: {integrity: sha512-dRLjCWHYg4oaA77cxO64oO+7JwCwnIzkZPdrrC71jQmQtlhM556pwKo5bUzqvZndkVbeFLIIi+9TC40JNF5hNQ==}
     dev: true
 
-  /@types/node/18.15.7:
-    resolution: {integrity: sha512-LFmUbFunqmBn26wJZgZPYZPrDR1RwGOu2v79Mgcka1ndO6V0/cwjivPTc4yoK6n9kmw4/ls1r8cLrvh2iMibFA==}
+  /@types/node/18.15.8:
+    resolution: {integrity: sha512-kzGNJZ57XEH7RdckxZ7wfRjB9hgZABF+NLgR1B2zogUvV0gmK0/60VYA4yb4oKZckPiiJlmmfpdqTfCN0VRX+Q==}
     dev: true
 
   /@types/parse-json/4.0.0:
@@ -862,7 +862,7 @@ packages:
   /@types/sharp/0.31.1:
     resolution: {integrity: sha512-5nWwamN9ZFHXaYEincMSuza8nNfOof8nmO+mcI+Agx1uMUk4/pQnNIcix+9rLPXzKrm1pS34+6WRDbDV0Jn7ag==}
     dependencies:
-      '@types/node': 18.15.7
+      '@types/node': 18.15.8
     dev: true
 
   /@types/styled-components/5.1.26:
