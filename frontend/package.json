@@ -20,8 +20,8 @@
   },
   "dependencies": {
     "@emotion/styled": "11.10.6",
-    "@fortawesome/fontawesome-common-types": "6.3.0",
-    "@fortawesome/free-brands-svg-icons": "6.3.0",
+    "@fortawesome/fontawesome-common-types": "6.4.0",
+    "@fortawesome/free-brands-svg-icons": "6.4.0",
     "@mui/icons-material": "5.11.11",
     "@mui/material": "5.11.14",
     "@reduxjs/toolkit": "1.9.3",
