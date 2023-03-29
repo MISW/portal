@@ -187,7 +187,11 @@ const FundamentalInfo: React.FC<
           <br />
           それ以外の目的で了承なく情報を使うことはありません。
           <br />
-          入力を続ける場合、<a href="/policy" target="_blank" rel="noopener noreferrer" style={{textDecoration:"underline"}}><strong>プライバシーポリシー</strong></a>に同意いただけたものとみなします。
+          入力を続ける場合、
+          <a href="/policy" target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'underline' }}>
+            <strong>プライバシーポリシー</strong>
+          </a>
+          に同意いただけたものとみなします。
         </Alert>
       </Grid>
     </>
