@@ -27,7 +27,7 @@ export const GenerationSelector: React.FC<
           }}
         >
           <Grid container>
-            {[genFirstYear, genFirstYear - 1, genFirstYear - 2].map((y: number, i: number) => (
+            {[genFirstYear, genFirstYear - 1, genFirstYear - 2, genFirstYear - 3].map((y: number, i: number) => (
               <FormControlLabel value={y} key={y} control={<Radio color="primary" />} label={`${y}代 (学部${i + 1}年)`} labelPlacement="end" />
             ))}
           </Grid>
