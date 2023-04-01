@@ -177,16 +177,6 @@ const FundamentalInfo: React.FC<
           <PhoneNumberField {...emergencyPhoneNumber} />
           {/* <EmailField {...email} /> /*deprecated: emailは入力させるのではなくOIDCのアカウントのメアドを使う*/}
         </Grid>
-        <Alert
-          severity="info"
-          style={{
-            width: '100%',
-          }}
-        >
-          大学に提出する資料に必要な情報です。
-          <br />
-          それ以外の目的で了承なく情報を使うことはありません。
-        </Alert>
       </Grid>
     </>
   );

@@ -57,6 +57,21 @@ const linkData: Array<LinkData> = [
     link: 'https://twitter.com/misw_info/',
   },
   {
+    title: 'YouTube',
+    description: 'MIS.Wの公式YouTubeチャンネル',
+    link: 'https://www.youtube.com/@miswvideo/',
+  },
+  {
+    title: 'GitHub',
+    description: 'MIS.Wの公式GitHub Organization',
+    link: 'https://github.com/MISW/',
+  },
+  {
+    title: 'MISWskey',
+    description: 'サークル用のSNSインスタンス',
+    link: 'https://misskey.misw.jp/',
+  },
+  {
     title: 'Kibela',
     description: 'サークル用の資料共有サイト',
     link: 'https://misw.kibe.la/',
@@ -92,9 +107,9 @@ const Page: NextPage = () => {
               </Alert>
               <div>
                 <p>
-                  新入会希望者は
-                  <strong>入会費1000円</strong>
-                  を以下の口座へ振り込んでください。
+                  指定の口座番号へ入会費
+                  <strong>（1年生1500円、2年生以上3000円）</strong>
+                  を振り込んでください。
                 </p>
               </div>
               <TableContainer component={Paper}>
