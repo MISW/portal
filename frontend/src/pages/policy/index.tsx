@@ -10,7 +10,11 @@ const Chapter: React.FC<
   }>
 > = ({ chapter, descriptions }) => {
   return (
-    <div style={{ marginTop: 30 }}>
+    <div
+      style={{
+        marginTop: 30,
+      }}
+    >
       <Typography variant="h5" margin={1}>
         <strong>{chapter}</strong>
       </Typography>
@@ -24,7 +28,11 @@ const Chapter: React.FC<
 const Page: NextPage = () => {
   return (
     <NoSSR>
-      <div style={{ margin: 10 }}>
+      <div
+        style={{
+          margin: 10,
+        }}
+      >
         <Typography variant="h5" margin={1}>
           <strong>プライバシーポリシー</strong>
         </Typography>

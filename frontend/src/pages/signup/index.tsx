@@ -31,13 +31,33 @@ const Page: NextPage = () => {
         <p>現在のアカウント: {accountInfo.accountId}</p>
         <p>現在のアカウントのメールアドレス: {accountInfo.email}</p>
       </ol>
+      <Button onClick={handleLogout}>(別アカウントでログインする)</Button>
+      <br />
+      <Alert severity="info">
+        <p>
+          会員登録フォームへ進む前に、
+          <a
+            href="/policy"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              textDecoration: 'underline',
+            }}
+          >
+            <span className="inline-block">
+              <strong>プライバシーポリシー</strong>
+            </span>
+          </a>
+          を必ずお読みください。
+        </p>
+        <p>会員登録フォームへ進むと、あなたの個人情報をMISWが取り扱うことに同意したものとみなします。</p>
+      </Alert>
       <br />
       <Link href="/signup/form" passHref legacyBehavior>
         <Button color="primary" variant="contained">
-          会員登録フォームへ
+          プライバシーポリシーに同意して会員登録フォームへ
         </Button>
       </Link>
-      <Button onClick={handleLogout}>(別アカウントでログインする)</Button>
     </NoSSR>
   ) : (
     <NoSSR>
