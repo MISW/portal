@@ -57,6 +57,21 @@ const linkData: Array<LinkData> = [
     link: 'https://twitter.com/misw_info/',
   },
   {
+    title: 'YouTube',
+    description: 'MIS.Wの公式YouTubeチャンネル',
+    link: 'https://www.youtube.com/@miswvideo/',
+  },
+  {
+    title: 'GitHub',
+    description: 'MIS.Wの公式GitHub Organization',
+    link: 'https://github.com/MISW/',
+  },
+  {
+    title: 'MISWskey',
+    description: 'サークル用のSNSインスタンス',
+    link: 'https://misskey.misw.jp/',
+  },
+  {
     title: 'Kibela',
     description: 'サークル用の資料共有サイト',
     link: 'https://misw.kibe.la/',
