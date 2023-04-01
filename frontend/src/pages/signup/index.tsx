@@ -20,6 +20,7 @@ const Page: NextPage = () => {
   return accountInfo != null ? (
     <NoSSR>
       <p>会員登録方法</p>
+      <br />
       <ol>
         <li>フォームを埋める</li>
         <li>確認メールをチェック</li>
@@ -32,6 +33,7 @@ const Page: NextPage = () => {
         <p>現在のアカウントのメールアドレス: {accountInfo.email}</p>
       </ol>
       <Button onClick={handleLogout}>(別アカウントでログインする)</Button>
+      <br />
       <br />
       <Alert severity="info">
         <p>
@@ -52,7 +54,6 @@ const Page: NextPage = () => {
         </p>
         <p>会員登録フォームへ進むと、あなたの個人情報をMISWが取り扱うことに同意したものとみなします。</p>
       </Alert>
-      <br />
       <Link href="/signup/form" passHref legacyBehavior>
         <Button color="primary" variant="contained">
           プライバシーポリシーに同意して会員登録フォームへ
