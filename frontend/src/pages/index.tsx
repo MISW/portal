@@ -107,9 +107,9 @@ const Page: NextPage = () => {
               </Alert>
               <div>
                 <p>
-                  新入会希望者は
-                  <strong>入会費1000円</strong>
-                  を以下の口座へ振り込んでください。
+                  指定の口座番号へ入会費
+                  <strong>（1年生1500円、2年生以上3000円）</strong>
+                  を振り込んでください。
                 </p>
               </div>
               <TableContainer component={Paper}>
