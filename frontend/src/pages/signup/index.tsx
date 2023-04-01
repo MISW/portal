@@ -62,7 +62,7 @@ const Page: NextPage = () => {
         <p>会員登録フォームへ進むと、あなたの個人情報をMISWが取り扱うことに同意したものとみなします。</p>
       </Alert>
       <Link href="/signup/form" passHref legacyBehavior>
-        <Button color="primary" variant="contained">
+        <Button color="warning" variant="contained">
           プライバシーポリシーに同意して会員登録フォームへ
         </Button>
       </Link>
