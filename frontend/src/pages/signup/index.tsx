@@ -48,7 +48,7 @@ const Page: NextPage = () => {
       <br />
       <br />
       <Alert severity="error">
-        {/* <p>
+        <p>
           会員登録フォームへ進む前に、
           <a
             href="/policy"
@@ -63,12 +63,12 @@ const Page: NextPage = () => {
             </span>
           </a>
           を必ずお読みください。
-        </p> */}
+        </p>
         <p>会員登録フォームへ進むと、あなたの個人情報をMISWが取り扱うことに同意したものとみなします。</p>
       </Alert>
       <Link href="/signup/form" passHref legacyBehavior>
         <Button color="warning" variant="contained">
-          {/* プライバシーポリシーに同意して */}会員登録フォームへ
+          プライバシーポリシーに同意して会員登録フォームへ
         </Button>
       </Link>
     </NoSSR>
