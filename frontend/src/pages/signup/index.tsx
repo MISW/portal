@@ -39,6 +39,11 @@ const Page: NextPage = () => {
         <p>現在のアカウント: {accountInfo.accountId}</p>
         <p>現在のアカウントのメールアドレス: {accountInfo.email}</p>
       </ol>
+      <Alert severity="info">
+        <small>Discordアカウントでログインする場合は、MISWのDiscordに使ってるアカウントでログインしてください。</small>
+        <br />
+        <small>Slackアカウントを用いたログインは廃止予定です。</small>
+      </Alert>
       <Button onClick={handleLogout}>(別アカウントでログインする)</Button>
       <br />
       <br />
@@ -71,8 +76,8 @@ const Page: NextPage = () => {
     <NoSSR>
       <Alert severity="info">
         <p>まず最初にログイン(またはサインアップ)してください。</p>
-        <small>discordアカウントでログインする場合は、MISWのdiscordに使ってるアカウントでログインしてください.</small>
-        <small>slackアカウントを用いたログインは廃止予定です.</small>
+        <small>Discordアカウントでログインする場合は、MISWのDiscordに使ってるアカウントでログインしてください。</small>
+        <small>Slackアカウントを用いたログインは廃止予定です。</small>
       </Alert>
       <Button
         onClick={() => {
