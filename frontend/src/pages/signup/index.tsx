@@ -53,7 +53,7 @@ const Page: NextPage = () => {
               textDecoration: 'underline',
             }}
           >
-            <span className="inline-block">
+            <span className="inline-block, text-inherit, underline">
               <strong>プライバシーポリシー</strong>
             </span>
           </a>
