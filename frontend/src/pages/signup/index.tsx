@@ -28,7 +28,7 @@ const Page: NextPage = () => {
           <ListItemText primary="確認メールをチェック" />
         </ListItem>
         <ListItem>
-          <ListItemText primary="指定の口座番号へ入会費を振込（1年生1500円、2年生以上3000円）" />
+          <ListItemText primary="指定の口座番号へ入会費1500円を振込" />
         </ListItem>
         <ListItem>
           <ListItemText primary="振込が確認され次第, 会員登録完了!" />
