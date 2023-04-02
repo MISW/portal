@@ -108,7 +108,7 @@ const Page: NextPage = () => {
               <div>
                 <p>
                   指定の口座番号へ入会費
-                  <strong>（1年生1500円、2年生以上3000円）</strong>
+                  <strong>1500円</strong>
                   を振り込んでください。
                 </p>
               </div>
