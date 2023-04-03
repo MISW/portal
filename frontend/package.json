@@ -44,7 +44,7 @@
     "@types/sharp": "0.31.1",
     "@types/styled-components": "5.1.26",
     "@typescript-eslint/eslint-plugin": "5.57.0",
-    "@typescript-eslint/parser": "5.57.0",
+    "@typescript-eslint/parser": "5.57.1",
     "autoprefixer": "10.4.14",
     "eslint": "8.37.0",
     "eslint-config-next": "13.2.4",
