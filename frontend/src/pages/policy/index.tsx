@@ -36,21 +36,18 @@ const Page: NextPage = () => {
     <NoSSR>
       <div
         style={{
-          margin: 10,
+          margin: 20,
         }}
       >
-        <Typography variant="h5" margin={1}>
+        <br />
+        <Typography variant="h4" margin={1}>
           <strong>プライバシーポリシー</strong>
         </Typography>
-        <div
-          style={{
-            marginLeft: 20,
-          }}
-        >
-          <p>
-            経営情報学会MIS.W（以下、「当サークル」といいます。）は、本ウェブサイト上で提供するサービス（以下,「本サービス」といいます。）における、ユーザーの個人情報の取扱いについて、以下のとおりプライバシーポリシー（以下、「本ポリシー」といいます。）を定めます。
-          </p>
-        </div>
+        <Chapter
+          descriptions={[
+            '経営情報学会MIS.W（以下、「当サークル」といいます）は、本ウェブサイト上で提供するサービス（以下,「本サービス」といいます）における、ユーザーの個人情報の取扱いについて、以下のとおりプライバシーポリシー（以下、「本ポリシー」といいます）を定めます。',
+          ]}
+        />
         <Chapter
           chapter="個人情報の収集方法"
           descriptions={[
@@ -98,8 +95,6 @@ const Page: NextPage = () => {
           ]}
         />
         <Chapter chapter="" descriptions={['(2023年4月5日改定)']} />
-
-        <br />
       </div>
     </NoSSR>
   );
