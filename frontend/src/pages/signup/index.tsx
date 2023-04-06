@@ -40,9 +40,19 @@ const Page: NextPage = () => {
         <p>現在のアカウントのメールアドレス: {accountInfo.email}</p>
       </ol>
       <Alert severity="info">
-        <small>Discordアカウントでログインする場合は、MISWのDiscordに使ってるアカウントでログインしてください。</small>
-        <br />
-        <small>Slackアカウントを用いたログインは廃止予定です。</small>
+        <small>
+          Discordアカウントで新規登録する場合は、MISWのDiscordに使ってるアカウントでログインしてください。
+          <br />
+          Slackアカウントを用いた新規登録は廃止しています。
+          <br />
+          すでに登録済みの方は、登録済みのアカウントでログインし直してください。
+          <br />
+          アカウントは原則一人につき一つです。
+          <br />
+          複数のアカウントを持つことはできません。
+          <br />
+          アカウントのログイン方法を変更する必要がある場合は、SysAdに問い合わせてください。
+        </small>
       </Alert>
       <Button onClick={handleLogout}>(別アカウントでログインする)</Button>
       <br />
@@ -76,8 +86,19 @@ const Page: NextPage = () => {
     <NoSSR>
       <Alert severity="info">
         <p>まず最初にログイン(またはサインアップ)してください。</p>
-        <small>Discordアカウントでログインする場合は、MISWのDiscordに使ってるアカウントでログインしてください。</small>
-        <small>Slackアカウントを用いたログインは廃止予定です。</small>
+        <small>
+          Discordアカウントで新規登録する場合は、MISWのDiscordに使ってるアカウントでログインしてください。
+          <br />
+          Slackアカウントを用いた新規登録は廃止しています。
+          <br />
+          すでに登録済みの方は、登録済みのアカウントでログインしてください。
+          <br />
+          アカウントは原則一人につき一つです。
+          <br />
+          複数のアカウントを持つことはできません。
+          <br />
+          アカウントのログイン方法を変更する必要がある場合は、SysAdに問い合わせてください。
+        </small>
       </Alert>
       <Button
         onClick={() => {
