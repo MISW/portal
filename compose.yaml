@@ -1,6 +1,9 @@
 services:
   mysql:
+    image: mariadb:10.11
     command: mariadbd --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    ports:
+      - "3306:3306"
     environment:
       - MYSQL_ROOT_HOST=%
       - MYSQL_ROOT_PASSWORD=pass
@@ -8,9 +11,6 @@ services:
       - MARIADB_AUTO_UPGRADE=1
       - MARIADB_DISABLE_UPGRADE_BACKUP=1
       - TZ=Asia/Tokyo
-    image: mariadb:10.11
-    ports:
-      - "3306:3306"
     volumes:
       - mysql:/var/lib/mysql
 
@@ -19,14 +19,14 @@ services:
       dockerfile: backend.dockerfile
       target: development
       context: .
+    ports:
+      - "80:80"
     environment:
       - VIRTUAL_HOST=localhost
       - VIRTUAL_PATH=/api/
       - VIRTUAL_PORT=80
     env_file:
       - ./dev.env
-    ports:
-      - "80:80"
     volumes:
       - gopkg:/go/pkg
       - ./backend:/backend
@@ -38,19 +38,30 @@ services:
       dockerfile: frontend.dockerfile
       target: development
       context: .
+    ports:
+      - "3000:3000"
     environment:
       - VIRTUAL_HOST=localhost
       - VIRTUAL_PATH=/
       - VIRTUAL_PORT=3000
     env_file:
       - ./dev.env
-    ports:
-      - "3000:3000"
     volumes:
       - next:/frontend/.next
       - pnpm-store:/frontend/.pnpm-store
       - node_modules:/frontend/node_modules
       - ./frontend:/frontend
+
+  adminer:
+    image: adminer:4.8.1
+    ports:
+      - "8080:8080"
+    environment:
+      - ADMINER_DESIGN=hydra
+      - ADMINER_DEFAULT_SERVER=mysql
+      - VIRTUAL_HOST=localhost
+      - VIRTUAL_PATH=/adminer/
+      - VIRTUAL_PORT=8080
 
   nginx-proxy:
     image: nginxproxy/nginx-proxy:1.2
