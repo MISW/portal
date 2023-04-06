@@ -2,6 +2,7 @@ package config
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/caarlos0/env/v7"
 	"golang.org/x/xerrors"
@@ -52,7 +53,9 @@ func ReadConfig() (*Config, error) {
 		return nil, xerrors.Errorf("failed to perse config: %w", err)
 	}
 
-	fmt.Println(cfg)
+	if os.Getenv("DEBUG_MODE") == "1" {
+		fmt.Println(cfg)
+	}
 
 	return &cfg, err
 }
