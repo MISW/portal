@@ -62,7 +62,7 @@ func (es *sender) composeBody(to, subject, body string) string {
 }
 
 func (es *sender) Send(to, subject, body string) error {
-	auth := smtp.PlainAuth("", es.username, es.password, es.smtpServer)
+	auth := smtp.CRAMMD5Auth(es.username, es.password)
 	if err := smtp.SendMail(es.smtpServer+":"+es.smtpPort, auth, es.from, []string{to}, []byte(es.composeBody(to, subject, body))); err != nil {
 		return xerrors.Errorf("failed to send email: %w", err)
 	}
