@@ -67,6 +67,7 @@ func initDig(cfg *config.Config, addr string) *dig.Container {
 
 		return email.NewSender(
 			cfg.Email.SMTPServer,
+			cfg.Email.SMTPPort,
 			cfg.Email.Username,
 			cfg.Email.Password,
 			cfg.Email.From,

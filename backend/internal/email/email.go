@@ -15,9 +15,10 @@ type Sender interface {
 }
 
 // NewSender - 初期化
-func NewSender(smtpServer, username, password, from string) Sender {
+func NewSender(smtpServer, smtpPort, username, password, from string) Sender {
 	return &sender{
 		smtpServer: smtpServer,
+		smtpPort:   smtpPort,
 		username:   username,
 		password:   password,
 		from:       from,
@@ -28,6 +29,7 @@ var _ Sender = &sender{}
 
 type sender struct {
 	smtpServer         string
+	smtpPort           string
 	username, password string
 	from               string
 }
@@ -61,7 +63,7 @@ func (es *sender) composeBody(to, subject, body string) string {
 
 func (es *sender) Send(to, subject, body string) error {
 	auth := smtp.PlainAuth("", es.username, es.password, es.smtpServer)
-	if err := smtp.SendMail(es.smtpServer+":587", auth, es.from, []string{to}, []byte(es.composeBody(to, subject, body))); err != nil {
+	if err := smtp.SendMail(es.smtpServer+":"+es.smtpPort, auth, es.from, []string{to}, []byte(es.composeBody(to, subject, body))); err != nil {
 		return xerrors.Errorf("failed to send email: %w", err)
 	}
 	return nil
