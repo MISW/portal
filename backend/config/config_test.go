@@ -41,6 +41,7 @@ func init() {
 
 	envExpectedConfig.Email = Email{
 		SMTPServer: "mis-w.sakura.ne.jp",
+		SMTPPort:   "587",
 		Username:   "noreply@misw.jp",
 		Password:   "password",
 		From:       "noreply@misw.jp",
