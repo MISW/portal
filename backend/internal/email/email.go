@@ -12,6 +12,7 @@ import (
 // Sender - Eメールを送信するやつ
 type Sender interface {
 	Send(to, subject, body string) error
+	SendUnencrypted(to, subject, body string) error
 }
 
 // NewSender - 初期化
@@ -63,6 +64,26 @@ func (es *sender) composeBody(to, subject, body string) string {
 
 func (es *sender) Send(to, subject, body string) error {
 	auth := smtp.PlainAuth("", es.username, es.password, es.smtpServer)
+	if err := smtp.SendMail(es.smtpServer+":"+es.smtpPort, auth, es.from, []string{to}, []byte(es.composeBody(to, subject, body))); err != nil {
+		return xerrors.Errorf("failed to send email: %w", err)
+	}
+	return nil
+}
+
+type unencryptedAuth struct {
+	smtp.Auth
+}
+
+func (a unencryptedAuth) Start(server *smtp.ServerInfo) (string, []byte, error) {
+	s := *server
+	s.TLS = true
+	return a.Auth.Start(&s)
+}
+
+func (es *sender) SendUnencrypted(to, subject, body string) error {
+	auth := unencryptedAuth{
+		smtp.PlainAuth("", es.username, es.password, es.smtpServer),
+	}
 	if err := smtp.SendMail(es.smtpServer+":"+es.smtpPort, auth, es.from, []string{to}, []byte(es.composeBody(to, subject, body))); err != nil {
 		return xerrors.Errorf("failed to send email: %w", err)
 	}
