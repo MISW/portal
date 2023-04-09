@@ -3,6 +3,7 @@ package email
 import (
 	"bytes"
 	"encoding/base64"
+	"log"
 	"net/mail"
 	"net/smtp"
 
@@ -75,6 +76,7 @@ type unencryptedSender struct {
 }
 
 func NewUnencryptedSender(smtpServer, smtpPort, username, password, from string) Sender {
+	log.Println("THIS EMAIL SENDER DOESN'T CHECK IF SMTP CONNECTION IS ENCRYPTED OR NOT.")
 	return &unencryptedSender{
 		sender{
 			smtpServer: smtpServer,

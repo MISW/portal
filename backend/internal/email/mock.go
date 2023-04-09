@@ -13,9 +13,6 @@ func NewMock() Sender {
 func (s *mockSender) Send(to, subject, body string) error {
 	return s.logPrintln(to, subject, body)
 }
-func (s *mockSender) SendUnencrypted(to, subject, body string) error {
-	return s.logPrintln(to, subject, body)
-}
 
 func (s *mockSender) logPrintln(to, subject, body string) error {
 	log.Println("Sending Email:\nTo: " + to + "\r\n" +
