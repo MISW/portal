@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/caarlos0/env/v7"
+	"github.com/caarlos0/env/v8"
 	"golang.org/x/xerrors"
 )
 
@@ -19,6 +19,7 @@ type OpenIDConnect struct {
 // Email - Email周りの設定
 type Email struct {
 	SMTPServer string `env:"SMTP_SERVER"`
+	SMTPPort   string `env:"SMTP_PORT" envDefault:"587"`
 	Username   string `env:"SMTP_USERNAME"`
 	Password   string `env:"SMTP_PASSWORD"`
 	From       string `env:"SMTP_FROM"`

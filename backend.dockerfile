@@ -71,7 +71,6 @@ COPY --from=tools /tools/bin/mysqldef /bin
 COPY --from=workspace /backend/portal /bin/portal
 
 COPY ./backend/schema /schema
-COPY ./config /config
 COPY ./backend/docker-entrypoint.sh /bin/docker-entrypoint.sh
 
 ENTRYPOINT ["sh", "/bin/docker-entrypoint.sh"]
