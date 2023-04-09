@@ -91,6 +91,7 @@ type unencryptedAuth struct {
 }
 
 func (a unencryptedAuth) Start(server *smtp.ServerInfo) (string, []byte, error) {
+	// TLS=trueを強制的にセットすることで暗号化されていなくてもエラーを吐かない. https://cs.opensource.google/go/go/+/ee522e2cdad04a43bc9374776483b6249eb97ec9:src/net/smtp/auth.go;l=61-75
 	s := *server
 	s.TLS = true
 	return a.Auth.Start(&s)
