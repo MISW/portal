@@ -12,7 +12,6 @@ import (
 // Sender - Eメールを送信するやつ
 type Sender interface {
 	Send(to, subject, body string) error
-	SendUnencrypted(to, subject, body string) error
 }
 
 // NewSender - 初期化
@@ -70,6 +69,23 @@ func (es *sender) Send(to, subject, body string) error {
 	return nil
 }
 
+// unencrypted sender
+type unencryptedSender struct {
+	sender
+}
+
+func NewUnencryptedSender(smtpServer, smtpPort, username, password, from string) Sender {
+	return &unencryptedSender{
+		sender{
+			smtpServer: smtpServer,
+			smtpPort:   smtpPort,
+			username:   username,
+			password:   password,
+			from:       from,
+		},
+	}
+}
+
 type unencryptedAuth struct {
 	smtp.Auth
 }
@@ -80,7 +96,8 @@ func (a unencryptedAuth) Start(server *smtp.ServerInfo) (string, []byte, error) 
 	return a.Auth.Start(&s)
 }
 
-func (es *sender) SendUnencrypted(to, subject, body string) error {
+func (ues *unencryptedSender) Send(to, subject, body string) error {
+	es := ues.sender
 	auth := unencryptedAuth{
 		smtp.PlainAuth("", es.username, es.password, es.smtpServer),
 	}

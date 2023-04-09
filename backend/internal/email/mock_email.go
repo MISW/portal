@@ -46,17 +46,3 @@ func (mr *MockSenderMockRecorder) Send(to, subject, body interface{}) *gomock.Ca
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Send", reflect.TypeOf((*MockSender)(nil).Send), to, subject, body)
 }
-
-// SendUnencrypted mocks base method.
-func (m *MockSender) SendUnencrypted(to, subject, body string) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SendUnencrypted", to, subject, body)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// SendUnencrypted indicates an expected call of SendUnencrypted.
-func (mr *MockSenderMockRecorder) SendUnencrypted(to, subject, body interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SendUnencrypted", reflect.TypeOf((*MockSender)(nil).SendUnencrypted), to, subject, body)
-}

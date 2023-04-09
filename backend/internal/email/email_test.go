@@ -40,8 +40,8 @@ func TestSendUnencryptedEmail(t *testing.T) {
 		return
 	}
 
-	sender := email.NewSender(s, p, u, pass, from)
-	if err := sender.SendUnencrypted(to, "test subject", "test body"); err != nil {
+	sender := email.NewUnencryptedSender(s, p, u, pass, from)
+	if err := sender.Send(to, "test subject", "test body"); err != nil {
 		t.Errorf("failed to send email: %+v", err)
 	}
 }
