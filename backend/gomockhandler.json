@@ -132,7 +132,7 @@
 		},
 		"internal/email/mock_email.go": {
 			"checksum": "nQLM5fgD7BschxcaFKFtBQ==",
-			"source_checksum": "Gh/iMDo1wKO12GszzN2Bdg==",
+			"source_checksum": "pTVPSgOwJQwiMIhZIwLU5Q==",
 			"mode": "SOURCE_MODE",
 			"source_mode_runner": {
 				"source": "internal/email/email.go",
