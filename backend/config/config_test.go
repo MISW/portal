@@ -16,6 +16,7 @@ OIDC_CLIENT_SECRET=client_secret
 OIDC_PROVIDER_URL=https://misw.auth0.com/
 OIDC_REDIRECT_URL=http://localhost:10080/callback
 SMTP_SERVER=mis-w.sakura.ne.jp
+SMTP_PORT=587
 SMTP_USERNAME=noreply@misw.jp
 SMTP_PASSWORD=password
 SMTP_FROM=noreply@misw.jp
@@ -40,6 +41,7 @@ func init() {
 
 	envExpectedConfig.Email = Email{
 		SMTPServer: "mis-w.sakura.ne.jp",
+		SMTPPort:   "587",
 		Username:   "noreply@misw.jp",
 		Password:   "password",
 		From:       "noreply@misw.jp",

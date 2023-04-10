@@ -59,9 +59,12 @@ services:
     environment:
       - ADMINER_DESIGN=hydra
       - ADMINER_DEFAULT_SERVER=mysql
-      - VIRTUAL_HOST=localhost
-      - VIRTUAL_PATH=/adminer/
-      - VIRTUAL_PORT=8080
+
+  mailhog:
+    image: mailhog/mailhog:v1.0.1
+    ports:
+      - "1025:1025"
+      - "8025:8025"
 
   nginx-proxy:
     image: nginxproxy/nginx-proxy:1.2
