@@ -38,7 +38,7 @@
   },
   "devDependencies": {
     "@types/node": "18.15.11",
-    "@types/react": "18.0.33",
+    "@types/react": "18.0.34",
     "@types/react-dom": "18.0.11",
     "@types/react-redux": "7.1.25",
     "@types/sharp": "0.31.1",
