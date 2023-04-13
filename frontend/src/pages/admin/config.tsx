@@ -21,7 +21,7 @@ const usePaymentPeriodNode = (paymentPeriod: number | undefined, setPaymentPerio
     node: (
       <Period
         title="支払い期間"
-        description="支払い期間の設定は支払い登録モードにおいて支払いを行う期間の指定です。会員権限の確認に現在の期間で指定された期間を利用しつつ支払い期間での支払い登録を行い、支払った人も会員と認めることができます。会費徴収が始まった際には、支払い期間だけを次に進め、会費徴収期間が終了したタイミングで支払い期間を進めることを推奨します。"
+        description="支払い期間の設定は支払い登録モードにおいて支払いを行う期間の指定です。会員権限の確認に現在の期間で指定された期間を利用しつつ支払い期間での支払い登録を行い、支払った人も会員と認めることができます。会費徴収が始まった際には、支払い期間だけを次に進め、会費徴収期間が終了したタイミングで現在の期間を進めることを推奨します。"
         selected={selected}
         setSelected={setSelected}
         options={optionsForPayment}
@@ -53,7 +53,7 @@ const useCurrentPeriodNode = (currentPeriod: number | undefined, setCurrentPerio
     node: (
       <Period
         title="現在の期間"
-        description="現在の期間の設定はユーザに会員権限があるかの確認に使われます。変更すると、その期間に支払済でないメンバーが自動的に非メンバーとなるため、注意して実行してください。"
+        description="現在の期間の設定はユーザに会員権限があるかの確認に使われます。変更すると、その期間に支払済でないメンバーが自動的に非メンバーとなるため、注意して実行してください。支払期限を過ぎてから実行してください。"
         selected={selected}
         setSelected={setSelected}
         options={optionsForCurrent}
