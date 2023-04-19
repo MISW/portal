@@ -1,4 +1,4 @@
-ARG node_version=18
+ARG node_version=20
 
 # tools
 FROM archlinux:base-devel AS tools
@@ -7,7 +7,7 @@ RUN mkdir -p /tools/bin
 
 WORKDIR /tools
 
-ARG pnpm_version=v8.1.1
+ARG pnpm_version=v8.3.0
 RUN curl -fsSL https://github.com/pnpm/pnpm/releases/download/${pnpm_version}/pnpm-linux-x64 -o /tools/bin/pnpm \
   && chmod +x /tools/bin/pnpm
 
