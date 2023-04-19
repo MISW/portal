@@ -141,8 +141,8 @@
 			}
 		},
 		"internal/jwt/mock_jwt.go": {
-			"checksum": "x1HCaZju8mLD0F1cH22QtA==",
-			"source_checksum": "niTsqFENOpoaP+qJVyT1Zw==",
+			"checksum": "V0y4kbMtQ40m7ShpH3ifvg==",
+			"source_checksum": "Cb6IE1uQYd2y51UaTu5MvA==",
 			"mode": "SOURCE_MODE",
 			"source_mode_runner": {
 				"source": "internal/jwt/jwt.go",
