@@ -36,7 +36,7 @@ var (
 		Role:                 domain.Admin,
 		EmailVerified:        false,
 		AccountID:            "oauth|1xxxxxxx",
-		DiscordID:            "mischan#0123",
+		DiscordID:            "mischan#0000",
 	}
 
 	userTemplate2 = &domain.User{
@@ -52,7 +52,7 @@ var (
 			Subject:    "情報通信学科",
 		},
 		StudentID:            "1W180000-1",
-		EmergencyPhoneNumber: "0120117117",
+		EmergencyPhoneNumber: "0120117118",
 		OtherCircles:         "WCE",
 		Workshops:            []string{"Programming", "CG", "MIDI"},
 		Squads:               []string{"Web", "Webデザイン"},
