@@ -249,9 +249,9 @@ func TestUserUpdate(t *testing.T) {
 			t.Errorf("failed to get user: %+v", err)
 		}
 
-		fmt.Println(t)
-		fmt.Println(&tmp2)
-		fmt.Println(user)
+		fmt.Print(t)
+		fmt.Print(&tmp2)
+		fmt.Print(user)
 
 		compareUser(t, &tmp2, user)
 	})
