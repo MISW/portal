@@ -322,22 +322,28 @@ func TestListUnpaidMembers(t *testing.T) {
 	up := persistence.NewUserPersistence(conn)
 
 	up.Insert(context.Background(), &domain.User{
-		Email:     "1@example.com",
-		Sex:       domain.Male,
-		Role:      domain.Member,
-		AccountID: "1",
+		Email:                "1@example.com",
+		Sex:                  domain.Male,
+		Role:                 domain.Member,
+		AccountID:            "1",
+		StudentID:            "1W180000-0",
+		EmergencyPhoneNumber: "0120117117",
 	})
 	up.Insert(context.Background(), &domain.User{
-		Email:     "2@example.com",
-		Sex:       domain.Male,
-		Role:      domain.Member,
-		AccountID: "2",
+		Email:                "2@example.com",
+		Sex:                  domain.Male,
+		Role:                 domain.Member,
+		AccountID:            "2",
+		StudentID:            "1W180000-1",
+		EmergencyPhoneNumber: "0120117118",
 	})
 	up.Insert(context.Background(), &domain.User{
-		Email:     "3@example.com",
-		Sex:       domain.Male,
-		Role:      domain.Admin,
-		AccountID: "3",
+		Email:                "3@example.com",
+		Sex:                  domain.Male,
+		Role:                 domain.Admin,
+		AccountID:            "3",
+		StudentID:            "1W180000-2",
+		EmergencyPhoneNumber: "0120117119",
 	})
 
 	insertTestPaymentStatusData(t, psp)
