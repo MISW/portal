@@ -14,16 +14,16 @@ CREATE TABLE users (
     university_department VARCHAR(256) NOT NULL,
     university_subject VARCHAR(256) NOT NULL,
 
-    student_id VARCHAR(128) NOT NULL,
-    emergency_phone_number VARCHAR(128) NOT NULL,
+    student_id VARCHAR(128) NOT NULL UNIQUE,
+    emergency_phone_number VARCHAR(128) NOT NULL UNIQUE,
     other_circles VARCHAR(512) NOT NULL,
     workshops VARCHAR(128) NOT NULL,
     squads VARCHAR(512) NOT NULL,
     role VARCHAR(128) NOT NULL,
 
     account_id VARCHAR(128) UNIQUE,
-    discord_id VARCHAR(128),
-    twitter_screen_name VARCHAR(128),
+    discord_id VARCHAR(128) UNIQUE,
+    twitter_screen_name VARCHAR(128) UNIQUE,
 
     email_verified BOOLEAN DEFAULT 0,
     card_published BOOLEAN DEFAULT 0,
