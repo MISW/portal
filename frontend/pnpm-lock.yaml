@@ -97,8 +97,8 @@ devDependencies:
     specifier: 3.3.2
     version: 3.3.2
   type-fest:
-    specifier: 3.9.0
-    version: 3.9.0
+    specifier: 3.10.0
+    version: 3.10.0(typescript@5.0.4)
   typescript:
     specifier: 5.0.4
     version: 5.0.4
@@ -3623,9 +3623,13 @@ packages:
     engines: {node: '>=10'}
     dev: true
 
-  /type-fest@3.9.0:
-    resolution: {integrity: sha512-hR8JP2e8UiH7SME5JZjsobBlEiatFoxpzCP+R3ZeCo7kAaG1jXQE5X/buLzogM6GJu8le9Y4OcfNuIQX0rZskA==}
+  /type-fest@3.10.0(typescript@5.0.4):
+    resolution: {integrity: sha512-hmAPf1datm+gt3c2mvu0sJyhFy6lTkIGf0GzyaZWxRLnabQfPUqg6tF95RPg6sLxKI7nFLGdFxBcf2/7+GXI+A==}
     engines: {node: '>=14.16'}
+    peerDependencies:
+      typescript: '>=4.7.0'
+    dependencies:
+      typescript: 5.0.4
     dev: true
 
   /typed-array-length@1.0.4:
