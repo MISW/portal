@@ -14,7 +14,7 @@ require (
 	github.com/labstack/echo/v4 v4.10.2
 	github.com/labstack/gommon v0.4.0
 	github.com/pkg/errors v0.9.1
-	go.uber.org/dig v1.16.1
+	go.uber.org/dig v1.17.0
 	golang.org/x/crypto v0.8.0
 	golang.org/x/net v0.9.0
 	golang.org/x/oauth2 v0.7.0
