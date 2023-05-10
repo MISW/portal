@@ -23,7 +23,7 @@
     "@fortawesome/fontawesome-common-types": "6.4.0",
     "@fortawesome/free-brands-svg-icons": "6.4.0",
     "@mui/icons-material": "5.11.16",
-    "@mui/material": "5.12.3",
+    "@mui/material": "5.13.0",
     "@reduxjs/toolkit": "1.9.5",
     "clsx": "1.2.1",
     "ky": "0.33.3",
