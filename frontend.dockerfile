@@ -1,4 +1,4 @@
-ARG node_version=18
+ARG node_version=20
 
 # tools
 FROM archlinux:base-devel AS tools
@@ -7,7 +7,7 @@ RUN mkdir -p /tools/bin
 
 WORKDIR /tools
 
-ARG pnpm_version=v8.1.1
+ARG pnpm_version=v8.5.0
 RUN curl -fsSL https://github.com/pnpm/pnpm/releases/download/${pnpm_version}/pnpm-linux-x64 -o /tools/bin/pnpm \
   && chmod +x /tools/bin/pnpm
 
@@ -48,7 +48,7 @@ WORKDIR /frontend
 RUN pnpm prune --prod --no-optional
 
 # production
-FROM gcr.io/distroless/nodejs:${node_version}-debug AS production
+FROM gcr.io/distroless/nodejs${node_version}:debug AS production
 
 RUN ["/busybox/sh", "-c", "ln -s /busybox/sh /bin/sh"]
 RUN ["/busybox/sh", "-c", "ln -s /bin/env /usr/bin/env"]
