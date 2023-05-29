@@ -63,7 +63,11 @@ docker compose logs app # Webサーバのみ(MySQLを無視)
 [Install nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
 
 ```sh
-cd frontend
+cd ./frontend/
+nvm install 20
+nvm use 20
+corepack enable
+corepack prepare pnpm@latest --activate
 pnpm i
 pnpm format
 pnpm lint

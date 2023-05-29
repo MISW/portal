@@ -1,8 +1,9 @@
 #!/usr/bin/env sh
-npm install -g pnpm
-cd frontend/
+cd ./frontend/
+corepack enable
+corepack prepare pnpm@latest --activate
 pnpm i --frozen-lockfile
 pnpm build
 pnpm export
 cd ..
-mv -v frontend/out/ dist/
+mv -v ./frontend/out/ ./dist/

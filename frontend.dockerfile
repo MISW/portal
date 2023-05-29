@@ -1,20 +1,10 @@
 ARG node_version=20
 
-# tools
-FROM archlinux:base-devel AS tools
-
-RUN mkdir -p /tools/bin
-
-WORKDIR /tools
-
-ARG pnpm_version=v8.5.0
-RUN curl -fsSL https://github.com/pnpm/pnpm/releases/download/${pnpm_version}/pnpm-linux-x64 -o /tools/bin/pnpm \
-  && chmod +x /tools/bin/pnpm
-
 # development
 FROM node:${node_version}-bullseye-slim AS development
 
-COPY --from=tools /tools/bin/pnpm /bin
+RUN corepack enable \
+  && corepack prepare pnpm@latest --activate
 
 RUN mkdir -p /frontend
 
@@ -31,7 +21,8 @@ ENTRYPOINT ["/bin/docker-entrypoint.sh"]
 # workspace
 FROM node:${node_version}-bullseye-slim AS workspace
 
-COPY --from=tools /tools/bin/pnpm /bin
+RUN corepack enable \
+  && corepack prepare pnpm@latest --activate
 
 COPY ./frontend /frontend
 
