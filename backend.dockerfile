@@ -13,13 +13,13 @@ RUN curl -fsSL https://github.com/tsuzu/dbenv/releases/download/${dbenv_version}
   && chmod +x /tools/bin/dbenv \
   && rm -f ./dbenv.tar.gz
 
-ARG dockerize_version=v0.6.1
+ARG dockerize_version=v0.7.0
 RUN curl -fsSL https://github.com/jwilder/dockerize/releases/download/${dockerize_version}/dockerize-linux-amd64-${dockerize_version}.tar.gz -o ./dockerize.tar.gz \
   && tar xvf ./dockerize.tar.gz -C /tools/bin \
   && chmod +x /tools/bin/dockerize \
   && rm -f ./dockerize.tar.gz
 
-ARG sqldef_version=v0.16.1
+ARG sqldef_version=v0.16.2
 RUN curl -fsSL https://github.com/k0kubun/sqldef/releases/download/${sqldef_version}/mysqldef_linux_amd64.tar.gz -o ./mysqldef.tar.gz \
   && tar xvf ./mysqldef.tar.gz -C /tools/bin \
   && chmod +x /tools/bin/mysqldef \

@@ -81,7 +81,7 @@ pnpm start
 [Install Go](https://github.com/golang/go#download-and-install)
 
 ```sh
-cd backend
+cd ./backend/
 go install
 gomockhandler mockgen -config=gomockhandler.json
 go test -v -race -tags use_external_db ./...
