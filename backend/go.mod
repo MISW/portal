@@ -8,6 +8,7 @@ require (
 	github.com/coreos/go-oidc/v3 v3.6.0
 	github.com/go-sql-driver/mysql v1.7.1
 	github.com/golang-jwt/jwt/v4 v4.5.0
+	github.com/golang-jwt/jwt/v5 v5.0.0
 	github.com/golang/mock v1.6.0
 	github.com/google/go-cmp v0.5.9
 	github.com/jmoiron/sqlx v1.3.5
