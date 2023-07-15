@@ -1,7 +1,7 @@
 ARG node_version=20
 
 # development
-FROM node:${node_version}-bullseye-slim AS development
+FROM node:${node_version}-bookworm-slim AS development
 
 RUN corepack enable \
   && corepack prepare pnpm@latest --activate
@@ -19,7 +19,7 @@ EXPOSE 3000
 ENTRYPOINT ["/bin/docker-entrypoint.sh"]
 
 # workspace
-FROM node:${node_version}-bullseye-slim AS workspace
+FROM node:${node_version}-bookworm-slim AS workspace
 
 RUN corepack enable \
   && corepack prepare pnpm@latest --activate

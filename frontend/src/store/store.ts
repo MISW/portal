@@ -21,11 +21,9 @@ export const createStore = (props: ExtraArgument) => {
         },
       }),
   });
-  if (process.env.NODE_ENV === 'development' && (module as any).hot) {
-    (module as any).hot.accept('./reducer', () => {
-      // 開発環境でしか動作しないので問題ない
-      // eslint-disable-next-line @typescript-eslint/no-var-requires
-      const newRootReducer = require('./reducer').default;
+  if (process.env.NODE_ENV === 'development' && module.hot) {
+    module.hot.accept('./reducer', () => {
+      const newRootReducer = rootReducer;
       store.replaceReducer(newRootReducer);
     });
   }

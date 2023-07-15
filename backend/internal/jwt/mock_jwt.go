@@ -7,7 +7,7 @@ package jwt
 import (
 	reflect "reflect"
 
-	jwt "github.com/golang-jwt/jwt/v4"
+	jwt "github.com/golang-jwt/jwt/v5"
 	gomock "github.com/golang/mock/gomock"
 )
 

@@ -12,14 +12,14 @@ import { useDispatch, useSelector, useStore } from 'react-redux';
 import { selectAllUsers, fetchAllUsers, addPaymentStatus, deletePaymentStatus, selectUserById } from 'features/users';
 import { remindPayment } from 'features/admin';
 import { NoSSR } from 'components/utils/NoSSR';
-import { AppDispatch } from 'store/store';
+import { AppDispatch, RootState } from 'store/store';
 
 const headCells: HeadCell[] = labelsInJapanese.map(
   ({ id, label }) =>
     ({
       id,
       label,
-    } as HeadCell),
+    }) as HeadCell,
 );
 
 const toTableData = (u: User): UserTableData => ({
@@ -95,7 +95,7 @@ const Page: NextPage = () => {
               );
             }
 
-            const user = toTableData(nonNullOrThrow(selectUserById(store.getState() as any, id)));
+            const user = toTableData(nonNullOrThrow(selectUserById(store.getState() as RootState, id)));
 
             return user;
           }}

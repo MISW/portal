@@ -5,8 +5,6 @@ import { wrapper } from 'store';
 import { fetchCurrentOidcAccountInfo, selectCurrentOidcAccountInfo } from 'features/currentOidcAccount';
 import { Merge } from 'type-fest';
 import { currentOidcAccountInfo } from 'features/currentOidcAccount/slice';
-import { CombinedState, EntityState } from '@reduxjs/toolkit';
-import { PaymentStatus, User } from 'models/user';
 
 type WithCurrentOidcAccount<T> = Merge<
   T,
@@ -30,83 +28,32 @@ export type NextPageWithOidcAccountInfo<P = Record<string, never>, IP = P> = Nex
  */
 export const withLoginOIDC = <P extends object, IP>(page: NextPage<P, IP>) => {
   const wrapped: NextPage<P, IP | undefined> = (props) => createElement(page, props);
-  wrapped.getInitialProps = wrapper.getInitialPageProps(
-    (store: {
-        getState: () => CombinedState<{
-          users: EntityState<User>;
-          currentOidcAccountInfo: currentOidcAccountInfo;
-          currentUser: {
-            id: number | undefined;
-            paymentStatuses: PaymentStatus[] | undefined;
-          };
-          appconfig: Readonly<{
-            paymentPeriod?: number | undefined;
-            currentPeriod?: number | undefined;
-            emailTemplates: {
-              readonly email_verification?:
-                | Readonly<
-                    Readonly<{
-                      subject: string;
-                      body: string;
-                    }>
-                  >
-                | undefined;
-              readonly after_registration?:
-                | Readonly<
-                    Readonly<{
-                      subject: string;
-                      body: string;
-                    }>
-                  >
-                | undefined;
-              readonly payment_receipt?:
-                | Readonly<
-                    Readonly<{
-                      subject: string;
-                      body: string;
-                    }>
-                  >
-                | undefined;
-              readonly payment_reminder?:
-                | Readonly<
-                    Readonly<{
-                      subject: string;
-                      body: string;
-                    }>
-                  >
-                | undefined;
-            };
-          }>;
-        }>;
-        dispatch: any;
-      }) =>
-      async (ctx: NextPageContext) => {
-        const currentOidcAccount = selectCurrentOidcAccountInfo(store.getState());
-        if (currentOidcAccount == null) {
-          await store.dispatch(fetchCurrentOidcAccountInfo()); //fetch and store
-          const newAccountInfo = selectCurrentOidcAccountInfo(store.getState());
-          if (newAccountInfo == null) {
-            if (ctx.res) {
-              // server
-              ctx.res.writeHead(302, {
-                Location: '/',
-              });
-              ctx.res.end();
-              return;
-            } else {
-              // client
-              Router.push('/');
-              return;
-            }
-          }
-
+  wrapped.getInitialProps = wrapper.getInitialPageProps((store) => async (ctx: NextPageContext) => {
+    const currentOidcAccount = selectCurrentOidcAccountInfo(store.getState());
+    if (currentOidcAccount == null) {
+      await store.dispatch(fetchCurrentOidcAccountInfo()); //fetch and store
+      const newAccountInfo = selectCurrentOidcAccountInfo(store.getState());
+      if (newAccountInfo == null) {
+        if (ctx.res) {
+          // server
+          ctx.res.writeHead(302, {
+            Location: '/',
+          });
+          ctx.res.end();
+          return;
+        } else {
+          // client
+          Router.push('/');
           return;
         }
+      }
 
-        return await page.getInitialProps?.({
-          ...ctx,
-        });
-      },
-  );
+      return;
+    }
+
+    return await page.getInitialProps?.({
+      ...ctx,
+    });
+  });
   return wrapped;
 };

@@ -14,6 +14,7 @@ import (
 	"github.com/MISW/Portal/backend/internal/oidc"
 	"github.com/MISW/Portal/backend/internal/rest"
 	"github.com/MISW/Portal/backend/internal/tokenutil"
+	golangjwt "github.com/golang-jwt/jwt/v5"
 	"github.com/pkg/errors"
 	"golang.org/x/xerrors"
 )
@@ -327,6 +328,7 @@ type customClaims struct {
 	Email string `json:"email"`
 	ID    int    `json:"id"`
 	Kind  string `json:"kind"`
+	golangjwt.RegisteredClaims
 }
 
 func (c *customClaims) Valid() error {
