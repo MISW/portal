@@ -16,7 +16,6 @@ import darktheme from '../components/theme/darktheme';
 import favicon from 'assets/favicon.ico';
 
 declare module '@mui/material/styles/ThemeProvider' {
-  // eslint-disable-next-line @typescript-eslint/no-empty-interface
   interface DefaultTheme extends Theme {}
 }
 

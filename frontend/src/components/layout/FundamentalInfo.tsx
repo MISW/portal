@@ -5,7 +5,6 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import { RadioGroup, Radio, FormControl, FormLabel } from '@mui/material';
 import { SexType } from '../../user';
 import { UserProfileHooks, FormContentProps } from '../../hooks/formHooks';
-import { Alert } from '@mui/material';
 
 const NameField: React.FC<React.PropsWithChildren<FormContentProps<string>>> = ({ value, onChange, error }) => {
   const nameArray = value.split(/\s+/);
