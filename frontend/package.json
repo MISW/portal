@@ -40,7 +40,7 @@
   },
   "devDependencies": {
     "@types/node": "20.4.5",
-    "@types/react": "18.2.17",
+    "@types/react": "18.2.18",
     "@types/react-dom": "18.2.7",
     "@types/react-redux": "7.1.25",
     "@types/sharp": "0.31.1",
