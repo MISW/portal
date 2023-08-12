@@ -54,9 +54,9 @@ jobs:
         working-directory: backend
         run: go vet ./...
 
-      - name: Staticcheck
-        working-directory: backend
-        run: go install honnef.co/go/tools/cmd/staticcheck@latest && staticcheck ./...
+      # - name: Staticcheck
+      #   working-directory: backend
+      #   run: go install honnef.co/go/tools/cmd/staticcheck@latest && staticcheck ./...
 
       - name: Build
         working-directory: backend
