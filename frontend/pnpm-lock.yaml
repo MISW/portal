@@ -57,8 +57,8 @@ dependencies:
     specifier: 6.0.7
     version: 6.0.7(react-dom@18.2.0)(react@18.2.0)
   tss-react:
-    specifier: 4.8.8
-    version: 4.8.8(@emotion/react@11.11.1)(react@18.2.0)
+    specifier: 4.9.0
+    version: 4.9.0(@emotion/react@11.11.1)(react@18.2.0)
 
 devDependencies:
   '@types/node':
@@ -4804,8 +4804,8 @@ packages:
     resolution: {integrity: sha512-t0hLfiEKfMUoqhG+U1oid7Pva4bbDPHYfJNiB7BiIjRkj1pyC++4N3huJfqY6aRH6VTB0rvtzQwjM4K6qpfOig==}
     dev: false
 
-  /tss-react@4.8.8(@emotion/react@11.11.1)(react@18.2.0):
-    resolution: {integrity: sha512-V57AU6J42LLhYhRGSxDVi9VLUaoQtV6y2Kb1e0uqabe3w61G9R8gkUiX4DHZUReboRY9rwExPWz0LVZIgqQ98Q==}
+  /tss-react@4.9.0(@emotion/react@11.11.1)(react@18.2.0):
+    resolution: {integrity: sha512-dgqNSR9J0+NxvdwzXoKo2HxGGu2sg0UikLnPumGNLa9CSPVcL6ZNu23CJwxPaMvRnQC8NRyNbUN3pBCS9AWwRA==}
     peerDependencies:
       '@emotion/react': ^11.4.1
       '@emotion/server': ^11.4.0
