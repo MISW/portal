@@ -34,34 +34,27 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-
       - name: Install mysqldef
         run: |
-          curl -fsSL https://github.com/k0kubun/sqldef/releases/download/v0.16.3/mysqldef_linux_amd64.tar.gz -o ./mysqldef.tar.gz
+          curl -fsSL https://github.com/k0kubun/sqldef/releases/download/v0.16.6/mysqldef_linux_amd64.tar.gz -o ./mysqldef.tar.gz
           tar xvf mysqldef.tar.gz -C /usr/local/bin
           chmod +x /usr/local/bin/mysqldef
           rm -f ./mysqldef.tar.gz
-
       - name: Download modules
         working-directory: backend
         run: go mod download
-
       - name: Coverage
         working-directory: backend
         run: go test -v -race -cover -tags use_external_db -coverprofile=coverage ./...
-
       - name: Report likely mistakes
         working-directory: backend
         run: go vet ./...
-
       # - name: Staticcheck
       #   working-directory: backend
       #   run: go install honnef.co/go/tools/cmd/staticcheck@latest && staticcheck ./...
-
       - name: Build
         working-directory: backend
         run: CGO_ENABLED=0 go build -buildmode pie -buildvcs=false
-
       - name: Codecov
         uses: codecov/codecov-action@v3
         with:
