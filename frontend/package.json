@@ -46,7 +46,7 @@
     "@types/sharp": "0.31.1",
     "@types/styled-components": "5.1.27",
     "@types/webpack-env": "1.18.1",
-    "@typescript-eslint/eslint-plugin": "6.6.0",
+    "@typescript-eslint/eslint-plugin": "6.7.0",
     "@typescript-eslint/parser": "6.6.0",
     "autoprefixer": "10.4.15",
     "eslint": "8.49.0",
