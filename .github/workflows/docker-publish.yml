@@ -49,7 +49,7 @@ jobs:
           echo "DOCKER_REPO=${github_repo,,}" >> "${GITHUB_ENV}"
       - name: Extract Docker metadata
         id: meta
-        uses: docker/metadata-action@v4
+        uses: docker/metadata-action@v5
         with:
           images: ${{ env.REGISTRY }}/${{ env.DOCKER_REPO }}/${{ matrix.name }}
           tags: |
