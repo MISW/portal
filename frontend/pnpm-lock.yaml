@@ -54,8 +54,8 @@ dependencies:
     specifier: 0.32.5
     version: 0.32.5
   styled-components:
-    specifier: 6.0.7
-    version: 6.0.7(react-dom@18.2.0)(react@18.2.0)
+    specifier: 6.0.8
+    version: 6.0.8(react-dom@18.2.0)(react@18.2.0)
   tss-react:
     specifier: 4.9.0
     version: 4.9.0(@emotion/react@11.11.1)(react@18.2.0)
@@ -4713,8 +4713,8 @@ packages:
     engines: {node: '>=8'}
     dev: true
 
-  /styled-components@6.0.7(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-xIwWuiRMYR43mskVsW9MGTRjSo7ol4bcVjT595fGUp3OLBJOlOgaiKaxsHdC4a2HqWKqKnh0CmcRbk5ogyDjTg==}
+  /styled-components@6.0.8(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-AwI02MTWZwqjzfXgR5QcbmcSn5xVjY4N2TLjSuYnmuBGF3y7GicHz3ysbpUq2EMJP5M8/Nc22vcmF3V3WNZDFA==}
     engines: {node: '>= 16'}
     peerDependencies:
       babel-plugin-styled-components: '>= 2'
