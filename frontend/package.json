@@ -45,7 +45,7 @@
     "@types/react-redux": "7.1.26",
     "@types/sharp": "0.31.1",
     "@types/styled-components": "5.1.27",
-    "@types/webpack-env": "1.18.1",
+    "@types/webpack-env": "1.18.2",
     "@typescript-eslint/eslint-plugin": "6.7.2",
     "@typescript-eslint/parser": "6.7.2",
     "autoprefixer": "10.4.16",
