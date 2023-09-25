@@ -77,8 +77,8 @@ devDependencies:
     specifier: 0.31.1
     version: 0.31.1
   '@types/styled-components':
-    specifier: 5.1.27
-    version: 5.1.27
+    specifier: 5.1.28
+    version: 5.1.28
   '@types/webpack-env':
     specifier: 1.18.2
     version: 1.18.2
@@ -2087,8 +2087,8 @@ packages:
       '@types/node': 20.6.5
     dev: true
 
-  /@types/styled-components@5.1.27:
-    resolution: {integrity: sha512-oY9c1SdztRRF0QDQdwXEenfAjGN4WGUkaMpx5hvdTbYYqw01qoY2GrHi+kAR6SVofynzD6KbGoF5ITP0zh5pvg==}
+  /@types/styled-components@5.1.28:
+    resolution: {integrity: sha512-nu0VKNybkjvUqJAXWtRqKd7j3iRUl8GbYSTvZNuIBJcw/HUp1Y4QUXNLlj7gcnRV/t784JnHAlvRnSnE3nPbJA==}
     dependencies:
       '@types/hoist-non-react-statics': 3.3.2
       '@types/react': 18.2.22
