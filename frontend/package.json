@@ -28,7 +28,7 @@
     "@mui/material": "5.14.13",
     "@reduxjs/toolkit": "1.9.7",
     "clsx": "2.0.0",
-    "ky": "1.0.1",
+    "ky": "1.1.0",
     "next": "13.5.5",
     "next-redux-wrapper": "8.1.0",
     "react": "18.2.0",
