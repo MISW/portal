@@ -33,8 +33,8 @@ dependencies:
     specifier: 2.0.0
     version: 2.0.0
   ky:
-    specifier: 1.1.1
-    version: 1.1.1
+    specifier: 1.1.2
+    version: 1.1.2
   next:
     specifier: 14.0.0
     version: 14.0.0(react-dom@18.2.0)(react@18.2.0)
@@ -2484,8 +2484,8 @@ packages:
       json-buffer: 3.0.1
     dev: true
 
-  /ky@1.1.1:
-    resolution: {integrity: sha512-fEzUY9u7/Mlh5TRF1whK46OpwzTBA1VLm0L3waLD0oZepijQqZ51oqIcA3D9AiuxR+MZXt5g5g07n0y0MF5QRA==}
+  /ky@1.1.2:
+    resolution: {integrity: sha512-voehdKw8MleNTfcAVlZ9nObJQiWXvb5b3sYpVP6s8VYEdrmnbs7aYdNfAE0nC8wch8TXjH1ksnwTOvYcxrf1Gw==}
     engines: {node: '>=18'}
     dev: false
 
