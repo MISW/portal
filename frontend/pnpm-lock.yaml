@@ -71,8 +71,8 @@ devDependencies:
     specifier: 18.2.14
     version: 18.2.14
   '@types/react-redux':
-    specifier: 7.1.29
-    version: 7.1.29
+    specifier: 7.1.30
+    version: 7.1.30
   '@types/sharp':
     specifier: 0.31.1
     version: 0.31.1
@@ -777,8 +777,8 @@ packages:
     dependencies:
       '@types/react': 18.2.36
 
-  /@types/react-redux@7.1.29:
-    resolution: {integrity: sha512-orHCOWqBBQ1LP1uD6JVdXL+ZRTEWhGGne+VOPcXef03rC+QYdzktLhxR3ozymPDyZK0CNCUuQs9tyQhfg1ku+w==}
+  /@types/react-redux@7.1.30:
+    resolution: {integrity: sha512-i2kqM6YaUwFKduamV6QM/uHbb0eCP8f8ZQ/0yWf+BsAVVsZPRYJ9eeGWZ3uxLfWwwA0SrPRMTPTqsPFkY3HZdA==}
     dependencies:
       '@types/hoist-non-react-statics': 3.3.4
       '@types/react': 18.2.36
