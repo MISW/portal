@@ -44,7 +44,7 @@
     "@types/react-dom": "18.2.14",
     "@types/react-redux": "7.1.30",
     "@types/sharp": "0.31.1",
-    "@types/styled-components": "5.1.29",
+    "@types/styled-components": "5.1.30",
     "@types/webpack-env": "1.18.3",
     "@typescript-eslint/eslint-plugin": "6.10.0",
     "@typescript-eslint/parser": "6.10.0",
