@@ -54,8 +54,8 @@ dependencies:
     specifier: 0.32.6
     version: 0.32.6
   styled-components:
-    specifier: 6.1.5
-    version: 6.1.5(react-dom@18.2.0)(react@18.2.0)
+    specifier: 6.1.6
+    version: 6.1.6(react-dom@18.2.0)(react@18.2.0)
   tss-react:
     specifier: 4.9.3
     version: 4.9.3(@emotion/react@11.11.3)(@mui/material@5.15.2)(react@18.2.0)
@@ -3496,8 +3496,8 @@ packages:
     engines: {node: '>=8'}
     dev: true
 
-  /styled-components@6.1.5(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-7QYR5/vOhYV0/FP3EM0VUKvmAxU77s/wqiZu/LSK6ztn94VRSKEZqQ+Y1EraXznbVzYD6JEHe4zvEIx/FXbofA==}
+  /styled-components@6.1.6(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-DgTLULSC29xpabJ24bbn1+hulU6vvGFQf4RPwBOJrm8WJFnN42yXpo5voBt3jDSJBa5tBd1L6PqswJjQ0wRKdg==}
     engines: {node: '>= 16'}
     peerDependencies:
       react: '>= 16.8.0'
@@ -3512,7 +3512,7 @@ packages:
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
       shallowequal: 1.1.0
-      stylis: 4.3.0
+      stylis: 4.3.1
       tslib: 2.5.0
     dev: false
 
@@ -3537,8 +3537,8 @@ packages:
     resolution: {integrity: sha512-Orov6g6BB1sDfYgzWfTHDOxamtX1bE/zo104Dh9e6fqJ3PooipYyfJ0pUmrZO2wAvO8YbEyeFrkV91XTsGMSrw==}
     dev: false
 
-  /stylis@4.3.0:
-    resolution: {integrity: sha512-E87pIogpwUsUwXw7dNyU4QDjdgVMy52m+XEOPEKUn161cCzWjjhPSQhByfd1CcNvrOLnXQ6OnnZDwnJrz/Z4YQ==}
+  /stylis@4.3.1:
+    resolution: {integrity: sha512-EQepAV+wMsIaGVGX1RECzgrcqRRU/0sYOHkeLsZ3fzHaHXZy4DaOOX0vOlGQdlsjkh3mFHAIlVimpwAs4dslyQ==}
     dev: false
 
   /sucrase@3.35.0:
