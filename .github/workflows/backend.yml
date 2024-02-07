@@ -30,7 +30,7 @@ jobs:
           MYSQL_DATABASE: database
 
     container:
-      image: golang:1.21
+      image: golang:1.22
 
     steps:
       - uses: actions/checkout@v4

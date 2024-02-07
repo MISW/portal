@@ -1,4 +1,4 @@
-ARG go_version=1.21
+ARG go_version=1.22
 
 # tools
 FROM archlinux:base-devel AS tools
