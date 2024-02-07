@@ -24,7 +24,7 @@
     "@emotion/styled": "11.11.0",
     "@fortawesome/fontawesome-common-types": "6.5.1",
     "@fortawesome/free-brands-svg-icons": "6.5.1",
-    "@mui/icons-material": "5.15.7",
+    "@mui/icons-material": "5.15.8",
     "@mui/material": "5.15.7",
     "@reduxjs/toolkit": "1.9.7",
     "clsx": "2.1.0",
