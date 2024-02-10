@@ -67,7 +67,7 @@ services:
       - "8025:8025"
 
   nginx-proxy:
-    image: nginxproxy/nginx-proxy:1.4
+    image: nginxproxy/nginx-proxy:1.5
     ports:
       - "1080:1080"
       - "10443:10443"
