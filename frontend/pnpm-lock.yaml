@@ -110,8 +110,8 @@ devDependencies:
     specifier: 3.4.1
     version: 3.4.1
   type-fest:
-    specifier: 4.10.2
-    version: 4.10.2
+    specifier: 4.13.0
+    version: 4.13.0
   typescript:
     specifier: 5.3.3
     version: 5.3.3
@@ -3831,8 +3831,8 @@ packages:
     engines: {node: '>=10'}
     dev: true
 
-  /type-fest@4.10.2:
-    resolution: {integrity: sha512-anpAG63wSpdEbLwOqH8L84urkL6PiVIov3EMmgIhhThevh9aiMQov+6Btx0wldNcvm4wV+e2/Rt1QdDwKHFbHw==}
+  /type-fest@4.13.0:
+    resolution: {integrity: sha512-nKO1N9IFeTec3jnNe/3nZlX+RzwZsvT3c4akWC3IlhYGQbRSPFMBe87vmoaymS3hW2l/rs+4ptDDTxzcbqAcmA==}
     engines: {node: '>=16'}
     dev: true
 
