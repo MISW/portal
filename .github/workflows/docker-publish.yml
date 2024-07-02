@@ -58,7 +58,7 @@ jobs:
             type=sha,format=long
       - name: Build and push Docker image
         id: build-and-push
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           push: true
           context: ${{ matrix.context }}
