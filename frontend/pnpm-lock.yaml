@@ -54,8 +54,8 @@ dependencies:
     specifier: 0.32.6
     version: 0.32.6
   styled-components:
-    specifier: 6.1.11
-    version: 6.1.11(react-dom@18.3.1)(react@18.3.1)
+    specifier: 6.1.13
+    version: 6.1.13(react-dom@18.3.1)(react@18.3.1)
   tss-react:
     specifier: 4.9.10
     version: 4.9.10(@emotion/react@11.11.4)(@mui/material@5.15.21)(react@18.3.1)
@@ -3135,7 +3135,7 @@ packages:
     dependencies:
       nanoid: 3.3.7
       picocolors: 1.1.1
-      source-map-js: 1.2.0
+      source-map-js: 1.2.1
     dev: false
 
   /postcss@8.4.38:
@@ -3144,7 +3144,7 @@ packages:
     dependencies:
       nanoid: 3.3.7
       picocolors: 1.1.1
-      source-map-js: 1.2.0
+      source-map-js: 1.2.1
     dev: false
 
   /postcss@8.4.47:
@@ -3537,15 +3537,9 @@ packages:
     engines: {node: '>=8'}
     dev: true
 
-  /source-map-js@1.2.0:
-    resolution: {integrity: sha512-itJW8lvSA0TXEphiRoawsCksnlf8SyvmFzIhltqAHluXd88pkCd+cXJVHTDwdCr0IzwptSm035IHQktUu1QUMg==}
-    engines: {node: '>=0.10.0'}
-    dev: false
-
   /source-map-js@1.2.1:
     resolution: {integrity: sha512-UXWMKhLOwVKb728IUtQPXxfYU+usdybtUrK/8uGE8CQMvrhOpwvzDBwj0QhSL7MQc7vIsISBG8VQ8+IDQxpfQA==}
     engines: {node: '>=0.10.0'}
-    dev: true
 
   /source-map@0.5.7:
     resolution: {integrity: sha512-LbrmJOMUSdEVxIKvdcJzQC+nQhe8FUZQTXQy6+I75skNgn3OoQ0DZA8YnFa7gp8tqtL3KPf1kmo0R5DoApeSGQ==}
@@ -3664,8 +3658,8 @@ packages:
     engines: {node: '>=8'}
     dev: true
 
-  /styled-components@6.1.11(react-dom@18.3.1)(react@18.3.1):
-    resolution: {integrity: sha512-Ui0jXPzbp1phYij90h12ksljKGqF8ncGx+pjrNPsSPhbUUjWT2tD1FwGo2LF6USCnbrsIhNngDfodhxbegfEOA==}
+  /styled-components@6.1.13(react-dom@18.3.1)(react@18.3.1):
+    resolution: {integrity: sha512-M0+N2xSnAtwcVAQeFEsGWFFxXDftHUD7XrKla06QbpUMmbmtFBMMTcKWvFXtWxuD5qQkB8iU5gk6QASlx2ZRMw==}
     engines: {node: '>= 16'}
     peerDependencies:
       react: '>= 16.8.0'
