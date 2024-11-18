@@ -1,6 +1,6 @@
 services:
   mysql:
-    image: mariadb:11.3
+    image: mariadb:11.5
     command: mariadbd --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
     ports:
       - "3306:3306"
