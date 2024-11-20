@@ -15,11 +15,11 @@ dependencies:
     specifier: 11.13.5
     version: 11.13.5(@emotion/react@11.13.5)(@types/react@18.3.12)(react@18.3.1)
   '@fortawesome/fontawesome-common-types':
-    specifier: 6.7.0
-    version: 6.7.0
+    specifier: 6.7.1
+    version: 6.7.1
   '@fortawesome/free-brands-svg-icons':
-    specifier: 6.7.0
-    version: 6.7.0
+    specifier: 6.7.1
+    version: 6.7.1
   '@mui/icons-material':
     specifier: 5.16.7
     version: 5.16.7(@mui/material@5.16.7)(@types/react@18.3.12)(react@18.3.1)
@@ -403,16 +403,16 @@ packages:
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     dev: true
 
-  /@fortawesome/fontawesome-common-types@6.7.0:
-    resolution: {integrity: sha512-AUetZXU6cQdAe21p8j3mg2aD40MMDKfFNUNgq/G7gR3HMDp0BsQskAudLDSgq6d0SbCY0QKP0g4s5Y02S1kkhw==}
+  /@fortawesome/fontawesome-common-types@6.7.1:
+    resolution: {integrity: sha512-gbDz3TwRrIPT3i0cDfujhshnXO9z03IT1UKRIVi/VEjpNHtSBIP2o5XSm+e816FzzCFEzAxPw09Z13n20PaQJQ==}
     engines: {node: '>=6'}
     dev: false
 
-  /@fortawesome/free-brands-svg-icons@6.7.0:
-    resolution: {integrity: sha512-O/9/yKlN4T0bsYCBcx0NKq7YOr/512Yfpk8wZhOhaxg9/OxWLipDKXlP1hfEFE3I26mfYtsqLkbpz1CNu6KYqw==}
+  /@fortawesome/free-brands-svg-icons@6.7.1:
+    resolution: {integrity: sha512-nJR76eqPzCnMyhbiGf6X0aclDirZriTPRcFm1YFvuupyJOGwlNF022w3YBqu+yrHRhnKRpzFX+8wJKqiIjWZkA==}
     engines: {node: '>=6'}
     dependencies:
-      '@fortawesome/fontawesome-common-types': 6.7.0
+      '@fortawesome/fontawesome-common-types': 6.7.1
     dev: false
 
   /@humanwhocodes/config-array@0.13.0:
