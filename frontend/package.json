@@ -19,9 +19,9 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@emotion/cache": "11.13.5",
-    "@emotion/react": "11.13.5",
-    "@emotion/styled": "11.13.5",
+    "@emotion/cache": "11.14.0",
+    "@emotion/react": "11.14.0",
+    "@emotion/styled": "11.14.0",
     "@fortawesome/fontawesome-common-types": "6.7.1",
     "@fortawesome/free-brands-svg-icons": "6.7.1",
     "@mui/icons-material": "5.16.9",
