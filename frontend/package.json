@@ -26,7 +26,7 @@
     "@fortawesome/free-brands-svg-icons": "6.7.1",
     "@mui/icons-material": "5.16.10",
     "@mui/material": "5.16.9",
-    "@reduxjs/toolkit": "1.9.7",
+    "@reduxjs/toolkit": "2.5.0",
     "clsx": "2.1.1",
     "ky": "1.7.3",
     "next": "14.0.4",
