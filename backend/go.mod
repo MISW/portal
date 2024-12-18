@@ -5,7 +5,7 @@ go 1.21
 require (
 	github.com/DATA-DOG/go-sqlmock v1.5.2
 	github.com/caarlos0/env/v11 v11.3.0
-	github.com/caarlos0/env/v9 v9.0.0
+	github.com/caarlos0/env/v11 v11.3.0
 	github.com/coreos/go-oidc/v3 v3.11.0
 	github.com/go-sql-driver/mysql v1.8.1
 	github.com/golang-jwt/jwt/v5 v5.2.1
