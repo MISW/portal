@@ -84,6 +84,8 @@ github.com/labstack/echo/v4 v4.13.1 h1:q3+CpQlYhJwpRr9+08pX0IdlabTIpnIhrg2AKPSKh
 github.com/labstack/echo/v4 v4.13.1/go.mod h1:61j7WN2+bp8V21qerqRs4yVlVTGyOagMBpF0vE7VcmM=
 github.com/labstack/echo/v4 v4.13.2 h1:9aAt4hstpH54qIcqkuUXRLTf+v7yOTfMPWzDtuqLmtA=
 github.com/labstack/echo/v4 v4.13.2/go.mod h1:uc9gDtHB8UWt3FfbYx0HyxcCuvR4YuPYOxF/1QjoV/c=
+github.com/labstack/echo/v4 v4.13.3 h1:pwhpCPrTl5qry5HRdM5FwdXnhXSLSY+WE+YQSeCaafY=
+github.com/labstack/echo/v4 v4.13.3/go.mod h1:o90YNEeQWjDozo584l7AwhJMHN0bOC4tAfg+Xox9q5g=
 github.com/labstack/gommon v0.4.0 h1:y7cvthEAEbU0yHOf4axH8ZG2NH8knB9iNSoTO8dyIk8=
 github.com/labstack/gommon v0.4.0/go.mod h1:uW6kP17uPlLJsD3ijUYn3/M5bAxtlZhMI6m3MFxTMTM=
 github.com/labstack/gommon v0.4.1 h1:gqEff0p/hTENGMABzezPoPSRtIh1Cvw0ueMOe0/dfOk=
