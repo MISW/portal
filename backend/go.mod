@@ -18,7 +18,7 @@ require (
 	go.uber.org/dig v1.18.0
 	golang.org/x/crypto v0.31.0
 	golang.org/x/net v0.33.0
-	golang.org/x/oauth2 v0.24.0
+	golang.org/x/oauth2 v0.25.0
 	golang.org/x/xerrors v0.0.0-20240903120638-7835f813f4da
 	gopkg.in/yaml.v3 v3.0.1
 )
