@@ -36,7 +36,7 @@
     "react-redux": "9.2.0",
     "sharp": "0.33.5",
     "styled-components": "6.1.14",
-    "tss-react": "4.9.14"
+    "tss-react": "4.9.15"
   },
   "devDependencies": {
     "@types/node": "22.10.2",
