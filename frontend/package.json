@@ -35,7 +35,7 @@
     "react-dom": "18.3.1",
     "react-redux": "9.2.0",
     "sharp": "0.33.5",
-    "styled-components": "6.1.14",
+    "styled-components": "6.1.15",
     "tss-react": "4.9.15"
   },
   "devDependencies": {
