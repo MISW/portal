@@ -50,7 +50,7 @@
     "@typescript-eslint/parser": "6.21.0",
     "autoprefixer": "10.4.21",
     "eslint": "8.57.1",
-    "eslint-config-next": "15.2.0",
+    "eslint-config-next": "15.2.1",
     "eslint-config-prettier": "10.0.2",
     "postcss": "8.5.3",
     "prettier": "3.3.2",
