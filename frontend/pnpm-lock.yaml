@@ -54,8 +54,8 @@ dependencies:
     specifier: 0.34.1
     version: 0.34.1
   styled-components:
-    specifier: 6.1.17
-    version: 6.1.17(react-dom@18.3.1)(react@18.3.1)
+    specifier: 6.1.18
+    version: 6.1.18(react-dom@18.3.1)(react@18.3.1)
   tss-react:
     specifier: 4.9.16
     version: 4.9.16(@emotion/react@11.14.0)(@mui/material@5.16.14)(@types/react@18.3.21)(react@18.3.1)
@@ -3766,8 +3766,8 @@ packages:
     engines: {node: '>=8'}
     dev: true
 
-  /styled-components@6.1.17(react-dom@18.3.1)(react@18.3.1):
-    resolution: {integrity: sha512-97D7DwWanI7nN24v0D4SvbfjLE9656umNSJZkBkDIWL37aZqG/wRQ+Y9pWtXyBIM/NSfcBzHLErEsqHmJNSVUg==}
+  /styled-components@6.1.18(react-dom@18.3.1)(react@18.3.1):
+    resolution: {integrity: sha512-Mvf3gJFzZCkhjY2Y/Fx9z1m3dxbza0uI9H1CbNZm/jSHCojzJhQ0R7bByrlFJINnMzz/gPulpoFFGymNwrsMcw==}
     engines: {node: '>= 16'}
     peerDependencies:
       react: '>= 16.8.0'
