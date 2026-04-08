@@ -1,14 +1,12 @@
 module github.com/MISW/Portal/backend
 
-go 1.23.0
-
-toolchain go1.24.5
+go 1.25.0
 
 require (
 	github.com/DATA-DOG/go-sqlmock v1.5.2
 	github.com/caarlos0/env/v11 v11.3.1
 	github.com/caarlos0/env/v9 v9.0.0
-	github.com/coreos/go-oidc/v3 v3.14.1
+	github.com/coreos/go-oidc/v3 v3.18.0
 	github.com/go-sql-driver/mysql v1.9.2
 	github.com/golang-jwt/jwt/v5 v5.2.2
 	github.com/golang/mock v1.6.0
@@ -20,7 +18,7 @@ require (
 	go.uber.org/dig v1.18.2
 	golang.org/x/crypto v0.38.0
 	golang.org/x/net v0.40.0
-	golang.org/x/oauth2 v0.30.0
+	golang.org/x/oauth2 v0.36.0
 	golang.org/x/xerrors v0.0.0-20240903120638-7835f813f4da
 	gopkg.in/yaml.v3 v3.0.1
 )
@@ -28,7 +26,7 @@ require (
 require (
 	filippo.io/edwards25519 v1.1.0 // indirect
 	github.com/go-jose/go-jose/v3 v3.0.1 // indirect
-	github.com/go-jose/go-jose/v4 v4.0.5 // indirect
+	github.com/go-jose/go-jose/v4 v4.1.4 // indirect
 	github.com/golang-jwt/jwt v3.2.2+incompatible // indirect
 	github.com/golang/protobuf v1.5.3 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
